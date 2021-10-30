@@ -21,10 +21,10 @@ ServerCallback.Await = function(resource, event, delay, ...)
     TriggerServerEvent(event, ...)
     local promise = promise.new()
     event = RegisterNetEvent(event, function(...)
-        promise:resolve(...)
+        promise:resolve({...})
         RemoveEventHandler(event)
     end)
-    return Citizen.Await(promise.value)
+    return table.unpack(Citizen.Await(promise))
 end
 
 --- Sends an event to the server and triggers a callback function once the response is returned.
@@ -33,7 +33,6 @@ end
 ServerCallback.Async = function(resource, event, delay, cb, ...)
     CallbackTimer(event, delay)
     event = ('__cb_%s:%s'):format(resource, event)
-    print(event)
     TriggerServerEvent(event, ...)
     event = RegisterNetEvent(event, function(...)
         cb(...)
