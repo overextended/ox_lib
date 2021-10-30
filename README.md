@@ -24,8 +24,13 @@ files {
 local ServerCallback = import 'callbacks'
 
 ServerCallback.Async(targetresource, 'eventname', 100, function(result)
-    print(result)
+    print(result) -- 'hello there. general kenobi'
 end, 'hello there')
+
+CreateThread(function()
+    local a, b, c = ServerCallback.Await('test', 'testevent', 100, 'hello there')
+    print(a, b, c) -- 'hello there. general kenobi', 'two', nil
+end)
 ```
 
 - server.lua
@@ -33,13 +38,8 @@ end, 'hello there')
 local ServerCallback = import 'callbacks'
 
 ServerCallback.Register('eventname', function(source, cb, data)
-    cb(data..'. general kenobi')
+    cb(data..'. general kenobi', 'two')
 end)
 ```
 
-Target a registered ServerCallback in any resource by setting the first parameter to that resource name, then utilise whatever event name you desire.  
-For my test, I utilised `test` and `testevent`, which registers an event with the name `__cb_test:testevent`.  
-
-The third parameter sets a delay for how often the client can trigger the callback (to prevent spam in certain situations).  
-
-There's also ServerCallback.Await which halts the thread and returns the values rather than using a callback (I haven't tested it since refactoring all this code, though).
+##### Target a registered ServerCallback in any resource by setting the first parameter to that resource name, then utilise whatever event name you desire. For my test, I utilised `test` and `testevent`, which registers an event with the name `__cb_test:testevent`. The third parameter sets a delay for how often the client can trigger the callback (to prevent spam in certain situations).  
