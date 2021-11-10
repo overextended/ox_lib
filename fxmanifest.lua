@@ -21,10 +21,10 @@ lua54        'yes'
 game         'gta5'
 
 --[[ Resource Information ]]--
-name         'library'
+name         'lua library'
 author       'Linden'
 version      '1.0.0'
-repository   'https://github.com/project-error/pe-lib'
+repository   'https://github.com/project-error/pe-lualib'
 description  'A library of shared functions to utilise in other resources.'
 
 --[[ Manifest ]]--
