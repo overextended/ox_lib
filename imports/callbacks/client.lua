@@ -12,9 +12,9 @@ end
 
 local ServerCallback = table.create(0, 2)
 
---- Sends an event to the server and halts the current thread until a response is returned.
 ---@param event string
 ---@param delay number
+--- Sends an event to the server and halts the current thread until a response is returned.
 ServerCallback.Await = function(resource, event, delay, ...)
 	CallbackTimer(event, delay)
 	event = ('__cb_%s:%s'):format(resource, event)
@@ -27,9 +27,9 @@ ServerCallback.Await = function(resource, event, delay, ...)
 	return table.unpack(Citizen.Await(promise))
 end
 
---- Sends an event to the server and triggers a callback function once the response is returned.
 ---@param event string
 ---@param delay number
+--- Sends an event to the server and triggers a callback function once the response is returned.
 ServerCallback.Async = function(resource, event, delay, cb, ...)
 	CallbackTimer(event, delay)
 	event = ('__cb_%s:%s'):format(resource, event)

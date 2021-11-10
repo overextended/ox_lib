@@ -6,7 +6,7 @@ local LIBRARY  = 'pe-lualib'
 local SERVICE  = IsDuplicityVersion() and 'server' or 'client'
 local IMPORTS  = {}
 
-local function loadFile(file)
+local function LoadFile(file)
 	local dir = ('imports/%s'):format(file)
 	local chunk = LoadResourceFile(LIBRARY, ('%s/%s.lua'):format(dir, SERVICE))
 	local shared = LoadResourceFile(LIBRARY, ('%s/shared.lua'):format(dir))
@@ -29,7 +29,7 @@ end
 ---@param file string
 ---@return table
 function import(file)
-	if not IMPORTS[file] then loadFile(file) end
+	if not IMPORTS[file] then LoadFile(file) end
 	return IMPORTS[file]
 end
 
