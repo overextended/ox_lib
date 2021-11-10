@@ -1,5 +1,16 @@
 ## WIP Lua Library
-### How to utilise in another resource
+The idea of this resource is to create a set of reusable functions for importing into other resources. Though FiveM has its own system for importing files (which is used to load init), this simplifies declarations and allows you to keep everything as `locals` rather than polluting the global namespace.  
+
+Everyone is free to utilise either the library or code from it so long as [the license is respected and adhered to](https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)).
+
+- [x] Server Callbacks
+- [ ] Table utilities
+- [ ] OxMySQL library
+- [ ] Native wrappers (animations, spawning, etc.)
+- [ ] Iterators
+- todo: think of more features
+
+### How to utilise ServerCallbacks
 
 - fxmanifest.lua
 ```lua

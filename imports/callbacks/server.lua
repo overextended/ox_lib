@@ -13,6 +13,5 @@ local ServerCallback = {}
 			end, ...)
 		end)
 	end
-}
 
 return ServerCallback
