@@ -26,7 +26,7 @@ local function contains(tbl, value)
 end
 table.contains = contains
 
-local function match(t1, t2)
+local function matches(t1, t2)
 	if t1 == t2 then return true end
 	if type(t1) ~= 'table' then return false end
 
@@ -39,7 +39,7 @@ local function match(t1, t2)
 			for _, v2 in pairs(t2) do
 				if v == v2 then
 					matched_values += 1
-				elseif match(v, v2) then
+				elseif matches(v, v2) then
 					values += 1
 					matched_values += #v
 				end
@@ -48,6 +48,6 @@ local function match(t1, t2)
 	end
 	return matched_values == values
 end
-table.match = match
+table.matches = matches
 
 return table
