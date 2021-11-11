@@ -1,5 +1,7 @@
 local ServerCallbacks = {}
 
+---@param event string
+---@param delay number prevent the event from being called for the given time
 local function CallbackTimer(event, delay)
 	if type(delay) == 'number' then
 		local time = GetGameTimer()

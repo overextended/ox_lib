@@ -5,10 +5,10 @@ Everyone is free to utilise either the library or code from it so long as [the l
 
 - [x] Server Callbacks
 - [ ] Table utilities
-- [ ] OxMySQL library
+- [x] OxMySQL library
 - [ ] Native wrappers (animations, spawning, etc.)
 - [ ] Iterators
-- todo: think of more features
+- todo: think of more stuff
 
 ### How to utilise ServerCallbacks
 

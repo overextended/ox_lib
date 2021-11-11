@@ -63,7 +63,7 @@ end
 ---@param query string
 ---@param parameters? table|function
 ---@param cb? function
----@return integer|string
+---@return number|string
 ---returns value of the first column of a single row
 function MySQL.scalar(query, parameters, cb)
 	oxmysql:scalar(safeArgs(query, parameters, cb))
@@ -72,7 +72,7 @@ end
 ---@param query string
 ---@param parameters? table|function
 ---@param cb? function
----@return integer result
+---@return number result
 ---returns number of rows updated by the executed query
 function MySQL.update(query, parameters, cb)
 	oxmysql:update(safeArgs(query, parameters, cb))
@@ -131,7 +131,7 @@ end
 
 ---@param query string
 ---@param parameters? table|function
----@return integer|string
+---@return number|string
 ---returns value of the first column of a single row
 function MySQL.scalarSync(query, parameters)
 	query, parameters = safeArgs(query, parameters)
@@ -144,7 +144,7 @@ end
 
 ---@param query string
 ---@param parameters? table|function
----@return integer result
+---@return number result
 ---returns number of rows updated by the executed query
 function MySQL.updateSync(query, parameters)
 	query, parameters = safeArgs(query, parameters)
