@@ -1,3 +1,7 @@
+---------------------------------------------------------------------------
+--- MySQL-Async like library for OxMySQL, without the function name aliases
+---------------------------------------------------------------------------
+
 local MySQL = {}
 
 MySQL.ready = function(cb)
