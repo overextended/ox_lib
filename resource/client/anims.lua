@@ -1,3 +1,14 @@
+---@param wait number
+---@param dict string
+---@param name string
+---@param introSpeed number
+---@param outroSpeed number
+---@param duration number
+---@param flag number
+---@param pbRate number
+---@param lockX? number
+---@param lockY? number
+---@param lockZ? number
 function PlayAnim(wait, dict, name, introSpeed, outroSpeed, duration, flag, pbRate, lockX, lockY, lockZ)
     local playerPed = PlayerPedId()
     if not lockX then lockX = 0 end
@@ -13,6 +24,20 @@ function PlayAnim(wait, dict, name, introSpeed, outroSpeed, duration, flag, pbRa
     end)
 end
 
+---@param wait number
+---@param dict string
+---@param name string
+---@param posX number
+---@param posY number
+---@param posZ number
+---@param rotX number
+---@param rotY number
+---@param rotZ number
+---@param introSpeed number
+---@param outroSpeed number
+---@param duration number
+---@param flag number
+---@param time number
 function PlayAnimAdvanced(wait, dict, name, posX, posY, posZ, rotX, rotY, rotZ, introSpeed, outroSpeed, duration, flag, time)
     local playerPed = PlayerPedId()
 	RequestAnimDict(dict)
