@@ -26,28 +26,22 @@ local function contains(tbl, value)
 end
 table.contains = contains
 
-local function matches(t1, t2)
-	if t1 == t2 then return true end
-	if type(t1) ~= 'table' then return false end
+local function table_matches(t1, t2)
+	local type1, type2 = type(t1), type(t2)
+	if type1 ~= type2 then return false end
+	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
 
-	local matched_values = 0
-	local values = 0
-
-	for _, v in pairs(t1) do
-		values += 1
-		if type(t2) == 'table' then
-			for _, v2 in pairs(t2) do
-				if v == v2 then
-					matched_values += 1
-				elseif matches(v, v2) then
-					values += 1
-					matched_values += #v
-				end
-			end
-		elseif v == t2 then matched_values += 1 end
+	for k1,v1 in pairs(t1) do
+	   local v2 = t2[k1]
+	   if v2 == nil or not table_matches(v1,v2) then return false end
 	end
-	return matched_values == values
+
+	for k2,v2 in pairs(t2) do
+	   local v1 = t1[k2]
+	   if v1 == nil or not table_matches(v1,v2) then return false end
+	end
+	return true
 end
-table.matches = matches
+table.matches = table_matches
 
 return table
