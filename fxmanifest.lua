@@ -32,6 +32,10 @@ dependencies {
     '/onesync',
 }
 
+client_scripts {
+    'resource/client/**.lua'
+}
+
 files {
     'init.lua',
     'imports/**/client.lua',
