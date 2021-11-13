@@ -21,9 +21,9 @@ lua54        'yes'
 game         'gta5'
 
 --[[ Resource Information ]]--
-name         'lua library'
+name         'pe-lualib'
 author       'Linden'
-version      '1.0.0'
+version      '1.0.1'
 repository   'https://github.com/project-error/pe-lualib'
 description  'A library of shared functions to utilise in other resources.'
 
@@ -36,4 +36,8 @@ files {
     'init.lua',
     'imports/**/client.lua',
     'imports/**/shared.lua',
+}
+
+server_scripts {
+	'version.lua'
 }

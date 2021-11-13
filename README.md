@@ -4,11 +4,17 @@ The idea of this resource is to create a set of reusable functions for importing
 Everyone is free to utilise either the library or code from it so long as [the license is respected and adhered to](https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)).
 
 - [x] Server Callbacks
-- [ ] Table utilities
+- [x] Table utilities
 - [x] OxMySQL library
-- [ ] Native wrappers (animations, spawning, etc.)
+- [ ] Native wrappers (animations, spawning, onesync, etc.)
 - [ ] Iterators
-- todo: think of more stuff
+- [ ] Exports (for non-runtime critical functions)
+
+##### To do
+- Think of more features
+- Improvements to import function?
+- Improve table utilities (matches doesn't work properly for hash tables)
+- Transfer non-essential code from ox inventory
 
 ### How to utilise ServerCallbacks
 
