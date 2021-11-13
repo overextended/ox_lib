@@ -6,7 +6,7 @@ local table = table
 local pairs = pairs
 
 local function contains(tbl, value)
-	if type(value) == 'string' then
+	if type(value) ~= 'table' then
 		for _, v in pairs(tbl) do
 			if v == value then return true end
 		end
