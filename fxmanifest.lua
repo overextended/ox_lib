@@ -1,4 +1,4 @@
--- Library
+-- pe-lualib
 -- Copyright (C) 2021	Linden <https://github.com/thelindat>
 
 -- This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,9 @@ repository   'https://github.com/project-error/pe-lualib'
 description  'A library of shared functions to utilise in other resources.'
 
 --[[ Manifest ]]--
-dependencies {
-    '/onesync',
-}
+-- dependencies {
+--     '/onesync',  Disabled until the heat death of the universe (or recommended artifact updates)
+-- }
 
 files {
     'init.lua',
@@ -38,6 +38,13 @@ files {
     'imports/**/shared.lua',
 }
 
+shared_script 'resource/main.lua'
+
+client_scripts {
+    'resource/**/client.lua'
+}
+
 server_scripts {
-	'version.lua'
+	'version.lua',
+    'resource/**/server.lua'
 }

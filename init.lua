@@ -35,7 +35,7 @@ function import(file)
 	return IMPORTS[file]
 end
 
--- Library
+-- pe-lualib
 -- Copyright (C) 2021	Linden <https://github.com/thelindat>
 
 -- This program is free software: you can redistribute it and/or modify

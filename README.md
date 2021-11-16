@@ -1,62 +1,94 @@
 ## WIP Lua Library
-The idea of this resource is to create a set of reusable functions for importing into other resources. Though FiveM has its own system for importing files (which is used to load init), this simplifies declarations and allows you to keep everything as `locals` rather than polluting the global namespace.  
-
-Everyone is free to utilise either the library or code from it so long as [the license is respected and adhered to](https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)).
-
-- [x] Server Callbacks
-- [x] Table utilities
-- [x] OxMySQL library
-- [ ] Native wrappers (animations, spawning, onesync, etc.)
-- [ ] Iterators
-- [ ] Exports (for non-runtime critical functions)
-
-##### To do
-- Think of more features
-- Improvements to import function?
-- Improve table utilities (matches doesn't work properly for hash tables)
-- Transfer non-essential code from ox inventory
-
-### How to utilise ServerCallbacks
-
-- fxmanifest.lua
+FXServer provides its own system for including files, which we use to load this resource in the fxmanifest via
 ```lua
-fx_version 'cerulean'
-game 'gta5'
-
-author 'You'
-version '1.0.0'
-lua54 'yes'
-use_fxv2_oal 'yes'
-
 shared_script '@pe-lualib/init.lua'
-
-files {
-    'client.lua',
-    'shared.lua',
-}
 ```
 
-- client.lua
+
+Once loaded, any resource can use simple in-line declarations to load anything from the imports folder, i.e
 ```lua
 local ServerCallback = import 'callbacks'
-
-ServerCallback.Async(targetresource, 'eventname', 100, function(result)
-    print(result) -- 'hello there. general kenobi'
-end, 'hello there')
-
-CreateThread(function()
-    local a, b, c = ServerCallback.Await('test', 'testevent', 100, 'hello there')
-    print(a, b, c) -- 'hello there. general kenobi', 'two', nil
-end)
 ```
 
+
+If you're not interested in this method of loading files, you are free to utilise the code per the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).
+
+#### Currently implemented
+- [x] Server callbacks
+- [x] Table utilities
+- [x] OxMySQL wrapper
+
+#### To do
+- Think of more features
+- Improvements to import function?
+- Improve table utilities (matches only work if the order is the same)
+- Transfer non-essential code from ox inventory
+- Entity iterators
+- Exports for non-runtime critical functions
+
+#### Native wrappers
+Likely to be handled as exports rather than imports, handling things such as entity creation, blips, markers, etc.  
+Anything that is capable of OneSync RPC's is prioritised over direct client functions.  
+
+#### Compatibility wrappers
+Setup imports for ESX and QBCore compatibility with certain tables, functions, and events; this should only be for important framework features, i.e
+- PlayerData / xPlayer / QBPlayer
+- GetPlayers / GetExtendedPlayers / GetQBPlayers
+
+<br>
+
+## Usage
+Requires the latest optional FXServer build (4478), or anything more recent.  
+Resources are required to utilise Lua 5.4 to ensure compatibility.  
+Any scripts must be loaded _after_ initialising the shared import.
+```lua
+lua54 'yes'
+shared_script '@pe-lualib/init.lua'
+```
+
+### ServerCallbacks
 - server.lua
 ```lua
 local ServerCallback = import 'callbacks'
 
-ServerCallback.Register('eventname', function(source, cb, data)
-    cb(data..'. general kenobi', 'two')
+-- Registers a server event with the name __cb_resourceName:eventName
+ServerCallback.Register('eventName', function(source, cb, data)
+    cb(data, 'general kenobi')
+end)
+```
+- client.lua
+```lua
+local ServerCallback = import 'callbacks'
+
+-- Trigger the server event and receive a callback function
+ServerCallback.Async('resourceName', 'eventName', 100, function(a, b)
+    print(a, b) -- 'hello there', 'general kenobi'
+end, 'hello there')
+
+-- Trigger the server event and await a promise
+CreateThread(function()
+    local a, b = ServerCallback.Await('resourceName', 'eventName', 100, 'hello there')
+    print(a, b) -- 'hello there', 'general kenobi'
 end)
 ```
 
-##### Target a registered ServerCallback in any resource by setting the first parameter to that resource name, then utilise whatever event name you desire. For my test, I utilised `test` and `testevent`, which registers an event with the name `__cb_test:testevent`. The third parameter sets a delay for how often the client can trigger the callback (to prevent spam in certain situations).  
+
+<br><h2>License</h2>
+<table><tr><td>
+pe-lualib  
+
+Copyright (C) 2021	Linden <https://www.github.com/thelindat>
+
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+
+You should have received a copy of the GNU General Public License along with this program.  
+If not, see <https://www.gnu.org/licenses/gpl-3.0.html>
+</td></tr>
+<tr><td>
+<font align='center'>https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)</font>
+</td></td></table>
