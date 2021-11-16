@@ -17,6 +17,7 @@ If you're not interested in this method of loading files, you are free to utilis
 - [x] Server callbacks
 - [x] Table utilities
 - [x] OxMySQL wrapper
+- [x] Streaming exports
 
 #### To do
 - Think of more features
@@ -38,7 +39,6 @@ Setup imports for ESX and QBCore compatibility with certain tables, functions, a
 <br>
 
 ## Usage
-Requires the latest optional FXServer build (4478), or anything more recent.  
 Resources are required to utilise Lua 5.4 to ensure compatibility.  
 Any scripts must be loaded _after_ initialising the shared import.
 ```lua
