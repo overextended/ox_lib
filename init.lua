@@ -6,6 +6,8 @@ local LIBRARY  = 'pe-lualib'
 local SERVICE  = IsDuplicityVersion() and 'server' or 'client'
 local IMPORTS  = {}
 
+lib = exports[LIBRARY]
+
 local function LoadFile(file)
 	local dir = ('imports/%s'):format(file)
 	local chunk = LoadResourceFile(LIBRARY, ('%s/%s.lua'):format(dir, SERVICE))
