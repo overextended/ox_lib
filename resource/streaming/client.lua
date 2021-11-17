@@ -44,7 +44,7 @@ function lib.requestStreamedTextureDict(dict)
 	if HasStreamedTextureDictLoaded(dict) then return true end
 	RequestStreamedTextureDict(dict)
 	if hasLoaded(HasStreamedTextureDictLoaded, dict) then return true end
-	print(('Unable to load texture dict after 20 ticks (%s)'):format(name))
+	print(('Unable to load texture dict after 20 ticks (%s)'):format(dict))
 end
 
 ---@param fxName string
@@ -53,5 +53,5 @@ function lib.requestNamedPtfxAsset(fxName)
 	if HasNamedPtfxAssetLoaded(fxName) then return true end
 	RequestNamedPtfxAsset(fxName)
 	if hasLoaded(RequestNamedPtfxAsset, fxName) then return true end
-	print(('Unable to load named ptfx after 20 ticks (%s)'):format(name))
+	print(('Unable to load named ptfx after 20 ticks (%s)'):format(fxName))
 end
