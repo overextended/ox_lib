@@ -44,4 +44,15 @@ local function table_matches(t1, t2)
 end
 table.matches = table_matches
 
+local function table_deepclone(tbl)
+	tbl = table.clone(tbl)
+	for k, v in pairs(tbl) do
+		if type(v) == 'table' then
+			tbl[k] = table_deepclone(v)
+		end
+	end
+	return tbl
+end
+table.deepclone = table_deepclone
+
 return table
