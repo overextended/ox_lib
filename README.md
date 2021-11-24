@@ -11,13 +11,16 @@ local ServerCallback = import 'callbacks'
 ```
 
 
-If you're not interested in this method of loading files, you are free to utilise the code per the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).
+If you don't want to use this resource, but want to reuse code you are permitted to do so under the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).  
+Any resources distributed with this code is subject to the same license restrictions and must be made available under the same license ([more below](#license)).
 
 #### Currently implemented
 - [x] Server callbacks
 - [x] Table utilities
-- [x] OxMySQL wrapper
+- [x] OxMySQL wrapper (might scrap for oxmysql v2.0.0)
 - [x] Streaming exports
+- [x] Metatable packing/unpacking
+- [x] SetInterval
 
 #### To do
 - Think of more features
