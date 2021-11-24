@@ -2,11 +2,14 @@ if not _VERSION:find('5.4') then
 	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 3)
 end
 
+
+-----------------------------------------------------------------------------------------------
+-- Imports
+-----------------------------------------------------------------------------------------------
+
 local LIBRARY  = 'pe-lualib'
 local SERVICE  = IsDuplicityVersion() and 'server' or 'client'
 local IMPORTS  = {}
-
-lib = exports[LIBRARY]
 
 local function LoadFile(file)
 	local dir = ('imports/%s'):format(file)
@@ -34,6 +37,39 @@ function import(file)
 	if not IMPORTS[file] then LoadFile(file) end
 	return IMPORTS[file]
 end
+
+
+-----------------------------------------------------------------------------------------------
+-- Namespace functions
+-----------------------------------------------------------------------------------------------
+
+local lib = {}
+
+---@param tbl table
+--- packs a table and metatable with msgpack
+function lib.pack(tbl)
+	local userdata = msgpack.new()
+	userdata:_table(tbl)
+
+	local mt = getmetatable(tbl)
+	if mt then userdata:table(mt) end
+
+	return tostring(userdata), not mt and true
+end
+
+---@param data string
+--- unpacks a msgpack table and metatable
+function lib.unpack(data)
+	local tbl, mt = msgpack.unpack(data)
+	return mt and setmetatable(tbl, mt) or tbl
+end
+
+setmetatable(lib, {
+	__index = exports[LIBRARY]
+})
+
+_ENV.lib = lib
+
 
 -----------------------------------------------------------------------------------------------
 -- Global functions

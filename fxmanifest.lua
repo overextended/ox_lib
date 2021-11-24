@@ -23,7 +23,7 @@ game         'gta5'
 --[[ Resource Information ]]--
 name         'pe-lualib'
 author       'Linden'
-version      '1.0.1'
+version      '1.0.2'
 repository   'https://github.com/project-error/pe-lualib'
 description  'A library of shared functions to utilise in other resources.'
 
