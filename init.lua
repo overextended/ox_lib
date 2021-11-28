@@ -4,27 +4,44 @@ end
 
 
 -----------------------------------------------------------------------------------------------
--- Imports
+-- Module
 -----------------------------------------------------------------------------------------------
 
-local LIBRARY  = 'pe-lualib'
-local SERVICE  = IsDuplicityVersion() and 'server' or 'client'
-local IMPORTS  = {}
+-- env
+local LIBRARY = 'pe-lualib'
+local SERVICE = IsDuplicityVersion() and 'server' or 'client'
 
-local function LoadFile(file)
+-- micro-optimise
+local rawget = rawget
+local rawset = rawset
+local LoadResourceFile = LoadResourceFile
+
+local function loadFile(self, file)
 	local dir = ('imports/%s'):format(file)
 	local chunk = LoadResourceFile(LIBRARY, ('%s/%s.lua'):format(dir, SERVICE))
 	local shared = LoadResourceFile(LIBRARY, ('%s/shared.lua'):format(dir))
+
 	if shared then
 		chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
 	end
+
 	if chunk then
 		local err
 		chunk, err = load(chunk, ('@@%s.lua'):format(SERVICE), 't')
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
-			IMPORTS[file] = chunk()
+			rawset(self, file, chunk())
+			return setmetatable(self[file], {
+				__index = {
+					name = file,
+					resource = LIBRARY
+				},
+
+				__newindex = function()
+					error('Cannot add indexes to imports')
+				end
+			})
 		end
 	else error(('\n^3Unable to import module (%s)^0'):format(dir), 3) end
 end
@@ -33,22 +50,36 @@ end
 ---If the module has already been loaded then it will reference the existing chunk.
 ---@param file string
 ---@return table
-function import(file)
-	if not IMPORTS[file] then LoadFile(file) end
-	return IMPORTS[file]
+local function getImport(self, file)
+	local import = rawget(self, file)
+	return import and import or loadFile(self, file)
 end
 
 
 -----------------------------------------------------------------------------------------------
--- Namespace functions
+-- Interface
 -----------------------------------------------------------------------------------------------
 
+import = setmetatable({}, {
+	__index = getImport,
+
+	__call = getImport,
+
+	__newindex = function()
+		error('Cannot add indexes to imports')
+	end
+})
+
 local lib = {}
+local msgpack_new = msgpack.new
+local msgpack_unpack = msgpack.unpack
+local getmetatable = getmetatable
+local setmetatable = setmetatable
 
 ---@param tbl table
 --- packs a table and metatable with msgpack
 function lib.pack(tbl)
-	local userdata = msgpack.new()
+	local userdata = msgpack_new()
 	userdata:_table(tbl)
 
 	local mt = getmetatable(tbl)
@@ -60,20 +91,19 @@ end
 ---@param data string
 --- unpacks a msgpack table and metatable
 function lib.unpack(data)
-	local tbl, mt = msgpack.unpack(data)
+	local tbl, mt = msgpack_unpack(data)
 	return mt and setmetatable(tbl, mt) or tbl
 end
 
 setmetatable(lib, {
-	__index = exports[LIBRARY]
+	__index = exports[LIBRARY],
+
+	__tostring = function()
+		return LIBRARY
+	end,
 })
 
 _ENV.lib = lib
-
-
------------------------------------------------------------------------------------------------
--- Global functions
------------------------------------------------------------------------------------------------
 
 --- Dream of a world where this PR gets accepted.
 --- ```lua
