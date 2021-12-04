@@ -46,8 +46,8 @@ local function loadFile(self, file)
 	else error(('\n^3Unable to import module (%s)^0'):format(dir), 3) end
 end
 
----Loads a module from the library.
----If the module has already been loaded then it will reference the existing chunk.
+--- Loads a module from the library.
+--- If the module has already been loaded then it will reference the existing chunk.
 ---@param file string
 ---@return table
 local function getImport(self, file)
@@ -71,29 +71,7 @@ import = setmetatable({}, {
 })
 
 local lib = {}
-local msgpack_new = msgpack.new
-local msgpack_unpack = msgpack.unpack
-local getmetatable = getmetatable
 local setmetatable = setmetatable
-
----@param tbl table
---- packs a table and metatable with msgpack
-function lib.pack(tbl)
-	local userdata = msgpack_new()
-	userdata:_table(tbl)
-
-	local mt = getmetatable(tbl)
-	if mt then userdata:table(mt) end
-
-	return tostring(userdata), not mt and true
-end
-
----@param data string
---- unpacks a msgpack table and metatable
-function lib.unpack(data)
-	local tbl, mt = msgpack_unpack(data)
-	return mt and setmetatable(tbl, mt) or tbl
-end
 
 setmetatable(lib, {
 	__index = exports[LIBRARY],

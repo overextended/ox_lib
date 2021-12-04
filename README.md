@@ -17,9 +17,7 @@ Any resources distributed with this code is subject to the same license restrict
 #### Currently implemented
 - [x] Server callbacks
 - [x] Table utilities
-- [x] OxMySQL wrapper (might scrap for oxmysql v2.0.0)
 - [x] Streaming exports
-- [x] Metatable packing/unpacking
 - [x] SetInterval
 
 #### To do
