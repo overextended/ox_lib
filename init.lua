@@ -32,16 +32,7 @@ local function loadFile(self, file)
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
 			rawset(self, file, chunk())
-			return setmetatable(self[file], {
-				__index = {
-					name = file,
-					resource = LIBRARY
-				},
-
-				__newindex = function()
-					error('Cannot add indexes to imports')
-				end
-			})
+			return self[file]
 		end
 	else error(('\n^3Unable to import module (%s)^0'):format(dir), 3) end
 end
@@ -84,7 +75,7 @@ setmetatable(lib, {
 _ENV.lib = lib
 
 --- Dream of a world where this PR gets accepted.
---- ```lua
+--- ```
 --- SetInterval(callback: function, timer: number)
 --- ```
 SetInterval = setmetatable({currentId = 0}, {
