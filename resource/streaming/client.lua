@@ -1,16 +1,13 @@
-local function hasLoaded(fn, lType, name, limit)
-	local timeout = limit
-	while not fn(name) do
+local function hasLoaded(fn, type, request, limit)
+	timeout = limit or 100
+	while not fn(request) do
 		Wait(0)
-		if timeout then
-			timeout -= 1
-			if timeout == 0 then
-				print(('Unable to load %s after %s ticks (%s)'):format(lType, limit, name))
-				return false
-			end
+		timeout -= 1
+		if timeout < 1 then
+			return print(('Unable to load %s after %s ticks (%s)'):format(type, limit, request))
 		end
 	end
-	return name
+	return request
 end
 
 ---@param dict string
