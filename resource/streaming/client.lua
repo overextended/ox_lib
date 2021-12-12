@@ -1,5 +1,5 @@
 local function hasLoaded(fn, type, request, limit)
-	timeout = limit or 100
+	local timeout = limit or 100
 	while not fn(request) do
 		Wait(0)
 		timeout -= 1
