@@ -4,7 +4,7 @@ local function hasLoaded(fn, type, request, limit)
 		Wait(0)
 		timeout -= 1
 		if timeout < 1 then
-			return print(('Unable to load %s after %s ticks (%s)'):format(type, limit, request))
+			return print(('Unable to load %s after %s ticks (%s)'):format(type, limit or 100, request))
 		end
 	end
 	return request
