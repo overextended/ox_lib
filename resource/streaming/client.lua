@@ -4,7 +4,7 @@ local function hasLoaded(fn, type, request, limit)
 		Wait(0)
 		timeout -= 1
 		if timeout < 1 then
-			return print(('Unable to load %s after %s ticks (%s)'):format(type, limit, request))
+			return print(('Unable to load %s after %s ticks (%s)'):format(type, limit or 100, request))
 		end
 	end
 	return request
@@ -17,7 +17,7 @@ function lib.requestAnimDict(dict, timeout)
 	if HasAnimDictLoaded(dict) then return dict end
 	assert(DoesAnimDictExist(dict), ('Attempted to load an invalid animdict (%s)'):format(dict))
 	RequestAnimDict(dict)
-	return hasLoaded(HasModelLoaded, 'animdict', dict, timeout)
+	return hasLoaded(HasAnimDictLoaded, 'animdict', dict, timeout)
 end
 
 ---@param set string
@@ -26,7 +26,7 @@ end
 function lib.requestAnimSet(set, timeout)
 	if HasAnimSetLoaded(set) then return set end
 	RequestAnimSet(set)
-	return hasLoaded(HasModelLoaded, 'animset', set, timeout)
+	return hasLoaded(HasAnimSetLoaded, 'animset', set, timeout)
 end
 
 ---@param model string|number
@@ -46,7 +46,7 @@ end
 function lib.requestStreamedTextureDict(dict, timeout)
 	if HasStreamedTextureDictLoaded(dict) then return dict end
 	RequestStreamedTextureDict(dict)
-	return hasLoaded(HasModelLoaded, 'texture dict', dict, timeout)
+	return hasLoaded(HasStreamedTextureDictLoaded, 'texture dict', dict, timeout)
 end
 
 ---@param fxName string
@@ -55,5 +55,5 @@ end
 function lib.requestNamedPtfxAsset(fxName, timeout)
 	if HasNamedPtfxAssetLoaded(fxName) then return fxName end
 	RequestNamedPtfxAsset(fxName)
-	return hasLoaded(HasModelLoaded, 'named ptfx', fxName, timeout)
+	return hasLoaded(RequestNamedPtfxAsset, 'named ptfx', fxName, timeout)
 end
