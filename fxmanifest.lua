@@ -23,14 +23,14 @@ game         'gta5'
 --[[ Resource Information ]]--
 name         'pe-lualib'
 author       'Linden'
-version      '1.0.3'
+version      '1.0.4'
 repository   'https://github.com/project-error/pe-lualib'
 description  'A library of shared functions to utilise in other resources.'
 
---[[ Manifest ]]--
--- dependencies {
---     '/onesync',  Disabled until the heat death of the universe (or recommended artifact updates)
--- }
+[[ Manifest ]]--
+dependencies {
+    '/onesync',
+}
 
 files {
     'init.lua',
