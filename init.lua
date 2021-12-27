@@ -8,18 +8,18 @@ end
 -----------------------------------------------------------------------------------------------
 
 -- env
-local LIBRARY = 'pe-lualib'
-local SERVICE = IsDuplicityVersion() and 'server' or 'client'
+local lualib = 'pe-lualib'
+local file = IsDuplicityVersion() and 'server' or 'client'
 
 -- micro-optimise
 local rawget = rawget
 local rawset = rawset
 local LoadResourceFile = LoadResourceFile
 
-local function loadFile(self, file)
-	local dir = ('imports/%s'):format(file)
-	local chunk = LoadResourceFile(LIBRARY, ('%s/%s.lua'):format(dir, SERVICE))
-	local shared = LoadResourceFile(LIBRARY, ('%s/shared.lua'):format(dir))
+local function loadFile(self, module)
+	local dir = ('imports/%s'):format(module)
+	local chunk = LoadResourceFile(lualib, ('%s/%s.lua'):format(dir, file))
+	local shared = LoadResourceFile(lualib, ('%s/shared.lua'):format(dir))
 
 	if shared then
 		chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
@@ -27,12 +27,12 @@ local function loadFile(self, file)
 
 	if chunk then
 		local err
-		chunk, err = load(chunk, ('@@%s.lua'):format(SERVICE), 't')
+		chunk, err = load(chunk, ('@@pe-lualib/%s/%s.lua'):format(module, file), 't')
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
-			rawset(self, file, chunk())
-			return self[file]
+			rawset(self, module, chunk())
+			return self[module]
 		end
 	else error(('\n^3Unable to import module (%s)^0'):format(dir), 3) end
 end
@@ -48,7 +48,7 @@ end
 
 
 -----------------------------------------------------------------------------------------------
--- Interface
+-- API
 -----------------------------------------------------------------------------------------------
 
 import = setmetatable({}, {
@@ -57,48 +57,66 @@ import = setmetatable({}, {
 	__call = getImport,
 
 	__newindex = function()
-		error('Cannot add indexes to imports')
+		error('Cannot set index on import')
 	end
 })
 
-local lib = {}
-local setmetatable = setmetatable
+lib = setmetatable({}, {
+	__index = function(self, method)
+		local export = exports[lualib][method]
+		rawset(self, method, function(...)
+			return export(nil, ...)
+		end)
 
-setmetatable(lib, {
-	__index = exports[LIBRARY],
+		return self[method]
+	end,
+
+	__newindex = function()
+		error('Cannot set index on lib')
+	end,
 
 	__tostring = function()
-		return LIBRARY
+		return lualib
 	end,
 })
 
-_ENV.lib = lib
-
+local intervals = {}
 --- Dream of a world where this PR gets accepted.
---- ```
---- SetInterval(callback: function, timer: number)
---- ```
-SetInterval = setmetatable({currentId = 0}, {
-	__call = function(self, callback, timer)
-		local id = self.currentId + 1
-		self.currentId = id
-		self[id] = timer or 0
-		CreateThread(function()
-			repeat
-				local interval = self[id]
-				Wait(interval)
-				callback(interval)
-			until interval == -1
-			self[id] = nil
-		end)
-		return id
+---@param callback function
+---@param interval? number
+---@param ... any
+function SetInterval(callback, interval, ...)
+	interval = interval or 0
+	assert(type(interval) == 'number', ('Interval must be a number. Received %s'):format(tostring(interval)))
+	local cbType = type(callback)
+
+	if cbType == 'number' and intervals[callback] then
+		intervals[callback] = interval or 0
+		return
 	end
-})
+
+	assert(cbType == 'function', ('Callback must be a function. Received %s'):format(tostring(cbType)))
+	local id
+	local args = {...}
+
+	Citizen.CreateThreadNow(function(ref)
+		id = ref
+		intervals[id] = interval or 0
+		repeat
+			interval = intervals[id]
+			Wait(interval)
+			callback(table.unpack(args))
+		until interval < 0
+		intervals[id] = nil
+	end)
+
+	return id
+end
 
 function ClearInterval(id)
-	if SetInterval[id] then
-		SetInterval[id] = -1
-	end
+	assert(type(id) == 'number', ('Interval id must be a number. Received %s'):format(tostring(id)))
+	assert(intervals[id], ('No interval exists with id %s'):format(id))
+	intervals[id] = -1
 end
 
 -- pe-lualib

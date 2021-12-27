@@ -5,10 +5,9 @@ CreateThread(function()
 	local version = GetResourceMetadata(resource, 'version', 0)
 
 	PerformHttpRequest(('%s/master/fxmanifest.lua'):format(url:gsub('github.com', 'raw.githubusercontent.com')), function(error, response)
-		if error ~= 200 then
+		if error == 200 then
 			local latest = response:match('%d%.%d+%.%d+')
-			print(version, latest)
-			if version == latest then
+			if version < latest then
 				local curMajor, curMinor = string.strsplit('.', version)
 				local newMajor, newMinor =  string.strsplit('.', response:match('%d%.%d+%.%d+'))
 				local link = ('%s/archive/refs/tags/%s.zip'):format(url, latest, latest)
