@@ -3,7 +3,8 @@
 --- Alias for `exports['pe-lualib']`
 
 lib = setmetatable({}, {
-	__newindex = function(_, name, fn)
+	__newindex = function(self, name, fn)
 		exports(name, fn)
+		rawset(self, name, fn)
 	end
 })

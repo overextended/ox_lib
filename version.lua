@@ -5,22 +5,10 @@ CreateThread(function()
 	local version = GetResourceMetadata(resource, 'version', 0)
 
 	PerformHttpRequest(('%s/master/fxmanifest.lua'):format(url:gsub('github.com', 'raw.githubusercontent.com')), function(error, response)
-		if error == 200 then
+		if error == 200 and response then
 			local latest = response:match('%d%.%d+%.%d+')
 			if version < latest then
-				local curMajor, curMinor = string.strsplit('.', version)
-				local newMajor, newMinor =  string.strsplit('.', response:match('%d%.%d+%.%d+'))
-				local link = ('%s/archive/refs/tags/%s.zip'):format(url, latest, latest)
-
-				if tonumber(curMajor) < tonumber(newMajor) then
-					latest = 'A major update'
-				elseif tonumber(curMinor) < tonumber(newMinor) then
-					latest = 'An update'
-				else
-					latest = 'A patch'
-				end
-
-				print(('^3%s is available for oxmysql - please download the latest release (current version: %s)\n   ^3- %s^0'):format(latest, version, link))
+				print(('^3An update is available for pe-lualib - please download the latest release (current version: %s)\n   ^3- %s^0'):format(latest, version, ('%s/archive/refs/tags/%s.zip'):format(url, latest, latest)))
 			end
 		end
 	end, 'GET')
