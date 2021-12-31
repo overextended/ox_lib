@@ -6,10 +6,10 @@ local ServerCallback = {}
 	ServerCallback.Register = function(name, callback)
 		name = ('__cb_%s:%s'):format(GetCurrentResourceName(), name)
 
-		RegisterServerEvent(name, function(...)
+		RegisterServerEvent(name, function(id, ...)
 			local source = source
 			callback(source, function(...)
-				TriggerClientEvent(name, source, ...)
+				TriggerClientEvent(name..id, source, ...)
 			end, ...)
 		end)
 	end
