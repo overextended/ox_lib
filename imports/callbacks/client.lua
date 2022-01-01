@@ -29,8 +29,8 @@ local ServerCallback = table.create(0, 2)
 ServerCallback.Await = function(resource, event, delay, ...)
 	if callbackTimer(event, delay) then
 		local promise = promise.new()
-		event = RegisterNetEvent(startCallback(resource, event, ...), function(...)
-			promise:resolve({...})
+		event = RegisterNetEvent(startCallback(resource, event, ...), function(response)
+			promise:resolve(response)
 			RemoveEventHandler(event)
 		end)
 		return table.unpack(Citizen.Await(promise))
@@ -44,8 +44,8 @@ end
 --- Sends an event to the server and triggers a callback function once the response is returned.
 ServerCallback.Async = function(resource, event, delay, cb, ...)
 	if callbackTimer(event, delay) then
-		event = RegisterNetEvent(startCallback(resource, event, ...), function(...)
-			cb(...)
+		event = RegisterNetEvent(startCallback(resource, event, ...), function(response)
+			cb(table.unpack(response))
 			RemoveEventHandler(event)
 		end)
 	end
