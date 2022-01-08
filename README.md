@@ -72,6 +72,15 @@ CreateThread(function()
     print(a, b) -- 'hello there', 'general kenobi'
 end)
 ```
+### Intervals
+
+```lua
+local ontick = SetInterval(function(...)
+    print(...)
+end, 0, 'arg1', 'arg2')
+
+ClearInterval(ontick)
+```
 
 
 <br><h2>License</h2>
