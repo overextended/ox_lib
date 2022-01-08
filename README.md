@@ -72,7 +72,7 @@ CreateThread(function()
     print(a, b) -- 'hello there', 'general kenobi'
 end)
 ```
-###Intervals
+### Intervals
 
 ```lua
 local ontick = SetInterval(function(...)
