@@ -10,6 +10,8 @@ Once loaded, any resource can use simple in-line declarations to load anything f
 local ServerCallback = import 'callbacks'
 ```
 
+Refer to the [wiki](https://github.com/project-error/pe-lualib/wiki) for more information on usage.
+
 
 If you don't want to use this resource, but want to reuse code you are permitted to do so under the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).  
 Any resources distributed with this code is subject to the same license restrictions and must be made available under the same license ([more below](#license)).
@@ -31,56 +33,6 @@ Any resources distributed with this code is subject to the same license restrict
 #### Native wrappers
 Likely to be handled as exports rather than imports, handling things such as entity creation, blips, markers, etc.  
 Anything that is capable of OneSync RPC's is prioritised over direct client functions.  
-
-#### Compatibility wrappers
-Setup imports for ESX and QBCore compatibility with certain tables, functions, and events; this should only be for important framework features, i.e
-- PlayerData / xPlayer / QBPlayer
-- GetPlayers / GetExtendedPlayers / GetQBPlayers
-
-<br>
-
-## Usage
-Resources are required to utilise Lua 5.4 to ensure compatibility.  
-Any scripts must be loaded _after_ initialising the shared import.
-```lua
-lua54 'yes'
-shared_script '@pe-lualib/init.lua'
-```
-
-### ServerCallbacks
-- server.lua
-```lua
-local ServerCallback = import 'callbacks'
-
--- Registers a server event with the name __cb_resourceName:eventName
-ServerCallback.Register('eventName', function(source, cb, data)
-    cb(data, 'general kenobi')
-end)
-```
-- client.lua
-```lua
-local ServerCallback = import 'callbacks'
-
--- Trigger the server event and receive a callback function
-ServerCallback.Async('resourceName', 'eventName', 100, function(a, b)
-    print(a, b) -- 'hello there', 'general kenobi'
-end, 'hello there')
-
--- Trigger the server event and await a promise
-CreateThread(function()
-    local a, b = ServerCallback.Await('resourceName', 'eventName', 100, 'hello there')
-    print(a, b) -- 'hello there', 'general kenobi'
-end)
-```
-### Intervals
-
-```lua
-local ontick = SetInterval(function(...)
-    print(...)
-end, 0, 'arg1', 'arg2')
-
-ClearInterval(ontick)
-```
 
 
 <br><h2>License</h2>
