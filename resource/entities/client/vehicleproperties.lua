@@ -109,6 +109,16 @@ function lib.getVehicleProperties(vehicle)
 			modDoorR = GetVehicleMod(vehicle, 47),
 			modLivery = modLivery,
 			modLightbar = GetVehicleMod(vehicle, 49),
+			windows = {
+				IsVehicleWindowIntact(vehicle, 0),
+				IsVehicleWindowIntact(vehicle, 1),
+				IsVehicleWindowIntact(vehicle, 2),
+				IsVehicleWindowIntact(vehicle, 3),
+				IsVehicleWindowIntact(vehicle, 4),
+				IsVehicleWindowIntact(vehicle, 5),
+				IsVehicleWindowIntact(vehicle, 6),
+				IsVehicleWindowIntact(vehicle, 7),
+			}
 		}
 	end
 end
@@ -121,6 +131,7 @@ function lib.setVehicleProperties(vehicle, props)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 
 		SetVehicleModKit(vehicle, 0)
+		SetVehicleAutoRepairDisabled(vehicle, true)
 
 		if props.plate then
 			SetVehicleNumberPlateText(vehicle, props.plate)
@@ -199,6 +210,14 @@ function lib.setVehicleProperties(vehicle, props)
 		if props.extras then
 			for id, state in pairs(props.extras) do
 				SetVehicleExtra(vehicle, id, state)
+			end
+		end
+
+		if props.windows then
+			for i = 1, #props.windows do
+				if props.windows[i] then
+					SmashVehicleWindow(vehicle, i - 1)
+				end
 			end
 		end
 
