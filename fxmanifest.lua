@@ -42,12 +42,14 @@ files {
 shared_script 'resource/main.lua'
 
 client_scripts {
-    'resource/**/client.lua'
+    'resource/**/client.lua',
+    'resource/**/client/*.lua'
 }
 
 server_scripts {
 	'version.lua',
-    'resource/**/server.lua'
+    'resource/**/server.lua',
+    'resource/**/server/*.lua'
 }
 
 provide 'lualib'
