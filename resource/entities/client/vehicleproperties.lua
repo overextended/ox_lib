@@ -114,6 +114,14 @@ function lib.getVehicleProperties(vehicle)
 				IsVehicleWindowIntact(vehicle, 1),
 				IsVehicleWindowIntact(vehicle, 2),
 				IsVehicleWindowIntact(vehicle, 3)
+			},
+			doors = {
+				GetIsDoorValid(vehicle, 0),
+				GetIsDoorValid(vehicle, 1),
+				GetIsDoorValid(vehicle, 2),
+				GetIsDoorValid(vehicle, 3),
+				GetIsDoorValid(vehicle, 4),
+				GetIsDoorValid(vehicle, 5)
 			}
 		}
 	end
@@ -213,6 +221,14 @@ function lib.setVehicleProperties(vehicle, props)
 			for i = 1, #props.windows do
 				if not props.windows[i] then
 					SmashVehicleWindow(vehicle, i - 1)
+				end
+			end
+		end
+
+		if props.doors then
+			for i = 1, #props.doors do
+				if props.doors[i] then
+					SetVehicleDoorBroken(vehicle, i - 1, true)
 				end
 			end
 		end
