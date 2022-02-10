@@ -122,6 +122,24 @@ function lib.getVehicleProperties(vehicle)
 				GetIsDoorValid(vehicle, 3),
 				GetIsDoorValid(vehicle, 4),
 				GetIsDoorValid(vehicle, 5)
+			},
+			tyres = {
+				flat = {
+					IsVehicleTyreBurst(vehicle, 0, false),
+					IsVehicleTyreBurst(vehicle, 1, false),
+					IsVehicleTyreBurst(vehicle, 2, false),
+					IsVehicleTyreBurst(vehicle, 3, false),
+					IsVehicleTyreBurst(vehicle, 4, false),
+					IsVehicleTyreBurst(vehicle, 5, false)
+				},
+				rim = {
+					IsVehicleTyreBurst(vehicle, 0, true),
+					IsVehicleTyreBurst(vehicle, 1, true),
+					IsVehicleTyreBurst(vehicle, 2, true),
+					IsVehicleTyreBurst(vehicle, 3, true),
+					IsVehicleTyreBurst(vehicle, 4, true),
+					IsVehicleTyreBurst(vehicle, 5, true)
+				}
 			}
 		}
 	end
@@ -232,6 +250,24 @@ function lib.setVehicleProperties(vehicle, props)
 				end
 			end
 		end
+
+		if props.tyres then
+			if props.tyres.flat then
+				for i = 1, #props.tyres.flat do
+					if props.tyres.flat[i] then
+						SetVehicleTyreBurst(vehicle, i - 1, false, 1000.0)
+					end
+				end
+			end
+
+			if props.tyres.rim then
+				for i = 1, #props.tyres.rim do
+					if props.tyres.rim[i] then
+						SetVehicleTyreBurst(vehicle, i - 1, true)
+					end
+				end
+			end
+ 		end
 
 		if props.neonColor then
 			SetVehicleNeonLightsColour(vehicle, props.neonColor[1], props.neonColor[2], props.neonColor[3])
