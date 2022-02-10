@@ -113,11 +113,7 @@ function lib.getVehicleProperties(vehicle)
 				IsVehicleWindowIntact(vehicle, 0),
 				IsVehicleWindowIntact(vehicle, 1),
 				IsVehicleWindowIntact(vehicle, 2),
-				IsVehicleWindowIntact(vehicle, 3),
-				IsVehicleWindowIntact(vehicle, 4),
-				IsVehicleWindowIntact(vehicle, 5),
-				IsVehicleWindowIntact(vehicle, 6),
-				IsVehicleWindowIntact(vehicle, 7),
+				IsVehicleWindowIntact(vehicle, 3)
 			}
 		}
 	end
