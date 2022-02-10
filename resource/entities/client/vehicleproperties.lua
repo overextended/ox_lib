@@ -215,7 +215,7 @@ function lib.setVehicleProperties(vehicle, props)
 
 		if props.windows then
 			for i = 1, #props.windows do
-				if props.windows[i] then
+				if not props.windows[i] then
 					SmashVehicleWindow(vehicle, i - 1)
 				end
 			end
