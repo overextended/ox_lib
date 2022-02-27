@@ -30,6 +30,46 @@ function lib.getVehicleProperties(vehicle)
 			modLivery = GetVehicleMod(vehicle, 48)
 		end
 
+		local damage = {
+			windows = {},
+			doors = {},
+			tyres = {},
+		}
+
+		local windows = 0
+
+		for i = 0, 7 do
+			if not IsVehicleWindowIntact(vehicle, i) then
+				windows += 1
+				damage.windows[windows] = i
+			end
+		end
+
+		local doors = 0
+
+		for i = 0, 5 do
+			if IsVehicleDoorDamaged(vehicle, i) then
+				doors += 1
+				damage.doors[doors] = i
+			end
+		end
+
+		for i = 0, 5 do
+			if IsVehicleTyreBurst(vehicle, i, true) then
+				damage.tyres[i] = IsVehicleTyreBurst(vehicle, i, false) and 2 or 1
+			end
+		end
+
+		local neons = {}
+		local neonCount = 0
+
+		for i = 0, 3 do
+			if IsVehicleNeonLightEnabled(vehicle, i) then
+				neonCount += 1
+				neons[neonCount] = i
+			end
+		end
+
 		return {
 			model = GetEntityModel(vehicle),
 			plate = GetVehicleNumberPlateText(vehicle),
@@ -48,12 +88,7 @@ function lib.getVehicleProperties(vehicle)
 			wheels = GetVehicleWheelType(vehicle),
 			windowTint = GetVehicleWindowTint(vehicle),
 			xenonColor = GetVehicleXenonLightsColour(vehicle),
-			neonEnabled = {
-				IsVehicleNeonLightEnabled(vehicle, 0),
-				IsVehicleNeonLightEnabled(vehicle, 1),
-				IsVehicleNeonLightEnabled(vehicle, 2),
-				IsVehicleNeonLightEnabled(vehicle, 3)
-			},
+			neonEnabled = neons,
 			neonColor = {GetVehicleNeonLightsColour(vehicle)},
 			extras = extras,
 			tyreSmokeColor = {GetVehicleTyreSmokeColor(vehicle)},
@@ -109,16 +144,13 @@ function lib.getVehicleProperties(vehicle)
 			modDoorR = GetVehicleMod(vehicle, 47),
 			modLivery = modLivery,
 			modLightbar = GetVehicleMod(vehicle, 49),
-			windows = {
-				IsVehicleWindowIntact(vehicle, 0),
-				IsVehicleWindowIntact(vehicle, 1),
-				IsVehicleWindowIntact(vehicle, 2),
-				IsVehicleWindowIntact(vehicle, 3),
-				IsVehicleWindowIntact(vehicle, 4),
-				IsVehicleWindowIntact(vehicle, 5),
-				IsVehicleWindowIntact(vehicle, 6),
-				IsVehicleWindowIntact(vehicle, 7),
-			}
+			windows = damage.windows,
+			doors = damage.doors,
+			tyres = damage.tyres,
+			leftHeadlight = damage.leftHeadlight,
+			rightHeadlight = damage.rightHeadlight,
+			frontBumper = damage.frontBumper,
+			rearBumper = damage.rearBumper,
 		}
 	end
 end
@@ -203,7 +235,7 @@ function lib.setVehicleProperties(vehicle, props)
 
 		if props.neonEnabled then
 			for i = 1, #props.neonEnabled do
-				SetVehicleNeonLightEnabled(vehicle, i - 1, props.neonEnabled[i])
+				SetVehicleNeonLightEnabled(vehicle, props.neonEnabled[i], true)
 			end
 		end
 
@@ -215,8 +247,22 @@ function lib.setVehicleProperties(vehicle, props)
 
 		if props.windows then
 			for i = 1, #props.windows do
-				if props.windows[i] then
-					SmashVehicleWindow(vehicle, i - 1)
+				SmashVehicleWindow(vehicle, props.windows[i])
+			end
+		end
+
+		if props.doors then
+			for i = 1, #props.doors do
+				SetVehicleDoorBroken(vehicle, props.windows[i], false)
+			end
+		end
+
+		if props.tyres then
+			for tyre, state in pairs(props.tyres) do
+				if state == 1 then
+					SetVehicleTyreBurst(vehicle, tyre, false, 1000.0)
+				else
+					SetVehicleTyreBurst(vehicle, tyre, true)
 				end
 			end
 		end
