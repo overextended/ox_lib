@@ -27,7 +27,7 @@ local function loadFile(self, module)
 
 	if chunk then
 		local err
-		chunk, err = load(chunk, ('@@pe-lualib/%s/%s.lua'):format(module, file), 't')
+		chunk, err = load(chunk, ('@@pe-lualib/%s/%s.lua'):format(module, file))
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
@@ -61,14 +61,13 @@ import = setmetatable({}, {
 	end
 })
 
-lib = setmetatable({}, {
-	__index = function(self, method)
-		local export = exports[lualib][method]
-		rawset(self, method, function(...)
-			return export(nil, ...)
-		end)
+local export = exports[lualib]
 
-		return self[method]
+lib = setmetatable({}, {
+	__index = function(_, method)
+		return function(...)
+			return export[method](nil, ...)
+		end
 	end,
 
 	__newindex = function()
@@ -87,7 +86,7 @@ local intervals = {}
 ---@param ... any
 function SetInterval(callback, interval, ...)
 	interval = interval or 0
-	assert(type(interval) == 'number', ('Interval must be a number. Received %s'):format(tostring(interval)))
+	assert(type(interval) == 'number', ('Interval must be a number. Received %s'):format(json.encode(interval)))
 	local cbType = type(callback)
 
 	if cbType == 'number' and intervals[callback] then
@@ -114,7 +113,7 @@ function SetInterval(callback, interval, ...)
 end
 
 function ClearInterval(id)
-	assert(type(id) == 'number', ('Interval id must be a number. Received %s'):format(tostring(id)))
+	assert(type(id) == 'number', ('Interval id must be a number. Received %s'):format(json.encode(id)))
 	assert(intervals[id], ('No interval exists with id %s'):format(id))
 	intervals[id] = -1
 end
