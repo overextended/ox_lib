@@ -16,7 +16,7 @@ local rawget = rawget
 local rawset = rawset
 local LoadResourceFile = LoadResourceFile
 
-local function loadFile(self, module)
+local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
 	local chunk = LoadResourceFile(lualib, ('%s/%s.lua'):format(dir, file))
 	local shared = LoadResourceFile(lualib, ('%s/shared.lua'):format(dir))
@@ -34,41 +34,39 @@ local function loadFile(self, module)
 			rawset(self, module, chunk())
 			return self[module]
 		end
-	else error(('\n^3Unable to import module (%s)^0'):format(dir), 3) end
+	end
 end
-
---- Loads a module from the library.
---- If the module has already been loaded then it will reference the existing chunk.
----@param file string
----@return table
-local function getImport(self, file)
-	local import = rawget(self, file)
-	return import and import or loadFile(self, file)
-end
-
 
 -----------------------------------------------------------------------------------------------
 -- API
 -----------------------------------------------------------------------------------------------
 
-import = setmetatable({}, {
-	__index = getImport,
+local function call(self, index, ...)
+	local module = rawget(self, index)
+	if not module then
+		module = loadModule(self, index)
 
-	__call = getImport,
+		if not module then
+			local function method(...)
+				return exports[lualib][index](nil, ...)
+			end
 
-	__newindex = function()
-		error('Cannot set index on import')
-	end
-})
+			if not ... then
+				rawset(self, index, method)
+			end
 
-local export = exports[lualib]
-
-lib = setmetatable({}, {
-	__index = function(_, method)
-		return function(...)
-			return export[method](nil, ...)
+			return method
 		end
-	end,
+	end
+
+	return module
+end
+
+lib = setmetatable({
+	exports = {},
+}, {
+	__index = call,
+	__call = call,
 
 	__newindex = function()
 		error('Cannot set index on lib')
@@ -78,6 +76,7 @@ lib = setmetatable({}, {
 		return lualib
 	end,
 })
+import = lib
 
 local intervals = {}
 --- Dream of a world where this PR gets accepted.
