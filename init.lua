@@ -2,19 +2,18 @@ if not _VERSION:find('5.4') then
 	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 3)
 end
 
-
 -----------------------------------------------------------------------------------------------
 -- Module
 -----------------------------------------------------------------------------------------------
 
 -- env
 local lualib = 'ox_lib'
-local file = IsDuplicityVersion() and 'server' or 'client'
 
 -- micro-optimise
-local rawget = rawget
-local rawset = rawset
 local LoadResourceFile = LoadResourceFile
+local file = IsDuplicityVersion() and 'server' or 'client'
+local rawset = rawset
+local rawget = rawget
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
