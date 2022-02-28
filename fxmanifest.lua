@@ -1,4 +1,4 @@
--- pe-lualib
+-- ox_lib
 -- Copyright (C) 2021	Linden <https://github.com/thelindat>
 
 -- This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,10 @@ lua54        'yes'
 game         'gta5'
 
 --[[ Resource Information ]]--
-name         'pe-lualib'
+name         'ox_lib'
 author       'Linden'
 version      '1.4.0'
-repository   'https://github.com/project-error/pe-lualib'
+repository   'https://github.com/overextended/ox_lib'
 description  'A library of shared functions to utilise in other resources.'
 
 [[ Manifest ]]--
@@ -47,9 +47,8 @@ client_scripts {
 }
 
 server_scripts {
-	'version.lua',
     'resource/**/server.lua',
     'resource/**/server/*.lua'
 }
 
-provide 'lualib'
+provide 'pe-lualib'

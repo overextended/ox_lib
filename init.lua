@@ -8,7 +8,7 @@ end
 -----------------------------------------------------------------------------------------------
 
 -- env
-local lualib = 'pe-lualib'
+local lualib = 'ox_lib'
 local file = IsDuplicityVersion() and 'server' or 'client'
 
 -- micro-optimise
@@ -27,7 +27,7 @@ local function loadFile(self, module)
 
 	if chunk then
 		local err
-		chunk, err = load(chunk, ('@@pe-lualib/%s/%s.lua'):format(module, file))
+		chunk, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, file))
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
@@ -118,7 +118,7 @@ function ClearInterval(id)
 	intervals[id] = -1
 end
 
--- pe-lualib
+-- ox_lib
 -- Copyright (C) 2021	Linden <https://github.com/thelindat>
 
 -- This program is free software: you can redistribute it and/or modify
