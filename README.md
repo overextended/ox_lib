@@ -1,43 +1,25 @@
-## WIP Lua Library
+## Lua Library for FiveM
 FXServer provides its own system for including files, which we use to load this resource in the fxmanifest via
 ```lua
-shared_script '@pe-lualib/init.lua'
+shared_script '@ox_lib/init.lua'
 ```
 
 
-Once loaded, any resource can use simple in-line declarations to load anything from the imports folder, i.e
+Once loaded, any resource can call exports or load modules with the `lib` keyword, i.e.
 ```lua
-local ServerCallback = import 'callbacks'
+lib.callbacks.Register(...)
 ```
 
-Refer to the [wiki](https://github.com/project-error/pe-lualib/wiki) for more information on usage.
+Modules are loaded into the environment of the invoking resource, unlike exports which are called via function reference.
 
 
 If you don't want to use this resource, but want to reuse code you are permitted to do so under the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).  
 Any resources distributed with this code is subject to the same license restrictions and must be made available under the same license ([more below](#license)).
 
-#### Currently implemented
-- [x] Server callbacks
-- [x] Table utilities
-- [x] Streaming exports
-- [x] SetInterval
-
-#### To do
-- Think of more features
-- Improvements to import function?
-- Improve table utilities (matches only work if the order is the same)
-- Transfer non-essential code from ox inventory
-- Entity iterators
-- Exports for non-runtime critical functions
-
-#### Native wrappers
-Likely to be handled as exports rather than imports, handling things such as entity creation, blips, markers, etc.  
-Anything that is capable of OneSync RPC's is prioritised over direct client functions.  
-
 
 <br><h2>License</h2>
 <table><tr><td>
-pe-lualib  
+ox_lib
 
 Copyright (C) 2021	Linden <https://www.github.com/thelindat>
 
