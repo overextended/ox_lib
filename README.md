@@ -5,6 +5,9 @@ shared_script '@ox_lib/init.lua'
 ```
 
 
+<div align='center'><h3><a href='https://overextended.github.io/docs/'>Documentation</a></h3></div>
+
+
 Once loaded, any resource can call exports or load modules with the `lib` keyword, i.e.
 ```lua
 lib.callbacks.Register(...)
