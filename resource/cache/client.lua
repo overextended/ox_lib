@@ -1,17 +1,4 @@
 local cache = {}
-local player = LocalPlayer.state
-local states = {
-	['vehicle'] = true,
-	['driver'] = true
-}
-
-function cache:set(key, value)
-	if value ~= self[key] then
-		self[key] = value
-
-		if states[key] then player:set(key, value, false) end
-	end
-end
 
 function cache:getPed()
 	local ped = PlayerPedId()
@@ -23,9 +10,7 @@ end
 function cache:getVehicle()
 	local vehicle = GetVehiclePedIsIn(self.ped, false)
 	if vehicle > 0 then
-		if vehicle ~= self.vehicle then
-			self:set('vehicle', vehicle)
-
+		if self:set('vehicle', vehicle) then
 			if GetPedInVehicleSeat(vehicle, -1) == self.ped then
 				self:set('driver', true)
 			else
@@ -36,14 +21,26 @@ function cache:getVehicle()
 end
 
 function cache:onFoot()
+	-- todo
 	-- print('on foot')
 end
 
 function cache:inVehicle()
+	-- todo
 	if self.driver then
 		-- print('driving vehicle')
 	else
 		-- print('in vehicle')
+	end
+end
+
+local update = {}
+
+function cache:set(key, value)
+	if value ~= self[key] then
+		self[key] = value
+		update[key] = value
+		return true
 	end
 end
 
@@ -52,12 +49,21 @@ CreateThread(function()
 		cache:getPed()
 		cache:getVehicle()
 
-		if not cache.vehicle then
-			cache:onFoot()
-		else
-			cache:inVehicle()
+		-- if not cache.vehicle then
+		-- 	cache:onFoot()
+		-- else
+		-- 	cache:inVehicle()
+		-- end
+
+		if cache.update then
+			TriggerEvent('lualib:updateCache', update)
+			table.wipe(update)
 		end
 
 		Wait(100)
 	end
 end)
+
+function lib.cache(key)
+	return cache[key]
+end
