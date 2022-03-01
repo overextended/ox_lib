@@ -80,6 +80,11 @@ end
 
 lib = setmetatable({
 	exports = {},
+	onCache = setmetatable({}, {
+		__call = function(self, key, cb)
+			self[key] = cb
+		end
+	})
 }, {
 	__index = call,
 	__call = call,
@@ -181,9 +186,11 @@ end)
 
 AddEventHandler('lualib:updateCache', function(data)
 	for key, value in pairs(data) do
-		if cache[key] ~= nil then
-			cache[key] = value
+		if lib.onCache[key] then
+			lib.onCache[key](value, cache[key])
 		end
+
+		cache[key] = value
 	end
 end)
 
