@@ -152,7 +152,7 @@ local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
 
 local cache_mt = {
 	__index = function(self, key)
-		return rawset(self, key, exports[lualib]['cache'](nil, key) or false)
+		return rawset(self, key, exports[lualib]['cache'](nil, key) or false)[key]
 	end,
 
 	__call = function(self)
@@ -186,11 +186,11 @@ end)
 
 AddEventHandler('lualib:updateCache', function(data)
 	for key, value in pairs(data) do
-		if lib.onCache[key] then
-			lib.onCache[key](value, cache[key])
-		end
-
 		cache[key] = value
+
+		if lib.onCache[key] then
+			lib.onCache[key](value)
+		end
 	end
 end)
 
