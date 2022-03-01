@@ -1,3 +1,20 @@
+
+-- ox_lib
+-- Copyright (C) 2021	Linden <https://github.com/thelindat>
+
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+
+-- You should have received a copy of the GNU General Public License
+-- along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>
+
 if not _VERSION:find('5.4') then
 	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 3)
 end
@@ -75,7 +92,6 @@ lib = setmetatable({
 		return lualib
 	end,
 })
-import = lib
 
 local intervals = {}
 --- Dream of a world where this PR gets accepted.
@@ -116,18 +132,59 @@ function ClearInterval(id)
 	intervals[id] = -1
 end
 
--- ox_lib
--- Copyright (C) 2021	Linden <https://github.com/thelindat>
 
--- This program is free software: you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation, either version 3 of the License, or
--- (at your option) any later version.
+-----------------------------------------------------------------------------------------------
+-- Cache
+-----------------------------------------------------------------------------------------------
 
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
+local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
+	__index = function()
+		return true
+	end
+}) or {
+	groups = GetResourceState('ox_groups') ~= 'missing',
+}
 
--- You should have received a copy of the GNU General Public License
--- along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>
+local cache_mt = {
+	__index = function(self, key)
+		return rawset(self, key, exports[lualib]['cache'](nil, key) or false)
+	end,
+
+	__call = function(self)
+		table.wipe(self)
+
+		if IsDuplicityVersion then
+
+		else
+			self.playerId = PlayerId()
+		end
+
+		if ox.groups then
+			self.groups = setmetatable({}, {
+				__index = function(groups, index)
+					groups[index] = GlobalState['group:'..index]
+					return groups[index]
+				end
+			})
+		end
+	end
+}
+
+local cache = setmetatable({}, cache_mt)
+
+Citizen.CreateThreadNow(function()
+	while true do
+		cache()
+		Wait(60000)
+	end
+end)
+
+AddEventHandler('lualib:updateCache', function(data)
+	for key, value in pairs(data) do
+		if cache[key] ~= nil then
+			cache[key] = value
+		end
+	end
+end)
+
+_ENV.cache = cache
