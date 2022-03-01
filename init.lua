@@ -158,7 +158,7 @@ local cache_mt = {
 	__call = function(self)
 		table.wipe(self)
 
-		if IsDuplicityVersion then
+		if file == 'server' then
 
 		else
 			self.playerId = PlayerId()
