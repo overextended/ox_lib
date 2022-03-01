@@ -11,13 +11,18 @@ function cache:getVehicle()
 	local vehicle = GetVehiclePedIsIn(self.ped, false)
 	if vehicle > 0 then
 		if self:set('vehicle', vehicle) then
-			if GetPedInVehicleSeat(vehicle, -1) == self.ped then
-				self:set('driver', true)
-			else
-				self:set('driver', false)
+			local seats = GetVehicleMaxNumberOfPassengers(vehicle) - 1
+			local GetPedInVehicleSeat = GetPedInVehicleSeat
+			for i = -1, seats do
+				if GetPedInVehicleSeat(vehicle, i) == self.ped then
+					return self:set('seat', i)
+				end
 			end
 		end
-	else self:set('vehicle', nil) end
+	else
+		self:set('vehicle', false)
+		self:set('seat', false)
+	end
 end
 
 function cache:onFoot()
@@ -55,7 +60,7 @@ CreateThread(function()
 		-- 	cache:inVehicle()
 		-- end
 
-		if cache.update then
+		if next(update) then
 			TriggerEvent('lualib:updateCache', update)
 			table.wipe(update)
 		end
