@@ -1,12 +1,5 @@
 local cache = {}
 
-function cache:getPed()
-	local ped = PlayerPedId()
-	if ped ~= self.ped then
-		self.ped = ped
-	end
-end
-
 function cache:getVehicle()
 	local vehicle = GetVehiclePedIsIn(self.ped, false)
 	if vehicle > 0 then
@@ -51,7 +44,7 @@ end
 
 CreateThread(function()
 	while true do
-		cache:getPed()
+		cache:set('ped', PlayerPedId())
 		cache:getVehicle()
 
 		-- if not cache.vehicle then
