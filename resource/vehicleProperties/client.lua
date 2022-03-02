@@ -55,8 +55,8 @@ function lib.getVehicleProperties(vehicle)
 		end
 
 		for i = 0, 5 do
-			if IsVehicleTyreBurst(vehicle, i, true) then
-				damage.tyres[i] = IsVehicleTyreBurst(vehicle, i, false) and 2 or 1
+			if IsVehicleTyreBurst(vehicle, i, false) then
+				damage.tyres[i] = IsVehicleTyreBurst(vehicle, i, true) and 2 or 1
 			end
 		end
 

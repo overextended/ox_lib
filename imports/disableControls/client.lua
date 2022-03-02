@@ -1,11 +1,11 @@
 --- Call on frame to disable all stored keys.
 --- ```
---- DisableControlActions()
+--- disableControls()
 --- ```
-local DisableControlActions = {}
+local disableControls = {}
 
 ---@param ... number
-function DisableControlActions:Add(...)
+function disableControls:Add(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do
 		local key = keys[i]
@@ -18,7 +18,7 @@ function DisableControlActions:Add(...)
 end
 
 ---@param ... number
-function DisableControlActions:Remove(...)
+function disableControls:Remove(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do
 		local key = keys[i]
@@ -32,22 +32,22 @@ function DisableControlActions:Remove(...)
 end
 
 ---@param ... number
-function DisableControlActions:Clear(...)
+function disableControls:Clear(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do
 		self[keys[i]] = nil
 	end
 end
 
-local Keys = {}
+local keys = {}
 local DisableControlAction = DisableControlAction
 local pairs = pairs
 
-return setmetatable(DisableControlActions, {
-	__index = Keys,
-	__newindex = Keys,
+return setmetatable(disableControls, {
+	__index = keys,
+	__newindex = keys,
 	__call = function()
-		for k in pairs(Keys) do
+		for k in pairs(keys) do
 			DisableControlAction(0, k, true)
 		end
 	end

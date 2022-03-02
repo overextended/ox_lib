@@ -23,11 +23,11 @@ game         'gta5'
 --[[ Resource Information ]]--
 name         'ox_lib'
 author       'Linden'
-version      '1.5.0'
+version      '2.0.0'
 repository   'https://github.com/overextended/ox_lib'
 description  'A library of shared functions to utilise in other resources.'
 
-[[ Manifest ]]--
+--[[ Manifest ]]--
 dependencies {
 	'/server:5104',
     '/onesync',
