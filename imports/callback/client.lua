@@ -43,7 +43,7 @@ function callback.await(event, delay, ...)
 end
 
 return setmetatable(callback, {
-	__call = function(event, delay, cb, ...)
+	__call = function(self, event, delay, cb, ...)
 		if callbackTimer(event, delay) then
 			event = RegisterNetEvent(triggerCallback(event, ...), function(response)
 				cb(table.unpack(response))
