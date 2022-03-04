@@ -1,19 +1,17 @@
+<div align='center'><h1><a href='https://overextended.github.io/docs/'>Documentation</a></h3></div>
+<br>
+
 ## Lua Library for FiveM
 FXServer provides its own system for including files, which we use to load this resource in the fxmanifest via
 ```lua
 shared_script '@ox_lib/init.lua'
 ```
 
-
-<div align='center'><h3><a href='https://overextended.github.io/docs/'>Documentation</a></h3></div>
-
-
-Once loaded, any resource can call exports or load modules with the `lib` keyword, i.e.
-```lua
-lib.callbacks.Register(...)
+### server.cfg
 ```
-
-Modules are loaded into the environment of the invoking resource, unlike exports which are called via function reference.
+add_ace resource.ox_lib command.add_principal allow
+add_ace resource.ox_lib command.remove_principal allow
+```
 
 
 If you don't want to use this resource, but want to reuse code you are permitted to do so under the [license terms](https://www.gnu.org/licenses/gpl-3.0.html).  
