@@ -16,17 +16,19 @@
 -- along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>
 
 if not _VERSION:find('5.4') then
-	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 3)
+	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
+end
+
+local lualib = 'ox_lib'
+
+if not GetResourceState(lualib):find('start') then
+	error('^1ox_lib should be started before this resource^0', 2)
 end
 
 -----------------------------------------------------------------------------------------------
 -- Module
 -----------------------------------------------------------------------------------------------
 
--- env
-local lualib = 'ox_lib'
-
--- micro-optimise
 local LoadResourceFile = LoadResourceFile
 local file = IsDuplicityVersion() and 'server' or 'client'
 local rawset = rawset
