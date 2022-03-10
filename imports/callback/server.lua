@@ -1,7 +1,7 @@
 local callback = {}
 
 ---@param name string
----@param callback function
+---@param cb function
 --- Registers an event handler and callback function to respond to client requests.
 function callback.register(name, cb)
 	name = ('__cb_%s'):format(name)
