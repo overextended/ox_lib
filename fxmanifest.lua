@@ -33,10 +33,14 @@ dependencies {
     '/onesync',
 }
 
+ui_page 'web/build/index.html'
+
 files {
     'init.lua',
     'imports/**/client.lua',
     'imports/**/shared.lua',
+    'web/build/index.html',
+    'web/build/**/*'
 }
 
 shared_script 'resource/main.lua'
