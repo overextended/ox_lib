@@ -186,7 +186,7 @@ Citizen.CreateThreadNow(function()
 	end
 end)
 
-AddEventHandler('lualib:updateCache', function(data)
+AddEventHandler('ox_lib:updateCache', function(data)
 	for key, value in pairs(data) do
 		cache[key] = value
 

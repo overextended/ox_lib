@@ -54,7 +54,7 @@ CreateThread(function()
 		-- end
 
 		if next(update) then
-			TriggerEvent('lualib:updateCache', update)
+			TriggerEvent('ox_lib:updateCache', update)
 			table.wipe(update)
 		end
 

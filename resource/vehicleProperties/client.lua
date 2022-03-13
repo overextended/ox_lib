@@ -1,4 +1,4 @@
-RegisterNetEvent('lualib:setVehicleProperties', function(netid, data)
+RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
 	lib.setVehicleProperties(NetToVeh(netid), data)
 end)
 
