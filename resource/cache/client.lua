@@ -43,15 +43,21 @@ function cache:set(key, value)
 end
 
 CreateThread(function()
+	local num = 1
 	while true do
+		num += 1
 		cache:set('ped', PlayerPedId())
-		cache:getVehicle()
 
-		-- if not cache.vehicle then
-		-- 	cache:onFoot()
-		-- else
-		-- 	cache:inVehicle()
-		-- end
+		if num > 1 then
+			cache.coords = GetEntityCoords(cache.ped)
+			cache:getVehicle()
+			-- if not cache.vehicle then
+			-- 	cache:onFoot()
+			-- else
+			-- 	cache:inVehicle()
+			-- end
+			num = 0
+		end
 
 		if next(update) then
 			TriggerEvent('ox_lib:updateCache', update)
@@ -65,3 +71,5 @@ end)
 function lib.cache(key)
 	return cache[key]
 end
+
+_ENV.cache = cache
