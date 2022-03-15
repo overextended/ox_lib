@@ -13,14 +13,14 @@ interface Props {
   duration: number;
 }
 
-debugData([
-  {
-    action: "circleProgress",
-    data: {
-      duration: 8000,
-    },
-  },
-]);
+// debugData([
+//   {
+//     action: "circleProgress",
+//     data: {
+//       duration: 8000,
+//     },
+//   },
+// ]);
 
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);

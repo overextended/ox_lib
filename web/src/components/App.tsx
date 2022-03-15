@@ -1,10 +1,11 @@
 import Notifications from "./Notifications";
 import CircleProgressbar from "./CircleProgressbar";
-import { CircularProgress } from "@chakra-ui/react";
+import Progressbar from "./Progressbar";
 
 const App: React.FC = () => {
   return (
     <>
+      <Progressbar />
       <CircleProgressbar />
       <Notifications />
     </>

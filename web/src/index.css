@@ -26,3 +26,12 @@ code {
     stroke-dasharray: 264, 0;
   }
 }
+
+@keyframes progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
