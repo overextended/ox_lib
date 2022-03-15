@@ -17,3 +17,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0, 264;
+  }
+  100% {
+    stroke-dasharray: 264, 0;
+  }
+}
