@@ -29,14 +29,25 @@ const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState("");
   const [duration, setDuration] = React.useState(0);
+  const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
     setVisible(false);
     fetchNui("progressComplete");
   };
 
+  const progressCancel = () => {
+    setCancelled(true);
+    setTimeout(() => {
+      setVisible(false);
+    }, 2500);
+  };
+
+  useNuiEvent("progressCancel", progressCancel);
+
   useNuiEvent<Props>("progress", (data) => {
     if (visible) return;
+    setCancelled(false);
     setVisible(true);
     setLabel(data.label);
     setDuration(data.duration);
@@ -59,12 +70,21 @@ const Progressbar: React.FC = () => {
             height="3rem"
             flex="1 1 auto"
             onAnimationEnd={progressComplete}
-            sx={{
-              // really scuffed solution but works, wonder if there's a better way to do this?
-              "> div:first-of-type": {
-                animation: `progress-bar linear ${duration}ms`,
-              },
-            }}
+            sx={
+              !cancelled
+                ? {
+                    // really scuffed solution but works, wonder if there's a better way to do this?
+                    "> div:first-of-type": {
+                      animation: `progress-bar linear ${duration}ms`,
+                    },
+                  }
+                : {
+                    "> div:first-of-type": {
+                      width: "100%",
+                      backgroundColor: "rgb(198, 40, 40)",
+                    },
+                  }
+            }
           >
             <ProgressLabel fontSize={22}>{label}</ProgressLabel>
           </Progress>
