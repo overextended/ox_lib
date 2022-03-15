@@ -188,11 +188,11 @@ end)
 
 AddEventHandler('ox_lib:updateCache', function(data)
 	for key, value in pairs(data) do
-		cache[key] = value
-
 		if lib.onCache[key] then
 			lib.onCache[key](value)
 		end
+
+		cache[key] = value
 	end
 end)
 
