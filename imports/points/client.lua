@@ -32,9 +32,14 @@ CreateThread(function()
 			if distance <= point.distance then
 				nearby[#nearby + 1] = point
 				point.currentDistance = distance
+
+				if point.onEnter and not point.inside then
+					point.inside = true
+					point:onEnter()
+				end
 			elseif point.currentDistance then
 				if point.onExit then point:onExit() end
-				point.entered = nil
+				point.inside = nil
 				point.currentDistance = nil
 			end
 		end
