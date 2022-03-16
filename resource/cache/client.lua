@@ -48,7 +48,6 @@ CreateThread(function()
 	while true do
 		num += 1
 		cache:set('ped', PlayerPedId())
-		print(cache.seat)
 
 		if num > 1 then
 			cache.coords = GetEntityCoords(cache.ped)
