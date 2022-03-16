@@ -1,12 +1,13 @@
 local cache = {}
 
+local GetPedInVehicleSeat = GetPedInVehicleSeat
 function cache:getVehicle()
 	local vehicle = GetVehiclePedIsIn(self.ped, false)
 	if vehicle > 0 then
-		if self:set('vehicle', vehicle) then
-			local seats = GetVehicleMaxNumberOfPassengers(vehicle) - 1
-			local GetPedInVehicleSeat = GetPedInVehicleSeat
-			for i = -1, seats do
+		self:set('vehicle', vehicle)
+
+		if not cache.seat or GetPedInVehicleSeat(vehicle, cache.seat) ~= cache.ped then
+			for i = -1, GetVehicleMaxNumberOfPassengers(vehicle) - 1 do
 				if GetPedInVehicleSeat(vehicle, i) == self.ped then
 					return self:set('seat', i)
 				end
@@ -47,6 +48,7 @@ CreateThread(function()
 	while true do
 		num += 1
 		cache:set('ped', PlayerPedId())
+		print(cache.seat)
 
 		if num > 1 then
 			cache.coords = GetEntityCoords(cache.ped)
