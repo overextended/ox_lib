@@ -14,14 +14,14 @@ interface Props {
   position?: "middle" | "bottom";
 }
 
-// debugData([
-//   {
-//     action: "circleProgress",
-//     data: {
-//       duration: 8000,
-//     },
-//   },
-// ]);
+debugData([
+  {
+    action: "circleProgress",
+    data: {
+      duration: 8000,
+    },
+  },
+]);
 
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -76,7 +76,7 @@ const CircleProgressbar: React.FC = () => {
           value={value}
           size="7rem"
           onAnimationEnd={progressComplete}
-          color={cancelled ? "rgb(198, 40, 40)" : "blue.300"}
+          color={cancelled ? "rgb(198, 40, 40)" : "blue.400"}
           sx={
             !cancelled
               ? {

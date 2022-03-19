@@ -19,7 +19,7 @@ debugData([
   {
     action: "progress",
     data: {
-      label: "Using lockpick",
+      label: "Using Lockpick",
       duration: 8000,
     },
   },
@@ -66,8 +66,8 @@ const Progressbar: React.FC = () => {
         <ScaleFade in={visible} unmountOnExit>
           <Progress
             value={100}
-            backgroundColor="rgba(0, 0, 0, 0.6)"
-            height="3rem"
+            height="2.8rem"
+            fontFamily="Inter"
             flex="1 1 auto"
             onAnimationEnd={progressComplete}
             sx={
@@ -86,7 +86,7 @@ const Progressbar: React.FC = () => {
                   }
             }
           >
-            <ProgressLabel fontSize={22}>{label}</ProgressLabel>
+            <ProgressLabel fontSize={20}>{label}</ProgressLabel>
           </Progress>
         </ScaleFade>
       </Box>

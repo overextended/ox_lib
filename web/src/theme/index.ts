@@ -1,8 +1,22 @@
-import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { CircularProgress, extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
     initialColorMode: 'dark',
     useSystemColorMode: false
 }
 
-export const theme = extendTheme({config})
+export const theme = extendTheme({
+    config,
+    components: {
+        Progress: {
+          baseStyle: {
+            filledTrack: {
+              bg: 'blue.400'
+            },
+            track: {
+                bg: 'rgba(0, 0, 0, 0.6)'
+            }
+          }
+        },
+    }
+})
