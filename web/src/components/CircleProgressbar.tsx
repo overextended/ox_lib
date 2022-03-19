@@ -11,6 +11,7 @@ import { fetchNui } from "../utils/fetchNui";
 
 interface Props {
   duration: number;
+  position?: "middle" | "bottom";
 }
 
 // debugData([
@@ -25,6 +26,7 @@ interface Props {
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const [progressDuration, setProgressDuration] = React.useState(0);
+  const [position, setPosition] = React.useState<"middle" | "bottom">("middle");
   const [value, setValue] = React.useState(0);
   const [cancelled, setCancelled] = React.useState(false);
 
@@ -49,6 +51,7 @@ const CircleProgressbar: React.FC = () => {
     setVisible(true);
     setValue(0);
     setProgressDuration(data.duration);
+    setPosition(data.position || "middle");
     const onePercent = data.duration * 0.01;
     const updateProgress = setInterval(() => {
       setValue((previousValue) => {
@@ -61,7 +64,7 @@ const CircleProgressbar: React.FC = () => {
 
   return (
     <Flex
-      h="20%"
+      h={position === "middle" ? "100%" : "20%"}
       w="100%"
       position="absolute"
       bottom="0"
