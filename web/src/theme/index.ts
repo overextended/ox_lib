@@ -11,10 +11,10 @@ export const theme = extendTheme({
         Progress: {
           baseStyle: {
             filledTrack: {
-              bg: 'blue.400'
+              bg: 'green.400'
             },
             track: {
-                bg: 'rgba(0, 0, 0, 0.6)'
+              bg: 'rgba(0, 0, 0, 0.6)'
             }
           }
         },

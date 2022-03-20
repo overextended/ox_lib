@@ -67,8 +67,10 @@ const Progressbar: React.FC = () => {
           <Progress
             value={100}
             height="2.8rem"
+            borderRadius="sm"
             fontFamily="Inter"
             flex="1 1 auto"
+            boxShadow="lg"
             onAnimationEnd={progressComplete}
             sx={
               !cancelled
@@ -76,6 +78,7 @@ const Progressbar: React.FC = () => {
                     // really scuffed solution but works, wonder if there's a better way to do this?
                     "> div:first-of-type": {
                       animation: `progress-bar linear ${duration}ms`,
+                      borderRadius: "none",
                     },
                   }
                 : {
@@ -86,7 +89,9 @@ const Progressbar: React.FC = () => {
                   }
             }
           >
-            <ProgressLabel fontSize={20}>{label}</ProgressLabel>
+            <ProgressLabel fontSize={22} fontWeight="light">
+              {label}
+            </ProgressLabel>
           </Progress>
         </ScaleFade>
       </Box>

@@ -48,7 +48,14 @@ const TextUI: React.FC = () => {
       }
     >
       <ScaleFade in={visible} unmountOnExit>
-        <Box bg="blue.400" p={3} fontFamily="Poppins" style={data.style}>
+        <Box
+          bg="gray.700"
+          boxShadow="lg"
+          p={3}
+          fontFamily="Poppins"
+          style={data.style}
+          borderRadius="md"
+        >
           <Text>{data.text}</Text>
         </Box>
       </ScaleFade>

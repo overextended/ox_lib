@@ -12,6 +12,7 @@ import { fetchNui } from "../utils/fetchNui";
 interface Props {
   duration: number;
   position?: "middle" | "bottom";
+  percent?: boolean;
 }
 
 debugData([
@@ -74,9 +75,11 @@ const CircleProgressbar: React.FC = () => {
       <ScaleFade in={visible} unmountOnExit>
         <CircularProgress
           value={value}
-          size="7rem"
+          size="5rem"
+          trackColor="rgba(0, 0, 0, 0.6)"
           onAnimationEnd={progressComplete}
-          color={cancelled ? "rgb(198, 40, 40)" : "blue.400"}
+          thickness={6}
+          color={cancelled ? "rgb(198, 40, 40)" : "white"}
           sx={
             !cancelled
               ? {
@@ -95,7 +98,9 @@ const CircleProgressbar: React.FC = () => {
                 }
           }
         >
-          <CircularProgressLabel color="black">{value}%</CircularProgressLabel>
+          <CircularProgressLabel fontFamily="Fira Mono">
+            {value}%
+          </CircularProgressLabel>
         </CircularProgress>
       </ScaleFade>
     </Flex>
