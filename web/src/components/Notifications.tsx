@@ -1,4 +1,10 @@
-import { useToast, type ToastPositionWithLogical, Box } from "@chakra-ui/react";
+import {
+  useToast,
+  type ToastPositionWithLogical,
+  Box,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -10,16 +16,16 @@ interface Props {
   duration?: number;
   position?: ToastPositionWithLogical;
   status?: "info" | "warning" | "success" | "error";
-  color?: string;
-  icon?: string;
   id?: number;
 }
 
 interface CustomProps {
   style?: React.CSSProperties;
-  text: string;
+  description: string;
+  title?: string;
   duration?: number;
   icon?: IconProp;
+  iconColor?: string;
   position?: ToastPositionWithLogical;
   id?: number;
 }
@@ -29,7 +35,7 @@ debugData<Props>([
     action: "notify",
     data: {
       description: "Dunak is nerd",
-      color: "red",
+      title: "Dunak",
       id: 1,
     },
   },
@@ -39,8 +45,9 @@ debugData<CustomProps>([
   {
     action: "customNotify",
     data: {
-      text: "Dunak is nerd",
-      icon: "clipboard-check",
+      description: "Dunak is nerd",
+      title: "Dunak",
+      icon: "basket-shopping",
       style: {
         backgroundColor: "#2D3748",
         color: "white",
@@ -59,9 +66,21 @@ const Notifications: React.FC = () => {
       duration: data.duration || 4000,
       position: data.position || "top-right",
       render: () => (
-        <Box style={data.style} p={3}>
-          {data.icon && <FontAwesomeIcon icon={data.icon} />}
-          {data.text}
+        <Box style={data.style} p={3} borderRadius="md" boxShadow="lg">
+          <HStack spacing={0}>
+            {data.icon && (
+              <FontAwesomeIcon
+                icon={data.icon}
+                fontSize="1.4rem"
+                style={{ paddingRight: 11 }}
+                color={data.iconColor}
+              />
+            )}
+            <Box w="100%">
+              {data.title && <Text as="b">{data.title}</Text>}
+              {data.description && <Text>{data.description}</Text>}
+            </Box>
+          </HStack>
         </Box>
       ),
     });
