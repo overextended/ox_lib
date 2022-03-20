@@ -1,6 +1,8 @@
 import { useToast, type ToastPositionWithLogical, Box } from "@chakra-ui/react";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   title?: string;
@@ -17,7 +19,7 @@ interface CustomProps {
   style?: React.CSSProperties;
   text: string;
   duration?: number;
-  icon?: string;
+  icon?: IconProp;
   position?: ToastPositionWithLogical;
   id?: number;
 }
@@ -38,9 +40,10 @@ debugData<CustomProps>([
     action: "customNotify",
     data: {
       text: "Dunak is nerd",
+      icon: "clipboard-check",
       style: {
-        backgroundColor: "red",
-        color: "purple",
+        backgroundColor: "#2D3748",
+        color: "white",
       },
     },
   },
@@ -57,6 +60,7 @@ const Notifications: React.FC = () => {
       position: data.position || "top-right",
       render: () => (
         <Box style={data.style} p={3}>
+          {data.icon && <FontAwesomeIcon icon={data.icon} />}
           {data.text}
         </Box>
       ),
