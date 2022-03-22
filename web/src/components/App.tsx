@@ -3,6 +3,7 @@ import CircleProgressbar from "./CircleProgressbar";
 import Progressbar from "./Progressbar";
 import TextUI from "./TextUI";
 import InputDialog from "./InputDialog";
+import ContextMenu from "./ContextMenu";
 
 const App: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
       <Notifications />
       <TextUI />
       <InputDialog />
+      <ContextMenu />
     </>
   );
 };
