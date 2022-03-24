@@ -40,3 +40,11 @@ code {
     width: 100%;
   }
 }
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  width: 0;
+  height: 0;
+}
