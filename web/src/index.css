@@ -12,6 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   user-select: none;
+  overflow: hidden !important;
 }
 
 #root {

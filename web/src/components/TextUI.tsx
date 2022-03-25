@@ -38,6 +38,7 @@ const TextUI: React.FC = () => {
       w="100%"
       h="100%"
       p={3}
+      position="absolute"
       alignItems={data.position === "top-center" ? "baseline" : "center"}
       justifyContent={
         data.position === "right-center"
