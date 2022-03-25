@@ -32,7 +32,7 @@ CreateThread(function()
 			if distance <= point.distance then
 				point.currentDistance = distance
 
-				if point.inside then
+				if point.nearby then
 					nearby[#nearby + 1] = point
 				end
 
@@ -53,7 +53,7 @@ CreateThread(function()
 	while true do
 		Wait(0)
 		for i = 1, #nearby do
-			nearby[i]:inside()
+			nearby[i]:nearby()
 		end
 	end
 end)
