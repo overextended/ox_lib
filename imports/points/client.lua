@@ -30,8 +30,11 @@ CreateThread(function()
 			local distance = #(coords - point.coords)
 
 			if distance <= point.distance then
-				nearby[#nearby + 1] = point
 				point.currentDistance = distance
+
+				if point.callback then
+					nearby[#nearby + 1] = point
+				end
 
 				if point.onEnter and not point.inside then
 					point.inside = true
@@ -50,8 +53,7 @@ CreateThread(function()
 	while true do
 		Wait(0)
 		for i = 1, #nearby do
-			local point = nearby[i]
-			if point.callback then point:callback() end
+			nearby[i]:callback()
 		end
 	end
 end)
