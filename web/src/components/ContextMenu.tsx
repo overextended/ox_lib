@@ -8,7 +8,9 @@ import {
   Portal,
   PopoverContent,
   PopoverBody,
+  Spacer,
 } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { debugData } from "../utils/debugData";
 import { useState } from "react";
 
@@ -21,6 +23,7 @@ interface Options {
   [key: string]: {
     description?: string;
     metadata?: string[] | { [key: string]: any };
+    subMenu?: boolean;
   };
 }
 
@@ -32,6 +35,7 @@ debugData<Props>([
       options: {
         ["Dinka Blista"]: {
           description: "Super cool vehicle",
+          subMenu: true,
           metadata: {
             ["Plate"]: "KLT 192",
             ["Status"]: "In garage",
@@ -112,16 +116,33 @@ const ContextMenu: React.FC = () => {
                   key={`option-${index}`}
                 >
                   {/* TODO: react-markdown (?) */}
-                  <Box paddingBottom={1}>
-                    <Text w="100%" fontWeight="medium">
-                      {option[0]}
-                    </Text>
-                  </Box>
-                  {option[1].description && (
-                    <Box paddingBottom={1}>
-                      <Text>{option[1].description}</Text>
+                  <Flex w="100%">
+                    <Box>
+                      <Box paddingBottom={1}>
+                        <Text w="100%" fontWeight="medium">
+                          {option[0]}
+                        </Text>
+                      </Box>
+                      {option[1].description && (
+                        <Box paddingBottom={1}>
+                          <Text>{option[1].description}</Text>
+                        </Box>
+                      )}
                     </Box>
-                  )}
+                    {option[1].subMenu && (
+                      <>
+                        <Spacer />
+                        <Box
+                          alignSelf="center"
+                          justifySelf="center"
+                          mr={4}
+                          fontSize="xl"
+                        >
+                          <FontAwesomeIcon icon="chevron-right" />
+                        </Box>
+                      </>
+                    )}
+                  </Flex>
                   <Portal>
                     <PopoverContent
                       fontFamily="Poppins"
