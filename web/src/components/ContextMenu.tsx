@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverBody,
   Spacer,
+  ScaleFade,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { debugData } from "../utils/debugData";
@@ -81,106 +82,110 @@ const ContextMenu: React.FC = () => {
       justifyContent="flex-end"
       alignItems="center"
     >
-      <Box w="xs" h={580}>
-        <Box borderRadius="md" bg="gray.800" mb={3}>
-          <Text
-            fontFamily="Poppins"
-            fontSize="md"
-            p={2}
-            textAlign="center"
-            fontWeight="light"
-          >
-            {contextMenu.title}
-          </Text>
-        </Box>
-        <Box maxH={560} overflowY="scroll">
-          {Object.entries(contextMenu.options).map((option, index) => (
-            <Popover
-              placement="right-start"
-              trigger="hover"
-              eventListeners={{ scroll: true }}
-              isLazy
+      <ScaleFade in={visible} unmountOnExit>
+        <Box w="xs" h={580}>
+          <Box borderRadius="md" bg="gray.800" mb={3}>
+            <Text
+              fontFamily="Poppins"
+              fontSize="md"
+              p={2}
+              textAlign="center"
+              fontWeight="light"
             >
-              <PopoverTrigger>
-                <Box
-                  bg="gray.800"
-                  borderRadius="md"
-                  h="fit-content"
-                  w="100%"
-                  p={2}
-                  mb={1}
-                  fontFamily="Poppins"
-                  fontSize="md"
-                  transition="300ms"
-                  _hover={{ bg: "gray.700" }}
-                  key={`option-${index}`}
-                >
-                  {/* TODO: react-markdown (?) */}
-                  <Flex w="100%">
-                    <Box>
-                      <Box paddingBottom={1}>
-                        <Text w="100%" fontWeight="medium">
-                          {option[0]}
-                        </Text>
-                      </Box>
-                      {option[1].description && (
+              {contextMenu.title}
+            </Text>
+          </Box>
+          <Box maxH={560} overflowY="scroll">
+            {Object.entries(contextMenu.options).map((option, index) => (
+              <Popover
+                placement="right-start"
+                trigger="hover"
+                eventListeners={{ scroll: true }}
+                isLazy
+              >
+                <PopoverTrigger>
+                  <Box
+                    bg="gray.800"
+                    borderRadius="md"
+                    h="fit-content"
+                    w="100%"
+                    p={2}
+                    mb={1}
+                    fontFamily="Poppins"
+                    fontSize="md"
+                    transition="300ms"
+                    _hover={{ bg: "gray.700" }}
+                    key={`option-${index}`}
+                  >
+                    {/* TODO: react-markdown (?) */}
+                    <Flex w="100%">
+                      <Box>
                         <Box paddingBottom={1}>
-                          <Text>{option[1].description}</Text>
+                          <Text w="100%" fontWeight="medium">
+                            {option[0]}
+                          </Text>
                         </Box>
-                      )}
-                    </Box>
-                    {option[1].subMenu && (
-                      <>
-                        <Spacer />
-                        <Box
-                          alignSelf="center"
-                          justifySelf="center"
-                          mr={4}
-                          fontSize="xl"
-                        >
-                          <FontAwesomeIcon icon="chevron-right" />
-                        </Box>
-                      </>
-                    )}
-                  </Flex>
-                  <Portal>
-                    <PopoverContent
-                      fontFamily="Poppins"
-                      bg="gray.800"
-                      outline="none"
-                      border="none"
-                      w="fit-content"
-                      maxW="2xs"
-                    >
-                      <PopoverBody>
-                        {option[1]?.metadata &&
-                        Array.isArray(option[1].metadata) ? (
-                          option[1].metadata.map((metadata: string, index) => (
-                            <Text key={`context-metadata-${index}`}>
-                              {metadata}
-                            </Text>
-                          ))
-                        ) : (
-                          <>
-                            {typeof option[1].metadata === "object" &&
-                              Object.entries(option[1].metadata).map(
-                                (metadata: { [key: string]: any }, index) => (
-                                  <Text key={`context-metadata-${index}`}>
-                                    {metadata[0]}: {metadata[1]}
-                                  </Text>
-                                )
-                              )}
-                          </>
+                        {option[1].description && (
+                          <Box paddingBottom={1}>
+                            <Text>{option[1].description}</Text>
+                          </Box>
                         )}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Portal>
-                </Box>
-              </PopoverTrigger>
-            </Popover>
-          ))}
+                      </Box>
+                      {option[1].subMenu && (
+                        <>
+                          <Spacer />
+                          <Box
+                            alignSelf="center"
+                            justifySelf="center"
+                            mr={4}
+                            fontSize="xl"
+                          >
+                            <FontAwesomeIcon icon="chevron-right" />
+                          </Box>
+                        </>
+                      )}
+                    </Flex>
+                    <Portal>
+                      <PopoverContent
+                        fontFamily="Poppins"
+                        bg="gray.800"
+                        outline="none"
+                        border="none"
+                        w="fit-content"
+                        maxW="2xs"
+                      >
+                        <PopoverBody>
+                          {option[1]?.metadata &&
+                          Array.isArray(option[1].metadata) ? (
+                            option[1].metadata.map(
+                              (metadata: string, index) => (
+                                <Text key={`context-metadata-${index}`}>
+                                  {metadata}
+                                </Text>
+                              )
+                            )
+                          ) : (
+                            <>
+                              {typeof option[1].metadata === "object" &&
+                                Object.entries(option[1].metadata).map(
+                                  (metadata: { [key: string]: any }, index) => (
+                                    <Text key={`context-metadata-${index}`}>
+                                      {metadata[0]}: {metadata[1]}
+                                    </Text>
+                                  )
+                                )}
+                            </>
+                          )}
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Portal>
+                  </Box>
+                </PopoverTrigger>
+              </Popover>
+            ))}
+          </Box>
         </Box>
-      </Box>
+      </ScaleFade>
     </Flex>
   );
 };
