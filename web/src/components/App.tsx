@@ -3,7 +3,7 @@ import CircleProgressbar from "./CircleProgressbar";
 import Progressbar from "./Progressbar";
 import TextUI from "./TextUI";
 import InputDialog from "./InputDialog";
-import ContextMenu from "./ContextMenu";
+import ContextMenu from "./features/menu/ContextMenu";
 
 const App: React.FC = () => {
   return (
