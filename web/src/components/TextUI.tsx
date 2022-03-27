@@ -59,9 +59,7 @@ const TextUI: React.FC = () => {
           borderRadius="md"
           maxW="xs"
         >
-          <Text>
-            <ReactMarkdown>{data.text}</ReactMarkdown>
-          </Text>
+          <ReactMarkdown>{data.text}</ReactMarkdown>
         </Box>
       </ScaleFade>
     </Flex>
