@@ -10,7 +10,17 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Option } from "../../../interfaces";
+import { Option, ContextMenuProps } from "../../../interfaces";
+import { fetchNui } from "../../../utils/fetchNui";
+
+const openMenu = (id: string | undefined) => {
+  fetchNui<ContextMenuProps>("openContext", id);
+};
+
+const clickContext = () => {
+  // todo
+  fetchNui("clickContext");
+};
 
 const Item: React.FC<{
   option: [string, Option];
@@ -36,7 +46,12 @@ const Item: React.FC<{
             transition="300ms"
             _hover={{ bg: "gray.700" }}
           >
-            <Flex w="100%">
+            <Flex
+              w="100%"
+              onClick={() =>
+                option[1].menu ? openMenu(option[1].menu) : clickContext()
+              }
+            >
               <Box>
                 <Box paddingBottom={1}>
                   <Text w="100%" fontWeight="medium">
@@ -49,7 +64,7 @@ const Item: React.FC<{
                   </Box>
                 )}
               </Box>
-              {option[1].subMenu && (
+              {option[1].menu && (
                 <>
                   <Spacer />
                   <Box
