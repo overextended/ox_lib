@@ -87,7 +87,7 @@ function lib.getVehicleProperties(vehicle)
 			wheelColor = wheelColor,
 			wheels = GetVehicleWheelType(vehicle),
 			windowTint = GetVehicleWindowTint(vehicle),
-			xenonColor = GetVehicleXenonLightsColour(vehicle),
+			xenonColor = GetVehicleXenonLightsColor(vehicle),
 			neonEnabled = neons,
 			neonColor = {GetVehicleNeonLightsColour(vehicle)},
 			extras = extras,
