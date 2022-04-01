@@ -1,6 +1,6 @@
 import React from "react";
 import { useNuiEvent } from "../hooks/useNuiEvent";
-import { Box, Flex, ScaleFade, Text } from "@chakra-ui/react";
+import { Box, Flex, ScaleFade } from "@chakra-ui/react";
 import { debugData } from "../utils/debugData";
 import ReactMarkdown from "react-markdown";
 

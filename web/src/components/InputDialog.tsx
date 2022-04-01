@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useNuiEvent } from "../hooks/useNuiEvent";
-import { debugData } from "../utils/debugData";
+// import { debugData } from "../utils/debugData";
 import { fetchNui } from "../utils/fetchNui";
 
 interface Props {
