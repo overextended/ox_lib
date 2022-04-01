@@ -3,10 +3,14 @@ import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { Box, Flex, ScaleFade } from "@chakra-ui/react";
 import { debugData } from "../../utils/debugData";
 import ReactMarkdown from "react-markdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface Props {
   text: string;
   position?: "right-center" | "left-center" | "top-center";
+  icon?: IconProp;
+  iconColor?: string;
   style?: React.CSSProperties;
 }
 
@@ -14,8 +18,9 @@ debugData([
   {
     action: "textUi",
     data: {
-      text: "[E] - Access locker inventory \n [G] - Do something else  \n ",
+      text: "[E] -  Access locker inventory  \n [G] - Do something else",
       position: "right-center",
+      icon: "door-open",
     },
   },
 ]);
@@ -54,12 +59,22 @@ const TextUI: React.FC = () => {
           bg="gray.700"
           boxShadow="lg"
           p={3}
-          fontFamily="DM Mono"
+          fontFamily="Poppins"
           style={data.style}
           borderRadius="md"
           maxW="xs"
         >
-          <ReactMarkdown>{data.text}</ReactMarkdown>
+          <Flex justifyContent="center" alignItems="center">
+            {data.icon && (
+              <FontAwesomeIcon
+                icon={data.icon}
+                color={data.iconColor}
+                fontSize="1.4rem"
+                style={{ paddingRight: 15 }}
+              />
+            )}
+            <ReactMarkdown>{data.text}</ReactMarkdown>
+          </Flex>
         </Box>
       </ScaleFade>
     </Flex>
