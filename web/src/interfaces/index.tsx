@@ -2,6 +2,9 @@ export interface Option {
   menu?: string;
   description?: string;
   metadata?: string[] | { [key: string]: any };
+  event?: string;
+  serverEvent?: string;
+  args?: any;
 }
 
 export interface Options {

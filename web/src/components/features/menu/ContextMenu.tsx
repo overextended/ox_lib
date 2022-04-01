@@ -1,7 +1,7 @@
 import { useNuiEvent } from "../../../hooks/useNuiEvent";
 import { Box, Text, Flex, ScaleFade } from "@chakra-ui/react";
 import { debugData } from "../../../utils/debugData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContextMenuProps } from "../../../interfaces";
 import Item from "./Item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,6 +51,24 @@ const ContextMenu: React.FC = () => {
     title: "",
     options: { "": { description: "", metadata: [] } },
   });
+
+  // Hides the context menu on ESC
+  useEffect(() => {
+    if (!visible) return;
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (["Escape"].includes(e.code)) {
+        setVisible(false);
+        fetchNui("closeContext");
+      }
+    };
+
+    window.addEventListener("keydown", keyHandler);
+
+    return () => window.removeEventListener("keydown", keyHandler);
+  }, [visible]);
+
+  useNuiEvent("hideContext", () => setVisible(false));
 
   useNuiEvent<ContextMenuProps>("showContext", async (data) => {
     if (visible) {
