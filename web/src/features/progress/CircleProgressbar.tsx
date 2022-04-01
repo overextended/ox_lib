@@ -5,9 +5,9 @@ import {
   Flex,
   ScaleFade,
 } from "@chakra-ui/react";
-import { useNuiEvent } from "../hooks/useNuiEvent";
-import { debugData } from "../utils/debugData";
-import { fetchNui } from "../utils/fetchNui";
+import { useNuiEvent } from "../../hooks/useNuiEvent";
+import { debugData } from "../../utils/debugData";
+import { fetchNui } from "../../utils/fetchNui";
 
 interface Props {
   duration: number;

@@ -1,11 +1,11 @@
-import { useNuiEvent } from "../../../hooks/useNuiEvent";
+import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { Box, Text, Flex, ScaleFade } from "@chakra-ui/react";
-import { debugData } from "../../../utils/debugData";
+import { debugData } from "../../utils/debugData";
 import { useEffect, useState } from "react";
-import { ContextMenuProps } from "../../../interfaces";
+import { ContextMenuProps } from "../../interfaces";
 import Item from "./Item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchNui } from "../../../utils/fetchNui";
+import { fetchNui } from "../../utils/fetchNui";
 
 debugData<ContextMenuProps>([
   {

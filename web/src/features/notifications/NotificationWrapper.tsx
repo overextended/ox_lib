@@ -5,8 +5,8 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react";
-import { useNuiEvent } from "../hooks/useNuiEvent";
-import { debugData } from "../utils/debugData";
+import { useNuiEvent } from "../../hooks/useNuiEvent";
+import { debugData } from "../../utils/debugData";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
