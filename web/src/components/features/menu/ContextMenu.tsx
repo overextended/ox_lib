@@ -68,7 +68,6 @@ const ContextMenu: React.FC = () => {
       h="80%"
       justifyContent="flex-end"
       alignItems="center"
-      bg="red"
     >
       <ScaleFade in={visible} unmountOnExit>
         <Box w="xs" h={580}>
