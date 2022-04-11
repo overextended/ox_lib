@@ -63,13 +63,12 @@ const Notifications: React.FC = () => {
   useNuiEvent<CustomProps>("customNotify", (data) => {
     if (data.id && toast.isActive(data.id)) return;
     if (!data.icon) {
-      //@ts-expect-error because amazing types
       data.icon =
         data.type === "error"
-          ? "fa-circle-xmark"
+          ? "circle-xmark"
           : data.type === "success"
-          ? "fa-circle-check"
-          : "fa-circle-info";
+          ? "circle-check"
+          : "circle-info";
     }
 
     toast({
@@ -84,15 +83,14 @@ const Notifications: React.FC = () => {
           boxShadow="md"
         >
           <HStack spacing={0}>
-            {
+            {data.icon && (
               <FontAwesomeIcon
-                //@ts-expect-error because amazing types
                 icon={data.icon}
                 fontSize="1.3em"
                 style={{ paddingRight: 8 }}
                 color={data.iconColor}
               />
-            }
+            )}
             <Box w="100%">
               {data.title && <Text as="b">{data.title}</Text>}
               {data.description && <Text>{data.description}</Text>}
