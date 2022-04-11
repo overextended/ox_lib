@@ -28,6 +28,7 @@ interface CustomProps {
   iconColor?: string;
   position?: ToastPositionWithLogical;
   id?: number;
+  type?: string;
 }
 
 debugData<Props>([
@@ -59,23 +60,39 @@ debugData<CustomProps>([
 const Notifications: React.FC = () => {
   const toast = useToast();
 
-  // todo: figure out icon support
   useNuiEvent<CustomProps>("customNotify", (data) => {
     if (data.id && toast.isActive(data.id)) return;
+    if (!data.icon) {
+      //@ts-expect-error because amazing types
+      data.icon =
+        data.type === "error"
+          ? "fa-circle-xmark"
+          : data.type === "success"
+          ? "fa-circle-check"
+          : "fa-circle-info";
+    }
+
     toast({
-      duration: data.duration || 4000,
+      duration: data.duration || 3000,
       position: data.position || "top-right",
       render: () => (
-        <Box style={data.style} p={3} borderRadius="md" boxShadow="lg">
+        <Box
+          className={`toast-${data.type || "inform"}`}
+          style={data.style}
+          p={2}
+          borderRadius="sm"
+          boxShadow="md"
+        >
           <HStack spacing={0}>
-            {data.icon && (
+            {
               <FontAwesomeIcon
+                //@ts-expect-error because amazing types
                 icon={data.icon}
-                fontSize="1.4rem"
-                style={{ paddingRight: 11 }}
+                fontSize="1.3em"
+                style={{ paddingRight: 8 }}
                 color={data.iconColor}
               />
-            )}
+            }
             <Box w="100%">
               {data.title && <Text as="b">{data.title}</Text>}
               {data.description && <Text>{data.description}</Text>}

@@ -50,3 +50,15 @@ code {
   width: 0;
   height: 0;
 }
+
+.toast-inform {
+	background-color: #2980b9;
+}
+
+.toast-success {
+	background-color: #27ae60;
+}
+
+.toast-error {
+	background-color: #c0392b;
+}

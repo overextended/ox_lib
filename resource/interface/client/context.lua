@@ -1,6 +1,6 @@
 local contextMenus = {}
 
-local function showContext(id)
+function lib.showContext(id)
     local data = contextMenus[id]
     SetNuiFocus(true, true)
     SendNUIMessage({
@@ -13,7 +13,7 @@ local function showContext(id)
     })
 end
 
-local function registerContext(context)
+function lib.registerContext(context)
     for k, v in pairs(context) do
         if type(k) == 'number' then
             contextMenus[v.id] = v
@@ -25,7 +25,7 @@ local function registerContext(context)
 end
 
 RegisterNUICallback('openContext', function(id)
-    showContext(id)
+    lib.showContext(id)
 end)
 
 RegisterNUICallback('clickContext', function(data)
