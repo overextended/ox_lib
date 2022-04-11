@@ -17,3 +17,5 @@ function lib.notify(data)
 		data = data
 	})
 end
+
+RegisterNetEvent('ox_lib:notify', lib.notify)
