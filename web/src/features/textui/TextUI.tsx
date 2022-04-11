@@ -33,6 +33,7 @@ const TextUI: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
 
   useNuiEvent<Props>("textUi", (data) => {
+    if (!data.position) data.position = "right-center"; // Default right position
     setData(data);
     setVisible(true);
   });
