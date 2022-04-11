@@ -152,7 +152,7 @@ local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
 	groups = GetResourceState('ox_groups') ~= 'missing',
 }
 
-local cache_mt = {
+local cache = setmetatable({}, {
 	__index = function(self, key)
 		return rawset(self, key, exports[lualib]['cache'](nil, key) or false)[key]
 	end,
@@ -164,6 +164,7 @@ local cache_mt = {
 
 		else
 			self.playerId = PlayerId()
+			self.serverId = GetPlayerServerId(self.playerId)
 		end
 
 		if ox.groups then
@@ -175,9 +176,7 @@ local cache_mt = {
 			})
 		end
 	end
-}
-
-local cache = setmetatable({}, cache_mt)
+})
 
 Citizen.CreateThreadNow(function()
 	while true do
