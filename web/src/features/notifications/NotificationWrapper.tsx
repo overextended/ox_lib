@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   title?: string;
-  description: string;
+  description?: string;
   duration?: number;
   position?: ToastPositionWithLogical;
   status?: "info" | "warning" | "success" | "error";
@@ -21,7 +21,7 @@ interface Props {
 
 interface CustomProps {
   style?: React.CSSProperties;
-  description: string;
+  description?: string;
   title?: string;
   duration?: number;
   icon?: IconProp;
@@ -47,7 +47,6 @@ debugData<CustomProps>([
     action: "customNotify",
     data: {
       description: "Dunak is nerd",
-      title: "Dunak",
       icon: "basket-shopping",
       style: {
         backgroundColor: "#2D3748",
@@ -61,6 +60,7 @@ const Notifications: React.FC = () => {
   const toast = useToast();
 
   useNuiEvent<CustomProps>("customNotify", (data) => {
+    if (!data.title && !data.description) return;
     if (data.id && toast.isActive(data.id)) return;
     if (!data.icon) {
       data.icon =
@@ -102,6 +102,7 @@ const Notifications: React.FC = () => {
   });
 
   useNuiEvent<Props>("notify", (data) => {
+    if (!data.title && !data.description) return;
     if (data.id && toast.isActive(data.id)) return;
     toast({
       title: data.title,
