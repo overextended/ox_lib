@@ -76,7 +76,7 @@ const InputDialog: React.FC = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">{inputOptions.heading}</ModalHeader>
-          <ModalBody>
+          <ModalBody fontFamily="Poppins">
             {inputOptions.inputs.map((input: string, index: number) => (
               <Box mb={3} key={`input-${index}`}>
                 <Text>{input}</Text>
