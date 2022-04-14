@@ -142,7 +142,15 @@ function lib.cancelProgress()
 	progress = false
 end
 
+function lib.progressActive()
+	return progress and true
+end
+
 RegisterNUICallback('progressComplete', function(data, cb)
 	cb(1)
 	progress = nil
+end)
+
+RegisterCommand('cancelprogress', function()
+	if progress?.canCancel then progress = false end
 end)
