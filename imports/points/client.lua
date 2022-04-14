@@ -6,6 +6,7 @@ end
 
 local nearby = {}
 local closest
+local tick
 
 CreateThread(function()
 	while true do
@@ -38,14 +39,17 @@ CreateThread(function()
 				point.currentDistance = nil
 			end
 		end
-	end
-end)
 
-CreateThread(function()
-	while true do
-		Wait(0)
-		for i = 1, #nearby do
-			nearby[i]:nearby()
+		if not tick then
+			if #nearby > 0 then
+				tick = SetInterval(function()
+					for i = 1, #nearby do
+						nearby[i]:nearby()
+					end
+				end)
+			end
+		elseif #nearby == 0 then
+			ClearInterval(tick)
 		end
 	end
 end)
