@@ -9,6 +9,14 @@ local disableKeys = {
 	combat = {25}
 }
 
+local function createProp(prop)
+	lib.requestModel(prop.model)
+	local coords = GetEntityCoords(cache.ped)
+	local object = CreateObject(prop.model, coords.x, coords.y, coords.z, true, true, true)
+	AttachEntityToEntity(object, cache.ped, GetPedBoneIndex(cache.ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
+	return object
+end
+
 local function startProgress(data)
 	progress = data
 
@@ -24,16 +32,15 @@ local function startProgress(data)
 	end
 
 	if data.prop then
-		for i = 1, #data.prop do
-			local prop = data.prop[i]
+		if data.prop.model then
+			data.prop1 = createProp(data.prop)
+		else
+			for i = 1, #data.prop do
+				local prop = data.prop[i]
 
-			if prop then
-				lib.requestModel(prop.model)
-
-				local coords = GetEntityCoords(cache.ped)
-				local object = CreateObject(prop.model, coords.x, coords.y, coords.z, true, true, true)
-				AttachEntityToEntity(object, cache.ped, GetPedBoneIndex(cache.ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
-				data['prop'..i] = object
+				if prop then
+					data['prop'..i] = createProp(prop)
+				end
 			end
 		end
 	end
@@ -78,7 +85,8 @@ local function startProgress(data)
 	end
 
 	if data.prop then
-		for i = 1, #data.prop do
+		local n = #data.prop
+		for i = 1, n > 0 and n or 1 do
 			local prop = data['prop'..i]
 
 			if prop then
@@ -154,3 +162,5 @@ end)
 RegisterCommand('cancelprogress', function()
 	if progress?.canCancel then progress = false end
 end)
+
+RegisterKeyMapping('cancelprogress', 'Cancel current progress bar', 'keyboard', 'x')
