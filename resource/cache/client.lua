@@ -1,6 +1,11 @@
 local cache = {}
+cache.playerId = PlayerId()
+cache.serverId = GetPlayerServerId(cache.playerId)
 
+local GetVehiclePedIsIn = GetVehiclePedIsIn
 local GetPedInVehicleSeat = GetPedInVehicleSeat
+local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
+
 function cache:getVehicle()
 	local vehicle = GetVehiclePedIsIn(self.ped, false)
 	if vehicle > 0 then
@@ -42,6 +47,8 @@ function cache:set(key, value)
 		return true
 	end
 end
+
+local GetEntityCoords = GetEntityCoords
 
 CreateThread(function()
 	local num = 1
