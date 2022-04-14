@@ -5,11 +5,13 @@ local function removePoint(self)
 end
 
 local nearby = {}
+local closest
 
 CreateThread(function()
 	while true do
 		local coords = GetEntityCoords(cache.ped)
 		Wait(300)
+		closest = nil
 		table.wipe(nearby)
 
 		for _, point in pairs(points) do
@@ -17,6 +19,10 @@ CreateThread(function()
 
 			if distance <= point.distance then
 				point.currentDistance = distance
+
+				if distance < (closest?.currentDistance or point.distance) then
+					closest = point
+				end
 
 				if point.nearby then
 					nearby[#nearby + 1] = point
@@ -64,5 +70,9 @@ return {
 		points[id] = self
 
 		return self
+	end,
+
+	closest = function()
+		return closest
 	end
 }
