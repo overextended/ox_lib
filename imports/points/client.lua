@@ -1,23 +1,10 @@
 local points = {}
-local nearby = {}
 
-function points.new(coords, distance, data)
-	local id = #points + 1
-
-	local self = {
-		id = id,
-		coords = coords,
-		distance = distance
-	}
-
-	for k, v in pairs(data) do
-		self[k] = v
-	end
-
-	points[id] = self
-
-	return self
+local function removePoint(self)
+	points[self.id] = nil
 end
+
+local nearby = {}
 
 CreateThread(function()
 	while true do
@@ -25,8 +12,7 @@ CreateThread(function()
 		Wait(300)
 		table.wipe(nearby)
 
-		for i = 1, #points do
-			local point = points[i]
+		for _, point in pairs(points) do
 			local distance = #(coords - point.coords)
 
 			if distance <= point.distance then
@@ -58,4 +44,25 @@ CreateThread(function()
 	end
 end)
 
-return points
+return {
+	new = function(coords, distance, data)
+		local id = #points + 1
+
+		local self = {
+			id = id,
+			coords = coords,
+			distance = distance,
+			remove = removePoint,
+		}
+
+		if data then
+			for k, v in pairs(data) do
+				self[k] = v
+			end
+		end
+
+		points[id] = self
+
+		return self
+	end
+}
