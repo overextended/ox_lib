@@ -2,6 +2,7 @@ local contextMenus = {}
 local openContextMenu = nil
 
 function lib.showContext(id)
+    if not contextMenus[id] then return error('No context menu of such id found.') end
     local data = contextMenus[id]
     openContextMenu = id
     SetNuiFocus(true, true)
