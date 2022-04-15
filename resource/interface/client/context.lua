@@ -35,10 +35,10 @@ end)
 
 RegisterNUICallback('clickContext', function(data, cb)
     cb(1)
+    SetNuiFocus(false, false)
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
     openContextMenu = nil
-    SetNuiFocus(false, false)
     SendNUIMessage({
         action = 'hideContext'
     })
