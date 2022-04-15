@@ -24,6 +24,7 @@ const openMenu = (id: string | undefined) => {
 };
 
 const clickContext = (data: DataProps) => {
+  if (!data.event && !data.serverEvent) return;
   fetchNui("clickContext", data);
 };
 
