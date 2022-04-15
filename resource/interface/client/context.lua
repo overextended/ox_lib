@@ -1,7 +1,9 @@
 local contextMenus = {}
+local openContextMenu = nil
 
 function lib.showContext(id)
     local data = contextMenus[id]
+    openContextMenu = id
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'showContext',
@@ -24,6 +26,8 @@ function lib.registerContext(context)
     end
 end
 
+function lib.getOpenContextMenu() return openContextMenu end
+
 RegisterNUICallback('openContext', function(id, cb)
     cb(1)
     lib.showContext(id)
@@ -33,6 +37,7 @@ RegisterNUICallback('clickContext', function(data, cb)
     cb(1)
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
+    openContextMenu = nil
     SetNuiFocus(false, false)
     SendNUIMessage({
         action = 'hideContext'
