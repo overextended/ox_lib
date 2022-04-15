@@ -54,6 +54,7 @@ const Item: React.FC<{
           >
             <Flex
               w="100%"
+              alignItems="center"
               onClick={() =>
                 option[1].menu
                   ? openMenu(option[1].menu)
@@ -65,7 +66,7 @@ const Item: React.FC<{
               }
             >
               <Box>
-                <Box paddingBottom={1}>
+                <Box paddingBottom={option[1].description ? 1 : 0}>
                   <Text w="100%" fontWeight="medium">
                     {option[0]}
                   </Text>
