@@ -68,10 +68,11 @@ const TextUI: React.FC = () => {
           <Flex justifyContent="center" alignItems="center">
             {data.icon && (
               <FontAwesomeIcon
+                fixedWidth
                 icon={data.icon}
                 color={data.iconColor}
                 fontSize="1.4rem"
-                style={{ paddingRight: 15 }}
+                style={{ paddingRight: 8 }}
               />
             )}
             <ReactMarkdown>{data.text}</ReactMarkdown>

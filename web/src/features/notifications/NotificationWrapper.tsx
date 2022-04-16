@@ -85,6 +85,7 @@ const Notifications: React.FC = () => {
           <HStack spacing={0}>
             {data.icon && (
               <FontAwesomeIcon
+                fixedWidth
                 icon={data.icon}
                 fontSize="1.3em"
                 style={{ paddingRight: 8 }}
