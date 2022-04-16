@@ -6,14 +6,14 @@ function lib.showContext(id)
     local data = contextMenus[id]
     openContextMenu = id
     SetNuiFocus(true, true)
-    SendNUIMessage({
+    SendNuiMessage(json.encode({
         action = 'showContext',
         data = {
             title = data.title,
             menu = data.menu,
             options = data.options
         }
-    })
+    }, {sort_keys=true}))
 end
 
 function lib.registerContext(context)
