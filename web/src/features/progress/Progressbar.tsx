@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Progress,
-  ProgressLabel,
-  Flex,
-  Box,
-  ScaleFade,
-} from "@chakra-ui/react";
+import { Text, Flex, Box, ScaleFade } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
@@ -55,44 +49,51 @@ const Progressbar: React.FC = () => {
 
   return (
     <Flex
-      h="20%"
+      h="30%"
       w="100%"
       position="absolute"
       bottom="0"
       justifyContent="center"
       alignItems="center"
     >
-      <Box width="22rem">
+      <Box width={350}>
         <ScaleFade in={visible} unmountOnExit>
-          <Progress
-            value={100}
-            height="2.8rem"
+          <Box
+            height={45}
+            bg="rgba(0, 0, 0, 0.6)"
+            textAlign="center"
             borderRadius="sm"
-            fontFamily="Inter"
-            flex="1 1 auto"
             boxShadow="lg"
-            onAnimationEnd={progressComplete}
-            sx={
-              !cancelled
-                ? {
-                    // really scuffed solution but works, wonder if there's a better way to do this?
-                    "> div:first-of-type": {
+            overflow="hidden"
+          >
+            <Box
+              height={45}
+              onAnimationEnd={progressComplete}
+              sx={
+                !cancelled
+                  ? {
+                      backgroundColor: "green.400",
                       animation: `progress-bar linear ${duration}ms`,
-                      borderRadius: "none",
-                    },
-                  }
-                : {
-                    "> div:first-of-type": {
+                    }
+                  : {
                       width: "100%",
                       backgroundColor: "rgb(198, 40, 40)",
-                    },
-                  }
-            }
-          >
-            <ProgressLabel fontSize={22} fontWeight="light">
+                    }
+              }
+            />
+            <Text
+              fontFamily="Inter"
+              isTruncated
+              fontSize={22}
+              fontWeight="light"
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
               {label}
-            </ProgressLabel>
-          </Progress>
+            </Text>
+          </Box>
         </ScaleFade>
       </Box>
     </Flex>
