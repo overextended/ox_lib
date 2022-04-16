@@ -10,10 +10,20 @@
 	iconColor?: string
 }
 ```]]
+
+-- Custom notifications with a lot of allowed styling
 ---@param data table
 function lib.notify(data)
 	SendNUIMessage({
 		action = 'customNotify',
+		data = data
+	})
+end
+
+-- Default Chakra UI notifications
+function lib.defaultNotify(data)
+	SendNUIMessage({
+		action = 'notify',
 		data = data
 	})
 end
