@@ -1,3 +1,5 @@
+local input
+
 function lib.inputDialog(heading, rows)
 	if input then return end
 	input = promise.new()
@@ -10,6 +12,7 @@ function lib.inputDialog(heading, rows)
 			inputs = rows
 		}
 	})
+
 	return Citizen.Await(input)
 end
 
