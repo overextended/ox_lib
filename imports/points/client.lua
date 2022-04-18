@@ -49,7 +49,7 @@ CreateThread(function()
 				end)
 			end
 		elseif #nearby == 0 then
-			ClearInterval(tick)
+			tick = ClearInterval(tick)
 		end
 	end
 end)
