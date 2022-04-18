@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  create-release:
+    name: Build and Create Tagged Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install archive tools
+        run: sudo apt install zip
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.20.3
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+          cache-dependency-path: "web/pnpm-lock.yaml"
+
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: web
+
+      - name: Run build
+        run: pnpm build
+        working-directory: web
+        env:
+          CI: false
+
+      - name: Bundle files
+        run: |
+          mkdir -p ./temp/ox_lib
+          mkdir -p ./temp/ox_lib/web/
+          cp ./{LICENSE,README.md,fxmanifest.lua,init.lua} ./temp/ox_lib
+          cp -r ./{imports,resource} ./temp/ox_lib
+          cp -r ./web/build ./temp/ox_lib/web/
+          cd ./temp && zip -r ../ox_lib.zip ./ox_lib
+
+      - name: Create Release
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        id: auto_release
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: ${{ env.RELEASE_VERSION }}
+          prerelease: false
+          files: ox_lib.zip
+
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
