@@ -77,7 +77,7 @@ const Item: React.FC<{
                   </Box>
                 )}
               </Box>
-              {option[1].menu && (
+              {(option[1].menu || option[1].arrow) && (
                 <>
                   <Spacer />
                   <Box

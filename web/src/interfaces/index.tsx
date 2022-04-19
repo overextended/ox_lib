@@ -1,6 +1,7 @@
 export interface Option {
   menu?: string;
   description?: string;
+  arrow?: boolean;
   metadata?: string[] | { [key: string]: any };
   event?: string;
   serverEvent?: string;
