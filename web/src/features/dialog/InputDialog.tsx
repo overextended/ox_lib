@@ -40,6 +40,7 @@ const InputDialog: React.FC = () => {
 
   useNuiEvent<Props>("openDialog", (data) => {
     setInputOptions(data);
+    setInputData([]);
     setVisible(true);
   });
 
