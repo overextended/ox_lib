@@ -24,20 +24,6 @@ function cache:getVehicle()
 	end
 end
 
-function cache:onFoot()
-	-- todo
-	-- print('on foot')
-end
-
-function cache:inVehicle()
-	-- todo
-	if self.driver then
-		-- print('driving vehicle')
-	else
-		-- print('in vehicle')
-	end
-end
-
 local update = {}
 
 function cache:set(key, value)
@@ -59,11 +45,6 @@ CreateThread(function()
 		if num > 1 then
 			cache.coords = GetEntityCoords(cache.ped)
 			cache:getVehicle()
-			-- if not cache.vehicle then
-			-- 	cache:onFoot()
-			-- else
-			-- 	cache:inVehicle()
-			-- end
 			num = 0
 		end
 
