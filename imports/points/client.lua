@@ -55,18 +55,30 @@ CreateThread(function()
 end)
 
 return {
-	new = function(coords, distance, data)
+	new = function(...)
+		local args = {...}
 		local id = #points + 1
+		local self
 
-		local self = {
-			id = id,
-			coords = coords,
-			distance = distance,
-			remove = removePoint,
-		}
+		-- Support sending a single argument containing point data
+		if type(args[1]) == 'table' then
+			self = args[1]
+			self.id = id
+			self.remove = removePoint
+		else
+			-- Backwards compatibility for original implementation (args: coords, distance, data)
+			self = {
+				id = id,
+				coords = args[1],
+				remove = removePoint,
+			}
+		end
 
-		if data then
-			for k, v in pairs(data) do
+
+		self.distance = self.distance or args[2]
+
+		if args[3] then
+			for k, v in pairs(args[3]) do
 				self[k] = v
 			end
 		end
