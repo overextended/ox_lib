@@ -2,12 +2,6 @@ local progress
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local disable = {}
-local disableKeys = {
-	mouse = {1, 2, 106},
-	move = {21, 30, 31, 36},
-	car = {63, 64, 71, 72, 75},
-	combat = {25}
-}
 
 local function createProp(prop)
 	lib.requestModel(prop.model)
@@ -45,30 +39,31 @@ local function startProgress(data)
 		end
 	end
 
-	local count
-
 	if data.disable then
-		count = 0
-
-		for k, v in pairs(data.disable) do
-			if v then
-				local keys = disableKeys[k]
-
-				for i = 1, #keys do
-					count += 1
-					disable[count] = keys[i]
-				end
-			end
-		end
-	end
-
-	if count and count > 0 then
 		while progress do
-			for i = 1, count do
-				DisableControlAction(0, disable[i], true)
+			if data.disable.mouse then
+				DisableControlAction(0, 1, true)
+				DisableControlAction(0, 2, true)
+				DisableControlAction(0, 106, true)
+			end
+
+			if data.disable.mouse then
+				DisableControlAction(0, 21, true)
+				DisableControlAction(0, 30, true)
+				DisableControlAction(0, 31, true)
+				DisableControlAction(0, 36, true)
+			end
+
+			if data.disable.car then
+				DisableControlAction(0, 63, true)
+				DisableControlAction(0, 64, true)
+				DisableControlAction(0, 71, true)
+				DisableControlAction(0, 72, true)
+				DisableControlAction(0, 75, true)
 			end
 
 			if data.disable.combat then
+				DisableControlAction(0, 25, true)
 				DisablePlayerFiring(cache.playerId, true)
 			end
 
