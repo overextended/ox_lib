@@ -50,7 +50,7 @@ return function()
 		err(result, 0)
 	end
 
-	success, result = pcall(result)
+	success, result = pcall(success)
 
 	if not success then err(result) end
 
