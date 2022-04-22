@@ -10,10 +10,16 @@ local function err(e, n)
 	error(('^1%s^0'):format(e), n)
 end
 
-return function(framework)
-	if framework == 'ox' then framework = 'ox_core'
-	elseif framework == 'esx' then framework = 'es_extended'
-	elseif framework == 'qbcore' then framework = 'qb-core' end
+return function()
+	local framework = GetResourceState('ox_core'):find('start') and 'ox_core'
+
+	if not framework then
+		framework = GetResourceState('es_extended'):find('start') and 'es_extended'
+	end
+
+	if not framework then
+		framework = GetResourceState('qb-core'):find('start') and 'qb-core'
+	end
 
 	local result
 	local success, import = pcall(ref, framework)
