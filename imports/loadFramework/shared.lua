@@ -28,6 +28,7 @@ return function()
 		err(import and import or ('no loader exists for %s'):format(framework), 1)
 	end
 
+	-- Return early since framework does not use an imports file
 	if type(import) == 'table' then
 		import.resource = framework
 		return import
@@ -43,20 +44,15 @@ return function()
 		err(result and result or ("unable to load '@%s/%s'"):format(framework, import), 0)
 	end
 
-	if success then
-		success, result = pcall(load, result, ('@@%s/%s'):format(framework, import), 't')
+	success, result = load(result, ('@@%s/%s'):format(framework, import))
 
-		if not result then
-			-- TODO: catch the error that pcall somehow doesn't catch?
-			err(("an unknown error occured while loading '@%s/%s'"):format(framework, import))
-		end
-
-		if success then
-			success, result = pcall(result)
-
-			if not success then err(result) end
-		end
+	if not success then
+		err(result, 0)
 	end
+
+	success, result = pcall(result)
+
+	if not success then err(result) end
 
 	if framework == 'ox_core' then
 		import = Ox
