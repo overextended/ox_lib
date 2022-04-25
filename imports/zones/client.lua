@@ -6,16 +6,18 @@ local function removeZone(self)
 end
 
 local function debug(self)
-	local points = self.polygon()
-	for i = 1, #points do
-		if i == #points then
-			DrawPoly(points[i], points[1], self.centroid, 255, 0, 0, 50)
-			DrawPoly(points[1], points[i], self.centroid, 255, 0, 0, 50)
-		else
-			DrawPoly(points[i], points[i + 1], self.centroid, 255, 0, 0, 50)
-			DrawPoly(points[i + 1], points[i], self.centroid, 255, 0, 0, 50)
-		end
-	end
+	local polygon = self.polygon
+	local polyCount = #self.polygon
+
+    for i = 1, polyCount do
+        if i == polyCount then
+            DrawPoly(polygon[i], polygon[1], self.centroid, 255, 0, 0, 50)
+            DrawPoly(polygon[1], polygon[i], self.centroid, 255, 0, 0, 50)
+        else
+            DrawPoly(polygon[i], polygon[i + 1], self.centroid, 255, 0, 0, 50)
+            DrawPoly(polygon[i + 1], polygon[i], self.centroid, 255, 0, 0, 50)
+        end
+    end
 end
 
 local inside = {}
