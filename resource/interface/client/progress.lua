@@ -47,7 +47,7 @@ local function startProgress(data)
 				DisableControlAction(0, 106, true)
 			end
 
-			if data.disable.mouse then
+			if data.disable.move then
 				DisableControlAction(0, 21, true)
 				DisableControlAction(0, 30, true)
 				DisableControlAction(0, 31, true)
