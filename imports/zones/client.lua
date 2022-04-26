@@ -77,5 +77,23 @@ return {
 
 		zones[data.id] = data
 		return data
+	end,
+	box = function(data)
+		data.id = #zones + 1
+		data.thickness = data.size.z or 2
+		data.polygon = glm.polygon.new({
+			vec(data.size.x, data.size.y, 0),
+			vec(-data.size.x, data.size.y, 0),
+			vec(-data.size.x, -data.size.y, 0),
+			vec(data.size.x, -data.size.y, 0),
+		})
+		data.rotation = quat(data.rotation, vec(0, 0, 1))
+		data.polygon = data.rotation * data.polygon
+		data.polygon = data.polygon + data.centroid
+		data.remove = removeZone
+		data.debug = data.debug and debug
+
+		zones[data.id] = data
+		return data
 	end
 }
