@@ -67,7 +67,7 @@ CreateThread(function()
 end)
 
 return {
-	new = function(data)
+	poly = function(data)
 		data.id = #zones + 1
 		data.thickness = data.thickness or 2
 		data.polygon = glm.polygon.new(data.points)
@@ -78,6 +78,7 @@ return {
 		zones[data.id] = data
 		return data
 	end,
+
 	box = function(data)
 		data.id = #zones + 1
 		data.thickness = data.size.z or 2
@@ -87,7 +88,7 @@ return {
 			vec(-data.size.x, -data.size.y, 0),
 			vec(data.size.x, -data.size.y, 0),
 		})
-		data.rotation = quat(data.rotation, vec(0, 0, 1))
+		data.rotation = quat(data.rotation or 0, vec(0, 0, 1))
 		data.polygon = data.rotation * data.polygon
 		data.polygon = data.polygon + data.centroid
 		data.remove = removeZone
