@@ -21,20 +21,23 @@ local function debug(self)
 end
 
 local inside = {}
+local insideCount
 local tick
 
 CreateThread(function()
 	while true do
-		local coords = GetEntityCoords(cache.ped)
 		Wait(300)
+		local coords = GetEntityCoords(cache.ped)
 		table.wipe(inside)
+		insideCount = 0
 
 		for _, zone in pairs(zones) do
 			local contains = zone.polygon:contains(coords, zone.thickness)
 
 			if contains then
 				if zone.inside then
-					inside[#inside + 1] = zone
+					insideCount += 1
+					inside[insideCount] = zone
 				end
 
 				if zone.onEnter and not zone.insideZone then
@@ -46,21 +49,29 @@ CreateThread(function()
 				if zone.onExit then
 					zone:onExit()
 				end
+			elseif zone.debug then
+				insideCount += 1
+				inside[insideCount] = zone
 			end
 		end
 
 		if not tick then
-			if #inside > 0 then
+			if insideCount > 0 then
 				tick = SetInterval(function()
-					for i = 1, #inside do
-						inside[i]:inside()
-						if inside[i].debug then
-							inside[i]:debug()
+					for i = 1, insideCount do
+						local zone = inside[i]
+
+						if zone.insideZone then
+							zone:inside()
+						end
+
+						if zone.debug then
+							zone:debug()
 						end
 					end
 				end)
 			end
-		elseif #inside == 0 then
+		elseif insideCount == 0 then
 			tick = ClearInterval(tick)
 		end
 	end
