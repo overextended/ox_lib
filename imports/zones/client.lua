@@ -77,6 +77,38 @@ CreateThread(function()
 	end
 end)
 
+local DrawLine = DrawLine
+
+local function debugBox(self)
+	if not self.debugCoords then
+		self.debugCoords = {
+			self.centroid + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+			self.centroid + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+			self.centroid + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+			self.centroid + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+			self.centroid - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+			self.centroid - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+			self.centroid - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+			self.centroid - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+		}
+	end
+
+	DrawLine(self.debugCoords[1], self.debugCoords[2], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[2], self.debugCoords[3], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[3], self.debugCoords[4], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[4], self.debugCoords[1], 255, 0, 0, 150)
+
+	DrawLine(self.debugCoords[5], self.debugCoords[6], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[6], self.debugCoords[7], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[7], self.debugCoords[8], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[8], self.debugCoords[5], 255, 0, 0, 150)
+
+	DrawLine(self.debugCoords[1], self.debugCoords[7], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[2], self.debugCoords[8], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[3], self.debugCoords[5], 255, 0, 0, 150)
+	DrawLine(self.debugCoords[4], self.debugCoords[6], 255, 0, 0, 150)
+end
+
 local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
@@ -108,7 +140,7 @@ return {
 			vec3(data.size.x, -data.size.y, 0),
 		}) + data.centroid)
 		data.remove = removeZone
-		data.debug = data.debug and debug
+		data.debug = data.debug and debugBox
 		data.contains = contains
 
 		zones[data.id] = data
