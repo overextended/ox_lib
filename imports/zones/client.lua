@@ -77,6 +77,12 @@ CreateThread(function()
 	end
 end)
 
+local glm_polygon_contains = glm.polygon.contains
+
+local function contains(self, coords)
+	return glm_polygon_contains(self.polygon, coords)
+end
+
 return {
 	poly = function(data)
 		data.id = #zones + 1
@@ -85,6 +91,7 @@ return {
 		data.remove = removeZone
 		data.centroid = data.polygon:centroid()
 		data.debug = data.debug and debug
+		data.contains = contains
 
 		zones[data.id] = data
 		return data
@@ -104,6 +111,7 @@ return {
 		data.polygon = data.polygon + data.centroid
 		data.remove = removeZone
 		data.debug = data.debug and debug
+		data.contains = contains
 
 		zones[data.id] = data
 		return data
