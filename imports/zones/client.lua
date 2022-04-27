@@ -100,15 +100,13 @@ return {
 	box = function(data)
 		data.id = #zones + 1
 		data.thickness = data.size.z or 2
-		data.polygon = glm.polygon.new({
-			vec(data.size.x, data.size.y, 0),
-			vec(-data.size.x, data.size.y, 0),
-			vec(-data.size.x, -data.size.y, 0),
-			vec(data.size.x, -data.size.y, 0),
-		})
-		data.rotation = quat(data.rotation or 0, vec(0, 0, 1))
-		data.polygon = data.rotation * data.polygon
-		data.polygon = data.polygon + data.centroid
+		data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
+		data.polygon = (data.rotation * glm.polygon.new({
+			vec3(data.size.x, data.size.y, 0),
+			vec3(-data.size.x, data.size.y, 0),
+			vec3(-data.size.x, -data.size.y, 0),
+			vec3(data.size.x, -data.size.y, 0),
+		}) + data.centroid)
 		data.remove = removeZone
 		data.debug = data.debug and debug
 		data.contains = contains
