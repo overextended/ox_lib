@@ -1,7 +1,3 @@
--- Creates exports from values assigned to lib
--- Hacky workaround for Lua Language Server support
---- Alias for `exports.ox_lib`
-
 lib = setmetatable({}, {
 	__newindex = function(self, name, fn)
 		exports(name, fn)
@@ -9,9 +5,6 @@ lib = setmetatable({}, {
 	end
 })
 
-function lib.setClipboard(value)
-	SendNUIMessage({
-		action = 'setClipboard',
-		data = value
-	})
+if not LoadResourceFile('ox_lib', 'web/build/index.html') then
+	error('Unable to load UI. Build ox_lib or download the latest release.\n	^3https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip^0')
 end
