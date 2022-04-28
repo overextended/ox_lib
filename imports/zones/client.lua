@@ -53,14 +53,14 @@ local function getTriangles(polygon)
 	end
 
 	function makeTriangles(t)
-		if t.c and t.d then
-			triangles[#triangles + 1] = {a = t.a, b = t.b, c = t.c}
-			triangles[#triangles + 1] = {a = t.b, b = t.c, c = t.d}
+		if t[3] and t[4] then
+			triangles[#triangles + 1] = {t[1], t[2], t[3]}
+			triangles[#triangles + 1] = {t[2], t[3], t[4]}
 			for k, v in pairs(t) do
 				points[v].uses += 1
 			end
 		else
-			triangles[#triangles + 1] = {a = t.a, b = t.b or t.c, c = t.d or t.c}
+			triangles[#triangles + 1] = {t[1], t[2] or t[3], t[4] or t[3]}
 			for k, v in pairs(t) do
 				points[v].uses += 2
 			end
@@ -139,7 +139,7 @@ local function getTriangles(polygon)
 						end
 					end
 				end
-				makeTriangles({a = a, b = b, c = c, d = d})
+				makeTriangles({a, b, c, d})
 			end
 		end
 	end
@@ -211,8 +211,8 @@ local function debugPoly(self)
 	if self.triangles then
 		for i = 1, #self.triangles do
 			local triangle = self.triangles[i]
-			DrawPoly(triangle.a, triangle.b, triangle.c, 255, 0, 0, 50)
-			DrawPoly(triangle.b, triangle.a, triangle.c, 255, 0, 0, 50)
+			DrawPoly(triangle[1], triangle[2], triangle[3], 255, 0, 0, 50)
+			DrawPoly(triangle[2], triangle[1], triangle[3], 255, 0, 0, 50)
 		end
 	else
 		local polygon = self.polygon
