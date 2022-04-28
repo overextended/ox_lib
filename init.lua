@@ -19,9 +19,9 @@ if not _VERSION:find('5.4') then
 	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
 end
 
-local lualib = 'ox_lib'
+local ox_lib = 'ox_lib'
 
-if not GetResourceState(lualib):find('start') then
+if not GetResourceState(ox_lib):find('start') then
 	error('^1ox_lib should be started before this resource^0', 2)
 end
 
@@ -36,8 +36,8 @@ local rawget = rawget
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
-	local chunk = LoadResourceFile(lualib, ('%s/%s.lua'):format(dir, file))
-	local shared = LoadResourceFile(lualib, ('%s/shared.lua'):format(dir))
+	local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, file))
+	local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
 
 	if shared then
 		chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
@@ -66,7 +66,7 @@ local function call(self, index, ...)
 
 		if not module then
 			local function method(...)
-				return exports[lualib][index](nil, ...)
+				return exports[ox_lib][index](nil, ...)
 			end
 
 			if not ... then
@@ -96,7 +96,7 @@ lib = setmetatable({
 	end,
 
 	__tostring = function()
-		return lualib
+		return ox_lib
 	end,
 })
 
@@ -154,7 +154,7 @@ local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
 
 local cache = setmetatable({}, {
 	__index = function(self, key)
-		return rawset(self, key, exports[lualib]['cache'](nil, key) or false)[key]
+		return rawset(self, key, exports[ox_lib]['cache'](nil, key) or false)[key]
 	end,
 
 	__call = function(self)
