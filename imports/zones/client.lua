@@ -150,24 +150,6 @@ local function removeZone(self)
 	zones[self.id] = nil
 end
 
-local function debug(self)
-	local polygon = self.polygon
-	local polyCount = #self.polygon
-
-	if polygon.isConvex(polygon) then
-		for i = 2, polyCount - 1 do
-			DrawPoly(polygon[1], polygon[i], polygon[i + 1], 255, 0, 0, 50)
-			DrawPoly(polygon[i], polygon[1], polygon[i + 1], 255, 0, 0, 50)
-		end
-	else
-		self.triangles = self.triangles or getTriangles(polygon)
-		for i = 1, #self.triangles do
-			DrawPoly(self.triangles[i].a, self.triangles[i].b, self.triangles[i].c, 255, 0, 0, 50)
-			DrawPoly(self.triangles[i].b, self.triangles[i].a, self.triangles[i].c, 255, 0, 0, 50)
-		end
-    end
-end
-
 local inside = {}
 local insideCount
 local tick
@@ -225,36 +207,40 @@ CreateThread(function()
 	end
 end)
 
+local function debugPoly(self)
+	if self.triangles then
+		for i = 1, #self.triangles do
+			local triangle = self.triangles[i]
+			DrawPoly(triangle.a, triangle.b, triangle.c, 255, 0, 0, 50)
+			DrawPoly(triangle.b, triangle.a, triangle.c, 255, 0, 0, 50)
+		end
+	else
+		local polygon = self.polygon
+
+		for i = 2, #self.polygon - 1 do
+			DrawPoly(polygon[1], polygon[i], polygon[i + 1], 255, 0, 0, 50)
+			DrawPoly(polygon[i], polygon[1], polygon[i + 1], 255, 0, 0, 50)
+		end
+	end
+end
+
 local DrawLine = DrawLine
 
 local function debugBox(self)
-	if not self.debugCoords then
-		self.debugCoords = {
-			self.centroid + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-			self.centroid + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-			self.centroid + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-			self.centroid + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
-			self.centroid - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-			self.centroid - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-			self.centroid - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-			self.centroid - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
-		}
-	end
+	DrawLine(self.vertices[1], self.vertices[2], 255, 0, 0, 150)
+	DrawLine(self.vertices[2], self.vertices[3], 255, 0, 0, 150)
+	DrawLine(self.vertices[3], self.vertices[4], 255, 0, 0, 150)
+	DrawLine(self.vertices[4], self.vertices[1], 255, 0, 0, 150)
 
-	DrawLine(self.debugCoords[1], self.debugCoords[2], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[2], self.debugCoords[3], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[3], self.debugCoords[4], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[4], self.debugCoords[1], 255, 0, 0, 150)
+	DrawLine(self.vertices[5], self.vertices[6], 255, 0, 0, 150)
+	DrawLine(self.vertices[6], self.vertices[7], 255, 0, 0, 150)
+	DrawLine(self.vertices[7], self.vertices[8], 255, 0, 0, 150)
+	DrawLine(self.vertices[8], self.vertices[5], 255, 0, 0, 150)
 
-	DrawLine(self.debugCoords[5], self.debugCoords[6], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[6], self.debugCoords[7], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[7], self.debugCoords[8], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[8], self.debugCoords[5], 255, 0, 0, 150)
-
-	DrawLine(self.debugCoords[1], self.debugCoords[7], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[2], self.debugCoords[8], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[3], self.debugCoords[5], 255, 0, 0, 150)
-	DrawLine(self.debugCoords[4], self.debugCoords[6], 255, 0, 0, 150)
+	DrawLine(self.vertices[1], self.vertices[7], 255, 0, 0, 150)
+	DrawLine(self.vertices[2], self.vertices[8], 255, 0, 0, 150)
+	DrawLine(self.vertices[3], self.vertices[5], 255, 0, 0, 150)
+	DrawLine(self.vertices[4], self.vertices[6], 255, 0, 0, 150)
 end
 
 local glm_polygon_contains = glm.polygon.contains
@@ -263,15 +249,32 @@ local function contains(self, coords)
 	return glm_polygon_contains(self.polygon, coords)
 end
 
+local function getBoxVertices(self)
+	return {
+		self.centroid + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.centroid + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.centroid + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.centroid + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.centroid - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.centroid - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.centroid - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.centroid - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+	}
+end
+
 return {
 	poly = function(data)
 		data.id = #zones + 1
 		data.thickness = data.thickness or 2
 		data.polygon = glm.polygon.new(data.points)
-		data.remove = removeZone
 		data.centroid = data.polygon:centroid()
-		data.debug = data.debug and debug
+		data.remove = removeZone
 		data.contains = contains
+
+		if data.debug then
+			data.triangles = not data.polygon:isConvex() and getTriangles(data.polygon)
+			data.debug = debugPoly
+		end
 
 		zones[data.id] = data
 		return data
@@ -288,8 +291,12 @@ return {
 			vec3(data.size.x, -data.size.y, 0),
 		}) + data.centroid)
 		data.remove = removeZone
-		data.debug = data.debug and debugBox
 		data.contains = contains
+
+		if data.debug then
+			data.vertices = getBoxVertices(data)
+			data.debug = debugBox
+		end
 
 		zones[data.id] = data
 		return data
