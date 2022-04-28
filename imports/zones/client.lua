@@ -2,8 +2,7 @@ local glm = require 'glm'
 local zones = {}
 
 local function getTriangles(polygon)
-	local X = {}
-	X[1], X[2] = polygon.projectToAxis(polygon, vec(1, 0, 0))
+	local X = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
 
 	local points = {}
 	local sides = {}
@@ -54,13 +53,13 @@ local function getTriangles(polygon)
 
 	function makeTriangles(t)
 		if t[3] and t[4] then
-			triangles[#triangles + 1] = {t[1], t[2], t[3]}
-			triangles[#triangles + 1] = {t[2], t[3], t[4]}
+			triangles[#triangles + 1] = mat(t[1], t[2], t[3])
+			triangles[#triangles + 1] = mat(t[2], t[3], t[4])
 			for k, v in pairs(t) do
 				points[v].uses += 1
 			end
 		else
-			triangles[#triangles + 1] = {t[1], t[2] or t[3], t[4] or t[3]}
+			triangles[#triangles + 1] = mat(t[1], t[2] or t[3], t[4] or t[3])
 			for k, v in pairs(t) do
 				points[v].uses += 2
 			end
