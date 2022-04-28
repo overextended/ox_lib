@@ -43,15 +43,15 @@ local function getTriangles(polygon)
 		end
 	end
 
-	function up(a, b)
+	local function up(a, b)
 		return a.y > b.y
 	end
 
-	function down(a, b)
+	local function down(a, b)
 		return a.y < b.y
 	end
 
-	function makeTriangles(t)
+	local function makeTriangles(t)
 		if t[3] and t[4] then
 			triangles[#triangles + 1] = mat(t[1], t[2], t[3])
 			triangles[#triangles + 1] = mat(t[2], t[3], t[4])
