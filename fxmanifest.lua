@@ -40,7 +40,8 @@ files {
     'imports/**/client.lua',
     'imports/**/shared.lua',
     'web/build/index.html',
-    'web/build/**/*'
+    'web/build/**/*',
+	'locales/*.json',
 }
 
 shared_script 'resource/main.lua'
