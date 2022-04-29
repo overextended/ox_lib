@@ -16,7 +16,7 @@ end
 
 local function loadLocale(locale)
 	local resourceName = GetCurrentResourceName()
-	local JSON = LoadResourceFile(resourceName, ('locales/%s.json'):format(locale)) or LoadResourceFile(resourceName, ('locales/en-US.json'):format(locale))
+	local JSON = LoadResourceFile(resourceName, ('locales/%s.json'):format(locale)) or LoadResourceFile(resourceName, ('locales/en.json'):format(locale))
 
 	if JSON then
 		dict = json.decode(JSON)
@@ -26,6 +26,6 @@ end
 AddEventHandler('ox_lib:setLocale', loadLocale)
 
 return function()
-	local lang = IsDuplicityVersion() and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en-US'
+	local lang = IsDuplicityVersion() and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
 	loadLocale(lang)
 end
