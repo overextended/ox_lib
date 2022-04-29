@@ -26,6 +26,6 @@ end
 AddEventHandler('ox_lib:setLocale', loadLocale)
 
 return function()
-	local lang = IsDuplicityVersion() and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
+	local lang = IsDuplicityVersion() and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'fr'
 	loadLocale(lang)
 end
