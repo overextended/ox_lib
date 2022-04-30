@@ -1,5 +1,11 @@
 {
   "language": "Français",
-  "ui.close": "Fermer",
-  "ui.confirm": "Confirmer"
+  "ui": {
+    "settings": {
+      "title": "Réglages",
+      "language": "Langue"
+    },
+    "close": "Fermer",
+    "confirm": "Confirmer"
+  }
 }

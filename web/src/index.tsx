@@ -11,6 +11,7 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { isEnvBrowser } from "./utils/misc";
+import LocaleProvider from "./providers/LocaleProvider";
 
 library.add(fas, far, fab);
 
@@ -33,11 +34,13 @@ debugData([
 
 ReactDOM.render(
   <React.StrictMode>
-    <VisibilityProvider>
-      <ChakraProvider theme={theme}>
-        <App />
-      </ChakraProvider>
-    </VisibilityProvider>
+    <LocaleProvider>
+      <VisibilityProvider>
+        <ChakraProvider theme={theme}>
+          <App />
+        </ChakraProvider>
+      </VisibilityProvider>
+    </LocaleProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
