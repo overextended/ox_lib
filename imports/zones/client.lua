@@ -2,41 +2,63 @@ local glm = require 'glm'
 local zones = {}
 
 local function getTriangles(polygon)
-	local X = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
+	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
 
 	local points = {}
 	local sides = {}
+	local horizontals = {}
 	local triangles = {}
 
+	local h
 	for i = 1, #polygon do
+		local point = polygon[i]
+		local unique = true
+
+		for j = 1, #horizontals do
+			if point.y == horizontals[j][1].y then
+				h = j
+				horizontals[j][#horizontals[j] + 1] = point
+				unique = false
+				break
+			end
+		end
+
+		if unique then
+			h = #horizontals + 1
+			horizontals[h] = {point}
+		end
+
 		sides[i] = {polygon[i], polygon[i + 1] or polygon[1]}
-		points[polygon[i]] = {side = i, intersects = {}, v = polygon[i], uses = 0}
+		points[polygon[i]] = {side = i, horizontal = h, uses = 0}
 	end
 
-	for i = 1, #polygon do
-		for j = 1, #X do
-			local extremePoint = vec(X[j], polygon[i].yz)
-			if polygon[i].x ~= extremePoint.x then
-				for l = 1, #polygon do
-					local bool, d, d2 = glm.segment.intersectsSegment(polygon[i], extremePoint, polygon[l], polygon[l + 1] or polygon[1])
-					if d > 0.001 and d < 0.999 and d2 > 0.001 and d2 < 0.999 then
-						local intersect = glm.segment.getPoint(polygon[i], extremePoint, d)
-						local valid = polygon.contains(polygon, (polygon[i] + intersect) / 2)
-						if valid then
-							for m = 1, #polygon do
-								local bool, d, d2 = glm.segment.intersectsSegment(polygon[i], intersect, polygon[m], polygon[m + 1] or polygon[1])
-								if d > 0.001 and d < 0.999 and d2 > 0.001 and d2 < 0.999 then
-									valid = false
-									break
-								end
+	for i = 1, #horizontals do
+		local horizontal = horizontals[i]
+		local hLineStart, hLineEnd = vec(extremes[1], horizontal[1].yz), vec(extremes[2], horizontal[1].yz)
+		for j = 1, #sides do
+			local sideStart, sideEnd = sides[j][1], sides[j][2]
+			local bool, d, d2 = glm.segment.intersectsSegment(hLineStart, hLineEnd, sideStart, sideEnd)
+			if d > 0.001 and d < 0.999 and d2 > 0.001 and d2 < 0.999 then
+				local newPoint = glm.segment.getPoint(hLineStart, hLineEnd, d)
+				local valid
+				for l = 1, #horizontal do
+					local point = horizontal[l]
+					valid = polygon.contains(polygon, (point + newPoint) / 2, 0.1)
+					if valid then
+						for m = 1, #sides do
+							local sideStart, sideEnd = sides[m][1], sides[m][2]
+							local bool, d, d2 = glm.segment.intersectsSegment(point, newPoint, sides[m][1], sides[m][2])
+							if d > 0.001 and d < 0.999 and d2 > 0.001 and d2 < 0.999 then
+								valid = false
+								break
 							end
 						end
-						if valid then
-							points[intersect] = {side = l, vertex = polygon[i], v = intersect, uses = 0}
-							points[polygon[i]].intersects[#points[polygon[i]].intersects + 1] = intersect
-
-							sides[l][#sides[l] + 1] = intersect
-						end
+					end
+					if valid then
+						horizontals[i][#horizontals[i] + 1] = newPoint
+						sides[j][#sides[j] + 1] = newPoint
+						points[newPoint] = {side = j, horizontal = i, uses = 0}
+						break
 					end
 				end
 			end
@@ -51,15 +73,23 @@ local function getTriangles(polygon)
 		return a.y < b.y
 	end
 
+	local function right(a, b)
+		return a.x > b.x
+	end
+
+	local function left(a, b)
+		return a.x < b.x
+	end
+
 	local function makeTriangles(t)
 		if t[3] and t[4] then
 			triangles[#triangles + 1] = mat(t[1], t[2], t[3])
 			triangles[#triangles + 1] = mat(t[2], t[3], t[4])
-			for k, v in pairs(t) do
-				points[v].uses += 1
+			for i = 1, #t do
+				points[t[i]].uses += 1
 			end
 		else
-			triangles[#triangles + 1] = mat(t[1], t[2] or t[3], t[4] or t[3])
+			triangles[#triangles + 1] = mat(t[1], t[2], t[3] or t[4])
 			for k, v in pairs(t) do
 				points[v].uses += 2
 			end
@@ -68,77 +98,103 @@ local function getTriangles(polygon)
 
 	for i = 1, #sides do
 		local side = sides[i]
+
 		local direction = side[1].y - side[2].y
-		if direction > 0 then
-			direction = up
-		else
-			direction = down
-		end
+		direction = direction > 0 and up or down
 		table.sort(side, direction)
+
 		for j = 1, #side - 1 do
 			local a, b = side[j], side[j + 1]
-			local c = points[a].vertex or points[a].intersects[1]
-			local d = points[b].vertex or points[b].intersects[1]
-			if points[a].uses < 2 then
-				if c and d then
-					if points[c].side ~= points[d].side then
-						local c2
-						if points[a].vertex then
-							if points[a].v == points[c].intersects[1] and points[c].intersects?[2] then
-								c2 = points[c].intersects[2]
-							else
-								c2 = points[c].intersects[1]
-							end
+			local aData, bData = points[a], points[b]
+			local aPos, bPos
+			if aData.horizontal ~= bData.horizontal then
+				local aHorizontal, bHorizontal = horizontals[aData.horizontal], horizontals[bData.horizontal]
+				local c, d
+
+				if aHorizontal[2] then
+					local direction = a.x - (a.x ~= aHorizontal[1].x and aHorizontal[1].x or aHorizontal[2].x)
+					direction = direction > 0 and right or left
+					table.sort(aHorizontal, direction)
+
+					for l = 1, #aHorizontal do
+						if a == aHorizontal[l] then
+							aPos = l
+						elseif c and aPos then
+							break
 						else
-							c2 = points[a].intersects[2]
-						end
-						local c2Point = points[c2]
-						if c2Point and c2Point.side == points[d].side then
-							c = c2
-						else
-							if points[b].vertex then
-								if points[b].v == points[d].intersects[1] and points[d].intersects?[2] then
-									d = points[d].intersects[2]
-								elseif b ~= points[d].intersects[1] then
-									d = points[d].intersects[1]
-								end
-							elseif points[b].intersects[2] then
-								d = points[b].intersects[2]
-							end
-						end
-					end
-				elseif c then
-					if points[b].side ~= points[c].side then
-						local c2
-						if points[c].intersects?[2] then
-							c2 = points[c].intersects[2]
-						elseif points[a].intersects?[2] then
-							c2 = points[a].intersects[2]
-						end
-						local c2Point = points[c2]
-						if c2Point then
-							if c2Point.side == points[b].side or (c2Point.side - #sides + 1) == points[b].side then
-								c = c2
-							end
-						end
-					end
-				elseif d then
-					if points[a].side ~= points[d].side then
-						local d2
-						if points[d].intersects?[2] then
-							d2 = points[d].intersects[2]
-						elseif points[b].intersects?[2] then
-							d2 = points[b].intersects[2]
-						end
-						local d2Point = points[d2]
-						if d2Point then
-							if d2Point.side == points[a].side or (d2Point.side - #sides + 1) == points[a].side then
-								d = d2
-							end
+							c = aHorizontal[l]
 						end
 					end
 				end
-				makeTriangles({a, b, c, d})
+
+				if bHorizontal[2] then
+					local direction = b.x - (b.x ~= bHorizontal[1].x and bHorizontal[1].x or bHorizontal[2].x)
+					direction = direction > 0 and right or left
+					table.sort(bHorizontal, direction)
+
+					for l = 1, #bHorizontal do
+						if b == bHorizontal[l] then
+							bPos = l
+						elseif bPos and d then
+							break
+						else
+							d = bHorizontal[l]
+						end
+					end
+				end
+
+				if aData.uses < 2 then
+					if c and d then
+						if points[c].side ~= points[d].side then
+							local done
+							for l = aPos > 1 and aPos - 1 or 1, aPos > #aHorizontal and aPos + 1 or #aHorizontal do
+								c = aHorizontal[l]
+								if c ~= a then
+									for m = bPos > 1 and bPos - 1 or 1, bPos > #bHorizontal and bPos + 1 or #bHorizontal do
+										d = bHorizontal[m]
+										local sideDifference = points[c].side - points[d].side
+										if d ~= b and sideDifference >= -1 and sideDifference <= 1 then
+											done = true
+											break
+										end
+									end
+								end
+								if done then break end
+							end
+						end
+						c = polygon.contains(polygon, (a + c) / 2, 0.1) and c or nil
+						d = polygon.contains(polygon, (b + d) / 2, 0.1) and d or nil
+					end
+
+					if c and not d then
+						for l = aPos > 1 and aPos - 1 or 1, aPos < #aHorizontal and aPos + 1 or #aHorizontal do
+							c = aHorizontal[l]
+							if c and c ~= a then
+								local sideDifference = bData.side - points[c].side
+								if sideDifference >= -1 and sideDifference <= 1 then
+									break
+								end
+							end
+						end
+					elseif d and not c then
+						for l = bPos > 1 and bPos - 1 or 1, bPos < #bHorizontal and bPos + 1 or #bHorizontal do
+							d = aHorizontal[l]
+							if d and d ~= b then
+								local sideDifference = aData.side - points[d].side
+								if sideDifference >= -1 and sideDifference <= 1 then
+									break
+								end
+							end
+						end
+					end
+
+					if c or d then
+						makeTriangles({a, b, c, d})
+					end
+				end
+			else
+				aData.uses += 1
+				bData.uses += 1
 			end
 		end
 	end
