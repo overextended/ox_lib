@@ -30,13 +30,11 @@ end
 -----------------------------------------------------------------------------------------------
 
 local LoadResourceFile = LoadResourceFile
-local file = IsDuplicityVersion() and 'server' or 'client'
-local rawset = rawset
-local rawget = rawget
+local service = IsDuplicityVersion() and 'server' or 'client'
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
-	local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, file))
+	local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, service))
 	local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
 
 	if shared then
@@ -45,7 +43,7 @@ local function loadModule(self, module)
 
 	if chunk then
 		local err
-		chunk, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, file))
+		chunk, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, service))
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
@@ -81,6 +79,8 @@ local function call(self, index, ...)
 end
 
 lib = setmetatable({
+	name = ox_lib,
+	service = service,
 	exports = {},
 	onCache = setmetatable({}, {
 		__call = function(self, key, cb)
@@ -90,13 +90,8 @@ lib = setmetatable({
 }, {
 	__index = call,
 	__call = call,
-
 	__newindex = function()
 		error('Cannot set index on lib')
-	end,
-
-	__tostring = function()
-		return ox_lib
 	end,
 })
 
@@ -160,9 +155,7 @@ local cache = setmetatable({}, {
 	__call = function(self)
 		table.wipe(self)
 
-		if file == 'server' then
-
-		else
+		if service == 'client' then
 			self.playerId = PlayerId()
 			self.serverId = GetPlayerServerId(self.playerId)
 		end
