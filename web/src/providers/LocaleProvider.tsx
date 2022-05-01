@@ -1,4 +1,4 @@
-import { Context, createContext, useContext, useEffect, useState } from "react";
+import { Context, createContext, useContext, useState } from "react";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
 

@@ -1,6 +1,4 @@
 import { HStack, Text, Select, Spacer } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useNuiEvent } from "../../../hooks/useNuiEvent";
 import { useLocales } from "../../../providers/LocaleProvider";
 import { fetchNui } from "../../../utils/fetchNui";
 

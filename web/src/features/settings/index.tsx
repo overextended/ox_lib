@@ -2,7 +2,6 @@ import {
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -10,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import LocaleSetting from "./components/locale";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
