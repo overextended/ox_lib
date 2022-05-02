@@ -66,11 +66,15 @@ const InputDialog: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
 
-  const [showPassword, setShowPassword] = React.useState(false);
-  const handleShowPassword = () => setShowPassword(!showPassword);
+  const [passwordStates, setShowPassword] = React.useState<Array<boolean>>([]);
+  const handleShowPassword = (index: number) => {
+    setShowPassword({
+      ...passwordStates, [index]: !passwordStates[index]
+    })
+  }
 
   useNuiEvent<Props>("openDialog", (data) => {
-    setShowPassword(false);
+    setShowPassword([]);
     setFields(data);
     setInputData([]);
     setVisible(true);
@@ -115,16 +119,16 @@ const InputDialog: React.FC = () => {
                     <InputGroup>
                       <Input
                         onChange={(e) => handleChange(e.target.value, index)}
-                        type={!row.password || showPassword ? 'text' : 'password'}
+                        type={!row.password || passwordStates[index] ? 'text' : 'password'}
                       />
                       {row.password && (
                         <InputRightElement
                           cursor="pointer"
-                          onClick={handleShowPassword}
+                          onClick={() => handleShowPassword(index)}
                           children={
                             <FontAwesomeIcon
                               fixedWidth
-                              icon={showPassword ? "eye" : "eye-slash"}
+                              icon={passwordStates[index] ? "eye" : "eye-slash"}
                               fontSize="1em"
                               style={{ paddingRight: 8 }}
                             />
