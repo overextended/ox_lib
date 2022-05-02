@@ -10,6 +10,7 @@ import {
   Text,
   Button,
   Checkbox,
+  Select,
 } from "@chakra-ui/react";
 import React from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
@@ -17,11 +18,14 @@ import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
+type RowType = "input" | "checkbox" | "select";
+
 interface Props {
   heading: string;
   rows: {
-    type: "input" | "checkbox";
+    type: RowType;
     label: string;
+    options?: { value: string; label: string }[];
   }[];
 }
 
@@ -35,6 +39,15 @@ debugData<Props>([
         { type: "checkbox", label: "Some checkbox" },
         { type: "input", label: "Locker PIN" },
         { type: "checkbox", label: "Some other checkbox" },
+        {
+          type: "select",
+          label: "Locker type",
+          options: [
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+            { value: "option3", label: "Option 3" },
+          ],
+        },
       ],
     },
   },
@@ -60,14 +73,9 @@ const InputDialog: React.FC = () => {
     fetchNui("inputData");
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-    type: "input" | "checkbox"
-  ) => {
+  const handleChange = (value: string | boolean, index: number) => {
     setInputData((previousData) => {
-      previousData[index] =
-        type === "input" ? e.target.value : e.target.checked;
+      previousData[index] = value;
       return previousData;
     });
   };
@@ -96,16 +104,35 @@ const InputDialog: React.FC = () => {
                 {row.type === "input" && (
                   <Box mb={3} key={`input-${index}`} textAlign="left">
                     <Text>{row.label}</Text>
-                    <Input onChange={(e) => handleChange(e, index, "input")} />
+                    <Input
+                      onChange={(e) => handleChange(e.target.value, index)}
+                    />
                   </Box>
                 )}
                 {row.type === "checkbox" && (
                   <Box mb={3} key={`checkbox-${index}`}>
                     <Checkbox
-                      onChange={(e) => handleChange(e, index, "checkbox")}
+                      onChange={(e) => handleChange(e.target.checked, index)}
                     >
                       {row.label}
                     </Checkbox>
+                  </Box>
+                )}
+                {row.type === "select" && (
+                  <Box mb={3} key={`select-${index}`}>
+                    <Select
+                      onChange={(e) => handleChange(e.target.value, index)}
+                    >
+                      {/* Hacky workaround for selectable placeholder issue */}
+                      <option value="" selected hidden disabled>
+                        {row.label}
+                      </option>
+                      {row.options?.map((option, index) => (
+                        <option key={`option-${index}`} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
                   </Box>
                 )}
               </React.Fragment>
