@@ -9,37 +9,46 @@ import {
   Input,
   Text,
   Button,
+  Checkbox,
 } from "@chakra-ui/react";
 import React from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-// import { debugData } from "../utils/debugData";
+import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
 interface Props {
   heading: string;
-  inputs: string[];
+  rows: {
+    type: "input" | "checkbox";
+    label: string;
+  }[];
 }
 
-// debugData([
-//   {
-//     action: "openDialog",
-//     data: {
-//       heading: "Police locker",
-//       inputs: ["Locker number", "Locker PIN"],
-//     },
-//   },
-// ]);
+debugData<Props>([
+  {
+    action: "openDialog",
+    data: {
+      heading: "Police locker",
+      rows: [
+        { type: "input", label: "Locker number" },
+        { type: "checkbox", label: "Some checkbox" },
+        { type: "input", label: "Locker PIN" },
+        { type: "checkbox", label: "Some other checkbox" },
+      ],
+    },
+  },
+]);
 
 const InputDialog: React.FC = () => {
-  const [inputOptions, setInputOptions] = React.useState<Props>({
+  const [fields, setFields] = React.useState<Props>({
     heading: "",
-    inputs: [""],
+    rows: [{ type: "input", label: "" }],
   });
-  const [inputData, setInputData] = React.useState<string[]>([]);
+  const [inputData, setInputData] = React.useState<Array<string | boolean>>([]);
   const [visible, setVisible] = React.useState(false);
 
   useNuiEvent<Props>("openDialog", (data) => {
-    setInputOptions(data);
+    setFields(data);
     setInputData([]);
     setVisible(true);
   });
@@ -51,10 +60,12 @@ const InputDialog: React.FC = () => {
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
+    type: "input" | "checkbox"
   ) => {
     setInputData((previousData) => {
-      previousData[index] = e.target.value;
+      previousData[index] =
+        type === "input" ? e.target.value : e.target.checked;
       return previousData;
     });
   };
@@ -76,13 +87,26 @@ const InputDialog: React.FC = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign="center">{inputOptions.heading}</ModalHeader>
-          <ModalBody fontFamily="Poppins">
-            {inputOptions.inputs.map((input: string, index: number) => (
-              <Box mb={3} key={`input-${index}`}>
-                <Text>{input}</Text>
-                <Input onChange={(e) => handleChange(e, index)} />
-              </Box>
+          <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
+          <ModalBody fontFamily="Poppins" textAlign="left">
+            {fields.rows.map((row, index) => (
+              <React.Fragment key={`row-${index}`}>
+                {row.type === "input" && (
+                  <Box mb={3} key={`input-${index}`} textAlign="left">
+                    <Text>{row.label}</Text>
+                    <Input onChange={(e) => handleChange(e, index, "input")} />
+                  </Box>
+                )}
+                {row.type === "checkbox" && (
+                  <Box mb={3} key={`checkbox-${index}`}>
+                    <Checkbox
+                      onChange={(e) => handleChange(e, index, "checkbox")}
+                    >
+                      {row.label}
+                    </Checkbox>
+                  </Box>
+                )}
+              </React.Fragment>
             ))}
           </ModalBody>
           <ModalFooter>

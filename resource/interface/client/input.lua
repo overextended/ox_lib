@@ -4,12 +4,20 @@ function lib.inputDialog(heading, rows)
 	if input then return end
 	input = promise.new()
 
+	-- Backwards compat with string tables
+	for i = 1, #rows do
+		if type(rows[i]) == 'string' then
+			rows[i] = {type = 'input', label = rows[i]}
+		end
+
+	end
+
 	SetNuiFocus(true, true)
 	SendNUIMessage({
 		action = 'openDialog',
 		data = {
 			heading = heading,
-			inputs = rows
+			rows = rows
 		}
 	})
 
