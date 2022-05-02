@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
+import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
@@ -46,6 +47,7 @@ const InputDialog: React.FC = () => {
   });
   const [inputData, setInputData] = React.useState<Array<string | boolean>>([]);
   const [visible, setVisible] = React.useState(false);
+  const { locale } = useLocales();
 
   useNuiEvent<Props>("openDialog", (data) => {
     setFields(data);
@@ -111,10 +113,10 @@ const InputDialog: React.FC = () => {
           </ModalBody>
           <ModalFooter>
             <Button mr={3} onClick={handleClose}>
-              Close
+              {locale.ui.close}
             </Button>
             <Button colorScheme="blue" onClick={handleConfirm}>
-              Confirm
+              {locale.ui.confirm}
             </Button>
           </ModalFooter>
         </ModalContent>
