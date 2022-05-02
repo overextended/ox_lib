@@ -7,12 +7,15 @@ import {
   ModalBody,
   Box,
   Input,
+  InputGroup,
+  InputRightElement,
   Text,
   Button,
   Checkbox,
   Select,
 } from "@chakra-ui/react";
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
@@ -26,6 +29,7 @@ interface Props {
     type: RowType;
     label: string;
     options?: { value: string; label: string }[];
+    password?: boolean;
   }[];
 }
 
@@ -37,7 +41,7 @@ debugData<Props>([
       rows: [
         { type: "input", label: "Locker number" },
         { type: "checkbox", label: "Some checkbox" },
-        { type: "input", label: "Locker PIN" },
+        { type: "input", label: "Locker PIN", password: true },
         { type: "checkbox", label: "Some other checkbox" },
         {
           type: "select",
@@ -62,7 +66,11 @@ const InputDialog: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
 
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
   useNuiEvent<Props>("openDialog", (data) => {
+    setShowPassword(false);
     setFields(data);
     setInputData([]);
     setVisible(true);
@@ -104,9 +112,26 @@ const InputDialog: React.FC = () => {
                 {row.type === "input" && (
                   <Box mb={3} key={`input-${index}`} textAlign="left">
                     <Text>{row.label}</Text>
-                    <Input
-                      onChange={(e) => handleChange(e.target.value, index)}
-                    />
+                    <InputGroup>
+                      <Input
+                        onChange={(e) => handleChange(e.target.value, index)}
+                        type={!row.password || showPassword ? 'text' : 'password'}
+                      />
+                      {row.password && (
+                        <InputRightElement
+                          cursor="pointer"
+                          onClick={handleShowPassword}
+                          children={
+                            <FontAwesomeIcon
+                              fixedWidth
+                              icon={showPassword ? "eye" : "eye-slash"}
+                              fontSize="1em"
+                              style={{ paddingRight: 8 }}
+                            />
+                          }
+                        />
+                      )}
+                    </InputGroup>
                   </Box>
                 )}
                 {row.type === "checkbox" && (
