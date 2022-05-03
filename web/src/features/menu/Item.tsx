@@ -10,7 +10,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Option, ContextMenuProps } from "../../interfaces";
+import { Option, ContextMenuProps } from "../../interfaces/context";
 import { fetchNui } from "../../utils/fetchNui";
 
 interface DataProps {

@@ -5,35 +5,22 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Box,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
   Button,
-  Checkbox,
-  Select,
-  InputLeftElement,
 } from "@chakra-ui/react";
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
+import { Row } from "../../interfaces/dialog";
 
-type RowType = "input" | "checkbox" | "select";
+import Input from "./components/input";
+import CheckboxField from "./components/checkbox";
+import SelectField from "./components/select";
 
 interface Props {
   heading: string;
-  rows: {
-    type: RowType;
-    label: string;
-    options?: { value: string; label: string }[];
-    password?: boolean;
-    icon?: IconProp;
-  }[];
+  rows: Row[];
 }
 
 debugData<Props>([
@@ -99,6 +86,7 @@ const InputDialog: React.FC = () => {
 
   const handleConfirm = () => {
     setVisible(false);
+    console.log(inputData);
     fetchNui("inputData", inputData);
   };
 
@@ -119,65 +107,28 @@ const InputDialog: React.FC = () => {
             {fields.rows.map((row, index) => (
               <React.Fragment key={`row-${index}`}>
                 {row.type === "input" && (
-                  <Box mb={3} key={`input-${index}`} textAlign="left">
-                    <Text>{row.label}</Text>
-                    <InputGroup>
-                      {row.icon && (
-                        <InputLeftElement
-                          pointerEvents="none"
-                          children={<FontAwesomeIcon icon={row.icon} />}
-                        />
-                      )}
-                      <Input
-                        onChange={(e) => handleChange(e.target.value, index)}
-                        type={
-                          !row.password || passwordStates[index]
-                            ? "text"
-                            : "password"
-                        }
-                      />
-                      {row.password && (
-                        <InputRightElement
-                          cursor="pointer"
-                          onClick={() => handlePasswordStates(index)}
-                          children={
-                            <FontAwesomeIcon
-                              fixedWidth
-                              icon={passwordStates[index] ? "eye" : "eye-slash"}
-                              fontSize="1em"
-                              style={{ paddingRight: 8 }}
-                            />
-                          }
-                        />
-                      )}
-                    </InputGroup>
-                  </Box>
+                  <Input
+                    key={`input-${index}`}
+                    row={row}
+                    index={index}
+                    handleChange={handleChange}
+                    passwordStates={passwordStates}
+                    handlePasswordStates={handlePasswordStates}
+                  />
                 )}
                 {row.type === "checkbox" && (
-                  <Box mb={3} key={`checkbox-${index}`}>
-                    <Checkbox
-                      onChange={(e) => handleChange(e.target.checked, index)}
-                    >
-                      {row.label}
-                    </Checkbox>
-                  </Box>
+                  <CheckboxField
+                    row={row}
+                    index={index}
+                    handleChange={handleChange}
+                  />
                 )}
                 {row.type === "select" && (
-                  <Box mb={3} key={`select-${index}`}>
-                    <Select
-                      onChange={(e) => handleChange(e.target.value, index)}
-                    >
-                      {/* Hacky workaround for selectable placeholder issue */}
-                      <option value="" selected hidden disabled>
-                        {row.label}
-                      </option>
-                      {row.options?.map((option, index) => (
-                        <option key={`option-${index}`} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
+                  <SelectField
+                    row={row}
+                    index={index}
+                    handleChange={handleChange}
+                  />
                 )}
               </React.Fragment>
             ))}
