@@ -13,9 +13,11 @@ import {
   Button,
   Checkbox,
   Select,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
@@ -30,6 +32,7 @@ interface Props {
     label: string;
     options?: { value: string; label: string }[];
     password?: boolean;
+    icon?: IconProp;
   }[];
 }
 
@@ -41,7 +44,7 @@ debugData<Props>([
       rows: [
         { type: "input", label: "Locker number" },
         { type: "checkbox", label: "Some checkbox" },
-        { type: "input", label: "Locker PIN", password: true },
+        { type: "input", label: "Locker PIN", password: true, icon: "lock" },
         { type: "checkbox", label: "Some other checkbox" },
         {
           type: "select",
@@ -63,15 +66,17 @@ const InputDialog: React.FC = () => {
     rows: [{ type: "input", label: "" }],
   });
   const [inputData, setInputData] = React.useState<Array<string | boolean>>([]);
+  const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
+
   const { locale } = useLocales();
 
-  const [passwordStates, setPasswordStates] = React.useState<Array<boolean>>([]);
   const handlePasswordStates = (index: number) => {
     setPasswordStates({
-      ...passwordStates, [index]: !passwordStates[index]
-    })
-  }
+      ...passwordStates,
+      [index]: !passwordStates[index],
+    });
+  };
 
   useNuiEvent<Props>("openDialog", (data) => {
     setPasswordStates([]);
@@ -117,9 +122,19 @@ const InputDialog: React.FC = () => {
                   <Box mb={3} key={`input-${index}`} textAlign="left">
                     <Text>{row.label}</Text>
                     <InputGroup>
+                      {row.icon && (
+                        <InputLeftElement
+                          pointerEvents="none"
+                          children={<FontAwesomeIcon icon={row.icon} />}
+                        />
+                      )}
                       <Input
                         onChange={(e) => handleChange(e.target.value, index)}
-                        type={!row.password || passwordStates[index] ? "text" : "password"}
+                        type={
+                          !row.password || passwordStates[index]
+                            ? "text"
+                            : "password"
+                        }
                       />
                       {row.password && (
                         <InputRightElement
