@@ -1,3 +1,9 @@
+local Core = {
+	Ox = 'ox_core',
+	QB = 'qb-core',
+	ESX = 'es_extended',
+}
+
 return function()
 	local result
 
@@ -5,60 +11,58 @@ return function()
 		local framework = GetConvar('framework', '')
 
 		if framework == '' then
-			framework = GetResourceState('ox_core'):find('start') and 'ox_core'
-			or GetResourceState('qb-core'):find('start') and 'qb-core'
-			or GetResourceState('es_extended'):find('start') and 'es_extended'
+			framework = GetResourceState(Core.Ox):find('start') and Core.Ox
+			or GetResourceState(Core.QB):find('start') and Core.QB
+			or GetResourceState(Core.ESX):find('start') and Core.ESX
 
 			if not framework then
 				error('Unable to determine framework (convar is not set, or resource was renamed)')
 			end
 		end
 
-		local success, import
+		local success
+		local import
+		local resource
 
-		if framework == 'qb-core' then
-			import = exports[framework]:GetCoreObject()
-		elseif framework == 'es_extended' then
-			import = exports[framework]:getSharedObject()
-		end
-
-		if import then
-			import.resource = framework
+		if framework == Core.Ox then
+			import = ('%s/import.lua'):format(lib.service)
+			resource = Core.Ox
 		else
-			if framework == 'ox_core' then
-				import = ('%s/import.lua'):format(lib.service)
-			else
-				error('no loader exists for %s'):format(framework)
-			end
-
-			success, result = pcall(LoadResourceFile, framework, import)
-
-			if not result then
-				error(("Unable to load '@%s/%s'"):format(framework, import))
-			end
-
-			if not success then
-				error(result and result or ("Unable to load '@%s/%s'"):format(framework, import), 0)
-			end
-
-			success, result = load(result, ('@@%s/%s'):format(framework, import))
-
-			if not success then
-				error(result, 0)
-			end
-
-			success, result = pcall(success)
-
-			if not success then error(result) end
-
-			if framework == 'ox_core' then
-				import = Ox
-			end
-
-			import.resource = framework
+			import = ('imports/getCore/%s/%s.lua'):format(framework, lib.service)
+			resource = lib.name
 		end
 
-		result = import
+		success, result = pcall(LoadResourceFile, resource, import)
+
+		if not result then
+			error(("Unable to load '@%s/%s'"):format(resource, import))
+		end
+
+		if not success then
+			error(result and result or ("Unable to load '@%s/%s'"):format(resource, import), 0)
+		end
+
+		success, result = load(result, ('@@%s/%s'):format(resource, import))
+
+		if not success then
+			error(result, 0)
+		end
+
+		success, result = pcall(success, framework)
+
+		if not success then error(result) end
+
+		if framework == Core.Ox then
+			result = Ox
+		end
+
+		if not result then
+			error(('no loader exists for %s'):format(framework))
+		elseif type(result) == 'function' then
+			result = result(framework)
+		end
+
+		result.resource = framework
 	end)
 
 	return result
