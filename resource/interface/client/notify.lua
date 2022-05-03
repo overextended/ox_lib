@@ -29,3 +29,4 @@ function lib.defaultNotify(data)
 end
 
 RegisterNetEvent('ox_lib:notify', lib.notify)
+RegisterNetEvent('ox_lib:defaultNotify', lib.defaultNotify)
