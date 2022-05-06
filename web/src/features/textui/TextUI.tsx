@@ -18,7 +18,7 @@ debugData([
   {
     action: "textUi",
     data: {
-      text: "[E] -  Access locker inventory  \n [G] - Do something else",
+      text: "[E] - Access locker inventory  \n [G] - Do something else",
       position: "right-center",
       icon: "door-open",
     },
@@ -58,11 +58,12 @@ const TextUI: React.FC = () => {
       <ScaleFade in={visible} unmountOnExit>
         <Box
           bg="gray.700"
-          boxShadow="lg"
+          boxShadow="md"
           p={3}
           fontFamily="Poppins"
+          fontSize="0.95em"
           style={data.style}
-          borderRadius="md"
+          borderRadius="sm"
           maxW="xs"
         >
           <Flex justifyContent="center" alignItems="center">
@@ -71,7 +72,7 @@ const TextUI: React.FC = () => {
                 fixedWidth
                 icon={data.icon}
                 color={data.iconColor}
-                fontSize="1.4rem"
+                fontSize="1.3em"
                 style={{ paddingRight: 8 }}
               />
             )}
