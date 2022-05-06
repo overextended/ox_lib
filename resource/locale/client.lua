@@ -1,5 +1,4 @@
 local default = { 'en', 'fr', 'de', 'it', 'es', 'pt-BR', 'pl', 'ru', 'ko', 'zh-TW', 'ja', 'es-MX', 'zh-CN' }
-local uiLoaded = false
 local userLocale = GetResourceKvpString('locale') or default[GetCurrentLanguage() + 1]
 
 local function loadLocale(locale, cb)
@@ -22,22 +21,15 @@ RegisterNUICallback('closeSettings', function(_, cb)
 	SetNuiFocus(false, false)
 end)
 
+RegisterNUICallback('init', function(_, cb)
+	cb(1)
 
-Citizen.CreateThread(function()
-	while not uiLoaded do Wait(0) end
-
-	SendNUIMessage({ -- Loads the `default` array into select options
+	SendNUIMessage({
 		action = 'loadLocales',
-		data = default
+		data = GlobalState.locales
 	})
 
 	loadLocale(userLocale)
-end)
-
-
-RegisterNUICallback('init', function(_, cb)
-	cb(1)
-	uiLoaded = true
 end)
 
 RegisterCommand('ox_lib', function()
