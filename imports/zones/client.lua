@@ -298,11 +298,18 @@ local function debugBox(self)
 	DrawLine(self.vertices[4], self.vertices[6], 255, 0, 0, 150)
 end
 
+local function debugSphere(self)
+	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 0, 0, 50, false, false, false, true, false, false, false)
+end
+
 local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
 	return glm_polygon_contains(self.polygon, coords, self.thickness)
 end
+
+local function insideSphere(self, coords)
+	return #(self.coords - coords) < self.radius
 end
 
 local function getBoxVertices(self)
@@ -356,5 +363,19 @@ return {
 
 		zones[data.id] = data
 		return data
-	end
+	end,
+
+	sphere = function(data)
+		data.id = #zones + 1
+		data.radius = (data.radius or 2) + 0.0
+		data.remove = removeZone
+		data.contains = insideSphere
+
+		if data.debug then
+			data.debug = debugSphere
+		end
+
+		zones[data.id] = data
+		return data
+	end,
 }
