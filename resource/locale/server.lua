@@ -6,5 +6,5 @@ RegisterCommand('serverlocale', function(_, args, _)
 end, true)
 
 function lib.getServerLocale()
-	return GetResourceKvpString('locale') or 'en-US'
+	return GetResourceKvpString('locale') or 'en'
 end

@@ -1,16 +1,16 @@
 local default = { 'en', 'fr', 'de', 'it', 'es', 'pt-BR', 'pl', 'ru', 'ko', 'zh-TW', 'ja', 'es-MX', 'zh-CN' }
 local uiLoaded = false
-local userLocale = GetResourceKvpString('locale')
+local userLocale = GetResourceKvpString('locale') or default[GetCurrentLanguage() + 1]
 
 local function loadLocale(locale, cb)
 	if cb then cb(1) end
-	if not locale then locale = userLocale end
 	local JSON = LoadResourceFile('ox_lib', ('locales/%s.json'):format(locale)) or LoadResourceFile('ox_lib', ('locales/en.json'):format(locale))
-	-- if cb then cb(JSON) end
+
 	SendNUIMessage({
 		action = 'setLocale',
 		data = json.decode(JSON)
 	})
+
 	SetResourceKvp('locale', locale)
 	TriggerEvent('ox_lib:setLocale', locale)
 end
@@ -24,13 +24,14 @@ end)
 
 
 Citizen.CreateThread(function()
-	if not userLocale then userLocale = default[GetCurrentLanguage() + 1] end
 	while not uiLoaded do Wait(0) end
-	loadLocale(userLocale)
+
 	SendNUIMessage({ -- Loads the `default` array into select options
 		action = 'loadLocales',
 		data = default
 	})
+
+	loadLocale(userLocale)
 end)
 
 
