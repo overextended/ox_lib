@@ -217,7 +217,7 @@ CreateThread(function()
 		insideCount = 0
 
 		for _, zone in pairs(zones) do
-			local contains = zone.polygon:contains(coords, zone.thickness)
+			local contains = zone:contains(coords)
 
 			if contains then
 				if zone.inside then
@@ -301,7 +301,8 @@ end
 local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
-	return glm_polygon_contains(self.polygon, coords)
+	return glm_polygon_contains(self.polygon, coords, self.thickness)
+end
 end
 
 local function getBoxVertices(self)
