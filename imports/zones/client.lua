@@ -314,14 +314,14 @@ end
 
 local function getBoxVertices(self)
 	return {
-		self.centroid + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.centroid + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.centroid + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.centroid + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.centroid - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.centroid - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.centroid - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.centroid - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.coords + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.coords + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.coords + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.coords + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.coords - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.coords - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
+		self.coords - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
+		self.coords - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
 	}
 end
 
@@ -330,7 +330,7 @@ return {
 		data.id = #zones + 1
 		data.thickness = data.thickness or 2
 		data.polygon = glm.polygon.new(data.points)
-		data.centroid = data.polygon:centroid()
+		data.coords = data.polygon:centroid()
 		data.remove = removeZone
 		data.contains = contains
 
@@ -352,7 +352,7 @@ return {
 			vec3(-data.size.x, data.size.y, 0),
 			vec3(-data.size.x, -data.size.y, 0),
 			vec3(data.size.x, -data.size.y, 0),
-		}) + data.centroid)
+		}) + data.coords)
 		data.remove = removeZone
 		data.contains = contains
 
