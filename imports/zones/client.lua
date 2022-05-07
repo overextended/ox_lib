@@ -1,5 +1,5 @@
 local glm = require 'glm'
-local zones = {}
+Zones = {}
 
 local function getTriangles(polygon)
 	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
@@ -202,7 +202,7 @@ local function getTriangles(polygon)
 end
 
 local function removeZone(self)
-	zones[self.id] = nil
+	Zones[self.id] = nil
 end
 
 local inside = {}
@@ -216,7 +216,7 @@ CreateThread(function()
 		table.wipe(inside)
 		insideCount = 0
 
-		for _, zone in pairs(zones) do
+		for _, zone in pairs(Zones) do
 			local contains = zone:contains(coords)
 
 			if contains then
@@ -327,7 +327,7 @@ end
 
 return {
 	poly = function(data)
-		data.id = #zones + 1
+		data.id = #Zones + 1
 		data.thickness = data.thickness or 2
 		data.polygon = glm.polygon.new(data.points)
 		data.coords = data.polygon:centroid()
@@ -339,12 +339,12 @@ return {
 			data.debug = debugPoly
 		end
 
-		zones[data.id] = data
+		Zones[data.id] = data
 		return data
 	end,
 
 	box = function(data)
-		data.id = #zones + 1
+		data.id = #Zones + 1
 		data.thickness = data.size.z or 2
 		data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
 		data.polygon = (data.rotation * glm.polygon.new({
@@ -361,12 +361,12 @@ return {
 			data.debug = debugBox
 		end
 
-		zones[data.id] = data
+		Zones[data.id] = data
 		return data
 	end,
 
 	sphere = function(data)
-		data.id = #zones + 1
+		data.id = #Zones + 1
 		data.radius = (data.radius or 2) + 0.0
 		data.remove = removeZone
 		data.contains = insideSphere
@@ -375,7 +375,7 @@ return {
 			data.debug = debugSphere
 		end
 
-		zones[data.id] = data
+		Zones[data.id] = data
 		return data
 	end,
 }
