@@ -68,7 +68,7 @@ const Item: React.FC<{
               <Box>
                 <Box paddingBottom={option[1].description ? 1 : 0}>
                   <Text w="100%" fontWeight="medium">
-                    {option[0]}
+                    {option[1].title ? option[1].title : option[0]}
                   </Text>
                 </Box>
                 {option[1].description && (

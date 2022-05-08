@@ -1,5 +1,6 @@
 export interface Option {
   menu?: string;
+  title?: string;
   description?: string;
   arrow?: boolean;
   metadata?: string[] | { [key: string]: any };
@@ -15,5 +16,5 @@ export interface Options {
 export interface ContextMenuProps {
   title: string;
   menu?: string;
-  options: Options;
+  options: Options | Option[];
 }

@@ -12,31 +12,27 @@ debugData<ContextMenuProps>([
     action: "showContext",
     data: {
       title: "Vehicle garage",
-      options: {
-        "Dinka Blista": {
-          description: "Super cool vehicle",
-          menu: "some_other_identifier",
-          metadata: {
-            Plate: "KLT 192",
-            Status: "In garage",
-            Health: "30%",
-          },
+      options: [
+        { title: "Empty button" },
+        {
+          title: "Example button",
+          description: "Example button description",
+          metadata: { ["Value 1"]: "Some value", ["Value 2"]: 300 },
         },
-        "Elegy Nitro": {
-          description: "Even cooler vehicle",
-          metadata: ["Plate: JGM 971", "Status: In garage"],
+        {
+          title: "Menu button",
+          menu: "other_example_menu",
+          description: "Takes you to another menu",
+          metadata: ["It also has metadata support"],
         },
-        Burger: {
-          description: "Make a delicious burger",
-          metadata: {
-            Bun: 3,
-            Lettuce: 2,
-            Meat: 1,
-            Tomato: 1,
-            Cheese: 2,
-          },
+        {
+          title: "Event button",
+          description: "Open a menu and send event data",
+          arrow: true,
+          event: "some_event",
+          args: { value1: 300, value2: "Other value" },
         },
-      },
+      ],
     },
   },
 ]);
