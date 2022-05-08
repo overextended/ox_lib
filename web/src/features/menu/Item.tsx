@@ -104,9 +104,14 @@ const Item: React.FC<{
                   <PopoverBody>
                     {Array.isArray(option[1].metadata) ? (
                       option[1].metadata.map(
-                        (metadata: string, index: number) => (
+                        (
+                          metadata: string | { label: string; value: any },
+                          index: number
+                        ) => (
                           <Text key={`context-metadata-${index}`}>
-                            {metadata}
+                            {typeof metadata === "string"
+                              ? `${metadata}`
+                              : `${metadata.label}: ${metadata.value}`}
                           </Text>
                         )
                       )

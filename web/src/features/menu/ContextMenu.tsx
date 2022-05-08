@@ -17,7 +17,7 @@ debugData<ContextMenuProps>([
         {
           title: "Example button",
           description: "Example button description",
-          metadata: { ["Value 1"]: "Some value", ["Value 2"]: 300 },
+          metadata: [{ label: "Value 1", value: 300 }],
         },
         {
           title: "Menu button",

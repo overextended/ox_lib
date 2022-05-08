@@ -3,7 +3,10 @@ export interface Option {
   title?: string;
   description?: string;
   arrow?: boolean;
-  metadata?: string[] | { [key: string]: any };
+  metadata?:
+    | string[]
+    | { [key: string]: any }
+    | { label: string; value: any }[];
   event?: string;
   serverEvent?: string;
   args?: any;
