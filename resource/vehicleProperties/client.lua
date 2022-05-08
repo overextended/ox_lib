@@ -1,5 +1,12 @@
 RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
-	lib.setVehicleProperties(NetToVeh(netid), data)
+	local timeout = 10
+	while not NetworkDoesEntityExistWithNetworkId(netid) and timeout > 0 do
+		Wait(0)
+		timeout -= 1
+	end
+	if timeout > 0 then
+		lib.setVehicleProperties(NetToVeh(netid), data)
+	end
 end)
 
 function lib.getVehicleProperties(vehicle)
