@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Flex, Box, ScaleFade } from "@chakra-ui/react";
+import { Text, Flex, Box } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
@@ -40,7 +40,6 @@ const Progressbar: React.FC = () => {
   useNuiEvent("progressCancel", progressCancel);
 
   useNuiEvent<Props>("progress", (data) => {
-    if (visible) return;
     setCancelled(false);
     setVisible(true);
     setLabel(data.label);
@@ -57,7 +56,7 @@ const Progressbar: React.FC = () => {
       alignItems="center"
     >
       <Box width={350}>
-        <ScaleFade in={visible} unmountOnExit>
+        {visible && (
           <Box
             height={45}
             bg="rgba(0, 0, 0, 0.6)"
@@ -72,11 +71,14 @@ const Progressbar: React.FC = () => {
               sx={
                 !cancelled
                   ? {
+                      width: "0%",
                       backgroundColor: "green.400",
-                      animation: `progress-bar linear ${duration}ms`,
+                      animation: "progress-bar linear",
+                      animationDuration: `${duration}ms`,
                     }
                   : {
                       width: "100%",
+                      animationPlayState: "paused",
                       backgroundColor: "rgb(198, 40, 40)",
                     }
               }
@@ -94,7 +96,7 @@ const Progressbar: React.FC = () => {
               {label}
             </Text>
           </Box>
-        </ScaleFade>
+        )}
       </Box>
     </Flex>
   );
