@@ -46,7 +46,7 @@ jobs:
           mkdir -p ./temp/ox_lib
           mkdir -p ./temp/ox_lib/web/
           cp ./{LICENSE,README.md,fxmanifest.lua,init.lua} ./temp/ox_lib
-          cp -r ./{imports,resource} ./temp/ox_lib
+          cp -r ./{imports,resource,locales} ./temp/ox_lib
           cp -r ./web/build ./temp/ox_lib/web/
           cd ./temp && zip -r ../ox_lib.zip ./ox_lib
 
