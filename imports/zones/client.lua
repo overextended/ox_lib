@@ -266,15 +266,15 @@ local function debugPoly(self)
 	if self.triangles then
 		for i = 1, #self.triangles do
 			local triangle = self.triangles[i]
-			DrawPoly(triangle[1], triangle[2], triangle[3], 255, 0, 0, 50)
-			DrawPoly(triangle[2], triangle[1], triangle[3], 255, 0, 0, 50)
+			DrawPoly(triangle[1], triangle[2], triangle[3], 255, 42, 24, 100)
+			DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
 		end
 	else
 		local polygon = self.polygon
 
 		for i = 2, #self.polygon - 1 do
-			DrawPoly(polygon[1], polygon[i], polygon[i + 1], 255, 0, 0, 50)
-			DrawPoly(polygon[i], polygon[1], polygon[i + 1], 255, 0, 0, 50)
+			DrawPoly(polygon[1], polygon[i], polygon[i + 1], 255, 42, 24, 100)
+			DrawPoly(polygon[i], polygon[1], polygon[i + 1], 255, 42, 24, 100)
 		end
 	end
 end
@@ -282,24 +282,24 @@ end
 local DrawLine = DrawLine
 
 local function debugBox(self)
-	DrawLine(self.vertices[1], self.vertices[2], 255, 0, 0, 150)
-	DrawLine(self.vertices[2], self.vertices[3], 255, 0, 0, 150)
-	DrawLine(self.vertices[3], self.vertices[4], 255, 0, 0, 150)
-	DrawLine(self.vertices[4], self.vertices[1], 255, 0, 0, 150)
+	DrawLine(self.vertices[1], self.vertices[2], 255, 42, 24, 225)
+	DrawLine(self.vertices[2], self.vertices[3], 255, 42, 24, 225)
+	DrawLine(self.vertices[3], self.vertices[4], 255, 42, 24, 225)
+	DrawLine(self.vertices[4], self.vertices[1], 255, 42, 24, 225)
 
-	DrawLine(self.vertices[5], self.vertices[6], 255, 0, 0, 150)
-	DrawLine(self.vertices[6], self.vertices[7], 255, 0, 0, 150)
-	DrawLine(self.vertices[7], self.vertices[8], 255, 0, 0, 150)
-	DrawLine(self.vertices[8], self.vertices[5], 255, 0, 0, 150)
+	DrawLine(self.vertices[5], self.vertices[6], 255, 42, 24, 225)
+	DrawLine(self.vertices[6], self.vertices[7], 255, 42, 24, 225)
+	DrawLine(self.vertices[7], self.vertices[8], 255, 42, 24, 225)
+	DrawLine(self.vertices[8], self.vertices[5], 255, 42, 24, 225)
 
-	DrawLine(self.vertices[1], self.vertices[7], 255, 0, 0, 150)
-	DrawLine(self.vertices[2], self.vertices[8], 255, 0, 0, 150)
-	DrawLine(self.vertices[3], self.vertices[5], 255, 0, 0, 150)
-	DrawLine(self.vertices[4], self.vertices[6], 255, 0, 0, 150)
+	DrawLine(self.vertices[1], self.vertices[7], 255, 42, 24, 225)
+	DrawLine(self.vertices[2], self.vertices[8], 255, 42, 24, 225)
+	DrawLine(self.vertices[3], self.vertices[5], 255, 42, 24, 225)
+	DrawLine(self.vertices[4], self.vertices[6], 255, 42, 24, 225)
 end
 
 local function debugSphere(self)
-	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 0, 0, 50, false, false, false, true, false, false, false)
+	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 42, 24, 100, false, false, false, true, false, false, false)
 end
 
 local glm_polygon_contains = glm.polygon.contains
