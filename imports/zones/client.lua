@@ -14,11 +14,17 @@ end
 
 local function getTriangles(polygon)
 	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
+	local triangles = {}
+	if polygon:isConvex() then
+		for i = 2, #polygon - 1 do
+			triangles[#triangles + 1] = mat(polygon[1], polygon[i], polygon[i + 1])
+		end
+		return triangles
+	end
 
 	local points = {}
 	local sides = {}
 	local horizontals = {}
-	local triangles = {}
 
 	local h
 	for i = 1, #polygon do
@@ -270,19 +276,10 @@ CreateThread(function()
 end)
 
 local function debugPoly(self)
-	if self.triangles then
-		for i = 1, #self.triangles do
-			local triangle = self.triangles[i]
-			DrawPoly(triangle[1], triangle[2], triangle[3], 255, 42, 24, 100)
-			DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
-		end
-	else
-		local polygon = self.polygon
-
-		for i = 2, #self.polygon - 1 do
-			DrawPoly(polygon[1], polygon[i], polygon[i + 1], 255, 42, 24, 100)
-			DrawPoly(polygon[i], polygon[1], polygon[i + 1], 255, 42, 24, 100)
-		end
+	for i = 1, #self.triangles do
+		local triangle = self.triangles[i]
+		DrawPoly(triangle[1], triangle[2], triangle[3], 255, 42, 24, 100)
+		DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
 	end
 end
 
@@ -342,7 +339,7 @@ return {
 		data.contains = contains
 
 		if data.debug then
-			data.triangles = not data.polygon:isConvex() and getTriangles(data.polygon)
+			data.triangles = getTriangles(data.polygon)
 			data.debug = debugPoly
 		end
 
