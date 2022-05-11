@@ -275,31 +275,20 @@ CreateThread(function()
 	end
 end)
 
+local DrawLine = DrawLine
+local DrawPoly = DrawPoly
+
 local function debugPoly(self)
 	for i = 1, #self.triangles do
 		local triangle = self.triangles[i]
 		DrawPoly(triangle[1], triangle[2], triangle[3], 255, 42, 24, 100)
 		DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
 	end
-end
-
-local DrawLine = DrawLine
-
-local function debugBox(self)
-	DrawLine(self.vertices[1], self.vertices[2], 255, 42, 24, 225)
-	DrawLine(self.vertices[2], self.vertices[3], 255, 42, 24, 225)
-	DrawLine(self.vertices[3], self.vertices[4], 255, 42, 24, 225)
-	DrawLine(self.vertices[4], self.vertices[1], 255, 42, 24, 225)
-
-	DrawLine(self.vertices[5], self.vertices[6], 255, 42, 24, 225)
-	DrawLine(self.vertices[6], self.vertices[7], 255, 42, 24, 225)
-	DrawLine(self.vertices[7], self.vertices[8], 255, 42, 24, 225)
-	DrawLine(self.vertices[8], self.vertices[5], 255, 42, 24, 225)
-
-	DrawLine(self.vertices[1], self.vertices[7], 255, 42, 24, 225)
-	DrawLine(self.vertices[2], self.vertices[8], 255, 42, 24, 225)
-	DrawLine(self.vertices[3], self.vertices[5], 255, 42, 24, 225)
-	DrawLine(self.vertices[4], self.vertices[6], 255, 42, 24, 225)
+	for i = 1, #self.polygon do
+		DrawLine(self.polygon[i] + vec(0, 0, self.thickness), self.polygon[i] - vec(0, 0, self.thickness), 255, 42, 24, 225)
+		DrawLine(self.polygon[i] + vec(0, 0, self.thickness), (self.polygon[i + 1] or self.polygon[1]) + vec(0, 0, self.thickness), 255, 42, 24, 225)
+		DrawLine(self.polygon[i] - vec(0, 0, self.thickness), (self.polygon[i + 1] or self.polygon[1]) - vec(0, 0, self.thickness), 255, 42, 24, 225)
+	end
 end
 
 local function debugSphere(self)
@@ -314,19 +303,6 @@ end
 
 local function insideSphere(self, coords)
 	return #(self.coords - coords) < self.radius
-end
-
-local function getBoxVertices(self)
-	return {
-		self.coords + vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.coords + vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.coords + vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.coords + vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.coords - vec3(self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.coords - vec3(-self.size.x, self.size.y, self.thickness) * self.rotation,
-		self.coords - vec3(-self.size.x, -self.size.y, self.thickness) * self.rotation,
-		self.coords - vec3(self.size.x, -self.size.y, self.thickness) * self.rotation,
-	}
 end
 
 return {
@@ -361,8 +337,8 @@ return {
 		data.contains = contains
 
 		if data.debug then
-			data.vertices = getBoxVertices(data)
-			data.debug = debugBox
+			data.triangles = {makeTriangles({data.polygon[1], data.polygon[2], data.polygon[4], data.polygon[3]})}
+			data.debug = debugPoly
 		end
 
 		Zones[data.id] = data
