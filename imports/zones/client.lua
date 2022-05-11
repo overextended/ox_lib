@@ -13,7 +13,6 @@ local function makeTriangles(t)
 end
 
 local function getTriangles(polygon)
-	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
 	local triangles = {}
 	if polygon:isConvex() then
 		for i = 2, #polygon - 1 do
@@ -25,9 +24,8 @@ local function getTriangles(polygon)
 	local points = {}
 	local sides = {}
 	local horizontals = {}
-
-	local h
 	for i = 1, #polygon do
+		local h
 		local point = polygon[i]
 		local unique = true
 
@@ -49,6 +47,7 @@ local function getTriangles(polygon)
 		points[polygon[i]] = {side = i, horizontal = h, uses = 0}
 	end
 
+	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
 	for i = 1, #horizontals do
 		local horizontal = horizontals[i]
 		local hLineStart, hLineEnd = vec(extremes[1], horizontal[1].yz), vec(extremes[2], horizontal[1].yz)
