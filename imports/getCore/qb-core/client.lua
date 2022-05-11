@@ -16,41 +16,44 @@ return function(resource)
 		PlayerData.gang = gang
 	end)
 
-	lib.addPlayerMethod('hasGroup', function(self, filter)
+	local groups = { 'job', 'gang' }
+
+	lib.addPlayerMethod('hasGroup', function(_, filter)
 		local type = type(filter)
 
 		if type == 'string' then
-			return PlayerData.job.name == filter or PlayerData.gang.name == filter
-		end
+			for i = 1, #groups do
+				local data = PlayerData[groups[i]]
 
-		local tabletype = table.type(filter)
-
-		if tabletype == 'hash' then
-			local jobGrade = filter[PlayerData.job.name]
-
-			if jobGrade then
-				return jobGrade <= PlayerData.job.grade
-			end
-
-			local gangGrade = filter[PlayerData.gang.name]
-
-			if gangGrade then
-				return gangGrade <= PlayerData.gang.grade
-			end
-
-			return false
-		end
-
-		if tabletype == 'array' then
-			for i = 1, #filter do
-				local group = filter[i]
-
-				if PlayerData.job.name == group or PlayerData.gang.name == group then
-					return true
+				if data.name == filter then
+					return data.name, data.grade.level
 				end
 			end
+		else
+			local tabletype = table.type(filter)
 
-			return false
+			if tabletype == 'hash' then
+				for i = 1, #groups do
+					local data = PlayerData[groups[i]]
+					local grade = filter[data.name]
+
+					if grade and grade <= data.grade.level then
+						return data.name, data.grade.level
+					end
+				end
+			elseif tabletype == 'array' then
+				for i = 1, #filter do
+					local group = filter[i]
+
+					for j = 1, #groups do
+						local data = PlayerData[groups[j]]
+
+						if data.name == group then
+							return data.group.name, data.grade.level
+						end
+					end
+				end
+			end
 		end
 	end)
 

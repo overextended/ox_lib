@@ -158,6 +158,8 @@ local cache = setmetatable({}, {
 			self.serverId = GetPlayerServerId(self.playerId)
 		end
 
+		self.resource = GetCurrentResourceName()
+
 		if ox.groups then
 			self.groups = setmetatable({}, {
 				__index = function(groups, index)

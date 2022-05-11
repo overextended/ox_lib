@@ -11,28 +11,30 @@ return function(resource)
 		ESX.PlayerData.job = job
 	end)
 
-	lib.addPlayerMethod('hasGroup', function(self, filter)
+	lib.addPlayerMethod('hasGroup', function(_, filter)
+		local data = ESX.PlayerData
 		local type = type(filter)
 
 		if type == 'string' then
-			return ESX.PlayerData.job.name == filter
-		end
+			if data.job.name == filter then
+				return data.job.name, data.job.grade
+			end
+		else
+			local tabletype = table.type(filter)
 
-		local tabletype = table.type(filter)
+			if tabletype == 'hash' then
+				local grade = filter[data.job.name]
 
-		if tabletype == 'hash' then
-			local grade = filter[ESX.PlayerData.job.name]
-			return grade and grade <= ESX.PlayerData.job.grade
-		end
-
-		if tabletype == 'array' then
-			for i = 1, #filter do
-				if ESX.PlayerData.job.name == filter[i] then
-					return true
+				if grade and grade <= data.job.grade then
+					return data.job.name, data.job.grade
+				end
+			elseif tabletype == 'array' then
+				for i = 1, #filter do
+					if data.job.name == filter[i] then
+						return data.job.name, data.job.grade
+					end
 				end
 			end
-
-			return false
 		end
 	end)
 
