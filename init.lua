@@ -47,7 +47,8 @@ local function loadModule(self, module)
 		if err then
 			error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
 		else
-			rawset(self, module, chunk())
+			local result = chunk() or function() end
+			rawset(self, module, result)
 			return self[module]
 		end
 	end
@@ -90,9 +91,6 @@ lib = setmetatable({
 }, {
 	__index = call,
 	__call = call,
-	__newindex = function()
-		error('Cannot set index on lib')
-	end,
 })
 
 local intervals = {}
