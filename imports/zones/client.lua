@@ -1,6 +1,17 @@
 local glm = require 'glm'
 Zones = {}
 
+local function makeTriangles(t)
+	local t1, t2
+	if t[3] and t[4] then
+		t1 = mat(t[1], t[2], t[3])
+		t2 = mat(t[2], t[3], t[4])
+	else
+		t1 = mat(t[1], t[2], t[3] or t[4])
+	end
+	return t1, t2
+end
+
 local function getTriangles(polygon)
 	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
 
@@ -79,21 +90,6 @@ local function getTriangles(polygon)
 
 	local function left(a, b)
 		return a.x < b.x
-	end
-
-	local function makeTriangles(t)
-		if t[3] and t[4] then
-			triangles[#triangles + 1] = mat(t[1], t[2], t[3])
-			triangles[#triangles + 1] = mat(t[2], t[3], t[4])
-			for i = 1, #t do
-				points[t[i]].uses += 1
-			end
-		else
-			triangles[#triangles + 1] = mat(t[1], t[2], t[3] or t[4])
-			for k, v in pairs(t) do
-				points[v].uses += 2
-			end
-		end
 	end
 
 	for i = 1, #sides do
@@ -189,7 +185,18 @@ local function getTriangles(polygon)
 					end
 
 					if c or d then
-						makeTriangles({a, b, c, d})
+						local t = {a, b, c, d}
+						nTriangles = #triangles
+						triangles[nTriangles + 1], triangles[nTriangles + 2] = makeTriangles(t)
+						if c and d then
+							for i = 1, #t do
+								points[t[i]].uses += 1
+							end
+						else
+							for k, v in pairs(t) do
+								points[v].uses += 2
+							end
+						end
 					end
 				end
 			else
