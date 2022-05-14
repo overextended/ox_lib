@@ -24,10 +24,9 @@ function lib.getVehicleProperties(vehicle)
 
 		local extras = {}
 
-		for i = 0, 12 do
+		for i = 1, 15 do
 			if DoesExtraExist(vehicle, i) then
-				-- [0=on, 1=off]
-				extras[i] = IsVehicleExtraTurnedOn(vehicle, i)
+				extras[i] = IsVehicleExtraTurnedOn(vehicle, i) and 0 or 1
 			end
 		end
 
