@@ -284,9 +284,10 @@ local function debugPoly(self)
 		DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
 	end
 	for i = 1, #self.polygon do
-		DrawLine(self.polygon[i] + vec(0, 0, self.thickness), self.polygon[i] - vec(0, 0, self.thickness), 255, 42, 24, 225)
-		DrawLine(self.polygon[i] + vec(0, 0, self.thickness), (self.polygon[i + 1] or self.polygon[1]) + vec(0, 0, self.thickness), 255, 42, 24, 225)
-		DrawLine(self.polygon[i] - vec(0, 0, self.thickness), (self.polygon[i + 1] or self.polygon[1]) - vec(0, 0, self.thickness), 255, 42, 24, 225)
+		local thickness = vec(0, 0, self.thickness / 2)
+		DrawLine(self.polygon[i] + thickness, self.polygon[i] - thickness, 255, 42, 24, 225)
+		DrawLine(self.polygon[i] + thickness, (self.polygon[i + 1] or self.polygon[1]) + thickness, 255, 42, 24, 225)
+		DrawLine(self.polygon[i] - thickness, (self.polygon[i + 1] or self.polygon[1]) - thickness, 255, 42, 24, 225)
 	end
 end
 
@@ -307,7 +308,7 @@ end
 return {
 	poly = function(data)
 		data.id = #Zones + 1
-		data.thickness = data.thickness or 2
+		data.thickness = data.thickness or 4
 		data.polygon = glm.polygon.new(data.points)
 		data.coords = data.polygon:centroid()
 		data.remove = removeZone
@@ -324,7 +325,8 @@ return {
 
 	box = function(data)
 		data.id = #Zones + 1
-		data.thickness = data.size.z or 2
+		data.size = data.size and data.size / 2 or vec3(2)
+		data.thickness = data.size.z * 2 or 4
 		data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
 		data.polygon = (data.rotation * glm.polygon.new({
 			vec3(data.size.x, data.size.y, 0),
