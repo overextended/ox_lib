@@ -297,7 +297,7 @@ end
 local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
-	return glm_polygon_contains(self.polygon, coords, self.thickness)
+	return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
 end
 
 local function insideSphere(self, coords)
