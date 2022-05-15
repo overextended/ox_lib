@@ -20,7 +20,7 @@ local function startProgress(data)
 			TaskPlayAnim(cache.ped, data.anim.dict, data.anim.clip, data.anim.blendIn or 3.0, data.anim.blendOut or 1.0, data.anim.duration or -1, data.anim.flag or 49, data.anim.playbackRate or 0, data.anim.lockX, data.anim.lockY, data.anim.lockZ)
 			data.anim = true
 		elseif data.anim.scenario then
-			TaskStartScenarioInPlace(cache.ped, data.anim.scenario, 0, data.anim.playEnter or true)
+			TaskStartScenarioInPlace(cache.ped, data.anim.scenario, 0, data.anim.playEnter ~= nil and data.anim.playEnter or true)
 			data.anim = true
 		end
 	end
