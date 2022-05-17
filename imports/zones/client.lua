@@ -232,17 +232,21 @@ CreateThread(function()
 			local contains = zone:contains(coords)
 
 			if contains then
+				if zone.onEnter and not zone.insideZone then
+					zone:onEnter()
+				end
+
 				if zone.inside then
 					insideCount += 1
 					inside[insideCount] = zone
 				end
 
-				if zone.onEnter and not zone.insideZone then
+				if not zone.insideZone then
 					zone.insideZone = true
-					zone:onEnter()
 				end
 			elseif zone.insideZone then
-				zone.insideZone = nil
+				zone.insideZone = false
+
 				if zone.onExit then
 					zone:onExit()
 				end
