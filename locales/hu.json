@@ -1,0 +1,12 @@
+{
+    "language": "Hungarian",
+    "ui": {
+      "settings": {
+        "title": "Beállítások",
+        "language": "Nyelv"
+      },
+      "close": "Bezárás",
+      "confirm": "Megerősít"
+    }
+  }
+  

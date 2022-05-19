@@ -1,0 +1,11 @@
+{
+    "language": "Slovenian",
+    "ui": {
+      "settings": {
+        "title": "Nastavitve",
+        "language": "Jezik"
+      },
+      "close": "Zapri",
+      "confirm": "Potrdi"
+    }
+  }

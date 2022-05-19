@@ -1,0 +1,11 @@
+{
+    "language": "Croatian",
+    "ui": {
+      "settings": {
+        "title": "Postavke",
+        "language": "Jezik"
+      },
+      "close": "Zatvoriti",
+      "confirm": "Potvrdite"
+    }
+  }
