@@ -1,0 +1,12 @@
+{
+    "language": "Czech",
+    "ui": {
+      "settings": {
+        "title": "Nastavení",
+        "language": "Jazyk"
+      },
+      "close": "Zavřít",
+      "confirm": "Potvrdit"
+    }
+  }
+  
