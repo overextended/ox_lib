@@ -40,6 +40,9 @@ local function startProgress(data)
 	end
 
 	if data.disable then
+		if data.disable.invBusy then
+			LocalPlayer.state.invBusy = true
+		end
 		while progress do
 			if data.disable.mouse then
 				DisableControlAction(0, 1, true)
@@ -68,6 +71,9 @@ local function startProgress(data)
 			end
 
 			Wait(0)
+		end
+		if data.disable.invBusy then
+			LocalPlayer.state.invBusy = false
 		end
 	elseif data.canCancel then
 		while progress do Wait(0) end
