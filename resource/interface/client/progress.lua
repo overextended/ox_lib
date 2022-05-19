@@ -72,15 +72,17 @@ local function startProgress(data)
 
 			Wait(0)
 		end
-		if data.disable.invBusy then
-			LocalPlayer.state.invBusy = false
-		end
+
 	elseif data.canCancel then
 		while progress do Wait(0) end
 	else
 		Wait(data.duration)
 	end
 
+	if data.disable.invBusy then
+		LocalPlayer.state.invBusy = false
+	end
+	
 	if data.anim then
 		ClearPedTasks(cache.ped)
 	end
