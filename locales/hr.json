@@ -1,0 +1,11 @@
+{
+  "language": "Hrvatski",
+  "ui": {
+    "settings": {
+      "title": "Postavke",
+      "language": "Jezik"
+    },
+    "close": "Zatvori",
+    "confirm": "Potvrdi"
+  }
+}
