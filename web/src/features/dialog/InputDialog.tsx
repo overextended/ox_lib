@@ -86,7 +86,6 @@ const InputDialog: React.FC = () => {
 
   const handleConfirm = () => {
     setVisible(false);
-    console.log(inputData);
     fetchNui("inputData", inputData);
   };
 
