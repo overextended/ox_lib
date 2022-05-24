@@ -1,7 +1,7 @@
 local progress
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
-local disable = {}
+local playerState = LocalPlayer.state
 
 local function createProp(prop)
 	lib.requestModel(prop.model)
@@ -12,6 +12,7 @@ local function createProp(prop)
 end
 
 local function startProgress(data)
+	playerState.invBusy = true
 	progress = data
 
 	if data.anim then
@@ -91,8 +92,8 @@ local function startProgress(data)
 		end
 	end
 
+	playerState.invBusy = false
 	local cancel = progress == false
-	table.wipe(disable)
 	progress = nil
 
 	if cancel then
