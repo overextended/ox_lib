@@ -1,0 +1,11 @@
+{
+  "language": "Estonian",
+  "ui": {
+    "settings": {
+      "title": "Seaded",
+      "language": "Keel"
+    },
+    "close": "Sulge",
+    "confirm": "Kinnita"
+  }
+}
