@@ -1,0 +1,11 @@
+{
+  "language": "Srpski",
+  "ui": {
+    "settings": {
+      "title": "Podesavanja",
+      "language": "Jezik"
+    },
+    "close": "Zatvori",
+    "confirm": "Potvrdi"
+  }
+}
