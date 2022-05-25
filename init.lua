@@ -145,20 +145,13 @@ local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
 	groups = GetResourceState('ox_groups') ~= 'missing',
 }
 
-local cache = setmetatable({}, {
+local _cache = setmetatable({}, {
 	__index = function(self, key)
-		return rawset(self, key, exports[ox_lib]['cache'](nil, key) or false)[key]
+		return rawset(self, key, exports[ox_lib].cache(nil, key) or false)[key]
 	end,
 
 	__call = function(self)
 		table.wipe(self)
-
-		if service == 'client' then
-			self.playerId = PlayerId()
-			self.serverId = GetPlayerServerId(self.playerId)
-		end
-
-		self.resource = GetCurrentResourceName()
 
 		if ox.groups then
 			self.groups = setmetatable({}, {
@@ -171,9 +164,21 @@ local cache = setmetatable({}, {
 	end
 })
 
+cache = setmetatable({
+	resource = GetCurrentResourceName(),
+}, {
+	__index = _cache,
+	__metatable = _cache
+})
+
+if service == 'client' then
+	cache.playerId = PlayerId()
+	cache.serverId = GetPlayerServerId(cache.playerId)
+end
+
 Citizen.CreateThreadNow(function()
 	while true do
-		cache()
+		_cache()
 		Wait(60000)
 	end
 end)
@@ -184,8 +189,6 @@ AddEventHandler('ox_lib:updateCache', function(data)
 			lib.onCache[key](value)
 		end
 
-		cache[key] = value
+		_cache[key] = value
 	end
 end)
-
-_ENV.cache = cache
