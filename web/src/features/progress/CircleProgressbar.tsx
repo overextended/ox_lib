@@ -4,12 +4,14 @@ import {
   CircularProgressLabel,
   Flex,
   ScaleFade,
+  Text,
 } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
 interface Props {
+  label?: string;
   duration: number;
   position?: "middle" | "bottom";
   percent?: boolean;
@@ -20,6 +22,7 @@ debugData([
     action: "circleProgress",
     data: {
       duration: 8000,
+      label: "Using Armour"
     },
   },
 ]);
@@ -29,6 +32,7 @@ const CircleProgressbar: React.FC = () => {
   const [progressDuration, setProgressDuration] = React.useState(0);
   const [position, setPosition] = React.useState<"middle" | "bottom">("middle");
   const [value, setValue] = React.useState(0);
+  const [label, setLabel] = React.useState("");
   const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
@@ -51,6 +55,7 @@ const CircleProgressbar: React.FC = () => {
     setCancelled(false);
     setVisible(true);
     setValue(0);
+    setLabel(data.label || "")
     setProgressDuration(data.duration);
     setPosition(data.position || "middle");
     const onePercent = data.duration * 0.01;
@@ -101,6 +106,18 @@ const CircleProgressbar: React.FC = () => {
           <CircularProgressLabel fontFamily="Fira Mono">
             {value}%
           </CircularProgressLabel>
+          <Text
+              fontFamily="Inter"
+              isTruncated
+              fontSize={18}
+              fontWeight="light"
+              position="absolute"
+              top="115%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
+              {label}
+            </Text>
         </CircularProgress>
       </ScaleFade>
     </Flex>
