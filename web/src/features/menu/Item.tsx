@@ -13,19 +13,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Option, ContextMenuProps } from "../../interfaces/context";
 import { fetchNui } from "../../utils/fetchNui";
 
-interface DataProps {
-  event?: string;
-  serverEvent?: string;
-  args?: any;
-}
-
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>("openContext", id);
 };
 
-const clickContext = (data: DataProps) => {
-  if (!data.event && !data.serverEvent) return;
-  fetchNui("clickContext", data);
+const clickContext = (id: string) => {
+  fetchNui("clickContext", id);
 };
 
 const Item: React.FC<{
@@ -58,11 +51,7 @@ const Item: React.FC<{
               onClick={() =>
                 option[1].menu
                   ? openMenu(option[1].menu)
-                  : clickContext({
-                      event: option[1].event,
-                      serverEvent: option[1].serverEvent,
-                      args: option[1].args,
-                    })
+                  : clickContext(option[0])
               }
             >
               <Box>
