@@ -3,7 +3,7 @@ CPlayer.__index = CPlayer
 
 function CPlayer:getCoords(update)
 	if update or not self.coords then
-		self.coords = GetEntityCoords(self.ped)
+		self.coords = GetEntityCoords(cache.ped)
 	end
 
 	return self.coords
@@ -20,7 +20,8 @@ end
 function lib.getPlayer()
 	return setmetatable({
 		id = cache.playerId,
-		ped = cache.ped,
 		serverId = cache.serverId,
 	}, CPlayer)
 end
+
+player = lib.getPlayer()
