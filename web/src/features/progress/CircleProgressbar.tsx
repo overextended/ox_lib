@@ -3,7 +3,6 @@ import {
   CircularProgress,
   CircularProgressLabel,
   Flex,
-  ScaleFade,
 } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
@@ -72,7 +71,7 @@ const CircleProgressbar: React.FC = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <ScaleFade in={visible} unmountOnExit>
+      {visible && (
         <CircularProgress
           value={value}
           size="5rem"
@@ -102,7 +101,7 @@ const CircleProgressbar: React.FC = () => {
             {value}%
           </CircularProgressLabel>
         </CircularProgress>
-      </ScaleFade>
+      )}
     </Flex>
   );
 };
