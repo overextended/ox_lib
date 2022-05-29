@@ -25,7 +25,7 @@ return function()
 		local resource
 
 		if framework == Core.Ox then
-			import = ('%s/import.lua'):format(lib.service)
+			import = ('imports/%s.lua'):format(lib.service)
 			resource = Core.Ox
 		else
 			import = ('imports/getCore/%s/%s.lua'):format(framework, lib.service)
