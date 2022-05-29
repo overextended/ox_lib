@@ -16,9 +16,18 @@ return function(resource)
 		PlayerData.gang = gang
 	end)
 
+	local CPlayer = lib.getPlayer()
+
+	function lib.getPlayer()
+		return setmetatable({
+			id = cache.playerId,
+			serverId = cache.serverId,
+		}, CPlayer)
+	end
+
 	local groups = { 'job', 'gang' }
 
-	lib.addPlayerMethod('hasGroup', function(_, filter)
+	function CPlayer:hasGroup(filter)
 		local type = type(filter)
 
 		if type == 'string' then
@@ -55,7 +64,9 @@ return function(resource)
 				end
 			end
 		end
-	end)
+	end
+
+	player = lib.getPlayer()
 
 	return QBCore
 end
