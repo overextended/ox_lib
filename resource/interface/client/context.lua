@@ -51,4 +51,5 @@ end)
 RegisterNUICallback('closeContext', function(_, cb)
     cb(1)
     SetNuiFocus(false, false)
+    openContextMenu = nil
 end)
