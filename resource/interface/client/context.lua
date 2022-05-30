@@ -29,6 +29,12 @@ end
 
 function lib.getOpenContextMenu() return openContextMenu end
 
+function lib.hideContext()
+    SetNuiFocus(false, false)
+    SendNUIMessage({action = 'hideContext'})
+    openContextMenu = nil
+end
+
 RegisterNUICallback('openContext', function(id, cb)
     cb(1)
     lib.showContext(id)
