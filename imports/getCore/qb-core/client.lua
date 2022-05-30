@@ -58,7 +58,7 @@ return function(resource)
 						local data = PlayerData[groups[j]]
 
 						if data.name == group then
-							return data.group.name, data.grade.level
+							return data.name, data.grade.level
 						end
 					end
 				end

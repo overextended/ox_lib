@@ -16,5 +16,31 @@ return function(resource)
 		return setmetatable(player, CPlayer)
 	end
 
+	function CPlayer:hasGroup(filter)
+		local type = type(filter)
+
+		if type == 'string' then
+			if self.job.name == filter then
+				return self.job.name, self.job.grade
+			end
+		else
+			local tabletype = table.type(filter)
+
+			if tabletype == 'hash' then
+				local grade = filter[self.job.name]
+
+				if grade and grade <= self.job.grade then
+					return self.job.name, self.job.grade
+				end
+			elseif tabletype == 'array' then
+				for i = 1, #filter do
+					if self.job.name == filter[i] then
+						return self.job.name, self.job.grade
+					end
+				end
+			end
+		end
+	end
+
 	return ESX
 end
