@@ -21,7 +21,7 @@ debugData([
     action: "circleProgress",
     data: {
       duration: 8000,
-      label: "Using Armour"
+      label: "Using Armour",
     },
   },
 ]);
@@ -54,7 +54,7 @@ const CircleProgressbar: React.FC = () => {
     setCancelled(false);
     setVisible(true);
     setValue(0);
-    setLabel(data.label || "")
+    setLabel(data.label || "");
     setProgressDuration(data.duration);
     setPosition(data.position || "middle");
     const onePercent = data.duration * 0.01;
@@ -77,47 +77,48 @@ const CircleProgressbar: React.FC = () => {
       alignItems="center"
     >
       {visible && (
-        <CircularProgress
-          value={value}
-          size="5rem"
-          trackColor="rgba(0, 0, 0, 0.6)"
-          onAnimationEnd={progressComplete}
-          thickness={6}
-          color={cancelled ? "rgb(198, 40, 40)" : "white"}
-          sx={
-            !cancelled
-              ? {
-                  ".chakra-progress__indicator": {
-                    transition: "none !important",
-                    animation: "progress linear forwards !important",
-                    animationDuration: `${progressDuration}ms !important`,
-                    opacity: "1 !important",
-                  },
-                }
-              : {
-                  ".chakra-progress__indicator": {
-                    transition: "none !important",
-                    strokeDasharray: "264, 0 !important", // sets circle to full
-                  },
-                }
-          }
+        <Flex
+          alignItems= "center"
+          flexDirection="column"
         >
-          <CircularProgressLabel fontFamily="Fira Mono">
-            {value}%
-          </CircularProgressLabel>
+          <CircularProgress
+            value={value}
+            size="5rem"
+            trackColor="rgba(0, 0, 0, 0.6)"
+            onAnimationEnd={progressComplete}
+            thickness={6}
+            color={cancelled ? "rgb(198, 40, 40)" : "white"}
+            sx={
+              !cancelled
+                ? {
+                    ".chakra-progress__indicator": {
+                      transition: "none !important",
+                      animation: "progress linear forwards !important",
+                      animationDuration: `${progressDuration}ms !important`,
+                      opacity: "1 !important",
+                    },
+                  }
+                : {
+                    ".chakra-progress__indicator": {
+                      transition: "none !important",
+                      strokeDasharray: "264, 0 !important", // sets circle to full
+                    },
+                  }
+            }
+          >
+            <CircularProgressLabel fontFamily="Fira Mono">
+              {value}%
+            </CircularProgressLabel>
+          </CircularProgress>
           <Text
-              fontFamily="Inter"
-              isTruncated
-              fontSize={18}
-              fontWeight="light"
-              position="absolute"
-              top="115%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-            >
-              {label}
-            </Text>
-        </CircularProgress>
+            fontFamily="Inter"
+            isTruncated
+            fontSize={18}
+            fontWeight="light"
+          >
+            {label}
+          </Text>
+        </Flex>
       )}
     </Flex>
   );
