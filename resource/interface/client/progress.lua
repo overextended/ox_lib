@@ -128,7 +128,8 @@ function lib.progressCircle(data)
 			action = 'circleProgress',
 			data = {
 				duration = data.duration,
-				position = data.position
+				position = data.position,
+				label = data.label
 			}
 		})
 

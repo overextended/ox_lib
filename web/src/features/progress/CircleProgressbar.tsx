@@ -3,12 +3,14 @@ import {
   CircularProgress,
   CircularProgressLabel,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
 interface Props {
+  label?: string;
   duration: number;
   position?: "middle" | "bottom";
   percent?: boolean;
@@ -19,6 +21,7 @@ debugData([
     action: "circleProgress",
     data: {
       duration: 8000,
+      label: "Using Armour",
     },
   },
 ]);
@@ -28,6 +31,7 @@ const CircleProgressbar: React.FC = () => {
   const [progressDuration, setProgressDuration] = React.useState(0);
   const [position, setPosition] = React.useState<"middle" | "bottom">("middle");
   const [value, setValue] = React.useState(0);
+  const [label, setLabel] = React.useState("");
   const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
@@ -50,6 +54,7 @@ const CircleProgressbar: React.FC = () => {
     setCancelled(false);
     setVisible(true);
     setValue(0);
+    setLabel(data.label || "");
     setProgressDuration(data.duration);
     setPosition(data.position || "middle");
     const onePercent = data.duration * 0.01;
@@ -72,35 +77,48 @@ const CircleProgressbar: React.FC = () => {
       alignItems="center"
     >
       {visible && (
-        <CircularProgress
-          value={value}
-          size="5rem"
-          trackColor="rgba(0, 0, 0, 0.6)"
-          onAnimationEnd={progressComplete}
-          thickness={6}
-          color={cancelled ? "rgb(198, 40, 40)" : "white"}
-          sx={
-            !cancelled
-              ? {
-                  ".chakra-progress__indicator": {
-                    transition: "none !important",
-                    animation: "progress linear forwards !important",
-                    animationDuration: `${progressDuration}ms !important`,
-                    opacity: "1 !important",
-                  },
-                }
-              : {
-                  ".chakra-progress__indicator": {
-                    transition: "none !important",
-                    strokeDasharray: "264, 0 !important", // sets circle to full
-                  },
-                }
-          }
+        <Flex
+          alignItems= "center"
+          flexDirection="column"
         >
-          <CircularProgressLabel fontFamily="Fira Mono">
-            {value}%
-          </CircularProgressLabel>
-        </CircularProgress>
+          <CircularProgress
+            value={value}
+            size="5rem"
+            trackColor="rgba(0, 0, 0, 0.6)"
+            onAnimationEnd={progressComplete}
+            thickness={6}
+            color={cancelled ? "rgb(198, 40, 40)" : "white"}
+            sx={
+              !cancelled
+                ? {
+                    ".chakra-progress__indicator": {
+                      transition: "none !important",
+                      animation: "progress linear forwards !important",
+                      animationDuration: `${progressDuration}ms !important`,
+                      opacity: "1 !important",
+                    },
+                  }
+                : {
+                    ".chakra-progress__indicator": {
+                      transition: "none !important",
+                      strokeDasharray: "264, 0 !important", // sets circle to full
+                    },
+                  }
+            }
+          >
+            <CircularProgressLabel fontFamily="Fira Mono">
+              {value}%
+            </CircularProgressLabel>
+          </CircularProgress>
+          <Text
+            fontFamily="Inter"
+            isTruncated
+            fontSize={18}
+            fontWeight="light"
+          >
+            {label}
+          </Text>
+        </Flex>
       )}
     </Flex>
   );
