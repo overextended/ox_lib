@@ -1,5 +1,5 @@
 RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
-	local timeout = 10
+	local timeout = 100
 	while not NetworkDoesEntityExistWithNetworkId(netid) and timeout > 0 do
 		Wait(0)
 		timeout -= 1
