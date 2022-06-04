@@ -1,6 +1,14 @@
 local contextMenus = {}
 local openContextMenu = nil
 
+local function closeContext(_, cb, onExit)
+    if cb then cb(1) end
+    if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
+    SetNuiFocus(false, false)
+    if not cb then SendNUIMessage({action = 'hideContext'}) end
+    openContextMenu = nil
+end
+
 function lib.showContext(id)
     if not contextMenus[id] then return error('No context menu of such id found.') end
     local data = contextMenus[id]
@@ -29,11 +37,7 @@ end
 
 function lib.getOpenContextMenu() return openContextMenu end
 
-function lib.hideContext()
-    SetNuiFocus(false, false)
-    SendNUIMessage({action = 'hideContext'})
-    openContextMenu = nil
-end
+function lib.hideContext(onExit) return closeContext(nil, nil, onExit) end
 
 RegisterNUICallback('openContext', function(id, cb)
     cb(1)
@@ -58,8 +62,4 @@ RegisterNUICallback('clickContext', function(id, cb)
     })
 end)
 
-RegisterNUICallback('closeContext', function(_, cb)
-    cb(1)
-    SetNuiFocus(false, false)
-    openContextMenu = nil
-end)
+RegisterNUICallback('closeContext', closeContext)
