@@ -42,7 +42,11 @@ end)
 
 RegisterNUICallback('clickContext', function(id, cb)
     cb(1)
-    if tonumber(id) then id += 1 end
+    if math.type(tonumber(id)) == 'float' then
+        id = math.tointeger(id)
+    elseif tonumber(id) then
+        id += 1
+    end
     local data = contextMenus[openContextMenu].options[id]
     if not data.event and not data.serverEvent then return end
     openContextMenu = nil
