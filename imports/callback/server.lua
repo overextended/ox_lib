@@ -1,4 +1,5 @@
 local callback = {}
+local cbEvent = ('__cb_%s'):format(cache.resource)
 
 ---@param name string
 ---@param cb function
@@ -6,8 +7,8 @@ local callback = {}
 function callback.register(name, cb)
 	name = ('__cb_%s'):format(name)
 
-	RegisterServerEvent(name, function(id, ...)
-		TriggerClientEvent(name..id, source, {cb(source, ...)})
+	RegisterServerEvent(name, function(key, ...)
+		TriggerClientEvent(cbEvent, source, key, { cb(source, ...) })
 	end)
 end
 

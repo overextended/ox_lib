@@ -1,54 +1,72 @@
-local ServerCallbacks = {}
+local events = {}
+local timers = {}
+local cbEvent = ('__cb_%s'):format(cache.resource)
+
+RegisterNetEvent(cbEvent, function(key, ...)
+	local cb = events[key]
+	return cb and cb(...)
+end)
 
 ---@param event string
 ---@param delay number prevent the event from being called for the given time
-local function callbackTimer(event, delay)
-	if type(delay) == 'number' then
+local function eventTimer(event, delay)
+	if delay and type(delay) == 'number' and delay > 0 then
 		local time = GetGameTimer()
-		if (ServerCallbacks[event] or 0) > time then
+
+		if (timers[event] or 0) > time then
 			return false
 		end
-		ServerCallbacks[event] = time + delay
+
+		timers[event] = time + delay
 	end
+
 	return true
 end
 
-local function triggerCallback(event, ...)
-	local id = math.random(0, 100000)
-	event = ('__cb_%s'):format(event)
-	TriggerServerEvent(event, id, ...)
-	return event..id
+---@param _ any
+---@param event string
+---@param delay number
+---@param cb function
+---@param ... unknown
+---@return unknown
+local function triggerServerCallback(_, event, delay, cb, ...)
+	if not eventTimer(event, delay) then return end
+
+	local key
+
+	repeat
+		key = ('%s:%s'):format(event, math.random(0, 100000))
+	until not events[key]
+
+	TriggerServerEvent(('__cb_%s'):format(event), key, ...)
+
+	local promise = not cb and promise.new()
+
+	events[key] = function(response)
+		events[key] = nil
+
+		if promise then
+			return promise:resolve(response)
+		end
+
+		cb(table.unpack(response))
+	end
+
+	if promise then
+		return table.unpack(Citizen.Await(promise))
+	end
 end
 
----Sends an event to the server and triggers a callback function once the response is returned.
----```
----callback(event: string, delay: number, function(...)
----	print(...)
----end)
----```
-local callback = {}
+---@overload fun(event: string, delay: number, cb: function, ...)
+local callback = setmetatable({}, {
+	__call = triggerServerCallback
+})
 
 ---@param event string
 ---@param delay number prevent the event from being called for the given time
 --- Sends an event to the server and halts the current thread until a response is returned.
 function callback.await(event, delay, ...)
-	if callbackTimer(event, delay) then
-		local promise = promise.new()
-		event = RegisterNetEvent(triggerCallback(event, ...), function(response)
-			promise:resolve(response)
-			RemoveEventHandler(event)
-		end)
-		return table.unpack(Citizen.Await(promise))
-	end
+	return triggerServerCallback(_, event, delay, false, ...)
 end
 
-return setmetatable(callback, {
-	__call = function(self, event, delay, cb, ...)
-		if callbackTimer(event, delay) then
-			event = RegisterNetEvent(triggerCallback(event, ...), function(response)
-				cb(table.unpack(response))
-				RemoveEventHandler(event)
-			end)
-		end
-	end
-})
+return callback
