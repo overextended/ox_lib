@@ -69,4 +69,15 @@ function callback.await(event, delay, ...)
 	return triggerServerCallback(_, event, delay, false, ...)
 end
 
+---@param name string
+---@param cb function
+--- Registers an event handler and callback function to respond to server requests.
+function callback.register(name, cb)
+	name = ('__cb_%s'):format(name)
+
+	RegisterNetEvent(name, function(key, ...)
+		TriggerServerEvent(cbEvent, key, { cb(...) })
+	end)
+end
+
 return callback
