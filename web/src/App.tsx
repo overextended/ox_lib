@@ -8,6 +8,7 @@ import Settings from "./features/settings";
 import { useNuiEvent } from "./hooks/useNuiEvent";
 import { setClipboard } from "./utils/setClipboard";
 import { fetchNui } from "./utils/fetchNui";
+import AlertDialog from "./features/dialog/AlertDialog";
 
 const App: React.FC = () => {
   useNuiEvent("setClipboard", (data: string) => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
       <Notifications />
       <TextUI />
       <InputDialog />
+      <AlertDialog />
       <ContextMenu />
     </>
   );

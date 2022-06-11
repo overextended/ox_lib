@@ -23,29 +23,29 @@ interface Props {
   rows: Row[];
 }
 
-debugData<Props>([
-  {
-    action: "openDialog",
-    data: {
-      heading: "Police locker",
-      rows: [
-        { type: "input", label: "Locker number" },
-        { type: "checkbox", label: "Some checkbox" },
-        { type: "input", label: "Locker PIN", password: true, icon: "lock" },
-        { type: "checkbox", label: "Some other checkbox" },
-        {
-          type: "select",
-          label: "Locker type",
-          options: [
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-            { value: "option3", label: "Option 3" },
-          ],
-        },
-      ],
-    },
-  },
-]);
+// debugData<Props>([
+//   {
+//     action: "openDialog",
+//     data: {
+//       heading: "Police locker",
+//       rows: [
+//         { type: "input", label: "Locker number" },
+//         { type: "checkbox", label: "Some checkbox" },
+//         { type: "input", label: "Locker PIN", password: true, icon: "lock" },
+//         { type: "checkbox", label: "Some other checkbox" },
+//         {
+//           type: "select",
+//           label: "Locker type",
+//           options: [
+//             { value: "option1", label: "Option 1" },
+//             { value: "option2", label: "Option 2" },
+//             { value: "option3", label: "Option 3" },
+//           ],
+//         },
+//       ],
+//     },
+//   },
+// ]);
 
 const InputDialog: React.FC = () => {
   const [fields, setFields] = React.useState<Props>({
