@@ -20,7 +20,7 @@ const SelectField: React.FC<Props> = (props) => {
           </option>
           {props.row.options?.map((option, index) => (
             <option key={`option-${index}`} value={option.value}>
-              {option.label}
+              {option.label ? option.label : option.value}
             </option>
           ))}
         </Select>
