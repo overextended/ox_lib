@@ -17,6 +17,7 @@ debugData<ContextMenuProps>([
         {
           title: "Example button",
           description: "Example button description",
+          image: "https://i.imgur.com/YAe7k17.jpeg",
           metadata: [{ label: "Value 1", value: 300 }],
         },
         {

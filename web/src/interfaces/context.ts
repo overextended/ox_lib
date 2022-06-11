@@ -3,6 +3,7 @@ export interface Option {
   title?: string;
   description?: string;
   arrow?: boolean;
+  image?: string;
   metadata?:
     | string[]
     | { [key: string]: any }

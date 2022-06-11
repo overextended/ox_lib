@@ -8,6 +8,7 @@ import {
   Text,
   Flex,
   Spacer,
+  Image,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Option, ContextMenuProps } from "../../interfaces/context";
@@ -91,31 +92,34 @@ const Item: React.FC<{
                   maxW="2xs"
                 >
                   <PopoverBody>
-                    {Array.isArray(option[1].metadata) ? (
-                      option[1].metadata.map(
-                        (
-                          metadata: string | { label: string; value: any },
-                          index: number
-                        ) => (
-                          <Text key={`context-metadata-${index}`}>
-                            {typeof metadata === "string"
-                              ? `${metadata}`
-                              : `${metadata.label}: ${metadata.value}`}
-                          </Text>
+                    <>
+                      {option[1].image && <Image src={option[1].image} />}
+                      {Array.isArray(option[1].metadata) ? (
+                        option[1].metadata.map(
+                          (
+                            metadata: string | { label: string; value: any },
+                            index: number
+                          ) => (
+                            <Text key={`context-metadata-${index}`}>
+                              {typeof metadata === "string"
+                                ? `${metadata}`
+                                : `${metadata.label}: ${metadata.value}`}
+                            </Text>
+                          )
                         )
-                      )
-                    ) : (
-                      <>
-                        {typeof option[1].metadata === "object" &&
-                          Object.entries(option[1].metadata).map(
-                            (metadata: { [key: string]: any }, index) => (
-                              <Text key={`context-metadata-${index}`}>
-                                {metadata[0]}: {metadata[1]}
-                              </Text>
-                            )
-                          )}
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          {typeof option[1].metadata === "object" &&
+                            Object.entries(option[1].metadata).map(
+                              (metadata: { [key: string]: any }, index) => (
+                                <Text key={`context-metadata-${index}`}>
+                                  {metadata[0]}: {metadata[1]}
+                                </Text>
+                              )
+                            )}
+                        </>
+                      )}
+                    </>
                   </PopoverBody>
                 </PopoverContent>
               )}
