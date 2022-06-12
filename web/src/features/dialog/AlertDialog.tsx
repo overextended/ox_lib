@@ -13,11 +13,11 @@ import ReactMarkdown from "react-markdown";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
+import { useLocales } from "../../providers/LocaleProvider";
 
 interface DialogProps {
   header: string;
   content: string;
-  button: string;
   centered?: boolean;
 }
 
@@ -27,19 +27,18 @@ debugData<DialogProps>([
     data: {
       header: "Hello there",
       content: "General kenobi  \n Markdown works",
-      button: "Ok",
       centered: true,
     },
   },
 ]);
 
 const AlertDialog: React.FC = () => {
+  const { locale } = useLocales();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
   const [dialogData, setDialogData] = useState<DialogProps>({
     header: "",
     content: "",
-    button: "",
   });
 
   const closeAlert = () => {
@@ -71,7 +70,7 @@ const AlertDialog: React.FC = () => {
             <ReactMarkdown>{dialogData.content}</ReactMarkdown>
           </AlertDialogBody>
           <AlertDialogFooter>
-            <Button onClick={closeAlert}>{dialogData.button}</Button>
+            <Button onClick={closeAlert}>{locale.ui.confirm}</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>
