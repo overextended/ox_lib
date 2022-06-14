@@ -1,7 +1,7 @@
 function lib.versionCheck(repository)
-	SetTimeout(1000, function()
-		local resource = repository:sub(repository:find('/') + 1, #repository)
+	local resource = GetInvokingResource() or GetCurrentResourceName()
 
+	SetTimeout(1000, function()
 		PerformHttpRequest(('https://api.github.com/repos/%s/releases/latest'):format(repository), function(status, response)
 			if status ~= 200 then return end
 
