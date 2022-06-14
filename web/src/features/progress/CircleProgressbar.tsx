@@ -42,9 +42,7 @@ const CircleProgressbar: React.FC = () => {
   const progressCancel = () => {
     setCancelled(true);
     setValue(99); // Sets the final value to 100% kek
-    setTimeout(() => {
-      setVisible(false);
-    }, 2500);
+    setVisible(false);
   };
 
   useNuiEvent("progressCancel", progressCancel);
@@ -77,10 +75,7 @@ const CircleProgressbar: React.FC = () => {
       alignItems="center"
     >
       {visible && (
-        <Flex
-          alignItems= "center"
-          flexDirection="column"
-        >
+        <Flex alignItems="center" flexDirection="column">
           <CircularProgress
             value={value}
             size="5rem"
@@ -99,6 +94,7 @@ const CircleProgressbar: React.FC = () => {
                     },
                   }
                 : {
+                    // Currently unused
                     ".chakra-progress__indicator": {
                       transition: "none !important",
                       strokeDasharray: "264, 0 !important", // sets circle to full
@@ -110,12 +106,7 @@ const CircleProgressbar: React.FC = () => {
               {value}%
             </CircularProgressLabel>
           </CircularProgress>
-          <Text
-            fontFamily="Inter"
-            isTruncated
-            fontSize={18}
-            fontWeight="light"
-          >
+          <Text fontFamily="Inter" isTruncated fontSize={18} fontWeight="light">
             {label}
           </Text>
         </Flex>

@@ -32,9 +32,7 @@ const Progressbar: React.FC = () => {
 
   const progressCancel = () => {
     setCancelled(true);
-    setTimeout(() => {
-      setVisible(false);
-    }, 2500);
+    setVisible(false);
   };
 
   useNuiEvent("progressCancel", progressCancel);
@@ -77,6 +75,7 @@ const Progressbar: React.FC = () => {
                       animationDuration: `${duration}ms`,
                     }
                   : {
+                      // Currently unused
                       width: "100%",
                       animationPlayState: "paused",
                       backgroundColor: "rgb(198, 40, 40)",
