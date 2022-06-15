@@ -1,0 +1,11 @@
+{
+  "language": "Lithuanian",
+  "ui": {
+    "settings": {
+      "title": "Nustatymai",
+      "language": "Kalba"
+    },
+    "close": "Uždaryti",
+    "confirm": "Patvirtinti"
+  }
+}
