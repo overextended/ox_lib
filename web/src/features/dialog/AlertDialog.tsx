@@ -19,6 +19,7 @@ interface DialogProps {
   header: string;
   content: string;
   centered?: boolean;
+  cancel?: boolean;
 }
 
 debugData<DialogProps>([
@@ -28,6 +29,7 @@ debugData<DialogProps>([
       header: "Hello there",
       content: "General kenobi  \n Markdown works",
       centered: true,
+      cancel: true,
     },
   },
 ]);
@@ -41,9 +43,9 @@ const AlertDialog: React.FC = () => {
     content: "",
   });
 
-  const closeAlert = () => {
+  const closeAlert = (button: string) => {
     onClose();
-    fetchNui("closeAlert");
+    fetchNui("closeAlert", button);
   };
 
   useNuiEvent("sendAlert", (data: DialogProps) => {
@@ -59,7 +61,7 @@ const AlertDialog: React.FC = () => {
         isOpen={isOpen}
         isCentered={dialogData.centered}
         closeOnOverlayClick={false}
-        onEsc={closeAlert}
+        onEsc={() => closeAlert("cancel")}
       >
         <AlertDialogOverlay />
         <AlertDialogContent fontFamily="Inter">
@@ -70,7 +72,17 @@ const AlertDialog: React.FC = () => {
             <ReactMarkdown>{dialogData.content}</ReactMarkdown>
           </AlertDialogBody>
           <AlertDialogFooter>
-            <Button onClick={closeAlert}>{locale.ui.confirm}</Button>
+            {dialogData.cancel && (
+              <Button onClick={() => closeAlert("cancel")} mr={3}>
+                {locale.ui.cancel}
+              </Button>
+            )}
+            <Button
+              colorScheme={dialogData.cancel ? "blue" : undefined}
+              onClick={() => closeAlert("confirm")}
+            >
+              {locale.ui.confirm}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </Dialog>

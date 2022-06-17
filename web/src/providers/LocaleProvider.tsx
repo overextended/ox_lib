@@ -47,6 +47,7 @@ interface Locale {
       title: string;
       language: string;
     };
+    cancel: string;
     close: string;
     confirm: string;
   };
@@ -67,6 +68,7 @@ const LocaleProvider: React.FC = ({ children }) => {
         title: "",
         language: "",
       },
+      cancel: "",
       close: "",
       confirm: "",
     },
