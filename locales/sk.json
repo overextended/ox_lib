@@ -1,12 +1,12 @@
 {
-    "language": "Slovak",
-    "ui": {
-      "settings": {
-        "title": "Nastavenia",
-        "language": "Jazyk"
-      },
-      "close": "Zavrieť",
-      "confirm": "Potvrdiť"
-    }
+  "language": "Slovak",
+  "ui": {
+    "settings": {
+      "title": "Nastavenia",
+      "language": "Jazyk"
+    },
+    "cancel": "Cancel",
+    "close": "Zavrieť",
+    "confirm": "Potvrdiť"
   }
-  
+}

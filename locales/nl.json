@@ -1,11 +1,12 @@
 {
-    "language": "Dutch",
-    "ui": {
-      "settings": {
-        "title": "Instellingen",
-        "language": "Taal"
-      },
-      "close": "Sluiten",
-      "confirm": "Bevestig"
-    }
+  "language": "Dutch",
+  "ui": {
+    "settings": {
+      "title": "Instellingen",
+      "language": "Taal"
+    },
+    "cancel": "Cancel",
+    "close": "Sluiten",
+    "confirm": "Bevestig"
   }
+}

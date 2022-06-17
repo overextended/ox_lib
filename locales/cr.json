@@ -1,11 +1,12 @@
 {
-    "language": "Croatian",
-    "ui": {
-      "settings": {
-        "title": "Postavke",
-        "language": "Jezik"
-      },
-      "close": "Zatvoriti",
-      "confirm": "Potvrdite"
-    }
+  "language": "Croatian",
+  "ui": {
+    "settings": {
+      "title": "Postavke",
+      "language": "Jezik"
+    },
+    "cancel": "Odustani",
+    "close": "Zatvoriti",
+    "confirm": "Potvrdite"
   }
+}

@@ -1,12 +1,12 @@
 {
-    "language": "Albanian",
-    "ui": {
-      "settings": {
-        "title": "Cilësimet",
-        "language": "Gjuhe"
-      },
-      "close": "Mbylle",
-      "confirm": "Konfirmo"
-    }
+  "language": "Albanian",
+  "ui": {
+    "settings": {
+      "title": "Cilësimet",
+      "language": "Gjuhe"
+    },
+    "cancel": "Cancel",
+    "close": "Mbylle",
+    "confirm": "Konfirmo"
   }
-  
+}
