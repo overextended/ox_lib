@@ -13,7 +13,7 @@ import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 import { Row } from "../../interfaces/dialog";
-
+import InputNumber from "./components/number";
 import Input from "./components/input";
 import CheckboxField from "./components/checkbox";
 import SelectField from "./components/select";
@@ -42,6 +42,7 @@ interface Props {
 //             { value: "option3", label: "Option 3" },
 //           ],
 //         },
+//         { type: "number", label: "Number counter" },
 //       ],
 //     },
 //   },
@@ -52,7 +53,9 @@ const InputDialog: React.FC = () => {
     heading: "",
     rows: [{ type: "input", label: "" }],
   });
-  const [inputData, setInputData] = React.useState<Array<string | boolean>>([]);
+  const [inputData, setInputData] = React.useState<
+    Array<string | number | boolean>
+  >([]);
   const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
 
@@ -77,7 +80,7 @@ const InputDialog: React.FC = () => {
     fetchNui("inputData");
   };
 
-  const handleChange = (value: string | boolean, index: number) => {
+  const handleChange = (value: string | number | boolean, index: number) => {
     setInputData((previousData) => {
       previousData[index] = value;
       return previousData;
@@ -124,6 +127,13 @@ const InputDialog: React.FC = () => {
                 )}
                 {row.type === "select" && (
                   <SelectField
+                    row={row}
+                    index={index}
+                    handleChange={handleChange}
+                  />
+                )}
+                {row.type === "number" && (
+                  <InputNumber
                     row={row}
                     index={index}
                     handleChange={handleChange}

@@ -12,7 +12,7 @@ import { Row } from "../../../interfaces/dialog";
 interface Props {
   row: Row;
   index: number;
-  handleChange: (value: string | boolean, index: number) => void;
+  handleChange: (value: string | number | boolean, index: number) => void;
   passwordStates: boolean[];
   handlePasswordStates: (index: number) => void;
 }
