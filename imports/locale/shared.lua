@@ -17,10 +17,7 @@ end
 local function loadLocale(locale)
 	local resourceName = GetCurrentResourceName()
 	local JSON = LoadResourceFile(resourceName, ('locales/%s.json'):format(locale)) or LoadResourceFile(resourceName, ('locales/en.json'):format(locale))
-
-	if JSON then
-		dict = json.decode(JSON)
-	end
+	dict = JSON and json.decode(JSON) or {}
 end
 
 AddEventHandler('ox_lib:setLocale', loadLocale)
