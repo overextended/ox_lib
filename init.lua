@@ -58,6 +58,8 @@ end
 -- API
 -----------------------------------------------------------------------------------------------
 
+local export = exports[ox_lib]
+
 local function call(self, index, ...)
 	local module = rawget(self, index)
 	if not module then
@@ -65,7 +67,7 @@ local function call(self, index, ...)
 
 		if not module then
 			local function method(...)
-				return exports[ox_lib][index](nil, ...)
+				return export[index](nil, ...)
 			end
 
 			if not ... then
@@ -147,7 +149,7 @@ local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
 
 local _cache = setmetatable({}, {
 	__index = function(self, key)
-		return rawset(self, key, exports[ox_lib].cache(nil, key) or false)[key]
+		return rawset(self, key, export.cache(nil, key) or false)[key]
 	end,
 
 	__call = function(self)
@@ -172,8 +174,28 @@ cache = setmetatable({
 })
 
 if service == 'client' then
+	RegisterNetEvent(('%s:notify'):format(cache.resource), function(data)
+		if locale then
+			if data.title then
+				data.title = locale(data.title) or data.title
+			end
+
+			if data.description then
+				data.description = locale(data.description) or data.description
+			end
+		end
+
+		return export:notify(data)
+	end)
+
 	cache.playerId = PlayerId()
 	cache.serverId = GetPlayerServerId(cache.playerId)
+else
+	local notify = ('%s:notify'):format(cache.resource)
+
+	function lib.notify(source, data)
+		TriggerClientEvent(notify, source, data)
+	end
 end
 
 Citizen.CreateThreadNow(function()
