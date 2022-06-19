@@ -1,8 +1,8 @@
 local events = {}
 local timers = {}
-local cbEvent = ('__cb_%s'):format(cache.resource)
+local cbEvent = ('__ox_cb_%s')
 
-RegisterNetEvent(cbEvent, function(key, ...)
+RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 	local cb = events[key]
 	return cb and cb(...)
 end)
@@ -38,7 +38,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 		key = ('%s:%s'):format(event, math.random(0, 100000))
 	until not events[key]
 
-	TriggerServerEvent(('__cb_%s'):format(event), key, ...)
+	TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
 
 	local promise = not cb and promise.new()
 
@@ -73,10 +73,8 @@ end
 ---@param cb function
 --- Registers an event handler and callback function to respond to server requests.
 function callback.register(name, cb)
-	name = ('__cb_%s'):format(name)
-
-	RegisterNetEvent(name, function(key, ...)
-		TriggerServerEvent(cbEvent, key, { cb(...) })
+	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
+		TriggerServerEvent(cbEvent:format(resource), key, { cb(...) })
 	end)
 end
 

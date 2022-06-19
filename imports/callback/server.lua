@@ -1,7 +1,7 @@
 local events = {}
-local cbEvent = ('__cb_%s'):format(cache.resource)
+local cbEvent = ('__ox_cb_%s')
 
-RegisterNetEvent(cbEvent, function(key, ...)
+RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 	local cb = events[key]
 	return cb and cb(...)
 end)
@@ -19,7 +19,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 		key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
 	until not events[key]
 
-	TriggerClientEvent(('__cb_%s'):format(event), playerId, key, ...)
+	TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
 	local promise = not cb and promise.new()
 
@@ -54,10 +54,8 @@ end
 ---@param cb function
 --- Registers an event handler and callback function to respond to client requests.
 function callback.register(name, cb)
-	name = ('__cb_%s'):format(name)
-
-	RegisterNetEvent(name, function(key, ...)
-		TriggerClientEvent(cbEvent, source, key, { cb(source, ...) })
+	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
+		TriggerClientEvent(cbEvent:format(resource), source, key, { cb(source, ...) })
 	end)
 end
 
