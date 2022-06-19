@@ -17,6 +17,7 @@ import InputNumber from "./components/number";
 import Input from "./components/input";
 import CheckboxField from "./components/checkbox";
 import SelectField from "./components/select";
+import { useKeyPress } from "../../hooks/useKeyPress";
 
 interface Props {
   heading: string;
@@ -58,8 +59,12 @@ const InputDialog: React.FC = () => {
   >([]);
   const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
-
+  const enterPressed = useKeyPress("Enter");
   const { locale } = useLocales();
+
+  React.useEffect(() => {
+    if (visible && enterPressed === false) handleConfirm();
+  }, [enterPressed]);
 
   const handlePasswordStates = (index: number) => {
     setPasswordStates({
