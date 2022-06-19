@@ -487,4 +487,6 @@ function lib.setVehicleProperties(vehicle, props)
 	if props.modLightbar then
 		SetVehicleMod(vehicle, 49, props.modLightbar, false)
 	end
+
+	return true
 end
