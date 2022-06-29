@@ -46,6 +46,7 @@ const Settings: React.FC = () => {
         onClose={onClose}
         isCentered
         closeOnEsc
+        onEsc={closeSettings}
         closeOnOverlayClick={false}
         size="xs"
       >
