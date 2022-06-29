@@ -30,10 +30,14 @@ function lib.getVehicleProperties(vehicle)
 			end
 		end
 
-		if GetVehicleMod(vehicle, 48) == -1 and GetVehicleLivery(vehicle) ~= -1 then
-			modLivery = GetVehicleLivery(vehicle)
-		else
-			modLivery = GetVehicleMod(vehicle, 48)
+        local modLivery = GetVehicleMod(vehicle, 48)
+
+		if modLivery == -1 then
+			local modLivery2 = GetVehicleLivery(vehicle)
+
+			if modLivery2 ~= 0 then
+				modLivery = modLivery2
+			end
 		end
 
 		local damage = {
@@ -91,6 +95,8 @@ function lib.getVehicleProperties(vehicle)
 			interiorColor = GetVehicleInteriorColor(vehicle),
 			dashboardColor = GetVehicleDashboardColour(vehicle),
 			wheelColor = wheelColor,
+            wheelWidth = GetVehicleWheelWidth(vehicle),
+            wheelSize = GetVehicleWheelSize(vehicle),
 			wheels = GetVehicleWheelType(vehicle),
 			windowTint = GetVehicleWindowTint(vehicle),
 			xenonColor = GetVehicleXenonLightsColor(vehicle),
@@ -149,6 +155,7 @@ function lib.getVehicleProperties(vehicle)
 			modWindows = GetVehicleMod(vehicle, 46),
 			modDoorR = GetVehicleMod(vehicle, 47),
 			modLivery = modLivery,
+            modRoofLivery = GetVehicleRoofLivery(vehicle),
 			modLightbar = GetVehicleMod(vehicle, 49),
 			windows = damage.windows,
 			doors = damage.doors,
@@ -190,11 +197,15 @@ function lib.setVehicleProperties(vehicle, props)
 	end
 
 	if props.tankHealth  then
-		SetVehiclePetrolTankHealth(vehicle, props.engineHealth + 0.0)
+		SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0)
 	end
 
 	if props.fuelLevel then
 		SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0)
+	end
+
+	if props.oilLevel then
+		SetVehicleOilLevel(vehicle, props.oilLevel + 0.0)
 	end
 
 	if props.dirtLevel then
@@ -217,8 +228,8 @@ function lib.setVehicleProperties(vehicle, props)
 		end
 	end
 
-	if props.pearlescentColor then
-		SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor)
+	if props.pearlescentColor or props.wheelColor then
+		SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor or wheelColor)
 	end
 
 	if props.interiorColor then
@@ -226,15 +237,19 @@ function lib.setVehicleProperties(vehicle, props)
 	end
 
 	if props.dashboardColor then
-		SetVehicleDashboardColour(vehicle, props.dashboardColor)
-	end
-
-	if props.wheelColor then
-		SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor)
+		SetVehicleDashboardColor(vehicle, props.dashboardColor)
 	end
 
 	if props.wheels then
 		SetVehicleWheelType(vehicle, props.wheels)
+	end
+
+	if props.wheelSize then
+		SetVehicleWheelSize(vehicle, props.wheelSize)
+	end
+
+	if props.wheelWidth then
+		SetVehicleWheelWidth(vehicle, props.wheelWidth)
 	end
 
 	if props.windowTint then
@@ -261,7 +276,7 @@ function lib.setVehicleProperties(vehicle, props)
 
 	if props.doors then
 		for i = 1, #props.doors do
-			SetVehicleDoorBroken(vehicle, props.windows[i], false)
+			SetVehicleDoorBroken(vehicle, props.doors[i], true)
 		end
 	end
 
