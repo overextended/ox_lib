@@ -1,19 +1,6 @@
-
--- ox_lib
--- Copyright (C) 2021	Linden <https://github.com/thelindat>
-
--- This program is free software: you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation, either version 3 of the License, or
--- (at your option) any later version.
-
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
-
--- You should have received a copy of the GNU General Public License
--- along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>
+-- ox_lib <https://github.com/overextended/ox_lib>
+-- Copyright (C) 2021 Linden <https://github.com/thelindat>
+-- LGPL-3.0-or-later <https://www.gnu.org/licenses/lgpl-3.0.en.html>
 
 if not _VERSION:find('5.4') then
 	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
