@@ -9,6 +9,7 @@ import {
   Flex,
   Spacer,
   Image,
+  HStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Option, ContextMenuProps } from "../../interfaces/context";
@@ -55,6 +56,18 @@ const Item: React.FC<{
                   : clickContext(option[0])
               }
             >
+              {option[1]?.icon && (
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon={option[1].icon}
+                  fontSize={20}
+                  style={{
+                    marginRight: 10,
+                    justifySelf: "center",
+                    color: option[1].iconColor,
+                  }}
+                />
+              )}
               <Box>
                 <Box paddingBottom={option[1].description ? 1 : 0}>
                   <Text w="100%" fontWeight="medium">
