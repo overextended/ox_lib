@@ -88,12 +88,14 @@ const ContextMenu: React.FC = () => {
         <Box w="xs" h={580}>
           <Flex justifyContent="center" alignItems="center" mb={3}>
             {contextMenu.menu && (
-              <Box
+              <Flex
                 borderRadius="md"
                 bg="gray.800"
-                h="100%"
                 flex="1 15%"
+                alignSelf="stretch"
                 textAlign="center"
+                justifyContent="center"
+                alignItems="center"
                 marginRight={2}
                 p={2}
                 _hover={{ bg: "gray.700" }}
@@ -101,7 +103,7 @@ const ContextMenu: React.FC = () => {
                 onClick={() => openMenu(contextMenu.menu)}
               >
                 <FontAwesomeIcon icon="chevron-left" />
-              </Box>
+              </Flex>
             )}
             <Box borderRadius="md" bg="gray.800" flex="1 85%">
               <Text
