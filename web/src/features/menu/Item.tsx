@@ -82,7 +82,7 @@ const Item: React.FC<{
               )}
             </Flex>
             <Portal>
-              {option[1].metadata && (
+              {(option[1].metadata || option[1].image) && (
                 <PopoverContent
                   fontFamily="Poppins"
                   bg="gray.800"
