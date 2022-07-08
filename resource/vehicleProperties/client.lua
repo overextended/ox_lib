@@ -171,8 +171,8 @@ end
 ---@param vehicle number Entity handle
 ---@param props table Properties
 function lib.setVehicleProperties(vehicle, props)
-	if not DoesEntityExist(vehicle) then error(("Unable to set vehicle properties for '%s' (entity does not exist)"):format(entity)) end
-	if NetworkGetEntityOwner(vehicle) ~= PlayerId() then error(("Unable to set vehicle properties for '%s' (client is not entity owner)"):format(entity)) end
+	if not DoesEntityExist(vehicle) then error(("Unable to set vehicle properties for '%s' (entity does not exist)"):format(vehicle)) end
+	if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then error(("Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle)) end
 
 	local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
