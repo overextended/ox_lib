@@ -90,7 +90,13 @@ local function addCommand(group, name, callback, parameters, help)
 		end, group and true)
 
 		name = ('command.%s'):format(name)
-		if not IsPrincipalAceAllowed(group, name) then lib.addAce(group, name) end
+		if type(group) == 'table' then
+			for _, v in ipairs(group) do
+				if not IsPrincipalAceAllowed(v, name) then lib.addAce(v, name) end
+			end
+		else
+			if not IsPrincipalAceAllowed(group, name) then lib.addAce(group, name) end
+		end
 	end
 end
 
