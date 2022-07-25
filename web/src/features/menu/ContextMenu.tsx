@@ -52,15 +52,17 @@ const ContextMenu: React.FC = () => {
     options: { "": { description: "", metadata: [] } },
   });
 
+  const closeContext = () => {
+    setVisible(false);
+    fetchNui("closeContext");
+  };
+
   // Hides the context menu on ESC
   useEffect(() => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
-      if (["Escape"].includes(e.code)) {
-        setVisible(false);
-        fetchNui("closeContext");
-      }
+      if (["Escape"].includes(e.code)) closeContext();
     };
 
     window.addEventListener("keydown", keyHandler);
@@ -119,6 +121,22 @@ const ContextMenu: React.FC = () => {
                 {contextMenu.title}
               </Text>
             </Box>
+            <Flex
+              borderRadius="md"
+              bg="gray.800"
+              flex="1 15%"
+              alignSelf="stretch"
+              textAlign="center"
+              justifyContent="center"
+              alignItems="center"
+              marginLeft={2}
+              p={2}
+              _hover={{ bg: "gray.700" }}
+              transition="300ms"
+              onClick={() => closeContext()}
+            >
+              <FontAwesomeIcon icon="xmark" fontSize={20} />
+            </Flex>
           </Flex>
           <Box maxH={560} overflowY="scroll">
             {Object.entries(contextMenu.options).map((option, index) => (
