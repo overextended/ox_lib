@@ -1,8 +1,9 @@
-import { Box, Spacer, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useNuiEvent } from "../../../hooks/useNuiEvent";
 import { debugData } from "../../../utils/debugData";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ListItem from "./ListItem";
+import Header from "./Header";
 
 interface MenuSettings {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -46,19 +47,21 @@ const ListMenu: React.FC = () => {
       case "ArrowDown":
         setSelected((selected) => {
           if (selected >= menu.items.length - 1) return selected;
-          listRefs.current[selected + 1]?.focus();
           return selected + 1;
         });
         break;
       case "ArrowUp":
         setSelected((selected) => {
           if (selected <= 0) return selected;
-          listRefs.current[selected - 1]?.focus();
           return selected - 1;
         });
         break;
     }
   };
+
+  useEffect(() => {
+    listRefs.current[selected]?.focus();
+  }, [selected]);
 
   useEffect(() => {
     if (!visible) return document.removeEventListener("keyup", moveMenu);
@@ -91,39 +94,10 @@ const ListMenu: React.FC = () => {
         left={menu.position === "bottom-left" ? 1 : undefined}
         bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
       >
-        <Box p={3} textAlign="center" borderTopLeftRadius="md" borderTopRightRadius="md" bg="#25262B">
-          <Text fontSize={24} textTransform="uppercase" fontWeight={300} fontFamily="Poppins">
-            {menu.title}
-          </Text>
-        </Box>
+        <Header title={menu.title} />
         <Stack direction="column" p={2} overflowY="scroll">
           {menu.items.map((item, index) => (
-            <Box
-              bg="#25262B"
-              borderRadius="md"
-              tabIndex={index}
-              pointerEvents="none"
-              p={2}
-              height="60px"
-              key={`item-${index}`}
-              _focus={{ bg: "#373A40", outline: "none" }}
-              ref={(element) => (listRefs.current = [...listRefs.current, element])}
-            >
-              {Array.isArray(item.value) ? (
-                <Flex justifyContent="center" alignItems="center">
-                  <Stack spacing={1}>
-                    <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
-                      {item.label}
-                    </Text>
-                    <Text>Nice cool</Text>
-                  </Stack>
-                  <Spacer />
-                  <FontAwesomeIcon icon="arrows-left-right" fontSize={20} color="#909296" />
-                </Flex>
-              ) : (
-                item.label
-              )}
-            </Box>
+            <ListItem index={index} item={item} ref={listRefs} key={`menu-item-${index}`} />
           ))}
         </Stack>
       </Box>
