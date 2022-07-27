@@ -2,12 +2,12 @@ local cache = {}
 cache.playerId = PlayerId()
 cache.serverId = GetPlayerServerId(cache.playerId)
 
-local GetVehiclePedIsIn = GetVehiclePedIsIn
+local GetVehiclePedIsUsing = GetVehiclePedIsUsing
 local GetPedInVehicleSeat = GetPedInVehicleSeat
 local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
 
 function cache:getVehicle()
-	local vehicle = GetVehiclePedIsIn(self.ped, false)
+	local vehicle = GetVehiclePedIsUsing(self.ped)
 	if vehicle > 0 then
 		self:set('vehicle', vehicle)
 
@@ -34,19 +34,10 @@ function cache:set(key, value)
 	end
 end
 
-local GetEntityCoords = GetEntityCoords
-
 CreateThread(function()
-	local num = 1
 	while true do
-		num += 1
 		cache:set('ped', PlayerPedId())
-
-		if num > 1 then
-			cache.coords = GetEntityCoords(cache.ped)
-			cache:getVehicle()
-			num = 0
-		end
+		cache:getVehicle()
 
 		if next(update) then
 			TriggerEvent('ox_lib:updateCache', update)
