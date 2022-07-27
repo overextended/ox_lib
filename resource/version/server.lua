@@ -8,7 +8,7 @@ function lib.versionCheck(repository)
 			response = json.decode(response)
 			if response.prerelease then return end
 
-			local currentVersion = GetResourceMetadata(resource, 'version', 0):match('%d%.%d+%.%d+')
+			local currentVersion = GetResourceMetadata(resource, 'version', 0) and GetResourceMetadata(resource, 'version', 0):match('%d%.%d+%.%d+')
 			if not currentVersion then return end
 
 			local latestVersion = response.tag_name:match('%d%.%d+%.%d+')
