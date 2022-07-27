@@ -20,6 +20,12 @@ debugData<MenuSettings>([
         { label: "Option 1", value: "option1" },
         { label: "Option 2", value: "option2" },
         { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Option 1", value: "option1" },
+        { label: "Option 2", value: "option2" },
+        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Option 1", value: "option1" },
+        { label: "Option 2", value: "option2" },
+        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
       ],
     },
   },
@@ -33,18 +39,21 @@ const ListMenu: React.FC = () => {
   });
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
+  const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const moveMenu = (e: KeyboardEvent) => {
     switch (e.code) {
       case "ArrowDown":
         setSelected((selected) => {
           if (selected >= menu.items.length - 1) return selected;
+          listRefs.current[selected + 1]?.focus();
           return selected + 1;
         });
         break;
       case "ArrowUp":
         setSelected((selected) => {
           if (selected <= 0) return selected;
+          listRefs.current[selected - 1]?.focus();
           return selected - 1;
         });
         break;
@@ -67,7 +76,9 @@ const ListMenu: React.FC = () => {
     <>
       <Box
         width="sm"
-        height="md"
+        height="fit-content"
+        maxHeight={480}
+        overflow="hidden"
         borderRadius="md"
         bg="#141517"
         position="absolute"
@@ -80,24 +91,28 @@ const ListMenu: React.FC = () => {
         left={menu.position === "bottom-left" ? 1 : undefined}
         bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
       >
-        <Box p={2} textAlign="center" borderTopLeftRadius="md" borderTopRightRadius="md">
-          <Text fontSize={24} textTransform="uppercase" fontWeight={500}>
+        <Box p={3} textAlign="center" borderTopLeftRadius="md" borderTopRightRadius="md" bg="#25262B">
+          <Text fontSize={24} textTransform="uppercase" fontWeight={300} fontFamily="Poppins">
             {menu.title}
           </Text>
         </Box>
-        <Stack direction="column" p={2}>
+        <Stack direction="column" p={2} overflowY="scroll">
           {menu.items.map((item, index) => (
             <Box
-              bg={index !== selected ? "#25262B" : "#373A40"}
+              bg="#25262B"
               borderRadius="md"
               tabIndex={index}
-              p={5}
+              pointerEvents="none"
+              p={2}
+              height="60px"
               key={`item-${index}`}
+              _focus={{ bg: "#373A40", outline: "none" }}
+              ref={(element) => (listRefs.current = [...listRefs.current, element])}
             >
               {Array.isArray(item.value) ? (
                 <Flex justifyContent="center" alignItems="center">
                   <Stack spacing={1}>
-                    <Text color="#909296" textTransform="uppercase" fontSize={12}>
+                    <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
                       {item.label}
                     </Text>
                     <Text>Nice cool</Text>
