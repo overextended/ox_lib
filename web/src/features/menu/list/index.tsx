@@ -68,6 +68,7 @@ const ListMenu: React.FC = () => {
     if (!data.position) data.position = "top-left";
     setMenu(data);
     setVisible(true);
+    listRefs.current[0]?.focus();
   });
 
   return (
