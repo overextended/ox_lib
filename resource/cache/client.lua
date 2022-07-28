@@ -24,12 +24,10 @@ function cache:getVehicle()
 	end
 end
 
-local update = {}
-
 function cache:set(key, value)
 	if value ~= self[key] then
 		self[key] = value
-		update[key] = value
+		TriggerEvent(('ox_lib:cache:%s'):format(key), value)
 		return true
 	end
 end
@@ -38,12 +36,6 @@ CreateThread(function()
 	while true do
 		cache:set('ped', PlayerPedId())
 		cache:getVehicle()
-
-		if next(update) then
-			TriggerEvent('ox_lib:updateCache', update)
-			table.wipe(update)
-		end
-
 		Wait(100)
 	end
 end)
