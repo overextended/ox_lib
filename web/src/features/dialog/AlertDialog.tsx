@@ -22,17 +22,17 @@ interface DialogProps {
   cancel?: boolean;
 }
 
-debugData<DialogProps>([
-  {
-    action: "sendAlert",
-    data: {
-      header: "Hello there",
-      content: "General kenobi  \n Markdown works",
-      centered: true,
-      cancel: true,
-    },
-  },
-]);
+// debugData<DialogProps>([
+//   {
+//     action: "sendAlert",
+//     data: {
+//       header: "Hello there",
+//       content: "General kenobi  \n Markdown works",
+//       centered: true,
+//       cancel: true,
+//     },
+//   },
+// ]);
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
@@ -77,10 +77,7 @@ const AlertDialog: React.FC = () => {
                 {locale.ui.cancel}
               </Button>
             )}
-            <Button
-              colorScheme={dialogData.cancel ? "blue" : undefined}
-              onClick={() => closeAlert("confirm")}
-            >
+            <Button colorScheme={dialogData.cancel ? "blue" : undefined} onClick={() => closeAlert("confirm")}>
               {locale.ui.confirm}
             </Button>
           </AlertDialogFooter>

@@ -4,6 +4,7 @@ import { useNuiEvent } from "../../../hooks/useNuiEvent";
 import { debugData } from "../../../utils/debugData";
 import ListItem from "./ListItem";
 import Header from "./Header";
+import FocusTrap from "focus-trap-react";
 
 interface MenuSettings {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -42,7 +43,7 @@ const ListMenu: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const moveMenu = (e: KeyboardEvent) => {
+  const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.code) {
       case "ArrowDown":
         setSelected((selected) => {
@@ -63,12 +64,6 @@ const ListMenu: React.FC = () => {
     listRefs.current[selected]?.focus();
   }, [selected]);
 
-  useEffect(() => {
-    if (!visible) return document.removeEventListener("keyup", moveMenu);
-
-    document.addEventListener("keyup", moveMenu);
-  }, [visible]);
-
   useNuiEvent("setMenu", (data: MenuSettings) => {
     if (!data.position) data.position = "top-left";
     setMenu(data);
@@ -86,6 +81,7 @@ const ListMenu: React.FC = () => {
         bg="#141517"
         position="absolute"
         fontFamily="Nunito"
+        onKeyDown={(e) => moveMenu(e)}
         mt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
         ml={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
         mr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
@@ -95,11 +91,13 @@ const ListMenu: React.FC = () => {
         bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
       >
         <Header title={menu.title} />
-        <Stack direction="column" p={2} overflowY="scroll">
-          {menu.items.map((item, index) => (
-            <ListItem index={index} item={item} ref={listRefs} key={`menu-item-${index}`} />
-          ))}
-        </Stack>
+        <FocusTrap active={visible}>
+          <Stack direction="column" p={2} overflowY="scroll">
+            {menu.items.map((item, index) => (
+              <ListItem index={index} item={item} ref={listRefs} key={`menu-item-${index}`} />
+            ))}
+          </Stack>
+        </FocusTrap>
       </Box>
     </>
   );
