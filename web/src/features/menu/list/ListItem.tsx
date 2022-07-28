@@ -35,7 +35,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index 
             <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
               {item.label}
             </Text>
-            <Text>Nice cool</Text>
+            <Text>hello</Text>
           </Stack>
           <Spacer />
           <FontAwesomeIcon icon="arrows-left-right" fontSize={20} color="#909296" />
