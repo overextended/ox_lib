@@ -10,9 +10,10 @@ interface Item {
 interface Props {
   item: Item;
   index: number;
+  scrollIndex: number;
 }
 
-const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index }, ref) => {
+const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex }, ref) => {
   return (
     <Box
       bg="#25262B"
@@ -35,7 +36,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index 
             <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
               {item.label}
             </Text>
-            <Text>hello</Text>
+            <Text>{item.value[scrollIndex]}</Text>
           </Stack>
           <Spacer />
           <FontAwesomeIcon icon="arrows-left-right" fontSize={20} color="#909296" />

@@ -41,6 +41,7 @@ const ListMenu: React.FC = () => {
   });
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -57,6 +58,23 @@ const ListMenu: React.FC = () => {
           return selected - 1;
         });
         break;
+      case "ArrowRight":
+        if (!Array.isArray(menu.items[selected].value)) return;
+        setIndexStates({
+          ...indexStates,
+          [selected]:
+            indexStates[selected] + 1 <= menu.items[selected].value.length - 1
+              ? indexStates[selected] + 1
+              : indexStates[selected],
+        });
+        break;
+      case "ArrowLeft":
+        if (!Array.isArray(menu.items[selected].value)) return;
+        setIndexStates({
+          ...indexStates,
+          [selected]: indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : indexStates[selected],
+        });
+        break;
     }
   };
 
@@ -68,6 +86,11 @@ const ListMenu: React.FC = () => {
     if (!data.position) data.position = "top-left";
     setMenu(data);
     setVisible(true);
+    let arrayIndexes: { [key: number]: number } = {};
+    for (let i = 0; i < data.items.length; i++) {
+      if (Array.isArray(data.items[i].value)) arrayIndexes[i] = 0;
+    }
+    setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();
   });
 
@@ -95,7 +118,13 @@ const ListMenu: React.FC = () => {
         <FocusTrap active={visible}>
           <Stack direction="column" p={2} overflowY="scroll">
             {menu.items.map((item, index) => (
-              <ListItem index={index} item={item} ref={listRefs} key={`menu-item-${index}`} />
+              <ListItem
+                index={index}
+                item={item}
+                scrollIndex={indexStates[index]}
+                ref={listRefs}
+                key={`menu-item-${index}`}
+              />
             ))}
           </Stack>
         </FocusTrap>
