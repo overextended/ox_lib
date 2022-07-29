@@ -105,6 +105,7 @@ const ListMenu: React.FC = () => {
     <>
       <Box
         position="absolute"
+        pointerEvents="none"
         pt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
         pl={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
         pr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
