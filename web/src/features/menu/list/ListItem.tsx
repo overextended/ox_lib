@@ -15,7 +15,6 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       bg="#25262B"
       borderRadius="md"
       tabIndex={index}
-      pointerEvents="none"
       p={2}
       height="60px"
       key={`item-${index}`}
