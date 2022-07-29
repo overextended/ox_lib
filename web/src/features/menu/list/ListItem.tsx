@@ -1,14 +1,10 @@
-import { Box, Flex, Stack, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack, Spacer, Text, IconProps } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { forwardRef } from "react";
-
-interface Item {
-  label: string;
-  value: string | string[];
-}
+import type { MenuItem } from "./index";
 
 interface Props {
-  item: Item;
+  item: MenuItem;
   index: number;
   scrollIndex: number;
 }
@@ -30,25 +26,34 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           return (ref.current = [...ref.current, element]);
       }}
     >
-      {Array.isArray(item.value) ? (
-        <Flex justifyContent="center" alignItems="center">
-          <Stack spacing={1}>
-            <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
-              {item.label}
-            </Text>
-            <Text>{item.value[scrollIndex]}</Text>
-          </Stack>
-          <Spacer />
-          <Stack direction="row" spacing="sm" mr={3}>
-            <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
-            <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
-          </Stack>
-        </Flex>
-      ) : (
-        <Flex alignItems="center" height="100%">
+      <Flex alignItems="center" height="100%">
+        {item.icon && (
+          <FontAwesomeIcon
+            icon={item.icon}
+            fontSize={24}
+            color="#909296"
+            fixedWidth
+            style={{ marginRight: 20, marginLeft: 5 }}
+          />
+        )}
+        {Array.isArray(item.value) ? (
+          <Flex justifyContent="center" alignItems="center" width="100%">
+            <Stack spacing={1}>
+              <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
+                {item.label}
+              </Text>
+              <Text>{item.value[scrollIndex]}</Text>
+            </Stack>
+            <Spacer />
+            <Stack direction="row" spacing="sm" mr={3}>
+              <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
+              <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
+            </Stack>
+          </Flex>
+        ) : (
           <Text>{item.label}</Text>
-        </Flex>
-      )}
+        )}
+      </Flex>
     </Box>
   );
 });

@@ -5,11 +5,18 @@ import { debugData } from "../../../utils/debugData";
 import ListItem from "./ListItem";
 import Header from "./Header";
 import FocusTrap from "focus-trap-react";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+
+export interface MenuItem {
+  label: string;
+  value: string | string[];
+  icon?: IconProp;
+}
 
 interface MenuSettings {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   title: string;
-  items: Array<{ label: string; value: string | string[] }>;
+  items: Array<MenuItem>;
 }
 
 debugData<MenuSettings>([
@@ -19,9 +26,9 @@ debugData<MenuSettings>([
       //   position: "bottom-left",
       title: "Vehicle garage",
       items: [
-        { label: "Option 1", value: "option1" },
-        { label: "Option 2", value: "option2" },
-        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Option 1", value: "option1", icon: "heart" },
+        { label: "Option 2", value: "option2", icon: "basket-shopping" },
+        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"], icon: "tag" },
         { label: "Option 1", value: "option1" },
         { label: "Option 2", value: "option2" },
         { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
