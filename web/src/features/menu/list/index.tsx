@@ -6,6 +6,7 @@ import ListItem from "./ListItem";
 import Header from "./Header";
 import FocusTrap from "focus-trap-react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { fetchNui } from "../../../utils/fetchNui";
 
 export interface MenuItem {
   label: string;
@@ -85,9 +86,17 @@ const ListMenu: React.FC = () => {
     }
   };
 
+  // TODO: add debounce so that callbacks can't be spammed
   useEffect(() => {
+    if (!menu.items[selected]?.value) return;
     listRefs.current[selected]?.focus();
-  }, [selected]);
+    fetchNui(
+      "changeSelected",
+      Array.isArray(menu.items[selected].value)
+        ? menu.items[selected].value[indexStates[selected]]
+        : menu.items[selected].value
+    );
+  }, [selected, menu, indexStates]);
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
     if (!data.position) data.position = "top-left";
