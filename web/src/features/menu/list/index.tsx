@@ -95,16 +95,19 @@ const ListMenu: React.FC = () => {
     }
   };
 
-  // TODO: add debounce so that callbacks can't be spammed
   useEffect(() => {
     if (!menu.items[selected]?.value) return;
     listRefs.current[selected]?.focus();
-    fetchNui(
-      "changeSelected",
-      Array.isArray(menu.items[selected].value)
-        ? menu.items[selected].value[indexStates[selected]]
-        : menu.items[selected].value
-    );
+    // debounces the callback to avoid spam
+    const timer = setTimeout(() => {
+      fetchNui(
+        "changeSelected",
+        Array.isArray(menu.items[selected].value)
+          ? menu.items[selected].value[indexStates[selected]]
+          : menu.items[selected].value
+      );
+    }, 500);
+    return () => clearTimeout(timer);
   }, [selected, menu, indexStates]);
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
