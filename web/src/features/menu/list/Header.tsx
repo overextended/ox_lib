@@ -11,7 +11,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
       height="60px"
       width="sm"
     >
-      <Text fontSize={24} textTransform="uppercase" fontWeight={300} fontFamily="Poppins">
+      <Text fontSize={24} textTransform="uppercase" fontWeight={600} fontFamily="Nunito">
         {title}
       </Text>
     </Box>
