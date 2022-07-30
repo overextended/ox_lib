@@ -44,8 +44,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               <Text>{item.value[scrollIndex]}</Text>
             </Stack>
             <Spacer />
-            <Stack direction="row" spacing="sm" mr={3}>
+            <Stack direction="row" spacing="sm" mr={3} justifyContent="center" alignItems="center">
               <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
+              <Text color="#909296" textTransform="uppercase" fontSize={14}>
+                {scrollIndex + 1}/{item.value.length}
+              </Text>
               <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
             </Stack>
           </Flex>
