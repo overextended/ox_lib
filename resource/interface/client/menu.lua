@@ -1,7 +1,8 @@
 local registeredMenus = {}
 local openMenu = nil
 
-function lib.registerMenu(data)
+function lib.registerMenu(data, cb)
+    data.cb = cb
     if not registeredMenus[data.id] then registeredMenus[data.id] = data end
 end
 
@@ -9,7 +10,7 @@ function lib.showMenu(id)
     if not registeredMenus[id] then return error('No menu of such id found.') end
     local data = registeredMenus[id]
     openMenu = id
-    SetNuiFocus(true, true)
+    SetNuiFocus(true, false)
     SendNUIMessage({
         action = 'setMenu',
         data = {
@@ -24,7 +25,13 @@ function lib.getOpenMenu() return openMenu end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
-    -- print(data)
+    SetNuiFocus(false, false)
+    local selected = data
+    if type(selected) == 'number' then
+        registeredMenus[openMenu].cb(selected)
+    else
+        registeredMenus[openMenu].cb(selected[1], selected[2])
+    end
 end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
@@ -51,6 +58,8 @@ RegisterCommand('testMenu', function()
             {label = 'Nice option'},
             {label = 'Nice header', values = {'Option1', 'option2', 'option3'}}
         }
-    })
+    }, function(selected, scrollIndex)
+        print(selected, scrollIndex)
+    end)
     lib.showMenu('epic_menu')
 end)
