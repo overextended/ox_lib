@@ -10,7 +10,7 @@ import { fetchNui } from "../../../utils/fetchNui";
 
 export interface MenuItem {
   label: string;
-  value: string | string[];
+  values?: string[];
   icon?: IconProp;
 }
 
@@ -27,15 +27,15 @@ debugData<MenuSettings>([
       //   position: "bottom-left",
       title: "Vehicle garage",
       items: [
-        { label: "Option 1", value: "option1", icon: "heart" },
-        { label: "Option 2", value: "option2", icon: "basket-shopping" },
-        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"], icon: "tag" },
-        { label: "Option 1", value: "option1" },
-        { label: "Option 2", value: "option2" },
-        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
-        { label: "Option 1", value: "option1" },
-        { label: "Option 2", value: "option2" },
-        { label: "Vehicle class", value: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Option 1", icon: "heart" },
+        { label: "Option 2", icon: "basket-shopping" },
+        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"], icon: "tag" },
+        { label: "Option 1" },
+        { label: "Option 2" },
+        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Option 1" },
+        { label: "Option 2" },
+        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
       ],
     },
   },
@@ -67,28 +67,27 @@ const ListMenu: React.FC = () => {
         });
         break;
       case "ArrowRight":
-        if (!Array.isArray(menu.items[selected].value)) return;
+        if (!Array.isArray(menu.items[selected].values)) return;
         setIndexStates({
           ...indexStates,
           [selected]:
-            indexStates[selected] + 1 <= menu.items[selected].value.length - 1
+            indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
               ? indexStates[selected] + 1
               : indexStates[selected],
         });
         break;
       case "ArrowLeft":
-        if (!Array.isArray(menu.items[selected].value)) return;
+        if (!Array.isArray(menu.items[selected].values)) return;
         setIndexStates({
           ...indexStates,
           [selected]: indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : indexStates[selected],
         });
         break;
       case "Enter":
+        if (!menu.items[selected].values) return;
         fetchNui(
           "confirmSelected",
-          Array.isArray(menu.items[selected].value)
-            ? menu.items[selected].value[indexStates[selected]]
-            : menu.items[selected].value
+          Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
         );
         setVisible(false);
         break;
@@ -96,15 +95,13 @@ const ListMenu: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!menu.items[selected]?.value) return;
+    if (!menu.items[selected]) return;
     listRefs.current[selected]?.focus();
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
       fetchNui(
         "changeSelected",
-        Array.isArray(menu.items[selected].value)
-          ? menu.items[selected].value[indexStates[selected]]
-          : menu.items[selected].value
+        Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
       );
     }, 500);
     return () => clearTimeout(timer);
@@ -116,7 +113,7 @@ const ListMenu: React.FC = () => {
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
     for (let i = 0; i < data.items.length; i++) {
-      if (Array.isArray(data.items[i].value)) arrayIndexes[i] = 0;
+      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = 0;
     }
     setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();

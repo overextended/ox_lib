@@ -35,19 +35,19 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             style={{ marginRight: 20, marginLeft: 5 }}
           />
         )}
-        {Array.isArray(item.value) ? (
+        {Array.isArray(item.values) ? (
           <Flex justifyContent="center" alignItems="center" width="100%">
             <Stack spacing={1}>
               <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
                 {item.label}
               </Text>
-              <Text>{item.value[scrollIndex]}</Text>
+              <Text>{item.values[scrollIndex]}</Text>
             </Stack>
             <Spacer />
             <Stack direction="row" spacing="sm" mr={3} justifyContent="center" alignItems="center">
               <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
               <Text color="#909296" textTransform="uppercase" fontSize={14}>
-                {scrollIndex + 1}/{item.value.length}
+                {scrollIndex + 1}/{item.values.length}
               </Text>
               <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
             </Stack>
