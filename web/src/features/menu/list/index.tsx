@@ -122,45 +122,47 @@ const ListMenu: React.FC = () => {
 
   return (
     <>
-      <Box
-        position="absolute"
-        pointerEvents="none"
-        pt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
-        pl={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
-        pr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
-        pb={menu.position === "bottom-left" || menu.position === "bottom-right" ? 5 : 0}
-        right={menu.position === "top-right" || menu.position === "bottom-right" ? 1 : undefined}
-        left={menu.position === "bottom-left" ? 1 : undefined}
-        bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
-      >
-        <Header title={menu.title} />
+      {visible && (
         <Box
-          width="sm"
-          height="fit-content"
-          maxHeight={415}
-          overflow="hidden"
-          borderRadius="md"
-          bg="#141517"
-          fontFamily="Nunito"
-          borderTopLeftRadius="none"
-          borderTopRightRadius="none"
-          onKeyDown={(e) => moveMenu(e)}
+          position="absolute"
+          pointerEvents="none"
+          pt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
+          pl={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
+          pr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
+          pb={menu.position === "bottom-left" || menu.position === "bottom-right" ? 5 : 0}
+          right={menu.position === "top-right" || menu.position === "bottom-right" ? 1 : undefined}
+          left={menu.position === "bottom-left" ? 1 : undefined}
+          bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
         >
-          <FocusTrap active={visible}>
-            <Stack direction="column" p={2} overflowY="scroll">
-              {menu.items.map((item, index) => (
-                <ListItem
-                  index={index}
-                  item={item}
-                  scrollIndex={indexStates[index]}
-                  ref={listRefs}
-                  key={`menu-item-${index}`}
-                />
-              ))}
-            </Stack>
-          </FocusTrap>
+          <Header title={menu.title} />
+          <Box
+            width="sm"
+            height="fit-content"
+            maxHeight={415}
+            overflow="hidden"
+            borderRadius="md"
+            bg="#141517"
+            fontFamily="Nunito"
+            borderTopLeftRadius="none"
+            borderTopRightRadius="none"
+            onKeyDown={(e) => moveMenu(e)}
+          >
+            <FocusTrap active={visible}>
+              <Stack direction="column" p={2} overflowY="scroll">
+                {menu.items.map((item, index) => (
+                  <ListItem
+                    index={index}
+                    item={item}
+                    scrollIndex={indexStates[index]}
+                    ref={listRefs}
+                    key={`menu-item-${index}`}
+                  />
+                ))}
+              </Stack>
+            </FocusTrap>
+          </Box>
         </Box>
-      </Box>
+      )}
     </>
   );
 };

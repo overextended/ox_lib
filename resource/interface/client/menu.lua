@@ -36,13 +36,12 @@ end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
-    if registeredMenus[openMenu].onChange then
-        local selected = data
-        if type(selected) == 'number' then
-            registeredMenus[openMenu].onChange(selected)
-        else
-            registeredMenus[openMenu].onChange(selected[1], selected[2])
-        end
+    if not registeredMenus[openMenu].onChange then return end
+    local selected = data
+    if type(selected) == 'number' then
+        registeredMenus[openMenu].onChange(selected)
+    else
+        registeredMenus[openMenu].onChange(selected[1], selected[2])
     end
 end)
 
@@ -50,7 +49,6 @@ RegisterCommand('testMenu', function()
     lib.registerMenu({
         id = 'epic_menu',
         title = 'Nice menu',
-        position = 'top-right',
         onChange = function(selected, scrollIndex)
             print(selected, scrollIndex)
         end,
@@ -60,6 +58,17 @@ RegisterCommand('testMenu', function()
         }
     }, function(selected, scrollIndex)
         print(selected, scrollIndex)
+        lib.registerMenu({
+            id = 'more_epic_menu',
+            title = 'Nicer menu',
+            position = 'top-right',
+            options = {
+                {label = 'Extra nice option'},
+                {label = 'Giga nice option'},
+                {label = 'Omega nice option'},
+            }
+        }, function() end)
+        lib.showMenu('more_epic_menu')
     end)
     lib.showMenu('epic_menu')
 end)
