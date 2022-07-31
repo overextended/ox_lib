@@ -109,6 +109,7 @@ const ListMenu: React.FC = () => {
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
     if (!data.position) data.position = "top-left";
+    listRefs.current = [];
     setMenu(data);
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
