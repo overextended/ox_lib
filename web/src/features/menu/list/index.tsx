@@ -84,7 +84,7 @@ const ListMenu: React.FC = () => {
         });
         break;
       case "Enter":
-        if (!menu.items[selected].values) return;
+        if (!menu.items[selected]) return;
         fetchNui(
           "confirmSelected",
           Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
