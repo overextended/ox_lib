@@ -72,11 +72,9 @@ lib = setmetatable({
 	name = ox_lib,
 	service = service,
 	exports = {},
-	onCache = setmetatable({}, {
-		__call = function(self, key, cb)
-			self[key] = cb
-		end
-	})
+	onCache = function(key, cb)
+		AddEventHandler(('ox_lib:cache:%s'):format(key), cb)
+	end
 }, {
 	__index = call,
 	__call = call,
@@ -99,7 +97,7 @@ function SetInterval(callback, interval, ...)
 
 	assert(cbType == 'function', ('Callback must be a function. Received %s'):format(tostring(cbType)))
 	local id
-	local args = {...}
+	local args = { ... }
 
 	Citizen.CreateThreadNow(function(ref)
 		id = ref
@@ -121,46 +119,23 @@ function ClearInterval(id)
 	intervals[id] = -1
 end
 
-
 -----------------------------------------------------------------------------------------------
 -- Cache
 -----------------------------------------------------------------------------------------------
 
-local ox = GetResourceState('ox_core') ~= 'missing' and setmetatable({}, {
-	__index = function()
-		return true
-	end
-}) or {
-	groups = GetResourceState('ox_groups') ~= 'missing',
-}
-
-local _cache = setmetatable({}, {
-	__index = function(self, key)
-		return rawset(self, key, export.cache(nil, key) or false)[key]
-	end,
-
-	__call = function(self)
-		table.wipe(self)
-
-		if ox.groups then
-			self.groups = setmetatable({}, {
-				__index = function(groups, index)
-					groups[index] = GlobalState['group:'..index]
-					return groups[index]
-				end
-			})
-		end
-	end
-})
-
-cache = setmetatable({
-	resource = GetCurrentResourceName(),
-}, {
-	__index = _cache,
-	__metatable = _cache
-})
+cache = { resource = GetCurrentResourceName() }
 
 if service == 'client' then
+	setmetatable(cache, {
+		__index = function(self, key)
+			AddEventHandler(('ox_lib:cache:%s'):format(key), function(value)
+				self[key] = value
+			end)
+
+			return rawset(self, key, export.cache(nil, key) or false)[key]
+		end,
+	})
+
 	RegisterNetEvent(('%s:notify'):format(cache.resource), function(data)
 		if locale then
 			if data.title then
@@ -184,20 +159,3 @@ else
 		TriggerClientEvent(notify, source, data)
 	end
 end
-
-Citizen.CreateThreadNow(function()
-	while true do
-		_cache()
-		Wait(60000)
-	end
-end)
-
-AddEventHandler('ox_lib:updateCache', function(data)
-	for key, value in pairs(data) do
-		if lib.onCache[key] then
-			lib.onCache[key](value)
-		end
-
-		_cache[key] = value
-	end
-end)

@@ -2,55 +2,39 @@ local cache = {}
 cache.playerId = PlayerId()
 cache.serverId = GetPlayerServerId(cache.playerId)
 
-local GetVehiclePedIsIn = GetVehiclePedIsIn
-local GetPedInVehicleSeat = GetPedInVehicleSeat
-local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
-
-function cache:getVehicle()
-	local vehicle = GetVehiclePedIsIn(self.ped, false)
-	if vehicle > 0 then
-		self:set('vehicle', vehicle)
-
-		if not cache.seat or GetPedInVehicleSeat(vehicle, cache.seat) ~= cache.ped then
-			for i = -1, GetVehicleMaxNumberOfPassengers(vehicle) - 1 do
-				if GetPedInVehicleSeat(vehicle, i) == self.ped then
-					return self:set('seat', i)
-				end
-			end
-		end
-	else
-		self:set('vehicle', false)
-		self:set('seat', false)
-	end
-end
-
-local update = {}
-
 function cache:set(key, value)
 	if value ~= self[key] then
 		self[key] = value
-		update[key] = value
+		TriggerEvent(('ox_lib:cache:%s'):format(key), value)
 		return true
 	end
 end
 
-local GetEntityCoords = GetEntityCoords
+local GetVehiclePedIsUsing = GetVehiclePedIsUsing
+local GetPedInVehicleSeat = GetPedInVehicleSeat
+local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
 
 CreateThread(function()
-	local num = 1
 	while true do
-		num += 1
-		cache:set('ped', PlayerPedId())
+		local ped = PlayerPedId()
+		cache:set('ped', ped)
 
-		if num > 1 then
-			cache.coords = GetEntityCoords(cache.ped)
-			cache:getVehicle()
-			num = 0
-		end
+		local vehicle = GetVehiclePedIsUsing(ped)
 
-		if next(update) then
-			TriggerEvent('ox_lib:updateCache', update)
-			table.wipe(update)
+		if vehicle > 0 then
+			cache:set('vehicle', vehicle)
+
+			if not cache.seat or GetPedInVehicleSeat(vehicle, cache.seat) ~= ped then
+				for i = -1, GetVehicleMaxNumberOfPassengers(vehicle) - 1 do
+					if GetPedInVehicleSeat(vehicle, i) == ped then
+						cache:set('seat', i)
+						break
+					end
+				end
+			end
+		else
+			cache:set('vehicle', false)
+			cache:set('seat', false)
 		end
 
 		Wait(100)
