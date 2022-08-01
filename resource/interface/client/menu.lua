@@ -45,6 +45,12 @@ RegisterNUICallback('changeSelected', function(data, cb)
     end
 end)
 
+RegisterNUICallback('closeMenu', function(data, cb)
+    cb(1)
+    SetNuiFocus(false, false)
+    if registeredMenus[openMenu].onClose then return registeredMenus[openMenu].onClose() end
+end)
+
 RegisterCommand('testMenu', function()
     lib.registerMenu({
         id = 'epic_menu',
@@ -62,6 +68,9 @@ RegisterCommand('testMenu', function()
             id = 'more_epic_menu',
             title = 'Nicer menu',
             position = 'top-right',
+            onClose = function()
+                lib.showMenu('epic_menu')
+            end,
             options = {
                 {label = 'Extra nice option'},
                 {label = 'Giga nice option'},
