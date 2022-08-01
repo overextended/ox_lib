@@ -52,6 +52,11 @@ const ListMenu: React.FC = () => {
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
+  const closeMenu = () => {
+    setVisible(false);
+    fetchNui("closeMenu");
+  };
+
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.code) {
       case "ArrowDown":
@@ -106,6 +111,18 @@ const ListMenu: React.FC = () => {
     }, 500);
     return () => clearTimeout(timer);
   }, [selected, menu, indexStates]);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (["Escape"].includes(e.code)) closeMenu();
+    };
+
+    window.addEventListener("keydown", keyHandler);
+
+    return () => window.removeEventListener("keydown", keyHandler);
+  }, [visible]);
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
     if (!data.position) data.position = "top-left";
