@@ -60,7 +60,7 @@ RegisterCommand('testMenu', function()
         end,
         options = {
             {label = 'Nice option'},
-            {label = 'Nice header', values = {'Option1', 'option2', 'option3'}}
+            {label = 'Nice header', values = {'Option1', 'option2', 'option3'}, description = 'Tooltip description'}
         }
     }, function(selected, scrollIndex)
         print(selected, scrollIndex)
