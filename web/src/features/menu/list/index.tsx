@@ -1,4 +1,4 @@
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Stack, Tooltip } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useNuiEvent } from "../../../hooks/useNuiEvent";
 import { debugData } from "../../../utils/debugData";
@@ -11,6 +11,7 @@ import { fetchNui } from "../../../utils/fetchNui";
 export interface MenuItem {
   label: string;
   values?: string[];
+  description?: string;
   icon?: IconProp;
 }
 
@@ -28,8 +29,17 @@ debugData<MenuSettings>([
       title: "Vehicle garage",
       items: [
         { label: "Option 1", icon: "heart" },
-        { label: "Option 2", icon: "basket-shopping" },
-        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"], icon: "tag" },
+        {
+          label: "Option 2",
+          icon: "basket-shopping",
+          description: "Tooltip description 1",
+        },
+        {
+          label: "Vehicle class",
+          values: ["Nice", "Super nice", "Extra nice"],
+          icon: "tag",
+          description: "Tooltip description 2",
+        },
         { label: "Option 1" },
         { label: "Option 2" },
         { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
@@ -140,45 +150,55 @@ const ListMenu: React.FC = () => {
   return (
     <>
       {visible && (
-        <Box
-          position="absolute"
-          pointerEvents="none"
-          pt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
-          pl={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
-          pr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
-          pb={menu.position === "bottom-left" || menu.position === "bottom-right" ? 5 : 0}
-          right={menu.position === "top-right" || menu.position === "bottom-right" ? 1 : undefined}
-          left={menu.position === "bottom-left" ? 1 : undefined}
-          bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
+        <Tooltip
+          label={menu.items[selected].description}
+          isOpen={menu.items[selected].description ? true : false}
+          // maxWidth="sm"
+          bg="#25262B"
+          color="#909296"
+          placement="bottom"
+          borderRadius="md"
         >
-          <Header title={menu.title} />
           <Box
-            width="sm"
-            height="fit-content"
-            maxHeight={415}
-            overflow="hidden"
-            borderRadius="md"
-            bg="#141517"
-            fontFamily="Nunito"
-            borderTopLeftRadius="none"
-            borderTopRightRadius="none"
-            onKeyDown={(e) => moveMenu(e)}
+            position="absolute"
+            pointerEvents="none"
+            mt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
+            ml={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
+            mr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
+            mb={menu.position === "bottom-left" || menu.position === "bottom-right" ? 5 : 0}
+            right={menu.position === "top-right" || menu.position === "bottom-right" ? 1 : undefined}
+            left={menu.position === "bottom-left" ? 1 : undefined}
+            bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
           >
-            <FocusTrap active={visible}>
-              <Stack direction="column" p={2} overflowY="scroll">
-                {menu.items.map((item, index) => (
-                  <ListItem
-                    index={index}
-                    item={item}
-                    scrollIndex={indexStates[index]}
-                    ref={listRefs}
-                    key={`menu-item-${index}`}
-                  />
-                ))}
-              </Stack>
-            </FocusTrap>
+            <Header title={menu.title} />
+            <Box
+              width="sm"
+              height="fit-content"
+              maxHeight={415}
+              overflow="hidden"
+              borderRadius="md"
+              bg="#141517"
+              fontFamily="Nunito"
+              borderTopLeftRadius="none"
+              borderTopRightRadius="none"
+              onKeyDown={(e) => moveMenu(e)}
+            >
+              <FocusTrap active={visible}>
+                <Stack direction="column" p={2} overflowY="scroll">
+                  {menu.items.map((item, index) => (
+                    <ListItem
+                      index={index}
+                      item={item}
+                      scrollIndex={indexStates[index]}
+                      ref={listRefs}
+                      key={`menu-item-${index}`}
+                    />
+                  ))}
+                </Stack>
+              </FocusTrap>
+            </Box>
           </Box>
-        </Box>
+        </Tooltip>
       )}
     </>
   );
