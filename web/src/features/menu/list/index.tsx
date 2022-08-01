@@ -135,6 +135,7 @@ const ListMenu: React.FC = () => {
   }, [visible]);
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
+    setSelected(0);
     if (!data.position) data.position = "top-left";
     listRefs.current = [];
     setMenu(data);
@@ -153,7 +154,6 @@ const ListMenu: React.FC = () => {
         <Tooltip
           label={menu.items[selected].description}
           isOpen={menu.items[selected].description ? true : false}
-          // maxWidth="sm"
           bg="#25262B"
           color="#909296"
           placement="bottom"
