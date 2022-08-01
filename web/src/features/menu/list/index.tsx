@@ -126,7 +126,7 @@ const ListMenu: React.FC = () => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
-      if (["Escape"].includes(e.code)) closeMenu();
+      if (["Escape", "Backspace"].includes(e.code)) closeMenu();
     };
 
     window.addEventListener("keydown", keyHandler);
