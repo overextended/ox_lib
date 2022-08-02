@@ -111,7 +111,11 @@ const ListMenu: React.FC = () => {
 
   useEffect(() => {
     if (!menu.items[selected]) return;
-    listRefs.current[selected]?.focus();
+    listRefs.current[selected]?.scrollIntoView({
+      block: "nearest",
+      inline: "start",
+    });
+    listRefs.current[selected]?.focus({ preventScroll: true });
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
       fetchNui(
