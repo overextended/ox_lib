@@ -162,6 +162,7 @@ const ListMenu: React.FC = () => {
           color="#909296"
           placement="bottom"
           borderRadius="md"
+          fontFamily="Nunito"
         >
           <Box
             position="absolute"
