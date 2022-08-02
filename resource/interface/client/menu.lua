@@ -3,7 +3,7 @@ local openMenu = nil
 
 function lib.registerMenu(data, cb)
     data.cb = cb
-    if not registeredMenus[data.id] then registeredMenus[data.id] = data end
+    registeredMenus[data.id] = data
 end
 
 function lib.showMenu(id)
