@@ -2,6 +2,9 @@ local registeredMenus = {}
 local openMenu = nil
 
 function lib.registerMenu(data, cb)
+    if not data.id then return error('No menu id was provided.') end
+    if not data.title then return error('No menu title was provided.') end
+    if not data.options then return error('No menu options were provided.') end
     data.cb = cb
     registeredMenus[data.id] = data
 end
