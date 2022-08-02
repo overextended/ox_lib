@@ -7,6 +7,7 @@ import Header from "./Header";
 import FocusTrap from "focus-trap-react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { fetchNui } from "../../../utils/fetchNui";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface MenuItem {
   label: string;
@@ -184,7 +185,7 @@ const ListMenu: React.FC = () => {
               height="fit-content"
               maxHeight={415}
               overflow="hidden"
-              borderRadius="md"
+              borderRadius={menu.items.length < 6 || selected === menu.items.length - 1 ? "md" : undefined}
               bg="#141517"
               fontFamily="Nunito"
               borderTopLeftRadius="none"
@@ -209,6 +210,11 @@ const ListMenu: React.FC = () => {
                 </Stack>
               </FocusTrap>
             </Box>
+            {menu.items.length > 6 && selected !== menu.items.length - 1 && (
+              <Box bg="#141517" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
+                <FontAwesomeIcon icon="chevron-down" color="#909296" fontSize={20} />
+              </Box>
+            )}
           </Box>
         </Tooltip>
       )}
