@@ -71,13 +71,13 @@ const ListMenu: React.FC = () => {
     switch (e.code) {
       case "ArrowDown":
         setSelected((selected) => {
-          if (selected >= menu.items.length - 1) return selected;
+          if (selected >= menu.items.length - 1) return (selected = 0);
           return selected + 1;
         });
         break;
       case "ArrowUp":
         setSelected((selected) => {
-          if (selected <= 0) return selected;
+          if (selected <= 0) return (selected = menu.items.length - 1);
           return selected - 1;
         });
         break;
@@ -88,14 +88,17 @@ const ListMenu: React.FC = () => {
           [selected]:
             indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
               ? indexStates[selected] + 1
-              : indexStates[selected],
+              : (indexStates[selected] = 0),
         });
         break;
       case "ArrowLeft":
         if (!Array.isArray(menu.items[selected].values)) return;
         setIndexStates({
           ...indexStates,
-          [selected]: indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : indexStates[selected],
+          [selected]:
+            indexStates[selected] - 1 >= 0
+              ? indexStates[selected] - 1
+              : (indexStates[selected] = menu.items[selected].values?.length! - 1),
         });
         break;
       case "Enter":
