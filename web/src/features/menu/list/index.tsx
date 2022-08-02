@@ -190,13 +190,17 @@ const ListMenu: React.FC = () => {
               <FocusTrap active={visible}>
                 <Stack direction="column" p={2} overflowY="scroll">
                   {menu.items.map((item, index) => (
-                    <ListItem
-                      index={index}
-                      item={item}
-                      scrollIndex={indexStates[index]}
-                      ref={listRefs}
-                      key={`menu-item-${index}`}
-                    />
+                    <>
+                      {item.label && (
+                        <ListItem
+                          index={index}
+                          item={item}
+                          scrollIndex={indexStates[index]}
+                          ref={listRefs}
+                          key={`menu-item-${index}`}
+                        />
+                      )}
+                    </>
                   ))}
                 </Stack>
               </FocusTrap>
