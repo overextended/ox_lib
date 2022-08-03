@@ -34,7 +34,7 @@ RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
     SetNuiFocus(false, false)
     local selected = data
-    local args = registeredMenus[openMenu].options[selected+1].args
+    local args = registeredMenus[openMenu].options[type(selected) == 'number' and selected+1 or selected[1]].args
     if type(selected) == 'number' then
         registeredMenus[openMenu].cb(selected, nil, args)
     else
