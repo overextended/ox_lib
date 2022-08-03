@@ -14,6 +14,7 @@ export interface MenuItem {
   values?: string[];
   description?: string;
   icon?: IconProp;
+  defaultIndex?: number;
 }
 
 interface MenuSettings {
@@ -43,7 +44,7 @@ debugData<MenuSettings>([
         },
         { label: "Option 1" },
         { label: "Option 2" },
-        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
+        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"], defaultIndex: 1 },
         { label: "Option 1" },
         { label: "Option 2" },
         { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
@@ -150,7 +151,7 @@ const ListMenu: React.FC = () => {
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
     for (let i = 0; i < data.items.length; i++) {
-      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = 0;
+      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = data.items[i].defaultIndex || 0;
     }
     setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();
@@ -161,7 +162,7 @@ const ListMenu: React.FC = () => {
       {visible && (
         <Tooltip
           label={menu.items[selected].description}
-          isOpen={menu.items[selected].description ? true : false}
+          isOpen={!!menu.items[selected].description}
           bg="#25262B"
           color="#909296"
           placement="bottom"

@@ -77,7 +77,7 @@ RegisterCommand('testMenu', function()
 				lib.setMenuOptions('epic_menu', {
 					{label = 'Nice 1'},
 					{label = 'Nice 2', icon = {'fab', 'bitcoin'}},
-					{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}}
+					{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}, defaultIndex = 2}
 				})
                 lib.showMenu('epic_menu')
             end,
