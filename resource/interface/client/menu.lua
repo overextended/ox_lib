@@ -51,10 +51,11 @@ RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
     if not registeredMenus[openMenu].onChange then return end
     local selected = data
-    local args = registeredMenus[openMenu].options[selected+1].args
     if type(selected) == 'number' then
+		local args = registeredMenus[openMenu].options[selected+1].args
         registeredMenus[openMenu].onChange(selected, nil, args)
     else
+		local args = registeredMenus[openMenu].options[selected[1]+1].args
         registeredMenus[openMenu].onChange(selected[1], selected[2], args)
     end
 end)
