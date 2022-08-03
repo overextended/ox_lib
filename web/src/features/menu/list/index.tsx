@@ -15,6 +15,7 @@ export interface MenuItem {
   description?: string;
   icon?: IconProp;
   defaultIndex?: number;
+  close?: boolean;
 }
 
 interface MenuSettings {
@@ -109,7 +110,7 @@ const ListMenu: React.FC = () => {
           "confirmSelected",
           Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
         );
-        setVisible(false);
+        if (menu.items[selected].close === undefined || menu.items[selected].close) setVisible(false);
         break;
     }
   };

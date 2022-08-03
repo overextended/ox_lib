@@ -36,13 +36,14 @@ function lib.getOpenMenu() return openMenu end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
-    SetNuiFocus(false, false)
-    local selected = data
-    local args = registeredMenus[openMenu].options[type(selected) == 'number' and selected+1 or selected[1]].args
-    if type(selected) == 'number' then
-        registeredMenus[openMenu].cb(selected, nil, args)
+    local selected = type(data) == 'number' and data+1 or data[1]
+    local menu = registeredMenus[openMenu]
+    if menu.options[selected].close ~= false then SetNuiFocus(false, false) end
+    local args = menu.options[selected].args
+    if type(data) == 'number' then
+        registeredMenus[openMenu].cb(data, nil, args)
     else
-        registeredMenus[openMenu].cb(selected[1], selected[2], args)
+        registeredMenus[openMenu].cb(data[1], data[2], args)
     end
 end)
 
@@ -78,16 +79,16 @@ RegisterCommand('testMenu', function()
             title = 'Nicer menu',
             position = 'top-right',
             onClose = function()
-				lib.setMenuOptions('epic_menu', {
-					{label = 'Nice 1'},
-					{label = 'Nice 2', icon = {'fab', 'bitcoin'}},
-					{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}, defaultIndex = 2}
-				})
-				lib.setMenuOptions('epic_menu', {label = 'Not nice'}, 1)
-                lib.showMenu('epic_menu')
+				--lib.setMenuOptions('epic_menu', {
+				--	{label = 'Nice 1'},
+				--	{label = 'Nice 2', icon = {'fab', 'bitcoin'}},
+				--	{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}, defaultIndex = 2}
+				--})
+				--lib.setMenuOptions('epic_menu', {label = 'Not nice'}, 1)
+                --lib.showMenu('epic_menu')
             end,
             options = {
-                {label = 'Extra nice option', args = 'Hello there'},
+                {label = 'Extra nice option', args = 'Hello there', close = false},
                 {label = 'Giga nice option'},
                 {label = 'Omega nice option'},
             }
