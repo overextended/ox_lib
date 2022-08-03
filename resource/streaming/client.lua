@@ -2,7 +2,11 @@ local function request(native, hasLoaded, requestType, name, timeout)
 	native(name)
 
 	if coroutine.running() then
-		for i = 1, timeout or 5 do
+		if not timeout then
+			timeout = 500
+		end
+
+		for i = 1, timeout do
 			Wait(0)
 			if hasLoaded(name) then
 				return name
