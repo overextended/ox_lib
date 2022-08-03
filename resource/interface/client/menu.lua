@@ -24,6 +24,10 @@ function lib.showMenu(id)
     })
 end
 
+function lib.setMenuOptions(id, options)
+	registeredMenus[id].options = options
+end
+
 function lib.getOpenMenu() return openMenu end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
@@ -70,6 +74,11 @@ RegisterCommand('testMenu', function()
             title = 'Nicer menu',
             position = 'top-right',
             onClose = function()
+				lib.setMenuOptions('epic_menu', {
+					{label = 'Nice 1'},
+					{label = 'Nice 2', icon = {'fab', 'bitcoin'}},
+					{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}}
+				})
                 lib.showMenu('epic_menu')
             end,
             options = {
