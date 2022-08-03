@@ -13,7 +13,7 @@ local function request(native, hasLoaded, requestType, name, timeout)
 			end
 		end
 
-		print(("Failed to load %s '%s' after %s ticks (%s)"):format(requestType, name, timeout, animDict))
+		print(("Failed to load %s '%s' after %s ticks"):format(requestType, name, timeout))
 	end
 
 	return name
