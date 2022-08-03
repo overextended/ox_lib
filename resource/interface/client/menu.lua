@@ -24,8 +24,12 @@ function lib.showMenu(id)
     })
 end
 
-function lib.setMenuOptions(id, options)
-	registeredMenus[id].options = options
+function lib.setMenuOptions(id, options, index)
+	if index then
+		registeredMenus[id].options[index] = options
+	else
+		registeredMenus[id].options = options
+ 	end
 end
 
 function lib.getOpenMenu() return openMenu end
@@ -79,6 +83,7 @@ RegisterCommand('testMenu', function()
 					{label = 'Nice 2', icon = {'fab', 'bitcoin'}},
 					{label = 'Nice 3', icon = 'biohazard', values={'option 1', 'option 2', 'option 3'}, defaultIndex = 2}
 				})
+				lib.setMenuOptions('epic_menu', {label = 'Not nice'}, 1)
                 lib.showMenu('epic_menu')
             end,
             options = {
