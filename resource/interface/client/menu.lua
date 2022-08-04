@@ -36,28 +36,27 @@ function lib.getOpenMenu() return openMenu end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
-    local selected = type(data) == 'number' and data+1 or data[1]
+    local selected = {data[1] + 1, data[2] and data[2] + 1} -- data = [selected, scrollIndex]
     local menu = registeredMenus[openMenu]
-    if menu.options[selected].close ~= false then SetNuiFocus(false, false) end
-    local args = menu.options[selected].args
-    if type(data) == 'number' then
-        registeredMenus[openMenu].cb(data, nil, args)
-    else
-        registeredMenus[openMenu].cb(data[1], data[2], args)
-    end
+    if menu.options[selected[1]].close ~= false then SetNuiFocus(false, false) end
+    local args = menu.options[selected[1]].args
+	registeredMenus[openMenu].cb(selected[1], selected[2], args)
+end)
+
+RegisterNUICallback('changeIndex', function(data, cb)
+	cb(1)
+	if not registeredMenus[openMenu].onSideScroll then return end
+	local selected = {data[1] + 1, data[2] and data[2] + 1} -- data = [selected, scrollIndex]
+	local args = registeredMenus[openMenu].options[selected[1]].args
+	registeredMenus[openMenu].onSideScroll(selected[1], selected[2], args)
 end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
-    if not registeredMenus[openMenu].onChange then return end
-    local selected = data
-    if type(selected) == 'number' then
-		local args = registeredMenus[openMenu].options[selected+1].args
-        registeredMenus[openMenu].onChange(selected, nil, args)
-    else
-		local args = registeredMenus[openMenu].options[selected[1]+1].args
-        registeredMenus[openMenu].onChange(selected[1], selected[2], args)
-    end
+    if not registeredMenus[openMenu].onSelected then return end
+    local selected = {data[1] + 1, data[2] and data[2] + 1} -- data = [selected, scrollIndex]
+    local args = registeredMenus[openMenu].options[selected[1]].args
+	registeredMenus[openMenu].onSelected(selected[1], selected[2], args)
 end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
@@ -88,10 +87,17 @@ RegisterCommand('testMenu', function()
 				--lib.setMenuOptions('epic_menu', {label = 'Not nice'}, 1)
                 --lib.showMenu('epic_menu')
             end,
+			onSelected = function(selected, scrollIndex, args)
+				print('selected: ', selected, scrollIndex)
+			end,
+			onSideScroll = function(selected, scrollIndex, args)
+				print('sideScroll: ', selected, scrollIndex)
+			end,
             options = {
                 {label = 'Extra nice option', args = 'Hello there', close = false},
                 {label = 'Giga nice option'},
                 {label = 'Omega nice option'},
+				{label = 'Values', values={'hello', 'there', 'general', 'kenobi'}}
             }
         }, function(selected, scrollIndex, args)
             print(selected, scrollIndex, args)
