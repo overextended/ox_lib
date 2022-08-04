@@ -25,7 +25,7 @@ const InputNumber: React.FC<Props> = (props) => {
     <Box mb={3}>
       <Text>{props.row.label}</Text>
       <NumberInput onChange={(e) => props.handleChange(+e, props.index)} defaultValue={props.row.default}>
-        <NumberInputField />
+        <NumberInputField placeholder={props.row.placeholder} />
         <NumberInputStepper>
           <NumberIncrementStepper />
           <NumberDecrementStepper />
