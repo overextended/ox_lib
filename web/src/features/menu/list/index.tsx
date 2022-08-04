@@ -8,6 +8,7 @@ import FocusTrap from "focus-trap-react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { fetchNui } from "../../../utils/fetchNui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 export interface MenuItem {
   label: string;
@@ -106,14 +107,19 @@ const ListMenu: React.FC = () => {
         break;
       case "Enter":
         if (!menu.items[selected]) return;
-        fetchNui(
-          "confirmSelected",
-          Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
-        );
+        fetchNui("confirmSelected", [selected, indexStates[selected]]).catch();
         if (menu.items[selected].close === undefined || menu.items[selected].close) setVisible(false);
         break;
     }
   };
+
+  useEffect(() => {
+    if (!menu.items[selected]?.values) return;
+    const timer = setTimeout(() => {
+      fetchNui("changeIndex", [selected, indexStates[selected]]).catch();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [indexStates]);
 
   useEffect(() => {
     if (!menu.items[selected]) return;
@@ -124,13 +130,10 @@ const ListMenu: React.FC = () => {
     listRefs.current[selected]?.focus({ preventScroll: true });
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
-      fetchNui(
-        "changeSelected",
-        Array.isArray(menu.items[selected].values) ? [selected, indexStates[selected]] : selected
-      );
-    }, 500);
+      fetchNui("changeSelected", [selected, indexStates[selected]]).catch();
+    }, 100);
     return () => clearTimeout(timer);
-  }, [selected, menu, indexStates]);
+  }, [selected, menu]);
 
   useEffect(() => {
     if (!visible) return;
@@ -197,17 +200,11 @@ const ListMenu: React.FC = () => {
               <FocusTrap active={visible}>
                 <Stack direction="column" p={2} overflowY="scroll">
                   {menu.items.map((item, index) => (
-                    <>
+                    <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
-                        <ListItem
-                          index={index}
-                          item={item}
-                          scrollIndex={indexStates[index]}
-                          ref={listRefs}
-                          key={`menu-item-${index}`}
-                        />
+                        <ListItem index={index} item={item} scrollIndex={indexStates[index]} ref={listRefs} />
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
                 </Stack>
               </FocusTrap>
