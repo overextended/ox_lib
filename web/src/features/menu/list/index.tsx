@@ -66,9 +66,9 @@ const ListMenu: React.FC = () => {
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const closeMenu = () => {
+  const closeMenu = (ignoreFetch?: boolean) => {
     setVisible(false);
-    fetchNui("closeMenu");
+    if (!ignoreFetch) fetchNui("closeMenu");
   };
 
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -146,6 +146,8 @@ const ListMenu: React.FC = () => {
 
     return () => window.removeEventListener("keydown", keyHandler);
   }, [visible]);
+
+  useNuiEvent("closeMenu", () => closeMenu(true));
 
   useNuiEvent("setMenu", (data: MenuSettings) => {
     setSelected(0);

@@ -24,6 +24,14 @@ function lib.showMenu(id)
     })
 end
 
+function lib.hideMenu(onExit)
+	if onExit and registeredMenus[openMenu].onClose then registeredMenus[openMenu].onClose() end
+	SetNuiFocus(false, false)
+	SendNUIMessage({
+		action = 'closeMenu'
+	})
+end
+
 function lib.setMenuOptions(id, options, index)
 	if index then
 		registeredMenus[id].options[index] = options
