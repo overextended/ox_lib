@@ -7,6 +7,7 @@ export interface Row {
   label: string;
   placeholder?: string;
   default?: string | number;
+  checked?: boolean;
   options?: { value: string; label?: string }[];
   password?: boolean;
   icon?: IconProp;

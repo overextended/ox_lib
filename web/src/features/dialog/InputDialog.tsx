@@ -33,7 +33,7 @@ interface Props {
 //         { type: "input", label: "Locker number", placeholder: "420" },
 //         { type: "checkbox", label: "Some checkbox" },
 //         { type: "input", label: "Locker PIN", password: true, icon: "lock" },
-//         { type: "checkbox", label: "Some other checkbox" },
+//         { type: "checkbox", label: "Some other checkbox", checked: true },
 //         {
 //           type: "select",
 //           label: "Locker type",
