@@ -31,6 +31,7 @@ const InputField: React.FC<Props> = (props) => {
           )}
           <Input
             onChange={(e) => props.handleChange(e.target.value, props.index)}
+            placeholder={props.row.placeholder}
             type={
               !props.row.password || props.passwordStates[props.index]
                 ? "text"
