@@ -157,7 +157,7 @@ const ListMenu: React.FC = () => {
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
     for (let i = 0; i < data.items.length; i++) {
-      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = data.items[i].defaultIndex || 0;
+      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
     }
     setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();
