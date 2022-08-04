@@ -6,6 +6,7 @@ export interface Row {
   type: RowType;
   label: string;
   placeholder?: string;
+  default?: string | number;
   options?: { value: string; label?: string }[];
   password?: boolean;
   icon?: IconProp;

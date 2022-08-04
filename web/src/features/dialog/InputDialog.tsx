@@ -43,7 +43,7 @@ interface Props {
 //             { value: "option3", label: "Option 3" },
 //           ],
 //         },
-//         { type: "number", label: "Number counter" },
+//         { type: "number", label: "Number counter", default: 12 },
 //       ],
 //     },
 //   },
