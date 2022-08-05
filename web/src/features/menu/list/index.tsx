@@ -192,7 +192,7 @@ const ListMenu: React.FC = () => {
               height="fit-content"
               maxHeight={415}
               overflow="hidden"
-              borderRadius={menu.items.length < 6 || selected === menu.items.length - 1 ? "md" : undefined}
+              borderRadius={menu.items.length <= 6 || selected === menu.items.length - 1 ? 'md' : undefined}
               bg="#141517"
               fontFamily="Nunito"
               borderTopLeftRadius="none"
