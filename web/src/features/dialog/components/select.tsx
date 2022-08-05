@@ -1,4 +1,5 @@
 import { Box, Select } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Row } from "../../../interfaces/dialog";
 
 interface Props {
@@ -8,11 +9,22 @@ interface Props {
 }
 
 const SelectField: React.FC<Props> = (props) => {
+  useEffect(() => {
+    if(props.row.default) {
+      props.row.options?.map((option) => {
+        if(props.row.default === option.value) {
+          props.handleChange(option.value, props.index);
+        }
+      });
+    }
+  }, []);
+
   return (
     <>
       <Box mb={3} key={`select-${props.index}`}>
         <Select
           onChange={(e) => props.handleChange(e.target.value, props.index)}
+          defaultValue={props.row.default}
         >
           {/* Hacky workaround for selectable placeholder issue */}
           <option value="" selected hidden disabled>
