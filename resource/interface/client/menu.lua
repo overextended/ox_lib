@@ -10,25 +10,29 @@ function lib.registerMenu(data, cb)
 end
 
 function lib.showMenu(id)
-    if not registeredMenus[id] then return error('No menu of such id found.') end
-    local data = registeredMenus[id]
-    openMenu = id
+	openMenu = registeredMenus[id]
+
+	if not openMenu then
+		return error(('No menu with id %s was found'):format(id))
+	end
+
     SetNuiFocus(true, false)
     SendNUIMessage({
         action = 'setMenu',
         data = {
-            position = data.position,
-            title = data.title,
-            items = data.options
+            position = openMenu.position,
+            title = openMenu.title,
+            items = openMenu.options
         }
     })
 end
 
 function lib.hideMenu(onExit)
-	if onExit and registeredMenus[openMenu].onClose then
-		registeredMenus[openMenu].onClose()
+	if onExit and openMenu.onClose then
+		openMenu.onClose()
 	end
 
+	openMenu = nil
 	SetNuiFocus(false, false)
 	SendNUIMessage({
 		action = 'closeMenu'
@@ -53,19 +57,20 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 		data[2] += 1 -- scrollIndex
 	end
 
-    local menu = registeredMenus[openMenu]
-
-    if menu.options[data[1]].close ~= false then
+    if openMenu.options[data[1]].close ~= false then
 		SetNuiFocus(false, false)
 	end
 
-	return menu.cb and menu.cb(data[1], data[2], menu.options[data[1]].args)
+	if openMenu.cb then
+		openMenu.cb(data[1], data[2], openMenu.options[data[1]].args)
+	end
+
+	openMenu = nil
 end)
 
 RegisterNUICallback('changeIndex', function(data, cb)
 	cb(1)
-	local menu = registeredMenus[openMenu]
-	if not menu.onSideScroll then return end
+	if not openMenu.onSideScroll then return end
 
 	data[1] += 1 -- selected
 
@@ -73,13 +78,12 @@ RegisterNUICallback('changeIndex', function(data, cb)
 		data[2] += 1 -- scrollIndex
 	end
 
-	menu.onSideScroll(data[1], data[2], menu.options[data[1]].args)
+	openMenu.onSideScroll(data[1], data[2], openMenu.options[data[1]].args)
 end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
-	local menu = registeredMenus[openMenu]
-    if not menu.onSelected then return end
+    if not openMenu.onSelected then return end
 
 	data[1] += 1 -- selected
 
@@ -87,11 +91,16 @@ RegisterNUICallback('changeSelected', function(data, cb)
 		data[2] += 1 -- scrollIndex
 	end
 
-	menu.onSelected(data[1], data[2], menu.options[data[1]].args)
+	openMenu.onSelected(data[1], data[2], openMenu.options[data[1]].args)
 end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
     cb(1)
     SetNuiFocus(false, false)
-    if registeredMenus[openMenu].onClose then return registeredMenus[openMenu].onClose() end
+
+    if openMenu.onClose then
+		openMenu.onClose()
+	end
+
+	openMenu = nil
 end)
