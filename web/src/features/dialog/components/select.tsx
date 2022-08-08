@@ -23,16 +23,16 @@ const SelectField: React.FC<Props> = (props) => {
     <>
       <Box mb={3} key={`select-${props.index}`}>
         <Select
-          onChange={(e) => props.handleChange(e.target.value, props.index)}
-          defaultValue={props.row.default}
+          onChange={(e: any) => props.handleChange(e.target.value, props.index)}
+          defaultValue={props.row.default || ""}
         >
           {/* Hacky workaround for selectable placeholder issue */}
-          <option value="" selected hidden disabled>
+          {!props.row.default && (<option value="" hidden disabled>
             {props.row.label}
-          </option>
+          </option>)}
           {props.row.options?.map((option, index) => (
             <option key={`option-${index}`} value={option.value}>
-              {option.label ? option.label : option.value}
+              {option.label || option.value}
             </option>
           ))}
         </Select>
