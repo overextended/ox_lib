@@ -9,9 +9,9 @@ end)
 ---@param _ any
 ---@param event string
 ---@param playerId number
----@param cb function
----@param ... unknown
----@return unknown
+---@param cb function|false
+---@param ... any
+---@return unknown?
 local function triggerClientCallback(_, event, playerId, cb, ...)
 	local key
 
@@ -21,6 +21,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 
 	TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
+	---@type promise | false
 	local promise = not cb and promise.new()
 
 	events[key] = function(response)
@@ -30,7 +31,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 			return promise:resolve(response)
 		end
 
-		cb(table.unpack(response))
+		return cb and cb(table.unpack(response))
 	end
 
 	if promise then

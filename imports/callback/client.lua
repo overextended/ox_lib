@@ -26,9 +26,9 @@ end
 ---@param _ any
 ---@param event string
 ---@param delay number
----@param cb function
----@param ... unknown
----@return unknown
+---@param cb function|false
+---@param ... any
+---@return unknown?
 local function triggerServerCallback(_, event, delay, cb, ...)
 	if not eventTimer(event, delay) then return end
 
@@ -40,6 +40,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 
 	TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
 
+	---@type promise | false
 	local promise = not cb and promise.new()
 
 	events[key] = function(response)
@@ -49,7 +50,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 			return promise:resolve(response)
 		end
 
-		cb(table.unpack(response))
+		return cb and cb(table.unpack(response))
 	end
 
 	if promise then
