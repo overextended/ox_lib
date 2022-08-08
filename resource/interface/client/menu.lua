@@ -1,5 +1,6 @@
 local registeredMenus = {}
 local openMenu = nil
+local keepInput = IsNuiFocusKeepingInput()
 
 function lib.registerMenu(data, cb)
     if not data.id then return error('No menu id was provided.') end
@@ -10,21 +11,47 @@ function lib.registerMenu(data, cb)
 end
 
 function lib.showMenu(id)
-	openMenu = registeredMenus[id]
+	local menu = registeredMenus[id]
+
+	if not menu then
+		return error(('No menu with id %s was found'):format(id))
+	end
 
 	if not openMenu then
-		return error(('No menu with id %s was found'):format(id))
+		CreateThread(function()
+			while openMenu do
+				if not openMenu.disableInput then
+					DisablePlayerFiring(cache.playerId, true)
+					HudWeaponWheelIgnoreSelection()
+					DisableControlAction(0, 140, true)
+				end
+
+				Wait(0)
+			end
+		end)
+	end
+
+	openMenu = menu
+	keepInput = IsNuiFocusKeepingInput()
+
+	if not menu.disableInput then
+		SetNuiFocusKeepInput(true)
 	end
 
     SetNuiFocus(true, false)
     SendNUIMessage({
         action = 'setMenu',
         data = {
-            position = openMenu.position,
-            title = openMenu.title,
-            items = openMenu.options
+            position = menu.position,
+            title = menu.title,
+            items = menu.options
         }
     })
+end
+
+local function resetFocus()
+	SetNuiFocus(false, false)
+	SetNuiFocusKeepInput(keepInput)
 end
 
 function lib.hideMenu(onExit)
@@ -33,7 +60,7 @@ function lib.hideMenu(onExit)
 	end
 
 	openMenu = nil
-	SetNuiFocus(false, false)
+	resetFocus()
 	SendNUIMessage({
 		action = 'closeMenu'
 	})
@@ -58,7 +85,7 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 	end
 
     if openMenu.options[data[1]].close ~= false then
-		SetNuiFocus(false, false)
+		resetFocus()
 	end
 
 	if openMenu.cb then
@@ -96,7 +123,7 @@ end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
     cb(1)
-    SetNuiFocus(false, false)
+    resetFocus()
 
     if openMenu.onClose then
 		openMenu.onClose()
