@@ -9,19 +9,19 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
+import { useKeyPress } from "../../hooks/useKeyPress";
 import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
-import { Row } from "../../interfaces/dialog";
-import InputNumber from "./components/number";
-import Input from "./components/input";
+import { IInput, ICheckbox, ISelect, INumber } from "../../interfaces/dialog";
+import InputField from "./components/input";
 import CheckboxField from "./components/checkbox";
 import SelectField from "./components/select";
-import { useKeyPress } from "../../hooks/useKeyPress";
+import NumberField from "./components/number";
 
 interface Props {
   heading: string;
-  rows: Row[];
+  rows: Array<IInput | ICheckbox | ISelect | INumber>;
 }
 
 // debugData<Props>([
@@ -111,10 +111,10 @@ const InputDialog: React.FC = () => {
         <ModalContent>
           <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
           <ModalBody fontFamily="Poppins" textAlign="left">
-            {fields.rows.map((row, index) => (
+            {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber, index) => (
               <React.Fragment key={`row-${index}`}>
                 {row.type === "input" && (
-                  <Input
+                  <InputField
                     key={`input-${index}`}
                     row={row}
                     index={index}
@@ -138,7 +138,7 @@ const InputDialog: React.FC = () => {
                   />
                 )}
                 {row.type === "number" && (
-                  <InputNumber
+                  <NumberField
                     row={row}
                     index={index}
                     handleChange={handleChange}

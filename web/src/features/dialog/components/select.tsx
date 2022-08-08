@@ -1,11 +1,11 @@
 import { Box, Select } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { Row } from "../../../interfaces/dialog";
+import { ISelect } from "../../../interfaces/dialog";
 
 interface Props {
-  row: Row;
+  row: ISelect;
   index: number;
-  handleChange: (value: string | boolean, index: number) => void;
+  handleChange: (value: string, index: number) => void;
 }
 
 const SelectField: React.FC<Props> = (props) => {
