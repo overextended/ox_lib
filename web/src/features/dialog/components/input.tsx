@@ -8,12 +8,12 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
-import { Row } from "../../../interfaces/dialog";
+import { IInput } from "../../../interfaces/dialog";
 
 interface Props {
-  row: Row;
+  row: IInput;
   index: number;
-  handleChange: (value: string | number | boolean, index: number) => void;
+  handleChange: (value: string, index: number) => void;
   passwordStates: boolean[];
   handlePasswordStates: (index: number) => void;
 }
@@ -35,7 +35,7 @@ const InputField: React.FC<Props> = (props) => {
             />
           )}
           <Input
-            onChange={(e) => props.handleChange(e.target.value, props.index)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.value, props.index)}
             placeholder={props.row.placeholder}
             defaultValue={props.row.default}
             type={

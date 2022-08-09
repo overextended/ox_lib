@@ -8,15 +8,15 @@ import {
   NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { Row } from "../../../interfaces/dialog";
+import { INumber } from "../../../interfaces/dialog";
 
 interface Props {
-  row: Row;
+  row: INumber;
   index: number;
-  handleChange: (value: string | number | boolean, index: number) => void;
+  handleChange: (value: number, index: number) => void;
 }
 
-const InputNumber: React.FC<Props> = (props) => {
+const NumberField: React.FC<Props> = (props) => {
   useEffect(() => {
     if(props.row.default) props.handleChange(props.row.default, props.index);
   }, []);
@@ -24,7 +24,7 @@ const InputNumber: React.FC<Props> = (props) => {
   return (
     <Box mb={3}>
       <Text>{props.row.label}</Text>
-      <NumberInput onChange={(e) => props.handleChange(+e, props.index)} defaultValue={props.row.default}>
+      <NumberInput onChange={(val: string) => props.handleChange(+val, props.index)} defaultValue={props.row.default}>
         <NumberInputField placeholder={props.row.placeholder} />
         <NumberInputStepper>
           <NumberIncrementStepper />
@@ -35,4 +35,4 @@ const InputNumber: React.FC<Props> = (props) => {
   );
 };
 
-export default InputNumber;
+export default NumberField;
