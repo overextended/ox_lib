@@ -35,7 +35,7 @@ const InputField: React.FC<Props> = (props) => {
             />
           )}
           <Input
-            onChange={(e: any) => props.handleChange(e.target.value, props.index)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.value, props.index)}
             placeholder={props.row.placeholder}
             defaultValue={props.row.default}
             type={
