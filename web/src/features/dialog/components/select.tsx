@@ -23,7 +23,7 @@ const SelectField: React.FC<Props> = (props) => {
     <>
       <Box mb={3} key={`select-${props.index}`}>
         <Select
-          onChange={(e: any) => props.handleChange(e.target.value, props.index)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
           defaultValue={props.row.default || ""}
         >
           {/* Hacky workaround for selectable placeholder issue */}
