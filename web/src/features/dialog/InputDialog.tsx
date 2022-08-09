@@ -13,15 +13,16 @@ import { useKeyPress } from "../../hooks/useKeyPress";
 import { useLocales } from "../../providers/LocaleProvider";
 import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
-import { IInput, ICheckbox, ISelect, INumber } from "../../interfaces/dialog";
+import { IInput, ICheckbox, ISelect, INumber, ISlider } from "../../interfaces/dialog";
 import InputField from "./components/input";
 import CheckboxField from "./components/checkbox";
 import SelectField from "./components/select";
 import NumberField from "./components/number";
+import SliderField from "./components/slider";
 
 interface Props {
   heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber>;
+  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider>;
 }
 
 // debugData<Props>([
@@ -44,6 +45,7 @@ interface Props {
 //           ],
 //         },
 //         { type: "number", label: "Number counter", default: 12 },
+//         { type: "slider", label: "Slide bar", min: 10, max: 50, step: 2 },
 //       ],
 //     },
 //   },
@@ -111,7 +113,7 @@ const InputDialog: React.FC = () => {
         <ModalContent>
           <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
           <ModalBody fontFamily="Poppins" textAlign="left">
-            {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber, index) => (
+            {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
               <React.Fragment key={`row-${index}`}>
                 {row.type === "input" && (
                   <InputField
@@ -139,6 +141,13 @@ const InputDialog: React.FC = () => {
                 )}
                 {row.type === "number" && (
                   <NumberField
+                    row={row}
+                    index={index}
+                    handleChange={handleChange}
+                  />
+                )}
+                {row.type === "slider" && (
+                  <SliderField
                     row={row}
                     index={index}
                     handleChange={handleChange}
