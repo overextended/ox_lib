@@ -223,13 +223,13 @@ local tick
 
 CreateThread(function()
 	while true do
-		Wait(300)
 		local coords = GetEntityCoords(cache.ped)
 		table.wipe(inside)
 		insideCount = 0
 
 		for _, zone in pairs(Zones) do
 			local contains = zone:contains(coords)
+			zone.distance = #(zone.coords - coords)
 
 			if contains then
 				if zone.onEnter and not zone.insideZone then
@@ -275,6 +275,8 @@ CreateThread(function()
 		elseif insideCount == 0 then
 			tick = ClearInterval(tick)
 		end
+
+		Wait(300)
 	end
 end)
 
@@ -302,13 +304,11 @@ end
 local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
-	self.distance = #(self.coords - coords)
 	return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
 end
 
 local function insideSphere(self, coords)
-	self.distance = #(self.coords - coords)
-	return self.distance < self.radius
+	return #(self.coords - coords) < self.radius
 end
 
 return {
