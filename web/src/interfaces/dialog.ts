@@ -28,3 +28,12 @@ export interface INumber {
   placeholder?: string;
   default?: number;
 }
+
+export interface ISlider {
+  type: "slider",
+  label: string;
+  default?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+}
