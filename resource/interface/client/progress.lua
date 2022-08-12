@@ -74,14 +74,12 @@ local function startProgress(data)
 				if data.interrupt.ragdoll then
 					if IsPedRagdoll(cache.ped) then
 						progress = false
-						break
 					end
 				end
 
 				if data.interrupt.cuff then
 					if IsPedCuffed(cache.ped) then
 						progress = false
-						break
 					end
 				end
 			end
