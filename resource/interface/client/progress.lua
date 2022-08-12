@@ -40,32 +40,50 @@ local function startProgress(data)
 		end
 	end
 
-	if data.disable then
+	if data.disable or data.interrupt then
 		while progress do
-			if data.disable.mouse then
-				DisableControlAction(0, 1, true)
-				DisableControlAction(0, 2, true)
-				DisableControlAction(0, 106, true)
+			if data.disable then
+				if data.disable.mouse then
+					DisableControlAction(0, 1, true)
+					DisableControlAction(0, 2, true)
+					DisableControlAction(0, 106, true)
+				end
+
+				if data.disable.move then
+					DisableControlAction(0, 21, true)
+					DisableControlAction(0, 30, true)
+					DisableControlAction(0, 31, true)
+					DisableControlAction(0, 36, true)
+				end
+
+				if data.disable.car then
+					DisableControlAction(0, 63, true)
+					DisableControlAction(0, 64, true)
+					DisableControlAction(0, 71, true)
+					DisableControlAction(0, 72, true)
+					DisableControlAction(0, 75, true)
+				end
+
+				if data.disable.combat then
+					DisableControlAction(0, 25, true)
+					DisablePlayerFiring(cache.playerId, true)
+				end
 			end
 
-			if data.disable.move then
-				DisableControlAction(0, 21, true)
-				DisableControlAction(0, 30, true)
-				DisableControlAction(0, 31, true)
-				DisableControlAction(0, 36, true)
-			end
+			if data.interrupt then
+				if data.interrupt.ragdoll then
+					if IsPedRagdoll(cache.ped) then
+						progress = false
+						break
+					end
+				end
 
-			if data.disable.car then
-				DisableControlAction(0, 63, true)
-				DisableControlAction(0, 64, true)
-				DisableControlAction(0, 71, true)
-				DisableControlAction(0, 72, true)
-				DisableControlAction(0, 75, true)
-			end
-
-			if data.disable.combat then
-				DisableControlAction(0, 25, true)
-				DisablePlayerFiring(cache.playerId, true)
+				if data.interrupt.cuff then
+					if IsPedCuffed(cache.ped) then
+						progress = false
+						break
+					end
+				end
 			end
 
 			Wait(0)
