@@ -11,6 +11,12 @@ local function createProp(prop)
 	return object
 end
 
+local function canStart(data)
+	return (data.useWhileDead or not IsEntityDead(cache.ped))
+	and ((data.ignoreInterrupt and data.ignoreInterrupt.ragdoll) or not IsPedRagdoll(cache.ped))
+	and ((data.ignoreInterrupt and data.ignoreInterrupt.cuff) or not IsPedCuffed(cache.ped))
+end
+
 local function startProgress(data)
 	playerState.invBusy = true
 	progress = data
@@ -70,18 +76,12 @@ local function startProgress(data)
 				end
 			end
 
-			if data.interrupt then
-				if data.interrupt.ragdoll then
-					if IsPedRagdoll(cache.ped) then
-						progress = false
-					end
-				end
+			if not (data.ignoreInterrupt and data.ignoreInterrupt.ragdoll) and IsPedRagdoll(cache.ped) then
+				progress = false
+			end
 
-				if data.interrupt.cuff then
-					if IsPedCuffed(cache.ped) then
-						progress = false
-					end
-				end
+			if not (data.ignoreInterrupt and data.ignoreInterrupt.cuff) and IsPedCuffed(cache.ped) then
+				progress = false
 			end
 
 			Wait(0)
@@ -123,7 +123,7 @@ end
 function lib.progressBar(data)
 	while progress ~= nil do Wait(100) end
 
-	if data.useWhileDead or not IsEntityDead(cache.ped) then
+	if canStart(data) then
 		SendNUIMessage({
 			action = 'progress',
 			data = {
@@ -139,7 +139,7 @@ end
 function lib.progressCircle(data)
 	while progress ~= nil do Wait(100) end
 
-	if data.useWhileDead or not IsEntityDead(cache.ped) then
+	if canStart(data) then
 		SendNUIMessage({
 			action = 'circleProgress',
 			data = {
