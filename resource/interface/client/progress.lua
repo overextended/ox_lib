@@ -15,11 +15,19 @@ local function canStart(data)
 	return (data.useWhileDead or not IsEntityDead(cache.ped))
 	and ((data.ignoreInterrupt and data.ignoreInterrupt.ragdoll) or not IsPedRagdoll(cache.ped))
 	and ((data.ignoreInterrupt and data.ignoreInterrupt.cuff) or not IsPedCuffed(cache.ped))
+	and ((data.ignoreInterrupt and data.ignoreInterrupt.falling) or not IsPedFalling(cache.ped))
 end
 
 local function startProgress(data)
 	playerState.invBusy = true
 	progress = data
+
+	local ignoreRagdoll, ignoreCuff, ignoreFalling = false, false, false
+	if data.ignoreInterrupt then
+		ignoreRagdoll = data.ignoreInterrupt.ragdoll or false
+		ignoreCuff = data.ignoreInterrupt.cuff or false
+		ignoreFalling = data.ignoreInterrupt.falling or false
+	end
 
 	if data.anim then
 		if data.anim.dict then
@@ -46,7 +54,7 @@ local function startProgress(data)
 		end
 	end
 
-	if data.disable or data.interrupt then
+	if data.disable or not ignoreRagdoll or not ignoreCuff or not ignoreFalling then
 		while progress do
 			if data.disable then
 				if data.disable.mouse then
@@ -76,11 +84,15 @@ local function startProgress(data)
 				end
 			end
 
-			if not (data.ignoreInterrupt and data.ignoreInterrupt.ragdoll) and IsPedRagdoll(cache.ped) then
+			if not ignoreRagdoll and IsPedRagdoll(cache.ped) then
 				progress = false
 			end
 
-			if not (data.ignoreInterrupt and data.ignoreInterrupt.cuff) and IsPedCuffed(cache.ped) then
+			if not ignoreCuff and IsPedCuffed(cache.ped) then
+				progress = false
+			end
+
+			if not ignoreFalling and IsPedFalling(cache.ped) then
 				progress = false
 			end
 
