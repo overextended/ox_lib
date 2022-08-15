@@ -12,6 +12,8 @@ shared_script '@ox_lib/init.lua'
 ### server.cfg
 
 ```
+add_ace resource.ox_lib command.add_ace allow
+add_ace resource.ox_lib command.remove_ace allow
 add_ace resource.ox_lib command.add_principal allow
 add_ace resource.ox_lib command.remove_principal allow
 ```

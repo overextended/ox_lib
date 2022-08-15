@@ -250,7 +250,9 @@ CreateThread(function()
 				if zone.onExit then
 					zone:onExit()
 				end
-			elseif zone.debug then
+			end
+
+			if zone.debug then
 				insideCount += 1
 				inside[insideCount] = zone
 			end
@@ -262,12 +264,13 @@ CreateThread(function()
 					for i = 1, insideCount do
 						local zone = inside[i]
 
-						if zone.insideZone then
-							zone:inside()
-						end
 
 						if zone.debug then
+							if zone.inside then zone:inside() end
+
 							zone:debug()
+						elseif zone.insideZone then
+							zone:inside()
 						end
 					end
 				end)
@@ -286,14 +289,18 @@ local DrawPoly = DrawPoly
 local function debugPoly(self)
 	for i = 1, #self.triangles do
 		local triangle = self.triangles[i]
-		DrawPoly(triangle[1], triangle[2], triangle[3], 255, 42, 24, 100)
-		DrawPoly(triangle[2], triangle[1], triangle[3], 255, 42, 24, 100)
+		DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z, 255, 42, 24, 100)
+		DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z, 255, 42, 24, 100)
 	end
 	for i = 1, #self.polygon do
 		local thickness = vec(0, 0, self.thickness / 2)
-		DrawLine(self.polygon[i] + thickness, self.polygon[i] - thickness, 255, 42, 24, 225)
-		DrawLine(self.polygon[i] + thickness, (self.polygon[i + 1] or self.polygon[1]) + thickness, 255, 42, 24, 225)
-		DrawLine(self.polygon[i] - thickness, (self.polygon[i + 1] or self.polygon[1]) - thickness, 255, 42, 24, 225)
+		local a = self.polygon[i] + thickness
+		local b = self.polygon[i] - thickness
+		local c = (self.polygon[i + 1] or self.polygon[1]) + thickness
+		local d = (self.polygon[i + 1] or self.polygon[1]) - thickness
+		DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, 255, 42, 24, 225)
+		DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, 255, 42, 24, 225)
+		DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, 255, 42, 24, 225)
 	end
 end
 
