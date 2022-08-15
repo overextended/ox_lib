@@ -27,7 +27,7 @@ end
 RegisterNUICallback('inputData', function(data, cb)
 	cb(1)
 	if not input then return end
-	if not data then input:resolve() else input:resolve(data) end
 	SetNuiFocus(false, false)
+	if not data then input:resolve() else input:resolve(data) end
 	input = nil
 end)
