@@ -11,6 +11,13 @@ local function createProp(prop)
 	return object
 end
 
+local function interruptProgress(data)
+	if not data.useWhileDead and IsEntityDead(cache.ped) then return true end
+	if not data.allowRagdoll and IsPedRagdoll(cache.ped) then return true end
+	if not data.allowCuffed and IsPedCuffed(cache.ped) then return true end
+	if not data.allowFalling and IsPedFalling(cache.ped) then return true end
+end
+
 local function startProgress(data)
 	playerState.invBusy = true
 	progress = data
@@ -40,22 +47,24 @@ local function startProgress(data)
 		end
 	end
 
-	if data.disable then
-		while progress do
-			if data.disable.mouse then
+	local disable = data.disable
+
+	while progress do
+		if disable then
+			if disable.mouse then
 				DisableControlAction(0, 1, true)
 				DisableControlAction(0, 2, true)
 				DisableControlAction(0, 106, true)
 			end
 
-			if data.disable.move then
+			if disable.move then
 				DisableControlAction(0, 21, true)
 				DisableControlAction(0, 30, true)
 				DisableControlAction(0, 31, true)
 				DisableControlAction(0, 36, true)
 			end
 
-			if data.disable.car then
+			if disable.car then
 				DisableControlAction(0, 63, true)
 				DisableControlAction(0, 64, true)
 				DisableControlAction(0, 71, true)
@@ -63,17 +72,17 @@ local function startProgress(data)
 				DisableControlAction(0, 75, true)
 			end
 
-			if data.disable.combat then
+			if disable.combat then
 				DisableControlAction(0, 25, true)
 				DisablePlayerFiring(cache.playerId, true)
 			end
-
-			Wait(0)
 		end
-	elseif data.canCancel then
-		while progress do Wait(0) end
-	else
-		Wait(data.duration)
+
+		if interruptProgress(progress) then
+			progress = false
+		end
+
+		Wait(0)
 	end
 
 	if data.anim then
@@ -107,7 +116,7 @@ end
 function lib.progressBar(data)
 	while progress ~= nil do Wait(100) end
 
-	if data.useWhileDead or not IsEntityDead(cache.ped) then
+	if not interruptProgress(data) then
 		SendNUIMessage({
 			action = 'progress',
 			data = {
@@ -123,7 +132,7 @@ end
 function lib.progressCircle(data)
 	while progress ~= nil do Wait(100) end
 
-	if data.useWhileDead or not IsEntityDead(cache.ped) then
+	if not interruptProgress(data) then
 		SendNUIMessage({
 			action = 'circleProgress',
 			data = {
