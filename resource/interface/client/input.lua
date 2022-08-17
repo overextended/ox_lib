@@ -26,8 +26,8 @@ end
 
 RegisterNUICallback('inputData', function(data, cb)
 	cb(1)
-	if not input then return end
 	SetNuiFocus(false, false)
-	if not data then input:resolve() else input:resolve(data) end
+	local promise = input
 	input = nil
+	promise:resolve(data)
 end)
