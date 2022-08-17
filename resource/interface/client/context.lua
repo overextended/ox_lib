@@ -52,9 +52,10 @@ RegisterNUICallback('clickContext', function(id, cb)
         id += 1
     end
     local data = contextMenus[openContextMenu].options[id]
-    if not data.event and not data.serverEvent then return end
+    if not data.event and not data.serverEvent and not data.onSelect then return end
     openContextMenu = nil
     SetNuiFocus(false, false)
+    if data.onSelect then data.onSelect(data.args) end
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
     SendNUIMessage({
