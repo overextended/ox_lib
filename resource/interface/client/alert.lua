@@ -16,8 +16,9 @@ end
 RegisterNUICallback('closeAlert', function(data, cb)
     cb(1)
     SetNuiFocus(false, false)
-    alert:resolve(data)
+    local promise = alert
     alert = nil
+    promise:resolve(data)
 end)
 
 RegisterNetEvent('ox_lib:alertDialog', lib.alertDialog)
