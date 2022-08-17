@@ -12,14 +12,14 @@ interface Props {
 const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex }, ref) => {
   return (
     <Box
-      bg="#25262B"
+      bg="gray.800"
       borderRadius="md"
       tabIndex={index}
       scrollMargin={2}
       p={2}
       height="60px"
       key={`item-${index}`}
-      _focus={{ bg: "#373A40", outline: "none" }}
+      _focus={{ bg: "gray.700", outline: "none" }}
       ref={(element) => {
         if (ref)
           // @ts-ignore i cba
@@ -31,7 +31,6 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           <FontAwesomeIcon
             icon={item.icon}
             fontSize={24}
-            color="#909296"
             fixedWidth
             style={{ marginRight: 20, marginLeft: 5 }}
           />
@@ -39,18 +38,18 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
         {Array.isArray(item.values) ? (
           <Flex justifyContent="center" alignItems="center" width="100%">
             <Stack spacing={1}>
-              <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
+              <Text textTransform="uppercase" fontSize={12} verticalAlign="middle">
                 {item.label}
               </Text>
               <Text>{item.values[scrollIndex]}</Text>
             </Stack>
             <Spacer />
             <Stack direction="row" spacing="sm" mr={3} justifyContent="center" alignItems="center">
-              <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
-              <Text color="#909296" textTransform="uppercase" fontSize={14}>
+              <FontAwesomeIcon icon="chevron-left" fontSize={16} />
+              <Text textTransform="uppercase" fontSize={14}>
                 {scrollIndex + 1}/{item.values.length}
               </Text>
-              <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
+              <FontAwesomeIcon icon="chevron-right" fontSize={16} />
             </Stack>
           </Flex>
         ) : (

@@ -169,8 +169,8 @@ const ListMenu: React.FC = () => {
         <Tooltip
           label={menu.items[selected].description}
           isOpen={!!menu.items[selected].description}
-          bg="#25262B"
-          color="#909296"
+          bg="gray.800"
+          color="whiteAlpha.900"
           placement="bottom"
           borderRadius="md"
           fontFamily="Nunito"
@@ -193,7 +193,7 @@ const ListMenu: React.FC = () => {
               maxHeight={415}
               overflow="hidden"
               borderRadius={menu.items.length <= 6 || selected === menu.items.length - 1 ? 'md' : undefined}
-              bg="#141517"
+              bg="gray.900"
               fontFamily="Nunito"
               borderTopLeftRadius="none"
               borderTopRightRadius="none"
@@ -212,8 +212,8 @@ const ListMenu: React.FC = () => {
               </FocusTrap>
             </Box>
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <Box bg="#141517" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
-                <FontAwesomeIcon icon="chevron-down" color="#909296" fontSize={20} />
+              <Box bg="gray.900" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
+                <FontAwesomeIcon icon="chevron-down" fontSize={20} />
               </Box>
             )}
           </Box>

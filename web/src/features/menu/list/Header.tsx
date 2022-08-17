@@ -7,7 +7,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
       textAlign="center"
       borderTopLeftRadius="md"
       borderTopRightRadius="md"
-      bg="#25262B"
+      bg="gray.800"
       height="60px"
       width="sm"
     >
