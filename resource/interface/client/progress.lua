@@ -95,7 +95,6 @@ local function startProgress(data)
 			local prop = data['prop'..i]
 
 			if prop then
-				DetachEntity(prop)
 				DeleteEntity(prop)
 			end
 		end
