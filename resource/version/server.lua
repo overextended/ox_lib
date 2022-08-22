@@ -17,11 +17,16 @@ function lib.versionCheck(repository)
 			if response.prerelease then return end
 
 			local latestVersion = response.tag_name:match('%d%.%d+%.%d+')
-			if not latestVersion then return end
+			if not latestVersion or latestVersion == currentVersion then return end
 
-			if currentVersion >= latestVersion then return end
+			local cv = { string.strsplit('.', currentVersion) }
+			local lv = { string.strsplit('.', latestVersion) }
 
-			print(('^3An update is available for %s (current version: %s)\r\n%s^0'):format(resource, currentVersion, response.html_url))
+			for i = 1, #cv do
+				if tonumber(cv[i]) < tonumber(lv[i]) then
+					return print(('^3An update is available for %s (current version: %s)\r\n%s^0'):format(resource, currentVersion, response.html_url))
+				end
+			end
 		end, 'GET')
 	end)
 end
