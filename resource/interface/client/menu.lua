@@ -55,11 +55,13 @@ local function resetFocus()
 end
 
 function lib.hideMenu(onExit)
-	if onExit and openMenu.onClose then
-		openMenu.onClose()
+	local menu = openMenu
+	openMenu = nil
+
+	if onExit and menu.onClose then
+		menu.onClose()
 	end
 
-	openMenu = nil
 	resetFocus()
 	SendNUIMessage({
 		action = 'closeMenu'
@@ -84,15 +86,17 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 		data[2] += 1 -- scrollIndex
 	end
 
-    if openMenu.options[data[1]].close ~= false then
+	local menu = openMenu
+	openMenu = nil
+
+    if menu.options[data[1]].close ~= false then
 		resetFocus()
 	end
 
-	if openMenu.cb then
-		openMenu.cb(data[1], data[2], openMenu.options[data[1]].args)
+	if menu.cb then
+		menu.cb(data[1], data[2], menu.options[data[1]].args)
 	end
 
-	openMenu = nil
 end)
 
 RegisterNUICallback('changeIndex', function(data, cb)
@@ -125,9 +129,10 @@ RegisterNUICallback('closeMenu', function(data, cb)
     cb(1)
     resetFocus()
 
-    if openMenu.onClose then
-		openMenu.onClose()
-	end
-
+	local menu = openMenu
 	openMenu = nil
+
+    if menu.onClose then
+		menu.onClose()
+	end
 end)
