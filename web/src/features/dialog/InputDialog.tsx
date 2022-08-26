@@ -61,12 +61,7 @@ const InputDialog: React.FC = () => {
   >([]);
   const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
-  const enterPressed = useKeyPress("Enter");
   const { locale } = useLocales();
-
-  React.useEffect(() => {
-    if (visible && enterPressed === false) handleConfirm();
-  }, [enterPressed]);
 
   const handlePasswordStates = (index: number) => {
     setPasswordStates({
@@ -110,7 +105,11 @@ const InputDialog: React.FC = () => {
         size="xs"
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && visible) return handleConfirm();
+          }}
+        >
           <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
           <ModalBody fontFamily="Poppins" textAlign="left">
             {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
