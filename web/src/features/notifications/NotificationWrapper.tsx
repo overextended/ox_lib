@@ -71,7 +71,9 @@ const Notifications: React.FC = () => {
           : "circle-info";
     }
 
+    const id = data.id
     toast({
+      id,
       duration: data.duration || 3000,
       position: data.position || "top-right",
       render: () => (
@@ -105,7 +107,9 @@ const Notifications: React.FC = () => {
   useNuiEvent<Props>("notify", (data) => {
     if (!data.title && !data.description) return;
     if (data.id && toast.isActive(data.id)) return;
+    const id = data.id
     toast({
+      id,
       title: data.title,
       description: data.description,
       duration: data.duration || 4000,
