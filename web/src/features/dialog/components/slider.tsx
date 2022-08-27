@@ -1,6 +1,6 @@
-import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, HStack, Tooltip } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { ISlider } from "../../../interfaces/dialog";
+import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, HStack, Tooltip } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { ISlider } from '../../../interfaces/dialog';
 
 interface Props {
   row: ISlider;
@@ -10,7 +10,7 @@ interface Props {
 
 const SliderField: React.FC<Props> = (props) => {
   useEffect(() => {
-    if(props.row.default) props.handleChange(props.row.default, props.index);
+    if (props.row.default) props.handleChange(props.row.default, props.index);
   }, []);
 
   const [sliderValue, setSliderValue] = useState(props.row.default || props.row.min || 0);
@@ -30,12 +30,7 @@ const SliderField: React.FC<Props> = (props) => {
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
-          <Tooltip
-            hasArrow
-            label={sliderValue}
-            placement="bottom"
-            gutter={10}
-          >
+          <Tooltip hasArrow label={sliderValue} placement="bottom" gutter={10}>
             <SliderThumb />
           </Tooltip>
         </Slider>

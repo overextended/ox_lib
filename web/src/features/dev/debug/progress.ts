@@ -1,12 +1,12 @@
-import { debugData } from "../../../utils/debugData";
-import { ProgressbarProps } from "../../progress/Progressbar";
+import { debugData } from '../../../utils/debugData';
+import { ProgressbarProps } from '../../progress/Progressbar';
 
 export const debugProgressbar = () => {
   debugData<ProgressbarProps>([
     {
-      action: "progress",
+      action: 'progress',
       data: {
-        label: "Using Lockpick",
+        label: 'Using Lockpick',
         duration: 8000,
       },
     },
@@ -16,10 +16,10 @@ export const debugProgressbar = () => {
 export const debugCircleProgressbar = () => {
   debugData([
     {
-      action: "circleProgress",
+      action: 'circleProgress',
       data: {
         duration: 8000,
-        label: "Using Armour",
+        label: 'Using Armour',
       },
     },
   ]);

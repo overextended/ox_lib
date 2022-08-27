@@ -10,17 +10,17 @@ import {
   Spacer,
   Image,
   HStack,
-} from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Option, ContextMenuProps } from "../../../interfaces/context";
-import { fetchNui } from "../../../utils/fetchNui";
+} from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Option, ContextMenuProps } from '../../../interfaces/context';
+import { fetchNui } from '../../../utils/fetchNui';
 
 const openMenu = (id: string | undefined) => {
-  fetchNui<ContextMenuProps>("openContext", id);
+  fetchNui<ContextMenuProps>('openContext', id);
 };
 
 const clickContext = (id: string) => {
-  fetchNui("clickContext", id);
+  fetchNui('clickContext', id);
 };
 
 const Item: React.FC<{
@@ -28,12 +28,7 @@ const Item: React.FC<{
 }> = ({ option }) => {
   return (
     <>
-      <Popover
-        placement="right-start"
-        trigger="hover"
-        eventListeners={{ scroll: true }}
-        isLazy
-      >
+      <Popover placement="right-start" trigger="hover" eventListeners={{ scroll: true }} isLazy>
         <PopoverTrigger>
           <Box
             bg="gray.800"
@@ -45,16 +40,12 @@ const Item: React.FC<{
             fontFamily="Poppins"
             fontSize="md"
             transition="300ms"
-            _hover={{ bg: "gray.700" }}
+            _hover={{ bg: 'gray.700' }}
           >
             <Flex
               w="100%"
               alignItems="center"
-              onClick={() =>
-                option[1].menu
-                  ? openMenu(option[1].menu)
-                  : clickContext(option[0])
-              }
+              onClick={() => (option[1].menu ? openMenu(option[1].menu) : clickContext(option[0]))}
             >
               {option[1]?.icon && (
                 <FontAwesomeIcon
@@ -63,7 +54,7 @@ const Item: React.FC<{
                   fontSize={20}
                   style={{
                     marginRight: 10,
-                    justifySelf: "center",
+                    justifySelf: 'center',
                     color: option[1].iconColor,
                   }}
                 />
@@ -83,12 +74,7 @@ const Item: React.FC<{
               {(option[1].menu || option[1].arrow) && (
                 <>
                   <Spacer />
-                  <Box
-                    alignSelf="center"
-                    justifySelf="center"
-                    mr={4}
-                    fontSize="xl"
-                  >
+                  <Box alignSelf="center" justifySelf="center" mr={4} fontSize="xl">
                     <FontAwesomeIcon icon="chevron-right" />
                   </Box>
                 </>
@@ -108,28 +94,19 @@ const Item: React.FC<{
                     <>
                       {option[1].image && <Image src={option[1].image} />}
                       {Array.isArray(option[1].metadata) ? (
-                        option[1].metadata.map(
-                          (
-                            metadata: string | { label: string; value: any },
-                            index: number
-                          ) => (
-                            <Text key={`context-metadata-${index}`}>
-                              {typeof metadata === "string"
-                                ? `${metadata}`
-                                : `${metadata.label}: ${metadata.value}`}
-                            </Text>
-                          )
-                        )
+                        option[1].metadata.map((metadata: string | { label: string; value: any }, index: number) => (
+                          <Text key={`context-metadata-${index}`}>
+                            {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata.value}`}
+                          </Text>
+                        ))
                       ) : (
                         <>
-                          {typeof option[1].metadata === "object" &&
-                            Object.entries(option[1].metadata).map(
-                              (metadata: { [key: string]: any }, index) => (
-                                <Text key={`context-metadata-${index}`}>
-                                  {metadata[0]}: {metadata[1]}
-                                </Text>
-                              )
-                            )}
+                          {typeof option[1].metadata === 'object' &&
+                            Object.entries(option[1].metadata).map((metadata: { [key: string]: any }, index) => (
+                              <Text key={`context-metadata-${index}`}>
+                                {metadata[0]}: {metadata[1]}
+                              </Text>
+                            ))}
                         </>
                       )}
                     </>

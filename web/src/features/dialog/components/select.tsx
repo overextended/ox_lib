@@ -1,6 +1,6 @@
-import { Box, Select } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { ISelect } from "../../../interfaces/dialog";
+import { Box, Select } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { ISelect } from '../../../interfaces/dialog';
 
 interface Props {
   row: ISelect;
@@ -10,9 +10,9 @@ interface Props {
 
 const SelectField: React.FC<Props> = (props) => {
   useEffect(() => {
-    if(props.row.default) {
+    if (props.row.default) {
       props.row.options?.map((option) => {
-        if(props.row.default === option.value) {
+        if (props.row.default === option.value) {
           props.handleChange(option.value, props.index);
         }
       });
@@ -24,12 +24,14 @@ const SelectField: React.FC<Props> = (props) => {
       <Box mb={3} key={`select-${props.index}`}>
         <Select
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
-          defaultValue={props.row.default || ""}
+          defaultValue={props.row.default || ''}
         >
           {/* Hacky workaround for selectable placeholder issue */}
-          {!props.row.default && (<option value="" hidden disabled>
-            {props.row.label}
-          </option>)}
+          {!props.row.default && (
+            <option value="" hidden disabled>
+              {props.row.label}
+            </option>
+          )}
           {props.row.options?.map((option, index) => (
             <option key={`option-${index}`} value={option.value}>
               {option.label || option.value}

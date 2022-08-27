@@ -1,5 +1,5 @@
-import React, { Context, createContext, useContext, useState } from "react";
-import { useNuiEvent } from "../hooks/useNuiEvent";
+import React, { Context, createContext, useContext, useState } from 'react';
+import { useNuiEvent } from '../hooks/useNuiEvent';
 
 const VisibilityCtx = createContext<VisibilityProviderValue | null>(null);
 
@@ -13,7 +13,7 @@ interface VisibilityProviderValue {
 export const VisibilityProvider: React.FC = ({ children }) => {
   const [visible, setVisible] = useState(true);
 
-  useNuiEvent<boolean>("setVisible", setVisible);
+  useNuiEvent<boolean>('setVisible', setVisible);
 
   return (
     <VisibilityCtx.Provider
@@ -22,16 +22,10 @@ export const VisibilityProvider: React.FC = ({ children }) => {
         setVisible,
       }}
     >
-      <div
-        style={{ visibility: visible ? "visible" : "hidden", height: "100%" }}
-      >
-        {children}
-      </div>
+      <div style={{ visibility: visible ? 'visible' : 'hidden', height: '100%' }}>{children}</div>
     </VisibilityCtx.Provider>
   );
 };
 
 export const useVisibility = () =>
-  useContext<VisibilityProviderValue>(
-    VisibilityCtx as Context<VisibilityProviderValue>
-  );
+  useContext<VisibilityProviderValue>(VisibilityCtx as Context<VisibilityProviderValue>);

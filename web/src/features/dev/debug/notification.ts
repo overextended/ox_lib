@@ -1,16 +1,13 @@
-import {
-  CustomNotificationProps,
-  NotificationProps,
-} from "../../notifications/NotificationWrapper";
-import { debugData } from "../../../utils/debugData";
+import { CustomNotificationProps, NotificationProps } from '../../notifications/NotificationWrapper';
+import { debugData } from '../../../utils/debugData';
 
 export const debugNotification = () => {
   debugData<NotificationProps>([
     {
-      action: "notify",
+      action: 'notify',
       data: {
-        description: "Dunak is nerd",
-        title: "Dunak",
+        description: 'Dunak is nerd',
+        title: 'Dunak',
         id: 1,
       },
     },
@@ -20,13 +17,13 @@ export const debugNotification = () => {
 export const debugCustomNotification = () => {
   debugData<CustomNotificationProps>([
     {
-      action: "customNotify",
+      action: 'customNotify',
       data: {
-        description: "Dunak is nerd",
-        icon: "basket-shopping",
+        description: 'Dunak is nerd',
+        icon: 'basket-shopping',
         style: {
-          backgroundColor: "#2D3748",
-          color: "white",
+          backgroundColor: '#2D3748',
+          color: 'white',
         },
       },
     },

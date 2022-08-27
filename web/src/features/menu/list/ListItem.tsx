@@ -1,7 +1,7 @@
-import { Box, Flex, Stack, Spacer, Text, IconProps } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { forwardRef } from "react";
-import type { MenuItem } from "./index";
+import { Box, Flex, Stack, Spacer, Text, IconProps } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { forwardRef } from 'react';
+import type { MenuItem } from './index';
 
 interface Props {
   item: MenuItem;
@@ -19,7 +19,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       p={2}
       height="60px"
       key={`item-${index}`}
-      _focus={{ bg: "#373A40", outline: "none" }}
+      _focus={{ bg: '#373A40', outline: 'none' }}
       ref={(element) => {
         if (ref)
           // @ts-ignore i cba

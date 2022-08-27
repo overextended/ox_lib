@@ -1,25 +1,25 @@
-import { useNuiEvent } from "../../../hooks/useNuiEvent";
-import { Box, Text, Flex, ScaleFade } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { ContextMenuProps } from "../../../interfaces/context";
-import Item from "./Item";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fetchNui } from "../../../utils/fetchNui";
+import { useNuiEvent } from '../../../hooks/useNuiEvent';
+import { Box, Text, Flex, ScaleFade } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { ContextMenuProps } from '../../../interfaces/context';
+import Item from './Item';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fetchNui } from '../../../utils/fetchNui';
 
 const openMenu = (id: string | undefined) => {
-  fetchNui<ContextMenuProps>("openContext", id);
+  fetchNui<ContextMenuProps>('openContext', id);
 };
 
 const ContextMenu: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
-    title: "",
-    options: { "": { description: "", metadata: [] } },
+    title: '',
+    options: { '': { description: '', metadata: [] } },
   });
 
   const closeContext = () => {
     setVisible(false);
-    fetchNui("closeContext");
+    fetchNui('closeContext');
   };
 
   // Hides the context menu on ESC
@@ -27,17 +27,17 @@ const ContextMenu: React.FC = () => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
-      if (["Escape"].includes(e.code)) closeContext();
+      if (['Escape'].includes(e.code)) closeContext();
     };
 
-    window.addEventListener("keydown", keyHandler);
+    window.addEventListener('keydown', keyHandler);
 
-    return () => window.removeEventListener("keydown", keyHandler);
+    return () => window.removeEventListener('keydown', keyHandler);
   }, [visible]);
 
-  useNuiEvent("hideContext", () => setVisible(false));
+  useNuiEvent('hideContext', () => setVisible(false));
 
-  useNuiEvent<ContextMenuProps>("showContext", async (data) => {
+  useNuiEvent<ContextMenuProps>('showContext', async (data) => {
     if (visible) {
       setVisible(false);
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -47,13 +47,7 @@ const ContextMenu: React.FC = () => {
   });
 
   return (
-    <Flex
-      position="absolute"
-      w="75%"
-      h="80%"
-      justifyContent="flex-end"
-      alignItems="center"
-    >
+    <Flex position="absolute" w="75%" h="80%" justifyContent="flex-end" alignItems="center">
       <ScaleFade in={visible} unmountOnExit>
         <Box w="xs" h={580}>
           <Flex justifyContent="center" alignItems="center" mb={3}>
@@ -68,7 +62,7 @@ const ContextMenu: React.FC = () => {
                 alignItems="center"
                 marginRight={2}
                 p={2}
-                _hover={{ bg: "gray.700" }}
+                _hover={{ bg: 'gray.700' }}
                 transition="300ms"
                 onClick={() => openMenu(contextMenu.menu)}
               >
@@ -76,13 +70,7 @@ const ContextMenu: React.FC = () => {
               </Flex>
             )}
             <Box borderRadius="md" bg="gray.800" flex="1 85%">
-              <Text
-                fontFamily="Poppins"
-                fontSize="md"
-                p={2}
-                textAlign="center"
-                fontWeight="light"
-              >
+              <Text fontFamily="Poppins" fontSize="md" p={2} textAlign="center" fontWeight="light">
                 {contextMenu.title}
               </Text>
             </Box>
@@ -96,7 +84,7 @@ const ContextMenu: React.FC = () => {
               alignItems="center"
               marginLeft={2}
               p={2}
-              _hover={{ bg: "gray.700" }}
+              _hover={{ bg: 'gray.700' }}
               transition="300ms"
               onClick={() => closeContext()}
             >

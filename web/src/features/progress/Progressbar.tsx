@@ -1,7 +1,7 @@
-import React from "react";
-import { Text, Flex, Box } from "@chakra-ui/react";
-import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { fetchNui } from "../../utils/fetchNui";
+import React from 'react';
+import { Text, Flex, Box } from '@chakra-ui/react';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
+import { fetchNui } from '../../utils/fetchNui';
 
 export interface ProgressbarProps {
   label: string;
@@ -10,13 +10,13 @@ export interface ProgressbarProps {
 
 const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
-  const [label, setLabel] = React.useState("");
+  const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
   const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
     setVisible(false);
-    fetchNui("progressComplete");
+    fetchNui('progressComplete');
   };
 
   const progressCancel = () => {
@@ -24,9 +24,9 @@ const Progressbar: React.FC = () => {
     setVisible(false);
   };
 
-  useNuiEvent("progressCancel", progressCancel);
+  useNuiEvent('progressCancel', progressCancel);
 
-  useNuiEvent<ProgressbarProps>("progress", (data) => {
+  useNuiEvent<ProgressbarProps>('progress', (data) => {
     setCancelled(false);
     setVisible(true);
     setLabel(data.label);
@@ -34,14 +34,7 @@ const Progressbar: React.FC = () => {
   });
 
   return (
-    <Flex
-      h="30%"
-      w="100%"
-      position="absolute"
-      bottom="0"
-      justifyContent="center"
-      alignItems="center"
-    >
+    <Flex h="30%" w="100%" position="absolute" bottom="0" justifyContent="center" alignItems="center">
       <Box width={350}>
         {visible && (
           <Box
@@ -58,16 +51,16 @@ const Progressbar: React.FC = () => {
               sx={
                 !cancelled
                   ? {
-                      width: "0%",
-                      backgroundColor: "green.400",
-                      animation: "progress-bar linear",
+                      width: '0%',
+                      backgroundColor: 'green.400',
+                      animation: 'progress-bar linear',
                       animationDuration: `${duration}ms`,
                     }
                   : {
                       // Currently unused
-                      width: "100%",
-                      animationPlayState: "paused",
-                      backgroundColor: "rgb(198, 40, 40)",
+                      width: '100%',
+                      animationPlayState: 'paused',
+                      backgroundColor: 'rgb(198, 40, 40)',
                     }
               }
             />

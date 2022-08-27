@@ -1,31 +1,26 @@
-import React from "react";
-import {
-  CircularProgress,
-  CircularProgressLabel,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
-import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { fetchNui } from "../../utils/fetchNui";
+import React from 'react';
+import { CircularProgress, CircularProgressLabel, Flex, Text } from '@chakra-ui/react';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
+import { fetchNui } from '../../utils/fetchNui';
 
 export interface CircleProgressbarProps {
   label?: string;
   duration: number;
-  position?: "middle" | "bottom";
+  position?: 'middle' | 'bottom';
   percent?: boolean;
 }
 
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const [progressDuration, setProgressDuration] = React.useState(0);
-  const [position, setPosition] = React.useState<"middle" | "bottom">("middle");
+  const [position, setPosition] = React.useState<'middle' | 'bottom'>('middle');
   const [value, setValue] = React.useState(0);
-  const [label, setLabel] = React.useState("");
+  const [label, setLabel] = React.useState('');
   const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
     setVisible(false);
-    fetchNui("progressComplete");
+    fetchNui('progressComplete');
   };
 
   const progressCancel = () => {
@@ -34,16 +29,16 @@ const CircleProgressbar: React.FC = () => {
     setVisible(false);
   };
 
-  useNuiEvent("progressCancel", progressCancel);
+  useNuiEvent('progressCancel', progressCancel);
 
-  useNuiEvent<CircleProgressbarProps>("circleProgress", (data) => {
+  useNuiEvent<CircleProgressbarProps>('circleProgress', (data) => {
     if (visible) return;
     setCancelled(false);
     setVisible(true);
     setValue(0);
-    setLabel(data.label || "");
+    setLabel(data.label || '');
     setProgressDuration(data.duration);
-    setPosition(data.position || "middle");
+    setPosition(data.position || 'middle');
     const onePercent = data.duration * 0.01;
     const updateProgress = setInterval(() => {
       setValue((previousValue) => {
@@ -56,7 +51,7 @@ const CircleProgressbar: React.FC = () => {
 
   return (
     <Flex
-      h={position === "middle" ? "100%" : "20%"}
+      h={position === 'middle' ? '100%' : '20%'}
       w="100%"
       position="absolute"
       bottom="0"
@@ -71,29 +66,27 @@ const CircleProgressbar: React.FC = () => {
             trackColor="rgba(0, 0, 0, 0.6)"
             onAnimationEnd={progressComplete}
             thickness={6}
-            color={cancelled ? "rgb(198, 40, 40)" : "white"}
+            color={cancelled ? 'rgb(198, 40, 40)' : 'white'}
             sx={
               !cancelled
                 ? {
-                    ".chakra-progress__indicator": {
-                      transition: "none !important",
-                      animation: "progress linear forwards !important",
+                    '.chakra-progress__indicator': {
+                      transition: 'none !important',
+                      animation: 'progress linear forwards !important',
                       animationDuration: `${progressDuration}ms !important`,
-                      opacity: "1 !important",
+                      opacity: '1 !important',
                     },
                   }
                 : {
                     // Currently unused
-                    ".chakra-progress__indicator": {
-                      transition: "none !important",
-                      strokeDasharray: "264, 0 !important", // sets circle to full
+                    '.chakra-progress__indicator': {
+                      transition: 'none !important',
+                      strokeDasharray: '264, 0 !important', // sets circle to full
                     },
                   }
             }
           >
-            <CircularProgressLabel fontFamily="Fira Mono">
-              {value}%
-            </CircularProgressLabel>
+            <CircularProgressLabel fontFamily="Fira Mono">{value}%</CircularProgressLabel>
           </CircularProgress>
           <Text fontFamily="Inter" isTruncated fontSize={18} fontWeight="light">
             {label}

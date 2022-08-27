@@ -1,13 +1,13 @@
-import { Box, Stack, Tooltip } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
-import { useNuiEvent } from "../../../hooks/useNuiEvent";
-import ListItem from "./ListItem";
-import Header from "./Header";
-import FocusTrap from "focus-trap-react";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { fetchNui } from "../../../utils/fetchNui";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import { Box, Stack, Tooltip } from '@chakra-ui/react';
+import { useEffect, useRef, useState } from 'react';
+import { useNuiEvent } from '../../../hooks/useNuiEvent';
+import ListItem from './ListItem';
+import Header from './Header';
+import FocusTrap from 'focus-trap-react';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { fetchNui } from '../../../utils/fetchNui';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 export interface MenuItem {
   label: string;
@@ -19,15 +19,15 @@ export interface MenuItem {
 }
 
 export interface MenuSettings {
-  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   title: string;
   items: Array<MenuItem>;
 }
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
-    position: "top-left",
-    title: "",
+    position: 'top-left',
+    title: '',
     items: [],
   });
   const [selected, setSelected] = useState(0);
@@ -37,53 +37,47 @@ const ListMenu: React.FC = () => {
 
   const closeMenu = (ignoreFetch?: boolean) => {
     setVisible(false);
-    if (!ignoreFetch) fetchNui("closeMenu");
+    if (!ignoreFetch) fetchNui('closeMenu');
   };
 
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.code) {
-      case "ArrowDown":
+      case 'ArrowDown':
         setSelected((selected) => {
           if (selected >= menu.items.length - 1) return (selected = 0);
           return selected + 1;
         });
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         setSelected((selected) => {
           if (selected <= 0) return (selected = menu.items.length - 1);
           return selected - 1;
         });
         break;
-      case "ArrowRight":
+      case 'ArrowRight':
         if (!Array.isArray(menu.items[selected].values)) return;
         setIndexStates({
           ...indexStates,
           [selected]:
-            indexStates[selected] + 1 <=
-            menu.items[selected].values?.length! - 1
+            indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
               ? indexStates[selected] + 1
               : (indexStates[selected] = 0),
         });
         break;
-      case "ArrowLeft":
+      case 'ArrowLeft':
         if (!Array.isArray(menu.items[selected].values)) return;
         setIndexStates({
           ...indexStates,
           [selected]:
             indexStates[selected] - 1 >= 0
               ? indexStates[selected] - 1
-              : (indexStates[selected] =
-                  menu.items[selected].values?.length! - 1),
+              : (indexStates[selected] = menu.items[selected].values?.length! - 1),
         });
         break;
-      case "Enter":
+      case 'Enter':
         if (!menu.items[selected]) return;
-        fetchNui("confirmSelected", [selected, indexStates[selected]]).catch();
-        if (
-          menu.items[selected].close === undefined ||
-          menu.items[selected].close
-        )
-          setVisible(false);
+        fetchNui('confirmSelected', [selected, indexStates[selected]]).catch();
+        if (menu.items[selected].close === undefined || menu.items[selected].close) setVisible(false);
         break;
     }
   };
@@ -91,7 +85,7 @@ const ListMenu: React.FC = () => {
   useEffect(() => {
     if (!menu.items[selected]?.values) return;
     const timer = setTimeout(() => {
-      fetchNui("changeIndex", [selected, indexStates[selected]]).catch();
+      fetchNui('changeIndex', [selected, indexStates[selected]]).catch();
     }, 100);
     return () => clearTimeout(timer);
   }, [indexStates]);
@@ -99,13 +93,13 @@ const ListMenu: React.FC = () => {
   useEffect(() => {
     if (!menu.items[selected]) return;
     listRefs.current[selected]?.scrollIntoView({
-      block: "nearest",
-      inline: "start",
+      block: 'nearest',
+      inline: 'start',
     });
     listRefs.current[selected]?.focus({ preventScroll: true });
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
-      fetchNui("changeSelected", [selected, indexStates[selected]]).catch();
+      fetchNui('changeSelected', [selected, indexStates[selected]]).catch();
     }, 100);
     return () => clearTimeout(timer);
   }, [selected, menu]);
@@ -114,26 +108,25 @@ const ListMenu: React.FC = () => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
-      if (["Escape", "Backspace"].includes(e.code)) closeMenu();
+      if (['Escape', 'Backspace'].includes(e.code)) closeMenu();
     };
 
-    window.addEventListener("keydown", keyHandler);
+    window.addEventListener('keydown', keyHandler);
 
-    return () => window.removeEventListener("keydown", keyHandler);
+    return () => window.removeEventListener('keydown', keyHandler);
   }, [visible]);
 
-  useNuiEvent("closeMenu", () => closeMenu(true));
+  useNuiEvent('closeMenu', () => closeMenu(true));
 
-  useNuiEvent("setMenu", (data: MenuSettings) => {
+  useNuiEvent('setMenu', (data: MenuSettings) => {
     setSelected(0);
-    if (!data.position) data.position = "top-left";
+    if (!data.position) data.position = 'top-left';
     listRefs.current = [];
     setMenu(data);
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
     for (let i = 0; i < data.items.length; i++) {
-      if (Array.isArray(data.items[i].values))
-        arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
+      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
     }
     setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();
@@ -154,39 +147,13 @@ const ListMenu: React.FC = () => {
           <Box
             position="absolute"
             pointerEvents="none"
-            mt={
-              menu.position === "top-left" || menu.position === "top-right"
-                ? 5
-                : 0
-            }
-            ml={
-              menu.position === "top-left" || menu.position === "bottom-left"
-                ? 5
-                : 0
-            }
-            mr={
-              menu.position === "top-right" || menu.position === "bottom-right"
-                ? 5
-                : 0
-            }
-            mb={
-              menu.position === "bottom-left" ||
-              menu.position === "bottom-right"
-                ? 5
-                : 0
-            }
-            right={
-              menu.position === "top-right" || menu.position === "bottom-right"
-                ? 1
-                : undefined
-            }
-            left={menu.position === "bottom-left" ? 1 : undefined}
-            bottom={
-              menu.position === "bottom-left" ||
-              menu.position === "bottom-right"
-                ? 1
-                : undefined
-            }
+            mt={menu.position === 'top-left' || menu.position === 'top-right' ? 5 : 0}
+            ml={menu.position === 'top-left' || menu.position === 'bottom-left' ? 5 : 0}
+            mr={menu.position === 'top-right' || menu.position === 'bottom-right' ? 5 : 0}
+            mb={menu.position === 'bottom-left' || menu.position === 'bottom-right' ? 5 : 0}
+            right={menu.position === 'top-right' || menu.position === 'bottom-right' ? 1 : undefined}
+            left={menu.position === 'bottom-left' ? 1 : undefined}
+            bottom={menu.position === 'bottom-left' || menu.position === 'bottom-right' ? 1 : undefined}
           >
             <Header title={menu.title} />
             <Box
@@ -194,11 +161,7 @@ const ListMenu: React.FC = () => {
               height="fit-content"
               maxHeight={415}
               overflow="hidden"
-              borderRadius={
-                menu.items.length <= 6 || selected === menu.items.length - 1
-                  ? "md"
-                  : undefined
-              }
+              borderRadius={menu.items.length <= 6 || selected === menu.items.length - 1 ? 'md' : undefined}
               bg="#141517"
               fontFamily="Nunito"
               borderTopLeftRadius="none"
@@ -210,12 +173,7 @@ const ListMenu: React.FC = () => {
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
-                        <ListItem
-                          index={index}
-                          item={item}
-                          scrollIndex={indexStates[index]}
-                          ref={listRefs}
-                        />
+                        <ListItem index={index} item={item} scrollIndex={indexStates[index]} ref={listRefs} />
                       )}
                     </React.Fragment>
                   ))}
@@ -223,18 +181,8 @@ const ListMenu: React.FC = () => {
               </FocusTrap>
             </Box>
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <Box
-                bg="#141517"
-                textAlign="center"
-                borderBottomLeftRadius="md"
-                borderBottomRightRadius="md"
-                height={25}
-              >
-                <FontAwesomeIcon
-                  icon="chevron-down"
-                  color="#909296"
-                  fontSize={20}
-                />
+              <Box bg="#141517" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
+                <FontAwesomeIcon icon="chevron-down" color="#909296" fontSize={20} />
               </Box>
             )}
           </Box>

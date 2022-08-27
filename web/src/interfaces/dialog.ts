@@ -1,7 +1,7 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export interface IInput {
-  type: "input",
+  type: 'input';
   label: string;
   placeholder?: string;
   default?: string;
@@ -10,27 +10,29 @@ export interface IInput {
 }
 
 export interface ICheckbox {
-  type: "checkbox",
+  type: 'checkbox';
   label: string;
   checked?: boolean;
 }
 
 export interface ISelect {
-  type: "select",
+  type: 'select';
   label: string;
   default?: string;
   options?: { value: string; label?: string }[];
 }
 
 export interface INumber {
-  type: "number",
+  type: 'number';
   label: string;
   placeholder?: string;
   default?: number;
+  min?: number;
+  max?: number;
 }
 
 export interface ISlider {
-  type: "slider",
+  type: 'slider';
   label: string;
   default?: number;
   min?: number;

@@ -10,19 +10,16 @@ import {
   VStack,
   Divider,
   useDisclosure,
-} from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { debugAlert } from "./debug/alert";
-import { debugContext } from "./debug/context";
-import { debugInput } from "./debug/input";
-import { debugMenu } from "./debug/menu";
-import {
-  debugCustomNotification,
-  debugNotification,
-} from "./debug/notification";
-import { debugCircleProgressbar, debugProgressbar } from "./debug/progress";
-import { debugTextUI } from "./debug/textui";
-import { debugSettings } from "./debug/settings";
+} from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { debugAlert } from './debug/alert';
+import { debugContext } from './debug/context';
+import { debugInput } from './debug/input';
+import { debugMenu } from './debug/menu';
+import { debugCustomNotification, debugNotification } from './debug/notification';
+import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
+import { debugTextUI } from './debug/textui';
+import { debugSettings } from './debug/settings';
 
 const Dev: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

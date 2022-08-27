@@ -6,9 +6,9 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-} from "@chakra-ui/react";
-import { useEffect } from "react";
-import { INumber } from "../../../interfaces/dialog";
+} from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { INumber } from '../../../interfaces/dialog';
 
 interface Props {
   row: INumber;

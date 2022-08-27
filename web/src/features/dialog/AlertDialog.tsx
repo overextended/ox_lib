@@ -7,12 +7,12 @@ import {
   AlertDialogOverlay,
   useDisclosure,
   Button,
-} from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { fetchNui } from "../../utils/fetchNui";
-import { useLocales } from "../../providers/LocaleProvider";
+} from '@chakra-ui/react';
+import { useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
+import { fetchNui } from '../../utils/fetchNui';
+import { useLocales } from '../../providers/LocaleProvider';
 
 export interface AlertProps {
   header: string;
@@ -26,16 +26,16 @@ const AlertDialog: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
   const [dialogData, setDialogData] = useState<AlertProps>({
-    header: "",
-    content: "",
+    header: '',
+    content: '',
   });
 
   const closeAlert = (button: string) => {
     onClose();
-    fetchNui("closeAlert", button);
+    fetchNui('closeAlert', button);
   };
 
-  useNuiEvent("sendAlert", (data: AlertProps) => {
+  useNuiEvent('sendAlert', (data: AlertProps) => {
     setDialogData(data);
     onOpen();
   });
@@ -48,7 +48,7 @@ const AlertDialog: React.FC = () => {
         isOpen={isOpen}
         isCentered={dialogData.centered}
         closeOnOverlayClick={false}
-        onEsc={() => closeAlert("cancel")}
+        onEsc={() => closeAlert('cancel')}
       >
         <AlertDialogOverlay />
         <AlertDialogContent fontFamily="Inter">
@@ -60,14 +60,11 @@ const AlertDialog: React.FC = () => {
           </AlertDialogBody>
           <AlertDialogFooter>
             {dialogData.cancel && (
-              <Button onClick={() => closeAlert("cancel")} mr={3}>
+              <Button onClick={() => closeAlert('cancel')} mr={3}>
                 {locale.ui.cancel}
               </Button>
             )}
-            <Button
-              colorScheme={dialogData.cancel ? "blue" : undefined}
-              onClick={() => closeAlert("confirm")}
-            >
+            <Button colorScheme={dialogData.cancel ? 'blue' : undefined} onClick={() => closeAlert('confirm')}>
               {locale.ui.confirm}
             </Button>
           </AlertDialogFooter>

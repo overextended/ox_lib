@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text } from '@chakra-ui/react';
 
 const Header: React.FC<{ title: string }> = ({ title }) => {
   return (

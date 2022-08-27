@@ -1,6 +1,6 @@
-import { Box, Checkbox } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { ICheckbox } from "../../../interfaces/dialog";
+import { Box, Checkbox } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { ICheckbox } from '../../../interfaces/dialog';
 
 interface Props {
   row: ICheckbox;
@@ -10,7 +10,7 @@ interface Props {
 
 const CheckboxField: React.FC<Props> = (props) => {
   useEffect(() => {
-    if(props.row.checked) props.handleChange(props.row.checked, props.index);
+    if (props.row.checked) props.handleChange(props.row.checked, props.index);
   }, []);
 
   return (

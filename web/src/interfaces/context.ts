@@ -1,4 +1,4 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export interface Option {
   menu?: string;
@@ -8,10 +8,7 @@ export interface Option {
   image?: string;
   icon?: IconProp;
   iconColor?: string;
-  metadata?:
-    | string[]
-    | { [key: string]: any }
-    | { label: string; value: any }[];
+  metadata?: string[] | { [key: string]: any } | { label: string; value: any }[];
   event?: string;
   serverEvent?: string;
   args?: any;
