@@ -18,13 +18,18 @@ interface Props {
 
 const NumberField: React.FC<Props> = (props) => {
   useEffect(() => {
-    if(props.row.default) props.handleChange(props.row.default, props.index);
+    if (props.row.default) props.handleChange(props.row.default, props.index);
   }, []);
 
   return (
     <Box mb={3}>
       <Text>{props.row.label}</Text>
-      <NumberInput onChange={(val: string) => props.handleChange(+val, props.index)} defaultValue={props.row.default}>
+      <NumberInput
+        onChange={(val: string) => props.handleChange(+val, props.index)}
+        defaultValue={props.row.default}
+        min={props.row.min}
+        max={props.row.max}
+      >
         <NumberInputField placeholder={props.row.placeholder} />
         <NumberInputStepper>
           <NumberIncrementStepper />
