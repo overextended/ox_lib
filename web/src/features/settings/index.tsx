@@ -11,16 +11,8 @@ import {
 import LocaleSetting from "./components/locale";
 import { useState } from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-// import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 import { useLocales } from "../../providers/LocaleProvider";
-
-// debugData([
-//   {
-//     action: "openSettings",
-//     data: true,
-//   },
-// ]);
 
 const Settings: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,12 +1,11 @@
 import React from "react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { Box, Flex, ScaleFade } from "@chakra-ui/react";
-import { debugData } from "../../utils/debugData";
 import ReactMarkdown from "react-markdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-interface Props {
+export interface TextUiProps {
   text: string;
   position?: "right-center" | "left-center" | "top-center";
   icon?: IconProp;
@@ -14,25 +13,14 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-debugData([
-  {
-    action: "textUi",
-    data: {
-      text: "[E] - Access locker inventory  \n [G] - Do something else",
-      position: "right-center",
-      icon: "door-open",
-    },
-  },
-]);
-
 const TextUI: React.FC = () => {
-  const [data, setData] = React.useState<Props>({
+  const [data, setData] = React.useState<TextUiProps>({
     text: "",
     position: "right-center",
   });
   const [visible, setVisible] = React.useState(false);
 
-  useNuiEvent<Props>("textUi", (data) => {
+  useNuiEvent<TextUiProps>("textUi", (data) => {
     if (!data.position) data.position = "right-center"; // Default right position
     setData(data);
     setVisible(true);

@@ -6,25 +6,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
-interface Props {
+export interface CircleProgressbarProps {
   label?: string;
   duration: number;
   position?: "middle" | "bottom";
   percent?: boolean;
 }
-
-debugData([
-  {
-    action: "circleProgress",
-    data: {
-      duration: 8000,
-      label: "Using Armour",
-    },
-  },
-]);
 
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -47,7 +36,7 @@ const CircleProgressbar: React.FC = () => {
 
   useNuiEvent("progressCancel", progressCancel);
 
-  useNuiEvent<Props>("circleProgress", (data) => {
+  useNuiEvent<CircleProgressbarProps>("circleProgress", (data) => {
     if (visible) return;
     setCancelled(false);
     setVisible(true);

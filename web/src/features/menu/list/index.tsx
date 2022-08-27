@@ -1,7 +1,6 @@
 import { Box, Stack, Tooltip } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useNuiEvent } from "../../../hooks/useNuiEvent";
-import { debugData } from "../../../utils/debugData";
 import ListItem from "./ListItem";
 import Header from "./Header";
 import FocusTrap from "focus-trap-react";
@@ -19,41 +18,11 @@ export interface MenuItem {
   close?: boolean;
 }
 
-interface MenuSettings {
+export interface MenuSettings {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   title: string;
   items: Array<MenuItem>;
 }
-
-debugData<MenuSettings>([
-  {
-    action: "setMenu",
-    data: {
-      //   position: "bottom-left",
-      title: "Vehicle garage",
-      items: [
-        { label: "Option 1", icon: "heart" },
-        {
-          label: "Option 2",
-          icon: "basket-shopping",
-          description: "Tooltip description 1",
-        },
-        {
-          label: "Vehicle class",
-          values: ["Nice", "Super nice", "Extra nice"],
-          icon: "tag",
-          description: "Tooltip description 2",
-        },
-        { label: "Option 1" },
-        { label: "Option 2" },
-        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"], defaultIndex: 1 },
-        { label: "Option 1" },
-        { label: "Option 2" },
-        { label: "Vehicle class", values: ["Nice", "Super nice", "Extra nice"] },
-      ],
-    },
-  },
-]);
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
@@ -90,7 +59,8 @@ const ListMenu: React.FC = () => {
         setIndexStates({
           ...indexStates,
           [selected]:
-            indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
+            indexStates[selected] + 1 <=
+            menu.items[selected].values?.length! - 1
               ? indexStates[selected] + 1
               : (indexStates[selected] = 0),
         });
@@ -102,13 +72,18 @@ const ListMenu: React.FC = () => {
           [selected]:
             indexStates[selected] - 1 >= 0
               ? indexStates[selected] - 1
-              : (indexStates[selected] = menu.items[selected].values?.length! - 1),
+              : (indexStates[selected] =
+                  menu.items[selected].values?.length! - 1),
         });
         break;
       case "Enter":
         if (!menu.items[selected]) return;
         fetchNui("confirmSelected", [selected, indexStates[selected]]).catch();
-        if (menu.items[selected].close === undefined || menu.items[selected].close) setVisible(false);
+        if (
+          menu.items[selected].close === undefined ||
+          menu.items[selected].close
+        )
+          setVisible(false);
         break;
     }
   };
@@ -157,7 +132,8 @@ const ListMenu: React.FC = () => {
     setVisible(true);
     let arrayIndexes: { [key: number]: number } = {};
     for (let i = 0; i < data.items.length; i++) {
-      if (Array.isArray(data.items[i].values)) arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
+      if (Array.isArray(data.items[i].values))
+        arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
     }
     setIndexStates(arrayIndexes);
     listRefs.current[0]?.focus();
@@ -178,13 +154,39 @@ const ListMenu: React.FC = () => {
           <Box
             position="absolute"
             pointerEvents="none"
-            mt={menu.position === "top-left" || menu.position === "top-right" ? 5 : 0}
-            ml={menu.position === "top-left" || menu.position === "bottom-left" ? 5 : 0}
-            mr={menu.position === "top-right" || menu.position === "bottom-right" ? 5 : 0}
-            mb={menu.position === "bottom-left" || menu.position === "bottom-right" ? 5 : 0}
-            right={menu.position === "top-right" || menu.position === "bottom-right" ? 1 : undefined}
+            mt={
+              menu.position === "top-left" || menu.position === "top-right"
+                ? 5
+                : 0
+            }
+            ml={
+              menu.position === "top-left" || menu.position === "bottom-left"
+                ? 5
+                : 0
+            }
+            mr={
+              menu.position === "top-right" || menu.position === "bottom-right"
+                ? 5
+                : 0
+            }
+            mb={
+              menu.position === "bottom-left" ||
+              menu.position === "bottom-right"
+                ? 5
+                : 0
+            }
+            right={
+              menu.position === "top-right" || menu.position === "bottom-right"
+                ? 1
+                : undefined
+            }
             left={menu.position === "bottom-left" ? 1 : undefined}
-            bottom={menu.position === "bottom-left" || menu.position === "bottom-right" ? 1 : undefined}
+            bottom={
+              menu.position === "bottom-left" ||
+              menu.position === "bottom-right"
+                ? 1
+                : undefined
+            }
           >
             <Header title={menu.title} />
             <Box
@@ -192,7 +194,11 @@ const ListMenu: React.FC = () => {
               height="fit-content"
               maxHeight={415}
               overflow="hidden"
-              borderRadius={menu.items.length <= 6 || selected === menu.items.length - 1 ? 'md' : undefined}
+              borderRadius={
+                menu.items.length <= 6 || selected === menu.items.length - 1
+                  ? "md"
+                  : undefined
+              }
               bg="#141517"
               fontFamily="Nunito"
               borderTopLeftRadius="none"
@@ -204,7 +210,12 @@ const ListMenu: React.FC = () => {
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
-                        <ListItem index={index} item={item} scrollIndex={indexStates[index]} ref={listRefs} />
+                        <ListItem
+                          index={index}
+                          item={item}
+                          scrollIndex={indexStates[index]}
+                          ref={listRefs}
+                        />
                       )}
                     </React.Fragment>
                   ))}
@@ -212,8 +223,18 @@ const ListMenu: React.FC = () => {
               </FocusTrap>
             </Box>
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <Box bg="#141517" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
-                <FontAwesomeIcon icon="chevron-down" color="#909296" fontSize={20} />
+              <Box
+                bg="#141517"
+                textAlign="center"
+                borderBottomLeftRadius="md"
+                borderBottomRightRadius="md"
+                height={25}
+              >
+                <FontAwesomeIcon
+                  icon="chevron-down"
+                  color="#909296"
+                  fontSize={20}
+                />
               </Box>
             )}
           </Box>

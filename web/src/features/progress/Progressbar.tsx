@@ -1,23 +1,12 @@
 import React from "react";
 import { Text, Flex, Box } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 
-interface Props {
+export interface ProgressbarProps {
   label: string;
   duration: number;
 }
-
-debugData([
-  {
-    action: "progress",
-    data: {
-      label: "Using Lockpick",
-      duration: 8000,
-    },
-  },
-]);
 
 const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -37,7 +26,7 @@ const Progressbar: React.FC = () => {
 
   useNuiEvent("progressCancel", progressCancel);
 
-  useNuiEvent<Props>("progress", (data) => {
+  useNuiEvent<ProgressbarProps>("progress", (data) => {
     setCancelled(false);
     setVisible(true);
     setLabel(data.label);

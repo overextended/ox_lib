@@ -11,34 +11,21 @@ import {
 import { useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { debugData } from "../../utils/debugData";
 import { fetchNui } from "../../utils/fetchNui";
 import { useLocales } from "../../providers/LocaleProvider";
 
-interface DialogProps {
+export interface AlertProps {
   header: string;
   content: string;
   centered?: boolean;
   cancel?: boolean;
 }
 
-// debugData<DialogProps>([
-//   {
-//     action: "sendAlert",
-//     data: {
-//       header: "Hello there",
-//       content: "General kenobi  \n Markdown works",
-//       centered: true,
-//       cancel: true,
-//     },
-//   },
-// ]);
-
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
-  const [dialogData, setDialogData] = useState<DialogProps>({
+  const [dialogData, setDialogData] = useState<AlertProps>({
     header: "",
     content: "",
   });
@@ -48,7 +35,7 @@ const AlertDialog: React.FC = () => {
     fetchNui("closeAlert", button);
   };
 
-  useNuiEvent("sendAlert", (data: DialogProps) => {
+  useNuiEvent("sendAlert", (data: AlertProps) => {
     setDialogData(data);
     onOpen();
   });
@@ -77,7 +64,10 @@ const AlertDialog: React.FC = () => {
                 {locale.ui.cancel}
               </Button>
             )}
-            <Button colorScheme={dialogData.cancel ? "blue" : undefined} onClick={() => closeAlert("confirm")}>
+            <Button
+              colorScheme={dialogData.cancel ? "blue" : undefined}
+              onClick={() => closeAlert("confirm")}
+            >
               {locale.ui.confirm}
             </Button>
           </AlertDialogFooter>

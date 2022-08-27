@@ -10,6 +10,8 @@ import { setClipboard } from "./utils/setClipboard";
 import { fetchNui } from "./utils/fetchNui";
 import AlertDialog from "./features/dialog/AlertDialog";
 import ListMenu from "./features/menu/list";
+import Dev from "./features/dev";
+import { isEnvBrowser } from "./utils/misc";
 
 const App: React.FC = () => {
   useNuiEvent("setClipboard", (data: string) => {
@@ -29,6 +31,7 @@ const App: React.FC = () => {
       <AlertDialog />
       <ContextMenu />
       <ListMenu />
+      {isEnvBrowser() && <Dev />}
     </>
   );
 };

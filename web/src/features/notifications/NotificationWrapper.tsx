@@ -6,11 +6,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
-import { debugData } from "../../utils/debugData";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface Props {
+export interface NotificationProps {
   title?: string;
   description?: string;
   duration?: number;
@@ -19,7 +18,7 @@ interface Props {
   id?: number;
 }
 
-interface CustomProps {
+export interface CustomNotificationProps {
   style?: React.CSSProperties;
   description?: string;
   title?: string;
@@ -31,35 +30,10 @@ interface CustomProps {
   type?: string;
 }
 
-debugData<Props>([
-  {
-    action: "notify",
-    data: {
-      description: "Dunak is nerd",
-      title: "Dunak",
-      id: 1,
-    },
-  },
-]);
-
-debugData<CustomProps>([
-  {
-    action: "customNotify",
-    data: {
-      description: "Dunak is nerd",
-      icon: "basket-shopping",
-      style: {
-        backgroundColor: "#2D3748",
-        color: "white",
-      },
-    },
-  },
-]);
-
 const Notifications: React.FC = () => {
   const toast = useToast();
 
-  useNuiEvent<CustomProps>("customNotify", (data) => {
+  useNuiEvent<CustomNotificationProps>("customNotify", (data) => {
     if (!data.title && !data.description) return;
     if (data.id && toast.isActive(data.id)) return;
     if (!data.icon) {
@@ -71,7 +45,7 @@ const Notifications: React.FC = () => {
           : "circle-info";
     }
 
-    const id = data.id
+    const id = data.id;
     toast({
       id,
       duration: data.duration || 3000,
@@ -104,10 +78,10 @@ const Notifications: React.FC = () => {
     });
   });
 
-  useNuiEvent<Props>("notify", (data) => {
+  useNuiEvent<NotificationProps>("notify", (data) => {
     if (!data.title && !data.description) return;
     if (data.id && toast.isActive(data.id)) return;
-    const id = data.id
+    const id = data.id;
     toast({
       id,
       title: data.title,
