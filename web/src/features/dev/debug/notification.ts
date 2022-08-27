@@ -1,5 +1,5 @@
 import {
-  CustomNotifiactionProps,
+  CustomNotificationProps,
   NotificationProps,
 } from "../../notifications/NotificationWrapper";
 import { debugData } from "../../../utils/debugData";
@@ -18,7 +18,7 @@ export const debugNotification = () => {
 };
 
 export const debugCustomNotification = () => {
-  debugData<CustomNotifiactionProps>([
+  debugData<CustomNotificationProps>([
     {
       action: "customNotify",
       data: {
