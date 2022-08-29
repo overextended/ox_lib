@@ -40,11 +40,11 @@ local function getTriangles(polygon)
 
 		if unique then
 			h = #horizontals + 1
-			horizontals[h] = {point}
+			horizontals[h] = { point }
 		end
 
-		sides[i] = {polygon[i], polygon[i + 1] or polygon[1]}
-		points[polygon[i]] = {side = i, horizontal = h, uses = 0}
+		sides[i] = { polygon[i], polygon[i + 1] or polygon[1] }
+		points[polygon[i]] = { side = i, horizontal = h, uses = 0 }
 	end
 
 	local extremes = { polygon.projectToAxis(polygon, vec(1, 0, 0)) }
@@ -73,7 +73,7 @@ local function getTriangles(polygon)
 					if valid then
 						horizontals[i][#horizontals[i] + 1] = newPoint
 						sides[j][#sides[j] + 1] = newPoint
-						points[newPoint] = {side = j, horizontal = i, uses = 0}
+						points[newPoint] = { side = j, horizontal = i, uses = 0 }
 						break
 					end
 				end
@@ -190,7 +190,7 @@ local function getTriangles(polygon)
 					end
 
 					if c or d then
-						local t = {a, b, c, d}
+						local t = { a, b, c, d }
 						nTriangles = #triangles
 						triangles[nTriangles + 1], triangles[nTriangles + 2] = makeTriangles(t)
 						if c and d then
@@ -289,8 +289,10 @@ local DrawPoly = DrawPoly
 local function debugPoly(self)
 	for i = 1, #self.triangles do
 		local triangle = self.triangles[i]
-		DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z, 255, 42, 24, 100)
-		DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z, 255, 42, 24, 100)
+		DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x,
+			triangle[3].y, triangle[3].z, 255, 42, 24, 100)
+		DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x,
+			triangle[3].y, triangle[3].z, 255, 42, 24, 100)
 	end
 	for i = 1, #self.polygon do
 		local thickness = vec(0, 0, self.thickness / 2)
@@ -305,7 +307,8 @@ local function debugPoly(self)
 end
 
 local function debugSphere(self)
-	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 42, 24, 100, false, false, false, true, false, false, false)
+	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius,
+		self.radius, 255, 42, 24, 100, false, false, false, true, false, false, false)
 end
 
 local glm_polygon_contains = glm.polygon.contains
@@ -318,11 +321,34 @@ local function insideSphere(self, coords)
 	return #(self.coords - coords) < self.radius
 end
 
+local function convertToVector(coords)
+	local _type = type(coords)
+
+	if _type ~= 'vector3' then
+		if _type == 'table' then
+			return vec3(coords[1] or coords.x, coords[2] or coords.y, coords[3] or coords.z)
+		end
+
+		error(("expected type 'vector3' or 'table' (received %s)"):format(_type))
+	end
+
+	return coords
+end
+
 return {
 	poly = function(data)
 		data.id = #Zones + 1
 		data.thickness = data.thickness or 4
-		data.polygon = glm.polygon.new(data.points)
+
+		local pointN = #data.points
+		local points = table.create(pointN, 0)
+
+		for i = 1, pointN do
+			points[i] = convertToVector(data.points[i])
+		end
+
+		data.polygon = glm.polygon.new(points)
+
 		data.coords = data.polygon:centroid()
 		data.remove = removeZone
 		data.contains = contains
@@ -338,7 +364,8 @@ return {
 
 	box = function(data)
 		data.id = #Zones + 1
-		data.size = data.size and data.size / 2 or vec3(2)
+		data.coords = convertToVector(data.coords)
+		data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
 		data.thickness = data.size.z * 2 or 4
 		data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
 		data.polygon = (data.rotation * glm.polygon.new({
@@ -351,7 +378,7 @@ return {
 		data.contains = contains
 
 		if data.debug then
-			data.triangles = {makeTriangles({data.polygon[1], data.polygon[2], data.polygon[4], data.polygon[3]})}
+			data.triangles = { makeTriangles({ data.polygon[1], data.polygon[2], data.polygon[4], data.polygon[3] }) }
 			data.debug = debugPoly
 		end
 
@@ -361,6 +388,7 @@ return {
 
 	sphere = function(data)
 		data.id = #Zones + 1
+		data.coords = convertToVector(data.coords)
 		data.radius = (data.radius or 2) + 0.0
 		data.remove = removeZone
 		data.contains = insideSphere
