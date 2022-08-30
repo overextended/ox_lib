@@ -72,6 +72,7 @@ function lib.setMenuOptions(id, options, index)
 	if index then
 		registeredMenus[id].options[index] = options
 	else
+		if not options[1] then return error('Invalid override format used, expected table of options.') end
 		registeredMenus[id].options = options
  	end
 end
