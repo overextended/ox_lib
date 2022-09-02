@@ -266,7 +266,7 @@ CreateThread(function()
 
 
 						if zone.debug then
-							if zone.inside then zone:inside() end
+							if zone.insideZone then zone:inside() end
 
 							zone:debug()
 						elseif zone.insideZone then
