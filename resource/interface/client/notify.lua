@@ -5,6 +5,7 @@
 	description: string
 	duration?: number
 	position?: 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left'
+    type: 'inform' | 'error' | 'success'
 	style?: table
 	icon?: string
 	iconColor?: string
