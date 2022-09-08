@@ -33,7 +33,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             fontSize={24}
             color="#909296"
             fixedWidth
-            style={{ marginRight: 20, marginLeft: 5 }}
+            style={{ marginRight: 20, marginLeft: 5, maxWidth:25 }}
           />
         )}
         {Array.isArray(item.values) ? (
