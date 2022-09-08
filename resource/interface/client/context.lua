@@ -18,6 +18,7 @@ function lib.showContext(id)
         action = 'showContext',
         data = {
             title = data.title,
+            canClose = data.canClose,
             menu = data.menu,
             options = data.options
         }

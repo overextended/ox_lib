@@ -18,6 +18,7 @@ const ContextMenu: React.FC = () => {
   });
 
   const closeContext = () => {
+    if (contextMenu.canClose === false) return;
     setVisible(false);
     fetchNui('closeContext');
   };
@@ -76,7 +77,8 @@ const ContextMenu: React.FC = () => {
             </Box>
             <Flex
               borderRadius="md"
-              bg="gray.800"
+              as="button"
+              bg={contextMenu.canClose === false ? 'gray.600' : 'gray.800'}
               flex="1 15%"
               alignSelf="stretch"
               textAlign="center"
@@ -84,11 +86,16 @@ const ContextMenu: React.FC = () => {
               alignItems="center"
               marginLeft={2}
               p={2}
-              _hover={{ bg: 'gray.700' }}
+              cursor={contextMenu.canClose === false ? 'not-allowed' : undefined}
+              _hover={{ bg: contextMenu.canClose === false ? undefined : 'gray.700' }}
               transition="300ms"
               onClick={() => closeContext()}
             >
-              <FontAwesomeIcon icon="xmark" fontSize={20} />
+              <FontAwesomeIcon
+                icon="xmark"
+                fontSize={20}
+                color={contextMenu.canClose === false ? '#718096' : undefined}
+              />
             </Flex>
           </Flex>
           <Box maxH={560} overflowY="scroll">
