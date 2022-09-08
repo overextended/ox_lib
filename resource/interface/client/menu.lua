@@ -89,10 +89,10 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 	end
 
 	local menu = openMenu
-	openMenu = nil
-
+	
     if menu.options[data[1]].close ~= false then
 		resetFocus()
+		openMenu = nil
 	end
 
 	if menu.cb then
