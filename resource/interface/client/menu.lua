@@ -43,6 +43,7 @@ function lib.showMenu(id)
         action = 'setMenu',
         data = {
             position = menu.position,
+            canClose = menu.canClose,
             title = menu.title,
             items = menu.options
         }

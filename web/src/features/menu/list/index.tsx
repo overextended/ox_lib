@@ -21,6 +21,7 @@ export interface MenuItem {
 export interface MenuSettings {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   title: string;
+  canClose?: boolean;
   items: Array<MenuItem>;
 }
 
@@ -36,6 +37,7 @@ const ListMenu: React.FC = () => {
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const closeMenu = (ignoreFetch?: boolean) => {
+    if (menu.canClose === false) return;
     setVisible(false);
     if (!ignoreFetch) fetchNui('closeMenu');
   };
