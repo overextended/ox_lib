@@ -6,9 +6,11 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { INumber } from '../../../interfaces/dialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   row: INumber;
@@ -30,7 +32,10 @@ const NumberField: React.FC<Props> = (props) => {
         min={props.row.min}
         max={props.row.max}
       >
-        <NumberInputField placeholder={props.row.placeholder} />
+        {props.row.icon && (
+          <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
+        )}
+        <NumberInputField placeholder={props.row.placeholder} pl={props.row.icon ? '40px' : undefined} />
         <NumberInputStepper>
           <NumberIncrementStepper />
           <NumberDecrementStepper />

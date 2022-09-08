@@ -27,6 +27,7 @@ export interface INumber {
   label: string;
   placeholder?: string;
   default?: number;
+  icon?: IconProp;
   min?: number;
   max?: number;
 }

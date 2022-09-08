@@ -27,6 +27,7 @@ export const debugInput = () => {
             default: 12,
             min: 3,
             max: 10,
+            icon: 'receipt',
           },
           { type: 'slider', label: 'Slide bar', min: 10, max: 50, step: 2 },
         ],

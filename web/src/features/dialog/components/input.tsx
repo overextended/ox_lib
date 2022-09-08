@@ -22,7 +22,7 @@ const InputField: React.FC<Props> = (props) => {
         <Text>{props.row.label}</Text>
         <InputGroup>
           {props.row.icon && (
-            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} />} />
+            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
           )}
           <Input
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.value, props.index)}
