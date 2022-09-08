@@ -71,7 +71,7 @@ const Item: React.FC<{
                   </Box>
                 )}
               </Box>
-              {(option[1].menu || option[1].arrow) && (
+              {(option[1].menu || option[1].arrow) && option[1].arrow !== false && (
                 <>
                   <Spacer />
                   <Box alignSelf="center" justifySelf="center" mr={4} fontSize="xl">

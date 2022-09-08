@@ -20,6 +20,7 @@ export const debugContext = () => {
             title: 'Menu button',
             icon: 'bars',
             menu: 'other_example_menu',
+            arrow: false,
             description: 'Takes you to another menu',
             metadata: ['It also has metadata support'],
           },
