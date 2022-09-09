@@ -26,26 +26,21 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           return (ref.current = [...ref.current, element]);
       }}
     >
-      <Flex alignItems="center" height="100%">
+      <Flex alignItems="center" height="100%" gap="20px">
         {item.icon && (
-          <FontAwesomeIcon
-            icon={item.icon}
-            fontSize={24}
-            color="#909296"
-            fixedWidth
-            style={{ marginRight: 20, marginLeft: 5 }}
-          />
+          <Box>
+            <FontAwesomeIcon icon={item.icon} fontSize={24} color="#909296" fixedWidth />
+          </Box>
         )}
         {Array.isArray(item.values) ? (
-          <Flex justifyContent="center" alignItems="center" width="100%">
-            <Stack spacing={1}>
+          <Flex alignItems="center" justifyContent="space-between" w="100%">
+            <Stack spacing={1} justifyContent="space-between">
               <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
                 {item.label}
               </Text>
               <Text>{item.values[scrollIndex]}</Text>
             </Stack>
-            <Spacer />
-            <Stack direction="row" spacing="sm" mr={3} justifyContent="center" alignItems="center">
+            <Stack direction="row" spacing="sm" pr={3} justifyContent="center" alignItems="center">
               <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
               <Text color="#909296" textTransform="uppercase" fontSize={14}>
                 {scrollIndex + 1}/{item.values.length}
