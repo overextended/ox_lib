@@ -27,7 +27,6 @@ end
 RegisterNUICallback('inputData', function(data, cb)
 	cb(1)
 	SetNuiFocus(false, false)
-	local promise = input
+	input:resolve(data)
 	input = nil
-	promise:resolve(data)
 end)
