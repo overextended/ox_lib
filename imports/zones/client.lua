@@ -223,8 +223,10 @@ local tick
 
 CreateThread(function()
 	while true do
-		local coords = GetEntityCoords(cache.ped)
 		table.wipe(inside)
+
+		local coords = GetEntityCoords(cache.ped)
+		cache.coords = coords
 		insideCount = 0
 
 		for _, zone in pairs(Zones) do
