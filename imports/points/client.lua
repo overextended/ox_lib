@@ -11,6 +11,8 @@ local tick
 CreateThread(function()
 	while true do
 		local coords = GetEntityCoords(cache.ped)
+		cache.coords = coords
+
 		Wait(300)
 		closest = nil
 		table.wipe(nearby)
