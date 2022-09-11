@@ -235,9 +235,15 @@ CreateThread(function()
 
 		for _, zone in pairs(Zones) do
 			zone.distance = #(zone.coords - coords)
-			local radius = zone.radius
+			local radius, contains = zone.radius
 
-			if not radius and glm_polygon_contains(zone.polygon, coords, zone.thickness / 4) or zone.distance < radius then
+			if radius then
+				contains = zone.distance < radius
+			else
+				contains = glm_polygon_contains(zone.polygon, coords, zone.thickness / 4)
+			end
+
+			if contains then
 				if not zone.insideZone then
 					zone.insideZone = true
 
