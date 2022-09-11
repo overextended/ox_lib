@@ -218,22 +218,26 @@ local function removeZone(self)
 end
 
 local inside = {}
-local insideCount
+local insideCount = 0
 local tick
+
+local glm_polygon_contains = glm.polygon.contains
 
 CreateThread(function()
 	while true do
-		table.wipe(inside)
+		if insideCount ~= 0 then
+			table.wipe(inside)
+			insideCount = 0
+		end
 
 		local coords = GetEntityCoords(cache.ped)
 		cache.coords = coords
-		insideCount = 0
 
 		for _, zone in pairs(Zones) do
-			local contains = zone:contains(coords)
 			zone.distance = #(zone.coords - coords)
+			local radius = zone.radius
 
-			if contains then
+			if not radius and glm_polygon_contains(zone.polygon, coords, zone.thickness / 4) or zone.distance < radius then
 				if not zone.insideZone then
 					zone.insideZone = true
 
@@ -263,7 +267,7 @@ CreateThread(function()
 		end
 
 		if not tick then
-			if insideCount > 0 then
+			if insideCount ~= 0 then
 				tick = SetInterval(function()
 					for i = 1, insideCount do
 						local zone = inside[i]
@@ -316,8 +320,6 @@ local function debugSphere(self)
 	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius,
 		self.radius, 255, 42, 24, 100, false, false, false, true, false, false, false)
 end
-
-local glm_polygon_contains = glm.polygon.contains
 
 local function contains(self, coords)
 	return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
