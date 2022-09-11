@@ -232,29 +232,31 @@ CreateThread(function()
 			zone.distance = #(zone.coords - coords)
 
 			if contains then
-				if zone.onEnter and not zone.insideZone then
-					zone:onEnter()
+				if not zone.insideZone then
+					zone.insideZone = true
+
+					if zone.onEnter then
+						zone:onEnter()
+					end
 				end
 
 				if zone.inside then
 					insideCount += 1
 					inside[insideCount] = zone
 				end
+			else
+				if zone.insideZone then
+					zone.insideZone = false
 
-				if not zone.insideZone then
-					zone.insideZone = true
+					if zone.onExit then
+						zone:onExit()
+					end
 				end
-			elseif zone.insideZone then
-				zone.insideZone = false
 
-				if zone.onExit then
-					zone:onExit()
+				if zone.debug then
+					insideCount += 1
+					inside[insideCount] = zone
 				end
-			end
-
-			if zone.debug then
-				insideCount += 1
-				inside[insideCount] = zone
 			end
 		end
 
@@ -266,10 +268,12 @@ CreateThread(function()
 
 
 						if zone.debug then
-							if zone.insideZone then zone:inside() end
-
 							zone:debug()
-						elseif zone.insideZone then
+
+							if zone.inside and zone.insideZone then
+								zone:inside()
+							end
+						else
 							zone:inside()
 						end
 					end
