@@ -68,7 +68,7 @@ RegisterCommand('zone', function(source, args, rawCommand)
 			startCreator(args[1])
 		end
 	end
-end)
+end, true)
 
 local function closeCreator(cancel)
 	if not cancel then
@@ -76,7 +76,7 @@ local function closeCreator(cancel)
 			points[#points + 1] = vec(xCoord, yCoord)
 		end
 
-		lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {'Name'})
+		local name = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {'Name'})
 
 		TriggerServerEvent('ox_lib:saveZone', {
 			zoneType = zoneType,
@@ -94,7 +94,7 @@ local function closeCreator(cancel)
 
 	creatorActive = false
 	controlsActive = false
-	lib.hideTextUI(true)
+	lib.hideTextUI()
 	zoneType = nil
 end
 
@@ -221,7 +221,7 @@ CreateThread(function()
 			elseif IsDisabledControlJustPressed(0, 22) then -- space
 				change = true
 				if zoneType == 'poly' then
-					points[#points + 1] = vec(xCoord, yCoord)
+					points[#points + 1] = vec2(xCoord, yCoord)
 				end
 
 				local coords = GetEntityCoords(cache.ped)
