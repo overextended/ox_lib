@@ -37,11 +37,13 @@ shared_scripts {
 }
 
 client_scripts {
+	'imports/callback/client.lua',
     'resource/**/client.lua',
     'resource/**/client/*.lua'
 }
 
 server_scripts {
+	'imports/callback/server.lua',
     'resource/**/server.lua',
     'resource/**/server/*.lua'
 }

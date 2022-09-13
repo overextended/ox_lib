@@ -59,14 +59,14 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 end
 
 ---@overload fun(event: string, delay: number, cb: function, ...)
-local callback = setmetatable({}, {
+lib.callback = setmetatable({}, {
 	__call = triggerServerCallback
 })
 
 ---@param event string
 ---@param delay number prevent the event from being called for the given time
 --- Sends an event to the server and halts the current thread until a response is returned.
-function callback.await(event, delay, ...)
+function lib.callback.await(event, delay, ...)
 	return triggerServerCallback(_, event, delay, false, ...)
 end
 
@@ -87,10 +87,10 @@ local pcall = pcall
 ---@param name string
 ---@param cb function
 --- Registers an event handler and callback function to respond to server requests.
-function callback.register(name, cb)
+function lib.callback.register(name, cb)
 	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
 		TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
 	end)
 end
 
-return callback
+return lib.callback
