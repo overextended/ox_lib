@@ -14,15 +14,16 @@ function locale(str, ...)
 	return ("Translation for '%s' does not exist"):format(str)
 end
 
-local function loadLocale(locale)
+function lib.loadLocale(locale)
+    if not locale then
+        locale = lib.service == 'server' and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
+    end
+
 	local resourceName = GetCurrentResourceName()
 	local JSON = LoadResourceFile(resourceName, ('locales/%s.json'):format(locale)) or LoadResourceFile(resourceName, ('locales/en.json'):format(locale))
 	dict = JSON and json.decode(JSON) or {}
 end
 
-AddEventHandler('ox_lib:setLocale', loadLocale)
+AddEventHandler('ox_lib:setLocale', lib.loadLocale)
 
-return function()
-	local lang = lib.service == 'server' and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
-	loadLocale(lang)
-end
+return lib.loadLocale

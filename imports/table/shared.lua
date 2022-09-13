@@ -55,4 +55,6 @@ local function table_deepclone(tbl)
 end
 table.deepclone = table_deepclone
 
+lib.table = table
+
 return table

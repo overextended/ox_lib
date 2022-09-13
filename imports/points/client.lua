@@ -23,6 +23,7 @@ CreateThread(function()
 			if distance <= point.distance then
 				point.currentDistance = distance
 
+                ---@diagnostic disable-next-line: need-check-nil
 				if distance < (closest?.currentDistance or point.distance) then
 					closest = point
 				end
@@ -56,7 +57,7 @@ CreateThread(function()
 	end
 end)
 
-return {
+lib.points = {
 	new = function(...)
 		local args = {...}
 		local id = #points + 1
@@ -94,3 +95,5 @@ return {
 		return closest
 	end
 }
+
+return lib.points

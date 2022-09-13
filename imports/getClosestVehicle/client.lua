@@ -3,7 +3,7 @@
 ---@param includePlayerVehicle boolean Whether or not to include the player's current vehicle.
 ---@return number? vehicle
 ---@return vector3? vehicleCoords
-return function(coords, maxDistance, includePlayerVehicle)
+function lib.getClosestVehicle(coords, maxDistance, includePlayerVehicle)
 	local vehicles = GetGamePool('CVehicle')
 	local closestVehicle, closestCoords
 	maxDistance = maxDistance or 2.0
@@ -25,3 +25,5 @@ return function(coords, maxDistance, includePlayerVehicle)
 
 	return closestVehicle, closestCoords
 end
+
+return lib.getClosestVehicle

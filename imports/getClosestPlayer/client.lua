@@ -4,7 +4,7 @@
 ---@return number? playerId
 ---@return number? playerPed
 ---@return vector3? playerCoords
-return function(coords, maxDistance, includePlayer)
+function lib.getClosestPlayer(coords, maxDistance, includePlayer)
 	local players = GetActivePlayers()
 	local closestId, closestPed, closestCoords
 	maxDistance = maxDistance or 2.0
@@ -28,3 +28,5 @@ return function(coords, maxDistance, includePlayer)
 
 	return closestId, closestPed, closestCoords
 end
+
+return lib.getClosestPlayer

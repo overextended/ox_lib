@@ -5,7 +5,7 @@ if key ~= '' then
 	local resourceName = GetCurrentResourceName()
 	key = key:gsub("[\'\"]", '')
 
-	return function(source, event, message, ...)
+	function lib.logger(source, event, message, ...)
 		local data = json.encode({
 			hostname = resourceName,
 			service = event,
@@ -27,4 +27,4 @@ if key ~= '' then
 	end
 end
 
-return function() end
+return lib.logger or function() end

@@ -1,7 +1,6 @@
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
-local raycast = {}
 
 ---@param flags number? Defaults to 1|2|8|16 (see: https://docs.fivem.net/natives/?_0x377906D8A31E5586)
 ---@param p8 number? A bit mask with bits 1, 2, 4, or 7 relating to collider types. 4 and 7 are usually used.
@@ -10,7 +9,7 @@ local raycast = {}
 ---@return vector3 endCoords
 ---@return vector3 surfaceNormal
 ---@return number materialHash
-function raycast.cam(flags, p8)
+function lib.raycast.cam(flags, p8)
 	local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
 	local destination = coords + normal * 10
 	local handle = StartShapeTestLosProbe(coords.x, coords.y, coords.z, destination.x, destination.y, destination.z,
@@ -27,4 +26,4 @@ function raycast.cam(flags, p8)
 	end
 end
 
-return raycast
+return lib.raycast

@@ -43,7 +43,7 @@ local keys = {}
 local DisableControlAction = DisableControlAction
 local pairs = pairs
 
-return setmetatable(disableControls, {
+lib.disableControls = setmetatable(disableControls, {
 	__index = keys,
 	__newindex = keys,
 	__call = function()
@@ -52,3 +52,5 @@ return setmetatable(disableControls, {
 		end
 	end
 })
+
+return lib.disableControls

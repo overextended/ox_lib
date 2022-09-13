@@ -1,3 +1,8 @@
+--[[
+	This module was experimental and won't be worked on or used further.
+	May be removed in the future.
+]]
+
 local CPlayer = {}
 
 function CPlayer:__index(index, ...)
@@ -22,6 +27,7 @@ function CPlayer:getDistance(coords)
 	return #(self:getCoords() - coords)
 end
 
+---@deprecated
 function lib.getPlayer()
 	return CPlayer
 end

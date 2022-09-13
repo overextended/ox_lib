@@ -67,7 +67,7 @@ lib.callback = setmetatable({}, {
 ---@param delay number prevent the event from being called for the given time
 --- Sends an event to the server and halts the current thread until a response is returned.
 function lib.callback.await(event, delay, ...)
-	return triggerServerCallback(_, event, delay, false, ...)
+	return triggerServerCallback(nil, event, delay, false, ...)
 end
 
 local function callbackResponse(success, result, ...)

@@ -100,6 +100,7 @@ local function getTriangles(polygon)
 	for i = 1, #sides do
 		local side = sides[i]
 
+        ---@type number | function
 		local direction = side[1].y - side[2].y
 		direction = direction > 0 and up or down
 		table.sort(side, direction)
@@ -113,6 +114,7 @@ local function getTriangles(polygon)
 				local c, d
 
 				if aHorizontal[2] then
+                    ---@type number | function
 					local direction = a.x - (a.x ~= aHorizontal[1].x and aHorizontal[1].x or aHorizontal[2].x)
 					direction = direction > 0 and right or left
 					table.sort(aHorizontal, direction)
@@ -129,6 +131,7 @@ local function getTriangles(polygon)
 				end
 
 				if bHorizontal[2] then
+                    ---@type number | function
 					local direction = b.x - (b.x ~= bHorizontal[1].x and bHorizontal[1].x or bHorizontal[2].x)
 					direction = direction > 0 and right or left
 					table.sort(bHorizontal, direction)
@@ -324,7 +327,7 @@ end
 
 local function debugSphere(self)
 	DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius,
-		self.radius, 255, 42, 24, 100, false, false, false, true, false, false, false)
+		self.radius, 255, 42, 24, 100, false, false, 0, true, false, false, false)
 end
 
 local function contains(self, coords)
@@ -349,7 +352,7 @@ local function convertToVector(coords)
 	return coords
 end
 
-return {
+lib.zones = {
 	poly = function(data)
 		data.id = #Zones + 1
 		data.thickness = data.thickness or 4
@@ -415,3 +418,5 @@ return {
 		return data
 	end,
 }
+
+return lib.zones

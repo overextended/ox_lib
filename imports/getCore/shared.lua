@@ -1,10 +1,16 @@
+--[[
+	This module was experimental and won't be worked on or used further.
+	May be removed in the future.
+]]
+
 local Core = {
 	Ox = 'ox_core',
 	QB = 'qb-core',
 	ESX = 'es_extended',
 }
 
-return function()
+---@deprecated
+function lib.getCore()
 	local result
 
 	Citizen.CreateThreadNow(function()
@@ -53,6 +59,7 @@ return function()
 		if not success then error(result) end
 
 		if framework == Core.Ox then
+			---@diagnostic disable-next-line: undefined-global
 			result = Ox
 		end
 
@@ -67,3 +74,5 @@ return function()
 
 	return result
 end
+
+return lib.getCore

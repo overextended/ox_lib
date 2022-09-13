@@ -48,7 +48,7 @@ lib.callback = setmetatable({}, {
 ---@param playerId number
 --- Sends an event to a client and halts the current thread until a response is returned.
 function lib.callback.await(event, playerId, ...)
-	return triggerClientCallback(_, event, playerId, false, ...)
+	return triggerClientCallback(nil, event, playerId, false, ...)
 end
 
 local function callbackResponse(success, result, ...)

@@ -37,18 +37,18 @@ end
 ---@param name string
 ---@param callback function
 ---@param parameters table
-local function addCommand(group, name, callback, parameters, help)
+function lib.addCommand(group, name, callback, parameters, help)
 	if not group then group = 'builtin.everyone' end
 
 	if type(name) == 'table' then
 		for i = 1, #name do
-			addCommand(group, name[i], callback, parameters, help)
+			lib.addCommand(group, name[i], callback, parameters, help)
 		end
 	else
 		chatSuggestion(name, parameters, help)
 
 		RegisterCommand(name, function(source, args)
-			source = tonumber(source)
+			source = tonumber(source) --[[@as number]]
 
 			if parameters then
 				for i = 1, #parameters do
@@ -100,7 +100,7 @@ local function addCommand(group, name, callback, parameters, help)
 	end
 end
 
-return addCommand
+return lib.addCommand
 
 --[[ Example
 	AddCommand('group.admin', {'additem', 'giveitem'}, function(source, args)

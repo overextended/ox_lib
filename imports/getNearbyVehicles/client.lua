@@ -2,7 +2,7 @@
 ---@param maxDistance number The max distance to check.
 ---@param includePlayerVehicle boolean Whether or not to include the player's current vehicle.
 ---@return number[]
-return function(coords, maxDistance, includePlayerVehicle)
+function lib.getNearbyVehicles(coords, maxDistance, includePlayerVehicle)
 	local vehicles = GetGamePool('CVehicle')
 	local nearby = {}
 	local count = 0
@@ -27,3 +27,5 @@ return function(coords, maxDistance, includePlayerVehicle)
 
 	return nearby
 end
+
+return lib.getNearbyVehicles
