@@ -5,7 +5,7 @@ local glm = require 'glm'
 ---@field coords vector3
 ---@field distance number
 ---@field remove fun()
----@field contains fun(self: CZone, coords?: vector3)
+---@field contains fun(self: CZone, coords?: vector3): boolean
 ---@field onEnter fun(self: CZone)?
 ---@field onExit fun(self: CZone)?
 ---@field inside fun(self: CZone)?
