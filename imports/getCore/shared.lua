@@ -31,10 +31,10 @@ function lib.getCore()
 		local resource
 
 		if framework == Core.Ox then
-			import = ('imports/%s.lua'):format(lib.service)
+			import = ('imports/%s.lua'):format(lib.context)
 			resource = Core.Ox
 		else
-			import = ('imports/getCore/%s/%s.lua'):format(framework, lib.service)
+			import = ('imports/getCore/%s/%s.lua'):format(framework, lib.context)
 			resource = lib.name
 		end
 
@@ -75,4 +75,5 @@ function lib.getCore()
 	return result
 end
 
+---@diagnostic disable-next-line: deprecated
 return lib.getCore

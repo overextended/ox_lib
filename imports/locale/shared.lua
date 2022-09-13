@@ -16,7 +16,7 @@ end
 
 function lib.loadLocale(locale)
     if not locale then
-        locale = lib.service == 'server' and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
+        locale = lib.context == 'server' and lib.getServerLocale() or GetExternalKvpString('ox_lib', 'locale') or 'en'
     end
 
 	local resourceName = GetCurrentResourceName()
