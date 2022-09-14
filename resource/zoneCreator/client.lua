@@ -54,6 +54,7 @@ local function closeCreator(cancel)
             { type = 'select', label = 'Format', default = format, options = {
                 { value = 'function', label = 'Function' },
                 { value = 'array', label = 'Array' },
+                { value = 'target', label = 'Target'},
             }}
         }) or {}
 
