@@ -3,6 +3,7 @@ local controlsActive = false
 local zoneType, step, xCoord, yCoord, zCoord, heading, height, width, length
 local steps = {{0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50, 100}, {0.25, 0.5, 1, 2.5, 5, 15, 30, 45, 60, 90, 180}}
 local points = {}
+local format = 'array'
 
 local function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
@@ -42,18 +43,26 @@ local function round(number)
 	return number >= 0 and math.floor(number + 0.5) or math.ceil(number - 0.5)
 end
 
-
 local function closeCreator(cancel)
 	if not cancel then
 		if zoneType == 'poly' then
 			points[#points + 1] = vec(xCoord, yCoord)
 		end
 
-		local name = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {'Name'})?[1]
+		local input = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {
+            { type = 'input', label = 'Name', placeholder = 'none' },
+            { type = 'select', label = 'Format', default = format, options = {
+                { value = 'function', label = 'Function' },
+                { value = 'array', label = 'Array' },
+            }}
+        }) or {}
+
+        format = input[2]
 
 		TriggerServerEvent('ox_lib:saveZone', {
 			zoneType = zoneType,
-			name = name,
+			name = input[1] or 'none',
+			format = format,
 			xCoord = xCoord,
 			yCoord = yCoord,
 			zCoord = zCoord,

@@ -1,7 +1,5 @@
-local printFunction = false
-
 --[[
-	-- printFunction = true
+	-- function
 local poly = lib.zones.poly({
 	name = poly,
 	points = {
@@ -13,7 +11,7 @@ local poly = lib.zones.poly({
 	},
 	thickness = 2,
 })
-	-- printFunction = false
+	-- array
 {
 	name = poly,
 	points = {
@@ -35,19 +33,19 @@ local parse = {
 		end
 
 		local pattern
-		if printFunction then
+		if data.format == 'function' then
 			pattern = {
 				'local poly = lib.zones.poly({\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				'\tpoints = {\n',
 				('%s\t},\n'):format(table.concat(points)),
 				('\tthickness = %s,\n'):format(data.height),
 				'})\n',
 			}
-		else
+		elseif data.format == 'array' then
 			pattern = {
 				'{\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				'\tpoints = {\n',
 				('%s\t},\n'):format(table.concat(points)),
 				('\tthickness = %s,\n'):format(data.height),
@@ -59,19 +57,19 @@ local parse = {
 	end,
 	box = function(data)
 		local pattern
-		if printFunction then
+		if data.format == 'function' then
 			pattern = {
 				'local box = lib.zones.box({\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
 				('\tsize = vec3(%s, %s, %s),\n'):format(data.width, data.length, data.height),
 				('\trotation = %s,\n'):format(data.heading),
 				'})\n',
 			}
-		else
+		elseif data.format == 'array' then
 			pattern = {
 				'{\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
 				('\tsize = vec3(%s, %s, %s),\n'):format(data.width, data.length, data.height),
 				('\trotation = %s,\n'):format(data.heading),
@@ -83,20 +81,20 @@ local parse = {
 	end,
 	sphere = function(data)
 		local pattern
-		if printFunction then
+		if data.format == 'function' then
 			pattern = {
 				'local sphere = lib.zones.sphere({\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
-				('\tradius = %s,\n'):format(data.heading),
+				('\tradius = %s,\n'):format(data.height),
 				'})\n',
 			}
-		else
+		elseif data.format == 'array' then
 			pattern = {
 				'{\n',
-				('\tname = "%s",\n'):format(data.name or 'none'),
+				('\tname = "%s",\n'):format(data.name),
 				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
-				('\tradius = %s,\n'):format(data.heading),
+				('\tradius = %s,\n'):format(data.height),
 				'},\n',
 			}
 		end
