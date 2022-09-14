@@ -252,3 +252,7 @@ RegisterCommand('zone', function(source, args, rawCommand)
 		end
 	end
 end, true)
+
+TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
+    { name = 'zoneType', help = 'poly, box, sphere' },
+})
