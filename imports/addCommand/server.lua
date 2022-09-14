@@ -33,8 +33,8 @@ local function chatSuggestion(name, parameters, help)
 	}
 end
 
----@param group string
----@param name string
+---@param group string | string[]
+---@param name string | string[]
 ---@param callback function
 ---@param parameters table
 function lib.addCommand(group, name, callback, parameters, help)

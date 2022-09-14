@@ -8,7 +8,7 @@ RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 end)
 
 ---@param event string
----@param delay number prevent the event from being called for the given time
+---@param delay number | false prevent the event from being called for the given time
 local function eventTimer(event, delay)
 	if delay and type(delay) == 'number' and delay > 0 then
 		local time = GetGameTimer()
@@ -25,7 +25,7 @@ end
 
 ---@param _ any
 ---@param event string
----@param delay number
+---@param delay number | false
 ---@param cb function|false
 ---@param ... any
 ---@return unknown?
@@ -58,13 +58,13 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 	end
 end
 
----@overload fun(event: string, delay: number, cb: function, ...)
+---@overload fun(event: string, delay: number | false, cb: function, ...)
 lib.callback = setmetatable({}, {
 	__call = triggerServerCallback
 })
 
 ---@param event string
----@param delay number prevent the event from being called for the given time
+---@param delay number | false prevent the event from being called for the given time
 --- Sends an event to the server and halts the current thread until a response is returned.
 function lib.callback.await(event, delay, ...)
 	return triggerServerCallback(nil, event, delay, false, ...)
