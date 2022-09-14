@@ -100,6 +100,7 @@ end
 
 local function startCreator(arg)
 	creatorActive = true
+    controlsActive = true
 	zoneType = arg
 
 	step = 5
