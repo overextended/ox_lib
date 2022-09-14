@@ -42,33 +42,6 @@ local function round(number)
 	return number >= 0 and math.floor(number + 0.5) or math.ceil(number - 0.5)
 end
 
-local function startCreator(arg)
-	creatorActive = true
-	zoneType = arg
-
-	step = 5
-	local coords = GetEntityCoords(cache.ped)
-	xCoord = round(coords.x) + 0.0
-	yCoord = round(coords.y) + 0.0
-	zCoord = round(coords.z) + 0.0
-	heading = 0.0
-	height = 4.0
-	width = 4.0
-	length = 4.0
-	points = {}
-
-	updateText()
-end
-
-RegisterCommand('zone', function(source, args, rawCommand)
-	if args[1] == 'poly' or args[1] == 'box' or args[1] == 'sphere' then
-		if creatorActive then
-			lib.notify({title = 'Already creating a zone', type = 'error'})
-		else
-			startCreator(args[1])
-		end
-	end
-end, true)
 
 local function closeCreator(cancel)
 	if not cancel then
@@ -76,7 +49,7 @@ local function closeCreator(cancel)
 			points[#points + 1] = vec(xCoord, yCoord)
 		end
 
-		local name = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {'Name'})
+		local name = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {'Name'})?[1]
 
 		TriggerServerEvent('ox_lib:saveZone', {
 			zoneType = zoneType,
@@ -115,128 +88,156 @@ local function drawLines()
 	end
 end
 
-CreateThread(function()
-	while true do
-		Wait(0)
+local function startCreator(arg)
+	creatorActive = true
+	zoneType = arg
+
+	step = 5
+	local coords = GetEntityCoords(cache.ped)
+	xCoord = round(coords.x) + 0.0
+	yCoord = round(coords.y) + 0.0
+	zCoord = round(coords.z) + 0.0
+	heading = 0.0
+	height = 4.0
+	width = 4.0
+	length = 4.0
+	points = {}
+
+	updateText()
+
+    while creatorActive do
+        Wait(0)
+
+        if IsDisabledControlJustPressed(0, 73) then -- x
+            if creatorActive then
+                controlsActive = not controlsActive
+            end
+        end
+
+        if zoneType == 'poly' then
+            DrawLine(xCoord, yCoord, zCoord + height / 2, xCoord, yCoord, zCoord - height / 2, 255, 42, 24, 225)
+
+            drawLines()
+        elseif zoneType == 'box' then
+            local offset = math.rad(heading + 45)
+            local sinT = math.sin(offset)
+            local cosT = math.cos(offset)
+            local center = vec(xCoord, yCoord)
+            ---@type vector2[]
+            points = {
+                center + vec(width * sinT, length * cosT),
+                center + vec(-width * cosT, length * sinT),
+                center + vec(-width * sinT, -length * cosT),
+                center + vec(width * cosT, -length * sinT),
+            }
+
+            drawLines()
+        elseif zoneType == 'sphere' then
+            DrawMarker(28, xCoord, yCoord, zCoord, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, height, height, height, 255, 42, 24, 100, false, false, 0, true, false, false, false)
+        end
+
+        if controlsActive then
+            DisableAllControlActions()
+            EnableControlAction(0, 1, true)
+            EnableControlAction(0, 2, true)
+            EnableControlAction(0, 245, true) -- t
+            local change = false
+
+            if IsDisabledControlJustPressed(0, 17) then -- scroll up
+                if IsDisabledControlPressed(0, 21) then -- shift held down
+                    change = true
+                    height += steps[1][step]
+                elseif IsDisabledControlPressed(0, 36) then -- ctrl held down
+                    change = true
+                    width += steps[1][step]
+                elseif IsDisabledControlPressed(0, 19) then -- alt held down
+                    change = true
+                    length += steps[1][step]
+                elseif step < 11 then
+                    change = true
+                    step += 1
+                end
+            elseif IsDisabledControlJustPressed(0, 16) then -- scroll down
+                if IsDisabledControlPressed(0, 21) then -- shift held down
+                    change = true
+                    if height - steps[1][step] > 0 then
+                        height -= steps[1][step]
+                    end
+                elseif IsDisabledControlPressed(0, 36) then -- ctrl held down
+                    change = true
+                    if width - steps[1][step] > 0 then
+                        width -= steps[1][step]
+                    end
+                elseif IsDisabledControlPressed(0, 19) then -- alt held down
+                    change = true
+                    if length - steps[1][step] > 0 then
+                        length -= steps[1][step]
+                    end
+                elseif step > 1 then
+                    change = true
+                    step -= 1
+                end
+            elseif IsDisabledControlJustPressed(0, 32) then -- w
+                change = true
+                yCoord += steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 33) then -- s
+                change = true
+                yCoord -= steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 35) then -- d
+                change = true
+                xCoord += steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 34) then -- a
+                change = true
+                xCoord -= steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 45) then -- r
+                change = true
+                zCoord += steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 23) then -- f
+                change = true
+                zCoord -= steps[1][step]
+            elseif IsDisabledControlJustPressed(0, 38) then -- e
+                change = true
+                heading += steps[2][step]
+                if heading >= 360 then
+                    heading -= 360
+                end
+            elseif IsDisabledControlJustPressed(0, 44) then -- q
+                change = true
+                heading -= steps[2][step]
+                if heading < 0 then
+                    heading += 360
+                end
+            elseif IsDisabledControlJustPressed(0, 22) then -- space
+                change = true
+                if zoneType == 'poly' then
+                    points[#points + 1] = vec2(xCoord, yCoord)
+                end
+
+                local coords = GetEntityCoords(cache.ped)
+                xCoord = round(coords.x)
+                yCoord = round(coords.y)
+                zCoord = round(coords.z)
+            elseif IsDisabledControlJustPressed(0, 201) then -- enter
+                closeCreator()
+            elseif IsDisabledControlJustPressed(0, 200) then -- esc
+                closeCreator(true)
+            end
+
+            if change then
+                updateText()
+            end
+        end
+    end
+end
+
+RegisterCommand('zone', function(source, args, rawCommand)
+	if args[1] == 'poly' or args[1] == 'box' or args[1] == 'sphere' then
 		if creatorActive then
-			if IsDisabledControlJustPressed(0, 73) then -- x
-				if creatorActive then
-					controlsActive = not controlsActive
-				end
-			end
-
-			if zoneType == 'poly' then
-				DrawLine(xCoord, yCoord, zCoord + height / 2, xCoord, yCoord, zCoord - height / 2, 255, 42, 24, 225)
-
-				drawLines()
-			elseif zoneType == 'box' then
-				local offset = math.rad(heading + 45)
-				local sinT = math.sin(offset)
-				local cosT = math.cos(offset)
-				local center = vec(xCoord, yCoord)
-				points = {
-					center + vec(width * sinT, length * cosT),
-					center + vec(-width * cosT, length * sinT),
-					center + vec(-width * sinT, -length * cosT),
-					center + vec(width * cosT, -length * sinT),
-				}
-
-				drawLines()
-			elseif zoneType == 'sphere' then
-				DrawMarker(28, xCoord, yCoord, zCoord, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, height, height, height, 255, 42, 24, 100, false, false, false, true, false, false, false)
-			end
-		end
-
-		if controlsActive then
-			DisableAllControlActions()
-			EnableControlAction(0, 1, true)
-			EnableControlAction(0, 2, true)
-			EnableControlAction(0, 245, true) -- t
-			local change = false
-
-			if IsDisabledControlJustPressed(0, 17) then -- scroll up
-				if IsDisabledControlPressed(0, 21) then -- shift held down
-					change = true
-					height += steps[1][step]
-				elseif IsDisabledControlPressed(0, 36) then -- ctrl held down
-					change = true
-					width += steps[1][step]
-				elseif IsDisabledControlPressed(0, 19) then -- alt held down
-					change = true
-					length += steps[1][step]
-				elseif step < 11 then
-					change = true
-					step += 1
-				end
-			elseif IsDisabledControlJustPressed(0, 16) then -- scroll down
-				if IsDisabledControlPressed(0, 21) then -- shift held down
-					change = true
-					if height - steps[1][step] > 0 then
-						height -= steps[1][step]
-					end
-				elseif IsDisabledControlPressed(0, 36) then -- ctrl held down
-					change = true
-					if width - steps[1][step] > 0 then
-						width -= steps[1][step]
-					end
-				elseif IsDisabledControlPressed(0, 19) then -- alt held down
-					change = true
-					if length - steps[1][step] > 0 then
-						length -= steps[1][step]
-					end
-				elseif step > 1 then
-					change = true
-					step -= 1
-				end
-			elseif IsDisabledControlJustPressed(0, 32) then -- w
-				change = true
-				yCoord += steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 33) then -- s
-				change = true
-				yCoord -= steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 35) then -- d
-				change = true
-				xCoord += steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 34) then -- a
-				change = true
-				xCoord -= steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 45) then -- r
-				change = true
-				zCoord += steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 23) then -- f
-				change = true
-				zCoord -= steps[1][step]
-			elseif IsDisabledControlJustPressed(0, 38) then -- e
-				change = true
-				heading += steps[2][step]
-				if heading >= 360 then
-					heading -= 360
-				end
-			elseif IsDisabledControlJustPressed(0, 44) then -- q
-				change = true
-				heading -= steps[2][step]
-				if heading < 0 then
-					heading += 360
-				end
-			elseif IsDisabledControlJustPressed(0, 22) then -- space
-				change = true
-				if zoneType == 'poly' then
-					points[#points + 1] = vec2(xCoord, yCoord)
-				end
-
-				local coords = GetEntityCoords(cache.ped)
-				xCoord = round(coords.x)
-				yCoord = round(coords.y)
-				zCoord = round(coords.z)
-			elseif IsDisabledControlJustPressed(0, 201) then -- enter
-				closeCreator()
-			elseif IsDisabledControlJustPressed(0, 200) then -- esc
-				closeCreator(true)
-			end
-
-			if change then
-				updateText()
-			end
+			lib.notify({title = 'Already creating a zone', type = 'error'})
+		else
+            CreateThread(function()
+			    startCreator(args[1])
+            end)
 		end
 	end
-end)
+end, true)
