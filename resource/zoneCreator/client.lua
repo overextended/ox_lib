@@ -119,7 +119,7 @@ local function startCreator(arg)
     while creatorActive do
         Wait(0)
 
-        if IsDisabledControlJustPressed(0, 73) then -- x
+        if IsDisabledControlJustReleased(0, 73) then -- x
             if creatorActive then
                 controlsActive = not controlsActive
             end
@@ -154,7 +154,7 @@ local function startCreator(arg)
             EnableControlAction(0, 245, true) -- t
             local change = false
 
-            if IsDisabledControlJustPressed(0, 17) then -- scroll up
+            if IsDisabledControlJustReleased(0, 17) then -- scroll up
                 if IsDisabledControlPressed(0, 21) then -- shift held down
                     change = true
                     height += steps[1][step]
@@ -168,7 +168,7 @@ local function startCreator(arg)
                     change = true
                     step += 1
                 end
-            elseif IsDisabledControlJustPressed(0, 16) then -- scroll down
+            elseif IsDisabledControlJustReleased(0, 16) then -- scroll down
                 if IsDisabledControlPressed(0, 21) then -- shift held down
                     change = true
                     if height - steps[1][step] > 0 then
@@ -188,49 +188,49 @@ local function startCreator(arg)
                     change = true
                     step -= 1
                 end
-            elseif IsDisabledControlJustPressed(0, 32) then -- w
+            elseif IsDisabledControlJustReleased(0, 32) then -- w
                 change = true
                 yCoord += steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 33) then -- s
+            elseif IsDisabledControlJustReleased(0, 33) then -- s
                 change = true
                 yCoord -= steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 35) then -- d
+            elseif IsDisabledControlJustReleased(0, 35) then -- d
                 change = true
                 xCoord += steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 34) then -- a
+            elseif IsDisabledControlJustReleased(0, 34) then -- a
                 change = true
                 xCoord -= steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 45) then -- r
+            elseif IsDisabledControlJustReleased(0, 45) then -- r
                 change = true
                 zCoord += steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 23) then -- f
+            elseif IsDisabledControlJustReleased(0, 23) then -- f
                 change = true
                 zCoord -= steps[1][step]
-            elseif IsDisabledControlJustPressed(0, 38) then -- e
+            elseif IsDisabledControlJustReleased(0, 38) then -- e
                 change = true
                 heading += steps[2][step]
                 if heading >= 360 then
                     heading -= 360
                 end
-            elseif IsDisabledControlJustPressed(0, 44) then -- q
+            elseif IsDisabledControlJustReleased(0, 44) then -- q
                 change = true
                 heading -= steps[2][step]
                 if heading < 0 then
                     heading += 360
                 end
-            elseif IsDisabledControlJustPressed(0, 22) then -- space
+            elseif IsDisabledControlJustReleased(0, 22) then -- space
                 change = true
                 if zoneType == 'poly' then
                     points[#points + 1] = vec2(xCoord, yCoord)
                 end
 
-                local coords = GetEntityCoords(cache.ped)
+                coords = GetEntityCoords(cache.ped)
                 xCoord = round(coords.x)
                 yCoord = round(coords.y)
-                zCoord = round(coords.z)
-            elseif IsDisabledControlJustPressed(0, 201) then -- enter
+            elseif IsDisabledControlJustReleased(0, 201) then -- enter
                 closeCreator()
-            elseif IsDisabledControlJustPressed(0, 200) then -- esc
+            elseif IsDisabledControlJustReleased(0, 200) then -- esc
+                SetPauseMenuActive(false)
                 closeCreator(true)
             end
 
