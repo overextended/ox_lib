@@ -130,16 +130,16 @@ local function startCreator(arg)
 
             drawLines()
         elseif zoneType == 'box' then
-            local offset = math.rad(heading + 45)
-            local sinT = math.sin(offset)
-            local cosT = math.cos(offset)
+            local rad = math.rad(heading)
+            local sinH = math.sin(rad)
+            local cosH = math.cos(rad)
             local center = vec(xCoord, yCoord)
             ---@type vector2[]
             points = {
-                center + vec(width * sinT, length * cosT),
-                center + vec(-width * cosT, length * sinT),
-                center + vec(-width * sinT, -length * cosT),
-                center + vec(width * cosT, -length * sinT),
+                center + vec((width * cosH + length * sinH), (length * cosH - width * sinH)),
+                center + vec(-(width * cosH - length * sinH), (length * cosH + width * sinH)),
+                center + vec(-(width * cosH + length * sinH), -(length * cosH - width * sinH)),
+                center + vec((width * cosH - length * sinH), -(length * cosH + width * sinH)),
             }
 
             drawLines()
