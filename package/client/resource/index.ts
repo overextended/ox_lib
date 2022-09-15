@@ -8,3 +8,5 @@ export * from './interface/progress';
 export * from './interface/textui';
 
 export * from './streaming';
+
+export * from './vehicleProperties';
