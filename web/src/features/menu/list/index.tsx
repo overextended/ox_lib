@@ -134,6 +134,10 @@ const ListMenu: React.FC = () => {
     listRefs.current[0]?.focus();
   });
 
+  useNuiEvent('updateMenu', (data: MenuSettings) => {
+    setMenu(data);
+  });
+
   return (
     <>
       {visible && (

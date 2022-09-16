@@ -76,6 +76,20 @@ function lib.setMenuOptions(id, options, index)
 		if not options[1] then return error('Invalid override format used, expected table of options.') end
 		registeredMenus[id].options = options
  	end
+
+    if id == openMenu.id then
+        local menu = registeredMenus[id]
+        openMenu = menu
+        SendNUIMessage({
+            action = 'updateMenu',
+            data = {
+                position = menu.position,
+                canClose = menu.canClose,
+                title = menu.title,
+                items = menu.options
+            }
+        })
+    end
 end
 
 function lib.getOpenMenu() return openMenu end
@@ -89,7 +103,7 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 	end
 
 	local menu = openMenu
-	
+
     if menu.options[data[1]].close ~= false then
 		resetFocus()
 		openMenu = nil
