@@ -1,12 +1,13 @@
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 interface ContextMenuItem {
+  title?: string;
   menu?: string;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
-  onSelect?: () => void;
+  onSelect?: (args: any) => void;
   arrow?: boolean;
-  description?: boolean;
+  description?: string;
   metadata?: string | { [key: string]: any } | string[];
   event?: string;
   serverEvent?: string;
@@ -26,7 +27,7 @@ interface ContextMenuProps {
   options: { [key: string]: ContextMenuItem } | ContextMenuArrayItem[];
 }
 
-type registerContext = (context: ContextMenuProps) => void;
+type registerContext = (context: ContextMenuProps | ContextMenuProps[]) => void;
 export const registerContext: registerContext = (context) => exports.ox_lib.registerContext(context);
 
 export const showContext = (id: string): void => exports.ox_lib.showContext(id);
