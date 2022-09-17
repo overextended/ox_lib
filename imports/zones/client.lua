@@ -267,7 +267,7 @@ CreateThread(function()
                     end
                 end
 
-                if zone.inside then
+                if zone.inside or zone.debug then
                     insideCount += 1
                     inside[insideCount] = zone
                 end
