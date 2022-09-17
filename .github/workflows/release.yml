@@ -36,6 +36,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: web
+        
+      - name: Bump package version
+        run: pnpm version ${{ github.ref_name }}
+        working-directory: package
 
       - name: Run build
         run: pnpm build
@@ -83,3 +87,10 @@ jobs:
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish npm package
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: './packages/package.json'
+          access: 'public'

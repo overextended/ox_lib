@@ -1,0 +1,73 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@citizenfx/client': 2.0.5885-1
+  '@citizenfx/server': 2.0.5885-1
+  '@fortawesome/fontawesome-common-types': 6.1.1
+  '@types/node': 16.9.1
+  '@types/react': ^18.0.20
+  prettier: ^2.7.1
+  typescript: ^4.8.3
+
+dependencies:
+  '@citizenfx/client': 2.0.5885-1
+  '@citizenfx/server': 2.0.5885-1
+  '@fortawesome/fontawesome-common-types': 6.1.1
+  '@types/node': 16.9.1
+  '@types/react': 18.0.20
+  typescript: 4.8.3
+
+devDependencies:
+  prettier: 2.7.1
+
+packages:
+
+  /@citizenfx/client/2.0.5885-1:
+    resolution: {integrity: sha512-Ba5YYfxhZ82PcOY+2rjqDElTzPt7NrN6/o2U+wYPKK2VU/wRdCsMonpMsr7dYob2ToN5Qe96w5VNI3m5OrouJQ==}
+    dev: false
+
+  /@citizenfx/server/2.0.5885-1:
+    resolution: {integrity: sha512-q8KRecfjJ3RjCfBT/3CSHNTr2efUs9uq8pIoPF4TGkn5X7jgTBprrp3VMayaee3Xekay3RTufpzsOaeHUntQeA==}
+    dev: false
+
+  /@fortawesome/fontawesome-common-types/6.1.1:
+    resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
+
+  /@types/node/16.9.1:
+    resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
+    dev: false
+
+  /@types/prop-types/15.7.5:
+    resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+    dev: false
+
+  /@types/react/18.0.20:
+    resolution: {integrity: sha512-MWul1teSPxujEHVwZl4a5HxQ9vVNsjTchVA+xRqv/VYGCuKGAU6UhfrTdF5aBefwD1BHUD8i/zq+O/vyCm/FrA==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.1
+    dev: false
+
+  /@types/scheduler/0.16.2:
+    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: false
+
+  /csstype/3.1.1:
+    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+    dev: false
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.8.3:
+    resolution: {integrity: sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false

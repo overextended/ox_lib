@@ -1,0 +1,36 @@
+{
+  "name": "@overextended/ox_lib",
+  "author": "Overextended",
+  "version": "1.0.0",
+  "description": "JS/TS wrapper for ox_lib exports",
+  "types": "./client/index.d.ts",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "tsc"
+  },
+  "keywords": [
+    "fivem",
+    "ox_lib",
+    "ox",
+    "overextended"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/overextended/ox_lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/overextended/ox_lib/issues"
+  },
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "@citizenfx/client": "2.0.5885-1",
+    "@citizenfx/server": "2.0.5885-1",
+    "@fortawesome/fontawesome-common-types": "6.1.1",
+    "@types/node": "16.9.1",
+    "@types/react": "^18.0.20",
+    "typescript": "^4.8.3"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}
