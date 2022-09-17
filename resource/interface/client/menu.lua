@@ -3,14 +3,14 @@ local openMenu = nil
 local keepInput = IsNuiFocusKeepingInput()
 
 function lib.registerMenu(data, cb)
-    if not data.id then return error('No menu id was provided.') end
-    if not data.title then return error('No menu title was provided.') end
-    if not data.options then return error('No menu options were provided.') end
-    data.cb = cb
-    registeredMenus[data.id] = data
+	if not data.id then return error('No menu id was provided.') end
+	if not data.title then return error('No menu title was provided.') end
+	if not data.options then return error('No menu options were provided.') end
+	data.cb = cb
+	registeredMenus[data.id] = data
 end
 
-function lib.showMenu(id)
+function lib.showMenu(id, startIndex)
 	local menu = registeredMenus[id]
 
 	if not menu then
@@ -38,16 +38,17 @@ function lib.showMenu(id)
 		SetNuiFocusKeepInput(true)
 	end
 
-    SetNuiFocus(true, false)
-    SendNUIMessage({
-        action = 'setMenu',
-        data = {
-            position = menu.position,
-            canClose = menu.canClose,
-            title = menu.title,
-            items = menu.options
-        }
-    })
+	SetNuiFocus(true, false)
+	SendNUIMessage({
+		action = 'setMenu',
+		data = {
+			position = menu.position,
+			canClose = menu.canClose,
+			title = menu.title,
+			items = menu.options,
+			startItemIndex = startIndex and startIndex - 1 or 0
+		}
+	})
 end
 
 local function resetFocus()
@@ -81,7 +82,7 @@ end
 function lib.getOpenMenu() return openMenu end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
-    cb(1)
+	cb(1)
 	data[1] += 1 -- selected
 
 	if data[2] then
@@ -89,8 +90,8 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 	end
 
 	local menu = openMenu
-	
-    if menu.options[data[1]].close ~= false then
+
+	if menu.options[data[1]].close ~= false then
 		resetFocus()
 		openMenu = nil
 	end
@@ -98,7 +99,6 @@ RegisterNUICallback('confirmSelected', function(data, cb)
 	if menu.cb then
 		menu.cb(data[1], data[2], menu.options[data[1]].args)
 	end
-
 end)
 
 RegisterNUICallback('changeIndex', function(data, cb)
@@ -115,8 +115,8 @@ RegisterNUICallback('changeIndex', function(data, cb)
 end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
-    cb(1)
-    if not openMenu.onSelected then return end
+	cb(1)
+	if not openMenu.onSelected then return end
 
 	data[1] += 1 -- selected
 
@@ -128,13 +128,13 @@ RegisterNUICallback('changeSelected', function(data, cb)
 end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
-    cb(1)
-    resetFocus()
+	cb(1)
+	resetFocus()
 
 	local menu = openMenu
 	openMenu = nil
 
-    if menu.onClose then
+	if menu.onClose then
 		menu.onClose()
 	end
 end)
