@@ -23,6 +23,7 @@ export interface MenuSettings {
   title: string;
   canClose?: boolean;
   items: Array<MenuItem>;
+  startItemIndex?: number;
 }
 
 const ListMenu: React.FC = () => {
@@ -121,7 +122,9 @@ const ListMenu: React.FC = () => {
   useNuiEvent('closeMenu', () => closeMenu(true));
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
-    setSelected(0);
+    if (!data.startItemIndex || data.startItemIndex < 0) data.startItemIndex = 0;
+    else if (data.startItemIndex >= data.items.length) data.startItemIndex = data.items.length - 1;
+    setSelected(data.startItemIndex);
     if (!data.position) data.position = 'top-left';
     listRefs.current = [];
     setMenu(data);
@@ -131,7 +134,7 @@ const ListMenu: React.FC = () => {
       if (Array.isArray(data.items[i].values)) arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
     }
     setIndexStates(arrayIndexes);
-    listRefs.current[0]?.focus();
+    listRefs.current[data.startItemIndex]?.focus();
   });
 
   return (
