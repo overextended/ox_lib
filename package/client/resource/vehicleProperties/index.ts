@@ -84,7 +84,7 @@ interface VehicleProperties {
   rearBumper: boolean;
 }
 
-export const getVehicleProperties = (): VehicleProperties => exports.ox_lib.getVehicleProperties();
+export const getVehicleProperties = (vehicle: number): VehicleProperties => exports.ox_lib.getVehicleProperties(vehicle);
 
 export const setVehicleProperties = (vehicle: number, props: Partial<VehicleProperties>): boolean =>
   exports.ox_lib.setVehicleProperties(vehicle, props);
