@@ -13,6 +13,7 @@ interface PropProps {
 
 interface ProgressProps {
   duration: number;
+  position?: 'middle' | 'bottom';
   useWhileDead?: boolean;
   allowRagdoll?: boolean;
   allowCuffed?: boolean;
@@ -41,7 +42,7 @@ interface ProgressProps {
   };
 }
 
-interface ProgressbarProps extends ProgressProps {
+interface ProgressbarProps extends Omit<ProgressProps, 'position'> {
   label: string;
 }
 
