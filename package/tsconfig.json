@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "strict": true,
     "module": "CommonJS",
-    "types": ["@types/node"],
+    "types": ["@types/node", "@citizenfx/client", "@citizenfx/server"],
     "declaration": true,
     "sourceMap": true,
     "target": "ESNext",
@@ -18,6 +18,6 @@
     "noImplicitAny": false,
     "noEmit": false
   },
-  "include": ["client"],
+  "include": ["client", "server", "shared"],
   "exclude": ["**/node_modules"]
 }

@@ -1,6 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@citizenfx/client': 2.0.5885-1
+  '@citizenfx/server': 2.0.5885-1
   '@fortawesome/fontawesome-common-types': 6.1.1
   '@types/node': 16.9.1
   '@types/react': ^18.0.20
@@ -8,6 +10,8 @@ specifiers:
   typescript: ^4.8.3
 
 dependencies:
+  '@citizenfx/client': 2.0.5885-1
+  '@citizenfx/server': 2.0.5885-1
   '@fortawesome/fontawesome-common-types': 6.1.1
   '@types/node': 16.9.1
   '@types/react': 18.0.20
@@ -17,6 +21,14 @@ devDependencies:
   prettier: 2.7.1
 
 packages:
+
+  /@citizenfx/client/2.0.5885-1:
+    resolution: {integrity: sha512-Ba5YYfxhZ82PcOY+2rjqDElTzPt7NrN6/o2U+wYPKK2VU/wRdCsMonpMsr7dYob2ToN5Qe96w5VNI3m5OrouJQ==}
+    dev: false
+
+  /@citizenfx/server/2.0.5885-1:
+    resolution: {integrity: sha512-q8KRecfjJ3RjCfBT/3CSHNTr2efUs9uq8pIoPF4TGkn5X7jgTBprrp3VMayaee3Xekay3RTufpzsOaeHUntQeA==}
+    dev: false
 
   /@fortawesome/fontawesome-common-types/6.1.1:
     resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
