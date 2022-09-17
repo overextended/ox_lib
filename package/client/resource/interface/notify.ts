@@ -10,7 +10,7 @@ interface NotifyProps {
   description?: string;
   duration?: number;
   position?: NotificationPosition;
-  type: NotificationType;
+  type?: NotificationType;
   style?: CSSProperties;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
@@ -23,7 +23,7 @@ interface DefaultNotifyProps {
   description?: string;
   duration?: number;
   position?: NotificationPosition;
-  status: 'info' | 'warning' | 'success' | 'error';
+  status?: 'info' | 'warning' | 'success' | 'error';
   id?: number;
 }
 
