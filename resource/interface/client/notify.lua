@@ -1,31 +1,39 @@
---[[```lua
-{
-	id?: string
-	title?: string
-	description: string
-	duration?: number
-	position?: 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left'
-	style?: table
-	icon?: string
-	iconColor?: string
-}
-```]]
+---@alias NotificationPosition 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left'
+---@alias NotificationType 'inform' | 'error' | 'success'
 
--- Custom notifications with a lot of allowed styling
----@param data table
+---@class NotifyProps
+---@field id? string
+---@field title? string
+---@field description? string
+---@field duration? number
+---@field position? NotificationPosition
+---@field type? NotificationType
+---@field style? string
+---@field icon? string;
+---@field iconColor? string;
+
+---@param data NotifyProps
 function lib.notify(data)
-	SendNUIMessage({
-		action = 'customNotify',
-		data = data
-	})
+    SendNUIMessage({
+        action = 'customNotify',
+        data = data
+    })
 end
 
--- Default Chakra UI notifications
+---@class DefaultNotifyProps
+---@field title? string
+---@field description? string
+---@field duration? number
+---@field position? NotificationPosition
+---@field status? 'info' | 'warning' | 'success' | 'error'
+---@field id? number
+
+---@param data DefaultNotifyProps
 function lib.defaultNotify(data)
-	SendNUIMessage({
-		action = 'notify',
-		data = data
-	})
+    SendNUIMessage({
+        action = 'notify',
+        data = data
+    })
 end
 
 RegisterNetEvent('ox_lib:notify', lib.notify)

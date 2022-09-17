@@ -1,16 +1,41 @@
 local contextMenus = {}
 local openContextMenu = nil
 
+---@class ContextMenuItem
+---@field title? string
+---@field menu? string
+---@field icon? string
+---@field iconColor? string
+---@field onSelect? fun(args: any)
+---@field arrow? boolean
+---@field description? string
+---@field metadata? string | { [string]: any } | string[]
+---@field event? string
+---@field serverEvent? string
+---@field args? any
+
+---@class ContextMenuArrayItem : ContextMenuItem
+---@field title string
+
+---@class ContextMenuProps
+---@field id string
+---@field title string
+---@field menu? string
+---@field onExit? fun()
+---@field canClose? boolean
+---@field options { [string]: ContextMenuItem } | ContextMenuArrayItem[]
+
 local function closeContext(_, cb, onExit)
     if cb then cb(1) end
     if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
     SetNuiFocus(false, false)
-    if not cb then SendNUIMessage({action = 'hideContext'}) end
+    if not cb then SendNUIMessage({ action = 'hideContext' }) end
     openContextMenu = nil
 end
 
+---@param id string
 function lib.showContext(id)
-    if not contextMenus[id] then return error('No context menu of such id found.') end
+    if not contextMenus[id] then error('No context menu of such id found.') end
     local data = contextMenus[id]
     openContextMenu = id
     SetNuiFocus(true, true)
@@ -25,6 +50,7 @@ function lib.showContext(id)
     }, { sort_keys = true }))
 end
 
+---@param context ContextMenuProps | ContextMenuProps[]
 function lib.registerContext(context)
     for k, v in pairs(context) do
         if type(k) == 'number' then
@@ -36,9 +62,11 @@ function lib.registerContext(context)
     end
 end
 
+---@return string?
 function lib.getOpenContextMenu() return openContextMenu end
 
-function lib.hideContext(onExit) return closeContext(nil, nil, onExit) end
+---@param onExit boolean?
+function lib.hideContext(onExit) closeContext(nil, nil, onExit) end
 
 RegisterNUICallback('openContext', function(id, cb)
     cb(1)

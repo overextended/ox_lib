@@ -1,5 +1,13 @@
 local alert = nil
 
+---@class AlertDialogProps
+---@field header string;
+---@field content string;
+---@field centered? boolean?;
+---@field cancel? boolean?;
+
+---@param data AlertDialogProps
+---@return 'cancel' | 'confirm' | nil
 function lib.alertDialog(data)
     if alert then return end
     alert = promise.new()
