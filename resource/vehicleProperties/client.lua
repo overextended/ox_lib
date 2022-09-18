@@ -8,8 +8,8 @@
 ---@field fuelLevel? number
 ---@field oilLevel? number
 ---@field dirtLevel? number
----@field color1? number
----@field color2? number
+---@field color1? number | number[]
+---@field color2? number | number[]
 ---@field pearlescentColor? number
 ---@field interiorColor? number
 ---@field dashboardColor? number
@@ -302,7 +302,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.color1 then
         if type(props.color1) == 'number' then
-            SetVehicleColours(vehicle, props.color1, colorSecondary)
+            SetVehicleColours(vehicle, props.color1 --[[@as number]], colorSecondary --[[@as number]])
         else
             SetVehicleCustomPrimaryColour(vehicle, props.color1[1], props.color1[2], props.color1[3])
         end
@@ -310,7 +310,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.color2 then
         if type(props.color2) == 'number' then
-            SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2)
+            SetVehicleColours(vehicle, props.color1 or colorPrimary --[[@as number]], props.color2 --[[@as number]])
         else
             SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
         end

@@ -6,9 +6,10 @@ interface VehicleProperties {
   engineHealth: number;
   tankHealth: number;
   fuelLevel: number;
+  oilLevel: number;
   dirtLevel: number;
-  color1: number;
-  color2: number;
+  color1: number | [number, number, number];
+  color2: number | [number, number, number];
   pearlescentColor: number;
   interiorColor: number;
   dashboardColor: number;
@@ -40,15 +41,15 @@ interface VehicleProperties {
   modSuspension: number;
   modArmor: number;
   modNitrous: number;
-  modTurbo: number;
-  modSubwoofer: number;
-  modSmokeEnabled: number;
-  modHydraulics: number;
-  modXenon: number;
+  modTurbo: boolean;
+  modSubwoofer: boolean;
+  modSmokeEnabled: boolean;
+  modHydraulics: boolean;
+  modXenon: boolean;
   modFrontWheels: number;
   modBackWheels: number;
-  modCustomTiresF: number;
-  modCustomTiresR: number;
+  modCustomTiresF: boolean;
+  modCustomTiresR: boolean;
   modPlateHolder: number;
   modVanityPlate: number;
   modTrimA: number;
@@ -84,7 +85,8 @@ interface VehicleProperties {
   rearBumper: boolean;
 }
 
-export const getVehicleProperties = (vehicle: number): VehicleProperties => exports.ox_lib.getVehicleProperties(vehicle);
+export const getVehicleProperties = (vehicle: number): VehicleProperties =>
+  exports.ox_lib.getVehicleProperties(vehicle);
 
 export const setVehicleProperties = (vehicle: number, props: Partial<VehicleProperties>): boolean =>
   exports.ox_lib.setVehicleProperties(vehicle, props);
