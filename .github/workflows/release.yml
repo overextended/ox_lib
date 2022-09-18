@@ -92,5 +92,5 @@ jobs:
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: './packages/package.json'
+          package: './package/package.json'
           access: 'public'
