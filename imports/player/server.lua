@@ -6,33 +6,35 @@
 local CPlayer = {}
 
 function CPlayer:__index(index, ...)
-	local method = CPlayer[index]
+    local method = CPlayer[index]
 
-	if method then
-		return function(...)
-			return method(self, ...)
-		end
-	end
+    if method then
+        return function(...)
+            return method(self, ...)
+        end
+    end
 end
 
 function CPlayer:getCoords(update)
-	if update or not self.coords then
-		self.coords = GetEntityCoords(self.getPed())
-	end
+    if update or not self.coords then
+        self.coords = GetEntityCoords(self.getPed())
+    end
 
-	return self.coords
+    return self.coords
 end
 
 function CPlayer:getDistance(coords)
-	return #(self:getCoords() - coords)
+    return #(self:getCoords() - coords)
 end
 
 function CPlayer:getPed()
     self.ped = GetPlayerPed(self.source)
-	return self.ped
+    return self.ped
 end
 
 ---@deprecated
 function lib.getPlayer()
-	return CPlayer
+    return CPlayer
 end
+
+return lib.getPlayer
