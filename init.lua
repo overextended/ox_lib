@@ -36,7 +36,7 @@ local function loadModule(self, module)
         end
 
         local result = fn()
-        self[module] = result
+        self[module] = result or function() end
         return self[module]
 	end
 end
