@@ -7,7 +7,7 @@ game         'gta5'
 --[[ Resource Information ]]--
 name         'ox_lib'
 author       'Linden'
-version      '2.10.5'
+version      '2.11.10'
 license      'LGPL-3.0-or-later'
 repository   'https://github.com/overextended/ox_lib'
 description  'A library of shared functions to utilise in other resources.'
