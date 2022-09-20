@@ -1,6 +1,7 @@
 ---@class CPoint
 ---@field id number
 ---@field coords vector3
+---@field nearbyDistance number
 ---@field distance number
 ---@field currentDistance number
 ---@field remove fun()
@@ -33,17 +34,19 @@ CreateThread(function()
 		for _, point in pairs(points) do
 			local distance = #(coords - point.coords)
 
+			if distance <= point.nearbyDistance then
+				if point.nearby then
+                    nearbyCount += 1
+					nearbyPoints[nearbyCount] = point
+				end
+			end
+
 			if distance <= point.distance then
 				point.currentDistance = distance
 
                 ---@diagnostic disable-next-line: need-check-nil
 				if distance < (closestPoint?.currentDistance or point.distance) then
 					closestPoint = point
-				end
-
-				if point.nearby then
-                    nearbyCount += 1
-					nearbyPoints[nearbyCount] = point
 				end
 
 				if point.onEnter and not point.inside then
@@ -94,8 +97,8 @@ lib.points = {
 			}
 		end
 
-
 		self.distance = self.distance or args[2]
+		self.nearbyDistance = self.nearbyDistance or self.distance or args[2]
 
 		if args[3] then
 			for k, v in pairs(args[3]) do
