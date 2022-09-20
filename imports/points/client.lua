@@ -3,21 +3,25 @@
 ---@field coords vector3
 ---@field distance number
 ---@field currentDistance number
+---@field isClosest boolean?
 ---@field remove fun()
 ---@field onEnter fun(self: CPoint)?
 ---@field onExit fun(self: CPoint)?
 ---@field nearby fun(self: CPoint)?
 
 local points = {}
-
-local function removePoint(self)
-	points[self.id] = nil
-end
-
 local nearbyPoints = {}
 local nearbyCount = 0
 local closestPoint
 local tick
+
+local function removePoint(self)
+    if closestPoint?.id == self.id then
+        closestPoint = nil
+    end
+
+	points[self.id] = nil
+end
 
 CreateThread(function()
 	while true do
@@ -28,7 +32,10 @@ CreateThread(function()
 
 		local coords = GetEntityCoords(cache.ped)
 		cache.coords = coords
-        closestPoint = nil
+
+        if closestPoint and #(coords - closestPoint.coords) > closestPoint.distance then
+            closestPoint = nil
+        end
 
 		for _, point in pairs(points) do
 			local distance = #(coords - point.coords)
@@ -36,10 +43,16 @@ CreateThread(function()
 			if distance <= point.distance then
 				point.currentDistance = distance
 
-                ---@diagnostic disable-next-line: need-check-nil
-				if distance < (closestPoint?.currentDistance or point.distance) then
-					closestPoint = point
-				end
+                if closestPoint then
+                    if distance < closestPoint.currentDistance then
+                        closestPoint.isClosest = nil
+                        point.isClosest = true
+                        closestPoint = point
+                    end
+                elseif distance < point.distance then
+                    point.isClosest = true
+                    closestPoint = point
+                end
 
 				if point.nearby then
                     nearbyCount += 1
