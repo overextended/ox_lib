@@ -177,10 +177,10 @@ local function startCreator(arg)
             local center = vec(xCoord, yCoord)
             ---@type vector2[]
             points = {
-                center + vec((width * cosH + length * sinH), (length * cosH - width * sinH)),
-                center + vec(-(width * cosH - length * sinH), (length * cosH + width * sinH)),
-                center + vec(-(width * cosH + length * sinH), -(length * cosH - width * sinH)),
-                center + vec((width * cosH - length * sinH), -(length * cosH + width * sinH)),
+                center + vec((width * cosH + length * sinH), (length * cosH - width * sinH)) / 2,
+                center + vec(-(width * cosH - length * sinH), (length * cosH + width * sinH)) / 2,
+                center + vec(-(width * cosH + length * sinH), -(length * cosH - width * sinH)) / 2,
+                center + vec((width * cosH - length * sinH), -(length * cosH + width * sinH)) / 2,
             }
 
             drawLines()
