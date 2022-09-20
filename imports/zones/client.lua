@@ -335,6 +335,10 @@ local function debugPoly(self)
         DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, 255, 42, 24, 225)
         DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, 255, 42, 24, 225)
         DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, 255, 42, 24, 225)
+        DrawPoly(a, b, c, 255, 42, 24, 100)
+        DrawPoly(c, b, a, 255, 42, 24, 100)
+        DrawPoly(b, c, d, 255, 42, 24, 100)
+        DrawPoly(d, c, b, 255, 42, 24, 100)
     end
 end
 
