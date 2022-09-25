@@ -109,7 +109,7 @@ function lib.setMenuOptions(id, options, index)
 end
 
 ---@return string?
-function lib.getOpenMenu() return openMenu end
+function lib.getOpenMenu() return openMenu?.id end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
