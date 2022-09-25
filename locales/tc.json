@@ -1,0 +1,12 @@
+{
+  "language": "繁體中文",
+  "ui": {
+    "settings": {
+      "title": "設置",
+      "language": "語言"
+    },
+    "cancel": "取消",
+    "close": "關閉",
+    "confirm": "確認"
+  }
+}
