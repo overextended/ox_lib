@@ -37,10 +37,10 @@ const ListMenu: React.FC = () => {
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const closeMenu = (ignoreFetch?: boolean) => {
+  const closeMenu = (ignoreFetch?: boolean, keyPressed?: string) => {
     if (menu.canClose === false) return;
     setVisible(false);
-    if (!ignoreFetch) fetchNui('closeMenu');
+    if (!ignoreFetch) fetchNui('closeMenu', keyPressed);
   };
 
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -111,7 +111,7 @@ const ListMenu: React.FC = () => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
-      if (['Escape', 'Backspace'].includes(e.code)) closeMenu();
+      if (['Escape', 'Backspace'].includes(e.code)) closeMenu(false, e.code);
     };
 
     window.addEventListener('keydown', keyHandler);
