@@ -1,4 +1,6 @@
+---@type { [string]: MenuProps }
 local registeredMenus = {}
+---@type MenuProps | nil
 local openMenu = nil
 local keepInput = IsNuiFocusKeepingInput()
 
@@ -19,7 +21,8 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field options MenuOptions[]
 ---@field position? MenuPosition
 ---@field disableInput? boolean
----@field onClose? fun()
+---@field canClose? boolean
+---@field onClose? fun(keyPressed?: 'Escape' | 'Backspace')
 ---@field onSelected? MenuChangeFunction
 ---@field onSideScroll? MenuChangeFunction
 
@@ -45,7 +48,7 @@ function lib.showMenu(id, startIndex)
     if not openMenu then
         CreateThread(function()
             while openMenu do
-                if not openMenu.disableInput then
+                if openMenu.disableInput == nil or openMenu.disableInput then
                     DisablePlayerFiring(cache.playerId, true)
                     HudWeaponWheelIgnoreSelection()
                     DisableControlAction(0, 140, true)
@@ -165,6 +168,6 @@ RegisterNUICallback('closeMenu', function(data, cb)
     openMenu = nil
 
     if menu.onClose then
-        menu.onClose()
+        menu.onClose(data --[[@as 'Escape' | 'Backspace' | nil]])
     end
 end)

@@ -18,7 +18,8 @@ interface MenuProps {
   options: MenuOptions[];
   position?: MenuPosition;
   disableInput?: boolean;
-  onClose?: () => void;
+  canClose?: boolean;
+  onClose?: (keyPressed?: 'Escape' | 'Backspace') => void;
   onSelected?: ChangeFunction;
   onSideScroll?: ChangeFunction;
 }
