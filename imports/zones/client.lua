@@ -300,7 +300,9 @@ CreateThread(function()
                                 zone:inside()
                             end
                         else
-                            zone:inside()
+                            if zone.inside then
+                                zone:inside()
+                            end
                         end
                     end
                 end)
