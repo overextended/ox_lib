@@ -19,12 +19,18 @@ function lib.versionCheck(repository)
 			local latestVersion = response.tag_name:match('%d%.%d+%.%d+')
 			if not latestVersion or latestVersion == currentVersion then return end
 
-			local cMajor, cMinor = string.strsplit('.', currentVersion, 2)
-			local lMajor, lMinor = string.strsplit('.', latestVersion, 2)
+            local cv = { string.strsplit('.', currentVersion) }
+            local lv = { string.strsplit('.', latestVersion) }
 
-			if tonumber(cMajor) < tonumber(lMajor) or tonumber(cMinor) < tonumber(lMinor) then
-				return print(('^3An update is available for %s (current version: %s)\r\n%s^0'):format(resource, currentVersion, response.html_url))
-			end
+            for i = 1, #cv do
+                local current, minimum = tonumber(cv[i]), tonumber(lv[i])
+
+                if current ~= minimum then
+                    if current < minimum then
+                        return print(('^3An update is available for %s (current version: %s)\r\n%s^0'):format(resource, currentVersion, response.html_url))
+                    else break end
+                end
+            end
 		end, 'GET')
 	end)
 end
