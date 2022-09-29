@@ -14,6 +14,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field description? string
 ---@field defaultIndex? number
 ---@field args? any
+---@field close? boolean
 
 ---@class MenuProps
 ---@field id string
