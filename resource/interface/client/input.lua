@@ -40,6 +40,16 @@ function lib.inputDialog(heading, rows)
     return Citizen.Await(input)
 end
 
+function lib.closeInputDialog()
+    if not input then return end
+    input:resolve(nil)
+    input = nil
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = 'closeInputDialog'
+    })
+end
+
 RegisterNUICallback('inputData', function(data, cb)
     cb(1)
     SetNuiFocus(false, false)

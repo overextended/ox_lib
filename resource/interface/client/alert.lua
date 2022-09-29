@@ -21,6 +21,17 @@ function lib.alertDialog(data)
     return Citizen.Await(alert)
 end
 
+function lib.closeAlertDialog()
+    if not alert then return end
+    alert:resolve(nil)
+    alert = nil
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = 'closeAlertDialog'
+    })
+end
+
+
 RegisterNUICallback('closeAlert', function(data, cb)
     cb(1)
     SetNuiFocus(false, false)

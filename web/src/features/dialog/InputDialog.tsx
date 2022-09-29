@@ -39,6 +39,10 @@ const InputDialog: React.FC = () => {
     setVisible(true);
   });
 
+  useNuiEvent('closeInputDialog', () => {
+    setVisible(false);
+  });
+
   const handleClose = () => {
     setVisible(false);
     fetchNui('inputData');

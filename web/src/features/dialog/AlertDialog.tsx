@@ -40,6 +40,10 @@ const AlertDialog: React.FC = () => {
     onOpen();
   });
 
+  useNuiEvent('closeAlertDialog', () => {
+    onClose();
+  });
+
   return (
     <>
       <Dialog
