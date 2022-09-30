@@ -37,8 +37,8 @@ const ListMenu: React.FC = () => {
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const closeMenu = (ignoreFetch?: boolean, keyPressed?: string) => {
-    if (menu.canClose === false) return;
+  const closeMenu = (ignoreFetch?: boolean, keyPressed?: string, forceClose?: boolean) => {
+    if (menu.canClose === false && !forceClose) return;
     setVisible(false);
     if (!ignoreFetch) fetchNui('closeMenu', keyPressed);
   };
@@ -119,7 +119,7 @@ const ListMenu: React.FC = () => {
     return () => window.removeEventListener('keydown', keyHandler);
   }, [visible]);
 
-  useNuiEvent('closeMenu', () => closeMenu(true));
+  useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
     if (!data.startItemIndex || data.startItemIndex < 0) data.startItemIndex = 0;
