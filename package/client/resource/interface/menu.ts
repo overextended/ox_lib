@@ -10,6 +10,7 @@ interface MenuOptions {
   description?: string;
   defaultIndex?: number;
   args?: any;
+  close?: boolean;
 }
 
 interface MenuProps {
