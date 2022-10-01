@@ -171,7 +171,7 @@ local function startCreator(arg)
         if zoneType == 'poly' then
             drawLines()
         elseif zoneType == 'box' then
-            local rad = math.rad(heading)
+            local rad = math.rad(-heading)
             local sinH = math.sin(rad)
             local cosH = math.cos(rad)
             local center = vec(xCoord, yCoord)
@@ -249,15 +249,15 @@ local function startCreator(arg)
                 zCoord -= steps[1][step]
             elseif IsDisabledControlJustReleased(0, 38) then -- e
                 change = true
-                heading += steps[2][step]
-                if heading >= 360 then
-                    heading -= 360
-                end
-            elseif IsDisabledControlJustReleased(0, 44) then -- q
-                change = true
                 heading -= steps[2][step]
                 if heading < 0 then
                     heading += 360
+                end
+            elseif IsDisabledControlJustReleased(0, 44) then -- q
+                change = true
+                heading += steps[2][step]
+                if heading >= 360 then
+                    heading -= 360
                 end
             elseif IsDisabledControlJustReleased(0, 47) then -- g
                 change = true
