@@ -9,6 +9,7 @@ local glm = require 'glm'
 ---@field onEnter fun(self: CZone)?
 ---@field onExit fun(self: CZone)?
 ---@field inside fun(self: CZone)?
+---@field [string] any
 
 ---@type { [number]: CZone }
 Zones = {}

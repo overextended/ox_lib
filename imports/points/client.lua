@@ -3,11 +3,12 @@
 ---@field coords vector3
 ---@field distance number
 ---@field currentDistance number
----@field isClosest boolean?
+---@field isClosest? boolean
 ---@field remove fun()
----@field onEnter fun(self: CPoint)?
----@field onExit fun(self: CPoint)?
----@field nearby fun(self: CPoint)?
+---@field onEnter? fun(self: CPoint)
+---@field onExit? fun(self: CPoint)
+---@field nearby? fun(self: CPoint)
+---@field [string] any
 
 local points = {}
 local nearbyPoints = {}

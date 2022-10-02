@@ -8,7 +8,7 @@
 ---@field duration? number
 ---@field position? NotificationPosition
 ---@field type? NotificationType
----@field style? string
+---@field style? { [string]: any }
 ---@field icon? string;
 ---@field iconColor? string;
 
