@@ -76,9 +76,8 @@ if lokiUser ~= '' and lokiKey ~= '' and lokiEndpoint ~= '' then
             return
         end
 		PerformHttpRequest(site, function(status, _, _, response)
-			if status ~= 202 then
+			if status ~= 204 then
 				-- Thanks, I hate it
-				response = json.decode(response:sub(10)).errors[1]
 				print(('unable to submit logs to %s\n%s'):format(site, json.encode(response, {indent=true})))
 			end
 		end, 'POST', data, {
