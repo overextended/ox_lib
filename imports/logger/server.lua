@@ -2,7 +2,7 @@ local key = GetConvar('datadog:key', '')
 
 local lokiUser = GetConvar('loki:user', '')
 local lokiKey = GetConvar('loki:key', '')
-local lokiEndpoint = GetConvar('loki:endpoint')
+local lokiEndpoint = GetConvar('loki:endpoint', '')
 
 if key ~= '' then
 	local site = ('https://http-intake.logs.%s/api/v2/logs'):format(GetConvar('datadog:site', 'datadoghq.com'))
