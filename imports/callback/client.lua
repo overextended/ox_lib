@@ -23,6 +23,19 @@ local function eventTimer(event, delay)
 	return true
 end
 
+---@param ... any
+---@return function
+local function tuple(...)
+    local co = coroutine.wrap(function(...)
+        coroutine.yield()
+        while true do
+            coroutine.yield(...)
+        end
+    end)
+    co(...)
+    return co
+end
+
 ---@param _ any
 ---@param event string
 ---@param delay number | false
@@ -43,18 +56,19 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 	---@type promise | false
 	local promise = not cb and promise.new()
 
-	events[key] = function(response)
+	events[key] = function(...)
 		events[key] = nil
-
 		if promise then
-			return promise:resolve(response or {})
+			return promise:resolve(select('#', ...) ~= 0 and tuple(...) or tuple({}))
 		end
 
-		return cb and cb(table.unpack(response or {}))
+		return cb and cb(select('#', ...) ~= 0 and ... or {})
 	end
 
 	if promise then
-		return table.unpack(Citizen.Await(promise))
+		---@type function
+		local retData = Citizen.Await(promise)
+		return retData()
 	end
 end
 
@@ -79,7 +93,7 @@ local function callbackResponse(success, result, ...)
 		return false
 	end
 
-	return { result, ... }
+	return tuple(result, ...)()
 end
 
 local pcall = pcall
