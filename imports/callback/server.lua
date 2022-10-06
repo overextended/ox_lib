@@ -39,11 +39,12 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 
 	events[key] = function(...)
 		events[key] = nil
+
 		if promise then
-			return promise:resolve(select('#', ...) ~= 0 and tuple(...) or tuple({}))
+			return promise:resolve(tuple(...))
 		end
 
-		return cb and cb(select('#', ...) ~= 0 and ... or {})
+		return cb and cb(...)
 	end
 
 	if promise then
