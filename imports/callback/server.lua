@@ -72,7 +72,7 @@ local function callbackResponse(success, result, ...)
 		return false
 	end
 
-	return tuple(result, ...)()
+	return result, ...
 end
 
 local pcall = pcall
