@@ -66,9 +66,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 	end
 
 	if promise then
-		---@type function
-		local retData = Citizen.Await(promise)
-		return retData()
+		return Citizen.Await(promise)()
 	end
 end
 

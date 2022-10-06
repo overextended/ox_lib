@@ -47,9 +47,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 	end
 
 	if promise then
-		---@type function
-		local retData = Citizen.Await(promise)
-		return retData()
+		return Citizen.Await(promise)()
 	end
 end
 
