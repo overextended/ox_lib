@@ -26,6 +26,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field onClose? fun(keyPressed?: 'Escape' | 'Backspace')
 ---@field onSelected? MenuChangeFunction
 ---@field onSideScroll? MenuChangeFunction
+---@field cb? MenuChangeFunction
 
 ---@param data MenuProps
 ---@param cb? MenuChangeFunction
