@@ -92,7 +92,7 @@ if service == 'loki' then
     local resourceName = GetCurrentResourceName()
 
     function lib.logger(source, event, message, ...)
-        local timestamp = tostring(os.time(os.date("*t")) ) .. "000000000"
+        local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
         local data = ""
         if type(message) =="string" then
             data = json.encode({
