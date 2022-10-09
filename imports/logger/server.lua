@@ -97,10 +97,26 @@ if service == 'loki' then
     local lokiUser = GetConvar('loki:user', '')
     local lokiKey = GetConvar('loki:key', '')
     local lokiEndpoint = GetConvar('loki:endpoint', '')
-    local site = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, lokiEndpoint)
+    local endpoint = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, lokiEndpoint)
     local resourceName = GetCurrentResourceName()
 
     function lib.logger(source, event, message, ...)
+        if not buffer then
+            buffer = {}
+
+            SetTimeout(500, function()
+                PerformHttpRequest(endpoint, function(status, _, _, _)
+                    if status ~= 204 then
+                        badResponse(endpoint, ("Error Code: %s"):format(status))
+                    end
+                end, 'POST', json.encode({streams = buffer}), {
+                    ['Content-Type'] = 'application/json',
+                })
+
+                buffer = nil
+            end)
+        end
+
         -- Generates a nanosecond unix timestamp
         local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
 
