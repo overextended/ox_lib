@@ -23,6 +23,7 @@ interface MenuProps {
   onClose?: (keyPressed?: 'Escape' | 'Backspace') => void;
   onSelected?: ChangeFunction;
   onSideScroll?: ChangeFunction;
+  cb?: ChangeFunction;
 }
 
 type registerMenu = (data: MenuProps, cb: ChangeFunction) => void;

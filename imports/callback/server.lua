@@ -28,10 +28,10 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 		events[key] = nil
 
 		if promise then
-			return promise:resolve(response or {})
+			return promise:resolve(response and { msgpack.unpack(response) } or {})
 		end
 
-		return cb and cb(table.unpack(response or {}))
+		return cb and cb(msgpack.unpack(response))
 	end
 
 	if promise then
@@ -60,7 +60,7 @@ local function callbackResponse(success, result, ...)
 		return false
 	end
 
-	return { result, ... }
+	return msgpack.pack(result, ...)
 end
 
 local pcall = pcall

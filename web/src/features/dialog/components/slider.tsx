@@ -10,7 +10,7 @@ interface Props {
 
 const SliderField: React.FC<Props> = (props) => {
   useEffect(() => {
-    if (props.row.default) props.handleChange(props.row.default, props.index);
+    if (props.row.default || props.row.min) props.handleChange(props.row.default || props.row.min!, props.index);
   }, []);
 
   const [sliderValue, setSliderValue] = useState(props.row.default || props.row.min || 0);
