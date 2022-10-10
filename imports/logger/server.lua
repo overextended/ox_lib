@@ -170,21 +170,20 @@ if service == 'loki' then
 
             -- Loop through table and grab only values
             for _,v in pairs(tempTable) do
-                local tempTable2 = split(tags, "[^:]*") -- splits string on ':' character
+                local tempTable2 = split(v, "[^:]*") -- splits string on ':' character
                 local key = tempTable2[1] -- generate key from first half of string
                 local value = tempTable2[2] -- store the value from the second half of the string
                 bTable[key] = value
-
             end
-
             return bTable -- Return the new table of kvps
         end
 
         -- Format the args into strings
         local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
+        local tagsTable = convertDDTagsToKVP(tags)
 
         -- Concatenates tags kvp table to the values table
-        for k,v in pairs(convertDDTagsToKVP(tags)) do
+        for k,v in pairs(tagsTable) do
             values[k] = v -- Store the tags in the values table ready for logging
         end
 
