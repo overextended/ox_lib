@@ -84,4 +84,4 @@ if service == 'datadog' then
     end
 end
 
-return lib.logger or function() end
+return lib.logger
