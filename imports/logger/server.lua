@@ -105,11 +105,18 @@ if service == 'loki' then
             buffer = {}
 
             SetTimeout(500, function()
+                -- Strip string keys from buffer
+                local tempBuffer = {}
+                for _,v in pairs(buffer) do
+                    tempBuffer[#tempBuffer+1] = v
+                end
+
+                local postBody = json.encode({streams = tempBuffer})
                 PerformHttpRequest(endpoint, function(status, _, _, _)
                     if status ~= 204 then
-                        badResponse(endpoint, ("Error Code: %s"):format(status))
+                        badResponse(endpoint, ("Error Code: %s\n%s"):format(status, postBody))
                     end
-                end, 'POST', json.encode({streams = buffer}), {
+                end, 'POST', postBody, {
                     ['Content-Type'] = 'application/json',
                 })
 
@@ -188,8 +195,10 @@ if service == 'loki' then
                 service = event
             },
             values = {
-                timestamp,
-                json.encode(values)
+                {
+                    timestamp,
+                    json.encode(values)
+                }
             }
         }
 
