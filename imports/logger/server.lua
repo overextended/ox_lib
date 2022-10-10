@@ -15,12 +15,42 @@ local function split(str,pat)
     return tbl
 end
 
-
 local playerData = {}
 
 AddEventHandler('playerDropped', function()
     playerData[source] = nil
 end)
+
+local function formatTags(source, tags)
+    if type(source) == 'number' and source > 0 then
+        local data = playerData[source]
+
+        if not data then
+            local _data = {
+                ('username:%s'):format(GetPlayerName(source))
+            }
+
+            local num = 1
+
+            ---@cast source string
+            for i = 0, GetNumPlayerIdentifiers(source) - 1 do
+                local identifier = GetPlayerIdentifier(source, i)
+
+                if not identifier:find('ip') then
+                    num += 1
+                    _data[num] = identifier
+                end
+            end
+
+            data = table.concat(_data, ',')
+            playerData[source] = data
+        end
+
+        tags = tags and ('%s,%s'):format(tags, data) or data
+    end
+
+    return tags
+end
 
 if service == 'datadog' then
     local key = GetConvar('datadog:key', ''):gsub("[\'\"]", '')
@@ -32,37 +62,6 @@ if service == 'datadog' then
             ['Content-Type'] = 'application/json',
             ['DD-API-KEY'] = key,
         }
-
-        local function formatTags(source, tags)
-            if type(source) == 'number' and source > 0 then
-                local data = playerData[source]
-
-                if not data then
-                    local _data = {
-                        ('username:%s'):format(GetPlayerName(source))
-                    }
-
-                    local num = 1
-
-                    ---@cast source string
-                    for i = 0, GetNumPlayerIdentifiers(source) - 1 do
-                        local identifier = GetPlayerIdentifier(source, i)
-
-                        if not identifier:find('ip') then
-                            num += 1
-                            _data[num] = identifier
-                        end
-                    end
-
-                    data = table.concat(_data, ',')
-                    playerData[source] = data
-                end
-
-                tags = tags and ('%s,%s'):format(tags, data) or data
-            end
-
-            return tags
-        end
 
         function lib.logger(source, event, message, ...)
             if not buffer then
@@ -96,9 +95,22 @@ end
 if service == 'loki' then
     local lokiUser = GetConvar('loki:user', '')
     local lokiKey = GetConvar('loki:key', '')
-    local lokiEndpoint = GetConvar('loki:endpoint', '')
-    local endpoint = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, lokiEndpoint)
-    local resourceName = GetCurrentResourceName()
+    local endpoint = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, GetConvar('loki:endpoint', ''))
+
+    -- Converts a string of comma seperated kvp string to a table of kvps
+    -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
+    local function convertDDTagsToKVP(tags)
+        local tempTable = { string.strsplit(',', tags) } -- outputs a number index table wth k:v strings as values
+        local bTable = table.create(0, #tempTable) -- buffer table
+
+        -- Loop through table and grab only values
+        for _, v in pairs(tempTable) do
+            local key, value = string.strsplit(':', v) -- splits string on ':' character
+            bTable[key] = value
+        end
+
+        return bTable -- Return the new table of kvps
+    end
 
     function lib.logger(source, event, message, ...)
         if not buffer then
@@ -130,54 +142,6 @@ if service == 'loki' then
         -- Initializes values table with the message
         local values = {message = message}
 
-        -- Formats arguments into kvp comma seperated string and adds user data
-        local function formatTags(source, tags)
-            if type(source) == 'number' and source > 0 then
-                local data = playerData[source]
-
-                if not data then
-                    local _data = {
-                        ('username:%s'):format(GetPlayerName(source))
-                    }
-
-                    local num = 1
-
-                    ---@cast source string
-                    for i = 0, GetNumPlayerIdentifiers(source) - 1 do
-                        local identifier = GetPlayerIdentifier(source, i)
-
-                        if not identifier:find('ip') then
-                            num += 1
-                            _data[num] = identifier
-                        end
-                    end
-
-                    data = table.concat(_data, ',')
-                    playerData[source] = data
-                end
-
-                tags = tags and ('%s,%s'):format(tags, data) or data
-            end
-
-            return tags
-        end
-
-        -- Converts a string of comma seperated kvp string to a table of kvps
-        -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
-        local function convertDDTagsToKVP(tags)
-            local tempTable = split(tags, "[^,]*") -- outputs a number index table wth k:v strings as values
-            local bTable = {} -- buffer table
-
-            -- Loop through table and grab only values
-            for _,v in pairs(tempTable) do
-                local tempTable2 = split(v, "[^:]*") -- splits string on ':' character
-                local key = tempTable2[1] -- generate key from first half of string
-                local value = tempTable2[2] -- store the value from the second half of the string
-                bTable[key] = value
-            end
-            return bTable -- Return the new table of kvps
-        end
-
         -- Format the args into strings
         local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
         local tagsTable = convertDDTagsToKVP(tags)
@@ -190,7 +154,7 @@ if service == 'loki' then
         -- initialise stream payload
         local payload = {
             stream = {
-                hostname = resourceName,
+                hostname = cache.resource,
                 service = event
             },
             values = {
