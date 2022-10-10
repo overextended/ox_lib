@@ -23,6 +23,7 @@ interface ContextMenuProps {
   title: string;
   menu?: string;
   onExit?: () => void;
+  onBack?: () => void;
   canClose?: boolean;
   options: { [key: string]: ContextMenuItem } | ContextMenuArrayItem[];
 }
