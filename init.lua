@@ -18,6 +18,7 @@ end
 
 local LoadResourceFile = LoadResourceFile
 local context = IsDuplicityVersion() and 'server' or 'client'
+local function noop() end
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
@@ -36,7 +37,7 @@ local function loadModule(self, module)
         end
 
         local result = fn()
-        self[module] = result or function() end
+        self[module] = result or noop
         return self[module]
 	end
 end
@@ -51,6 +52,7 @@ local function call(self, index, ...)
 	local module = rawget(self, index)
 
 	if not module then
+        self[index] = noop
 		module = loadModule(self, index)
 
 		if not module then

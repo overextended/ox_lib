@@ -220,7 +220,6 @@ if service == 'loki' then
             }
         end
 	end
-
 end
 
-return lib.logger or function() end
+return lib.logger
