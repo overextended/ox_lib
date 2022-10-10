@@ -16,7 +16,7 @@ import { Option, ContextMenuProps } from '../../../interfaces/context';
 import { fetchNui } from '../../../utils/fetchNui';
 
 const openMenu = (id: string | undefined) => {
-  fetchNui<ContextMenuProps>('openContext', id);
+  fetchNui<ContextMenuProps>('openContext', {id: id, back: false});
 };
 
 const clickContext = (id: string) => {
