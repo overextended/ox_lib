@@ -22,6 +22,7 @@ local openContextMenu = nil
 ---@field title string
 ---@field menu? string
 ---@field onExit? fun()
+---@field onBack? fun()
 ---@field canClose? boolean
 ---@field options { [string]: ContextMenuItem } | ContextMenuArrayItem[]
 
@@ -68,9 +69,10 @@ function lib.getOpenContextMenu() return openContextMenu end
 ---@param onExit boolean?
 function lib.hideContext(onExit) closeContext(nil, nil, onExit) end
 
-RegisterNUICallback('openContext', function(id, cb)
+RegisterNUICallback('openContext', function(data, cb)
+    if data.back and contextMenus[openContextMenu].onBack then contextMenus[openContextMenu].onBack() end
     cb(1)
-    lib.showContext(id)
+    lib.showContext(data.id)
 end)
 
 RegisterNUICallback('clickContext', function(id, cb)
