@@ -36,6 +36,7 @@ const ListMenu: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const firstRenderRef = useRef(false);
 
   const closeMenu = (ignoreFetch?: boolean, keyPressed?: string, forceClose?: boolean) => {
     if (menu.canClose === false && !forceClose) return;
@@ -87,6 +88,10 @@ const ListMenu: React.FC = () => {
 
   useEffect(() => {
     if (!menu.items[selected]?.values) return;
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       fetchNui('changeIndex', [selected, indexStates[selected]]).catch();
     }, 100);
@@ -122,6 +127,7 @@ const ListMenu: React.FC = () => {
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
+    firstRenderRef.current = true;
     if (!data.startItemIndex || data.startItemIndex < 0) data.startItemIndex = 0;
     else if (data.startItemIndex >= data.items.length) data.startItemIndex = data.items.length - 1;
     setSelected(data.startItemIndex);
