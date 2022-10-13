@@ -16,7 +16,7 @@ const getRandomAngle = (min: number, max: number) => Math.floor(Math.random() * 
 const difficultyOffsets = {
   easy: 275,
   medium: 290,
-  hard: 300,
+  hard: 295,
 };
 
 debugData([
@@ -35,10 +35,11 @@ const SkillCheck: React.FC = () => {
   });
 
   useNuiEvent('startSkillCheck', (data: 'easy' | 'medium' | 'hard') => {
+    const offset = difficultyOffsets[data];
     setSkillCheck({
       visible: true,
-      angle: -90 + getRandomAngle(0, 360),
-      difficultyOffset: difficultyOffsets[data],
+      angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
+      difficultyOffset: offset,
       difficulty: data,
     });
   });
@@ -65,7 +66,7 @@ const SkillCheck: React.FC = () => {
             <Indicator
               angle={skillCheck.angle}
               offset={skillCheck.difficultyOffset}
-              multiplier={skillCheck.difficulty === 'easy' ? 1 : skillCheck.difficulty === 'medium' ? 1.5 : 2}
+              multiplier={skillCheck.difficulty === 'easy' ? 1 : skillCheck.difficulty === 'medium' ? 1.5 : 1.75}
               setSkillCheck={setSkillCheck}
             />
           </svg>
