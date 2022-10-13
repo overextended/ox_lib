@@ -17,7 +17,6 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck }
   const isKeyPressed = useKeyPress('e');
 
   useEffect(() => {
-    console.log(1);
     intervalRef.current = setInterval(() => {
       setIndicatorAngle((prevState) => (prevState += multiplier));
     }, 1);
