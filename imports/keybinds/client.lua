@@ -43,3 +43,5 @@ lib.keybinds = {
         return keybinds[name]
     end
 }
+
+return lib.keybinds
