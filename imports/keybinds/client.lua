@@ -34,6 +34,8 @@ lib.keybinds = {
         end)
     
         RegisterKeyMapping('+'..self.name, self.description, 'keyboard', self.keybind)
+        TriggerEvent('chat:removeSuggestion', ('/+%s'):format(self.name))
+        TriggerEvent('chat:removeSuggestion', ('/-%s'):format(self.name))
         return self
     end,
 
