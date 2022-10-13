@@ -1,6 +1,5 @@
 ---@class CKeybind
 ---@field name string
----@field category string
 ---@field description string
 ---@field keybind string
 ---@field disabled boolean
