@@ -43,8 +43,7 @@ lib.keybinds = {
 
     ---@return CKeybind | false
     get = function(name)
-        if not keybinds[name] then return false end
-        return keybinds[name]
+        return keybinds[name] or false
     end
 }
 
