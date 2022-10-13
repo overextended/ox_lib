@@ -12,6 +12,7 @@ import AlertDialog from './features/dialog/AlertDialog';
 import ListMenu from './features/menu/list';
 import Dev from './features/dev';
 import { isEnvBrowser } from './utils/misc';
+import SkillCheck from './features/skillcheck';
 
 const App: React.FC = () => {
   useNuiEvent('setClipboard', (data: string) => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
       <AlertDialog />
       <ContextMenu />
       <ListMenu />
+      <SkillCheck />
       {isEnvBrowser() && <Dev />}
     </>
   );
