@@ -4,11 +4,18 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { debugData } from '../../utils/debugData';
 import Indicator from './indicator';
 
+interface CustomGameDifficulty {
+  areaSize: number;
+  speedMultiplier: number;
+}
+
+type GameDifficulty = 'easy' | 'medium' | 'hard' | CustomGameDifficulty;
+
 export interface SkillCheckProps {
   visible: boolean;
   angle: number;
   difficultyOffset: number;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: GameDifficulty;
 }
 
 const getRandomAngle = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
@@ -34,8 +41,8 @@ const SkillCheck: React.FC = () => {
     difficulty: 'easy',
   });
 
-  useNuiEvent('startSkillCheck', (data: 'easy' | 'medium' | 'hard') => {
-    const offset = difficultyOffsets[data];
+  useNuiEvent('startSkillCheck', (data: GameDifficulty) => {
+    const offset = typeof data === 'object' ? data.areaSize : difficultyOffsets[data];
     setSkillCheck({
       visible: true,
       angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
@@ -66,7 +73,15 @@ const SkillCheck: React.FC = () => {
             <Indicator
               angle={skillCheck.angle}
               offset={skillCheck.difficultyOffset}
-              multiplier={skillCheck.difficulty === 'easy' ? 1 : skillCheck.difficulty === 'medium' ? 1.5 : 1.75}
+              multiplier={
+                skillCheck.difficulty === 'easy'
+                  ? 1
+                  : skillCheck.difficulty === 'medium'
+                  ? 1.5
+                  : skillCheck.difficulty === 'hard'
+                  ? 1.75
+                  : skillCheck.difficulty.speedMultiplier
+              }
               setSkillCheck={setSkillCheck}
             />
           </svg>
