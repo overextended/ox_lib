@@ -24,7 +24,7 @@ lib.keybinds = {
         data.disable = disableKeybind
 
         RegisterCommand('+' .. data.name, function()
-            if not data.onReleased or data.disabled or IsPauseMenuActive() then return end
+            if not data.onPressed or data.disabled or IsPauseMenuActive() then return end
             data:onPressed()
         end)
 
