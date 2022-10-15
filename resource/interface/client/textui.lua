@@ -4,6 +4,8 @@
 ---@field iconColor? string;
 ---@field style? string;
 
+local isOpen = false
+
 ---@param text string
 ---@param options? TextUIOptions
 function lib.showTextUI(text, options)
@@ -13,10 +15,17 @@ function lib.showTextUI(text, options)
         action = 'textUi',
         data = options
     })
+    isOpen = true
 end
 
 function lib.hideTextUI()
     SendNUIMessage({
         action = 'textUiHide'
     })
+    isOpen = false
+end
+
+---@return boolean
+function lib.isTextUIOpen()
+    return isOpen
 end
