@@ -6,6 +6,7 @@ export * from './interface/menu';
 export * from './interface/notify';
 export * from './interface/progress';
 export * from './interface/textui';
+export * from './interface/skillcheck';
 
 export * from './streaming';
 
