@@ -1,19 +1,32 @@
+---@type promise?
 local skillcheck
 local gameCount = 0
+
+---@alias SkillCheckDifficulity 'easy' | 'medium' | 'hard' | { areaSize: number, speedMultiplier: number }
+
+---@type SkillCheckDifficulity | SkillCheckDifficulity[]
 local gameDifficulty
+
+---@type promise?
 local gamePromise
 
 local function resolveSkillCheck(success)
-    skillcheck:resolve(success)
-    skillcheck = nil
-    SetNuiFocus(false, false)
+    if skillcheck then
+        skillcheck:resolve(success)
+        skillcheck = nil
+        SetNuiFocus(false, false)
+    end
 end
 
+---@param difficulty SkillCheckDifficulity | SkillCheckDifficulity[]
+---@return boolean?
 function lib.skillCheck(difficulty)
     if skillcheck then return end
+
     skillcheck = promise:new()
     gameDifficulty = difficulty
     SetNuiFocus(true, false)
+
     if type(difficulty) == 'table' then
         gameCount = 0
         for i = 1, #difficulty do
@@ -33,6 +46,7 @@ function lib.skillCheck(difficulty)
             data = difficulty
         })
     end
+
     return Citizen.Await(skillcheck)
 end
 
