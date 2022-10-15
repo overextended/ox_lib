@@ -143,7 +143,7 @@ if service == 'loki' then
         local values = {message = message}
 
         -- Format the args into strings
-        local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
+        local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or {})
         local tagsTable = convertDDTagsToKVP(tags)
 
         -- Concatenates tags kvp table to the values table
