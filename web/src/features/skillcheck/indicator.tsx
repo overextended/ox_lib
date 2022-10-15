@@ -8,10 +8,11 @@ interface Props {
   angle: number;
   offset: number;
   multiplier: number;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setSkillCheck: React.Dispatch<React.SetStateAction<SkillCheckProps>>;
 }
 
-const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck }) => {
+const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck, setVisible }) => {
   const [indicatorAngle, setIndicatorAngle] = useState(-90);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
   const isKeyPressed = useKeyPress('e');
@@ -30,7 +31,7 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck }
     if (intervalRef.current && indicatorAngle + 90 >= 360) {
       clearInterval(intervalRef.current);
       fetchNui('skillCheckOver', { success: false });
-      setSkillCheck((prevState) => ({ ...prevState, visible: false }));
+      setVisible(false);
     }
 
     if (isKeyPressed && intervalRef.current) {
@@ -40,7 +41,7 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck }
       } else {
         fetchNui('skillCheckOver', { success: true });
       }
-      setSkillCheck((prevState) => ({ ...prevState, visible: false }));
+      setVisible(false);
     }
   }, [indicatorAngle, isKeyPressed]);
 

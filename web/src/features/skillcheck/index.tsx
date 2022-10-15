@@ -12,7 +12,6 @@ interface CustomGameDifficulty {
 type GameDifficulty = 'easy' | 'medium' | 'hard' | CustomGameDifficulty;
 
 export interface SkillCheckProps {
-  visible: boolean;
   angle: number;
   difficultyOffset: number;
   difficulty: GameDifficulty;
@@ -34,8 +33,8 @@ debugData([
 ]);
 
 const SkillCheck: React.FC = () => {
+  const [visible, setVisible] = useState(false);
   const [skillCheck, setSkillCheck] = useState<SkillCheckProps>({
-    visible: false,
     angle: 0,
     difficultyOffset: 315,
     difficulty: 'easy',
@@ -44,16 +43,16 @@ const SkillCheck: React.FC = () => {
   useNuiEvent('startSkillCheck', (data: GameDifficulty) => {
     const offset = typeof data === 'object' ? data.areaSize : difficultyOffsets[data];
     setSkillCheck({
-      visible: true,
       angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
       difficultyOffset: offset,
       difficulty: data,
     });
+    setVisible(true);
   });
 
   return (
     <Center height="100%" width="100%">
-      {skillCheck.visible && (
+      {visible && (
         <>
           <svg width={500} height={500}>
             {/*Circle track*/}
@@ -91,6 +90,7 @@ const SkillCheck: React.FC = () => {
                   : skillCheck.difficulty.speedMultiplier
               }
               setSkillCheck={setSkillCheck}
+              setVisible={setVisible}
             />
           </svg>
           <Box
