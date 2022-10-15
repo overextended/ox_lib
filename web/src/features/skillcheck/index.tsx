@@ -57,7 +57,15 @@ const SkillCheck: React.FC = () => {
         <>
           <svg width={500} height={500}>
             {/*Circle track*/}
-            <circle r={50} cx={250} cy={250} fill="transparent" stroke="#a3a8a5" strokeDasharray={360} />
+            <circle
+              r={50}
+              cx={250}
+              cy={250}
+              fill="transparent"
+              stroke="rgba(0, 0, 0, 0.4)"
+              strokeWidth={5}
+              strokeDasharray={360}
+            />
             {/*SkillCheck area*/}
             <circle
               r={50}
