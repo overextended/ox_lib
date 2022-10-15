@@ -34,7 +34,7 @@ function lib.addKeybind(data)
         data:onReleased()
     end)
 
-    RegisterKeyMapping('+' .. data.name, data.description, 'keyboard', data.keybind)
+    RegisterKeyMapping('+' .. data.name, data.description, 'keyboard', data.defaultKey)
 
     SetTimeout(500, function()
         TriggerEvent('chat:removeSuggestion', ('/+%s'):format(data.name))
