@@ -1,12 +1,15 @@
----@class CKeybind
+---@class KeybindProps
 ---@field name string
 ---@field description string
 ---@field defaultKey? string
----@field currentKey string
 ---@field disabled? boolean
 ---@field disable? fun(self: CKeybind, toggle: boolean)
 ---@field onPressed? fun(self: CKeybind)
 ---@field onReleased? fun(self: CKeybind)
+---@field [string] any
+
+---@class CKeybind : KeybindProps
+---@field currentKey string
 
 local keybinds = {}
 
@@ -16,7 +19,7 @@ end
 
 local IsPauseMenuActive = IsPauseMenuActive
 
----@param data CKeybind
+---@param data KeybindProps
 ---@return CKeybind
 function lib.addKeybind(data)
     data.defaultKey = data.defaultKey or ''
@@ -42,6 +45,7 @@ function lib.addKeybind(data)
     end)
 
     keybinds[data.name] = data
+    ---@cast data -KeybindProps
     return data
 end
 
