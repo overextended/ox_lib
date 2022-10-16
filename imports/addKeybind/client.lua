@@ -2,7 +2,7 @@
 ---@field name string
 ---@field description string
 ---@field defaultKey? string
----@field keybind string
+---@field currentKey string
 ---@field disabled? boolean
 ---@field disable? fun(self: CKeybind, toggle: boolean)
 ---@field onPressed? fun(self: CKeybind)
@@ -20,7 +20,7 @@ local IsPauseMenuActive = IsPauseMenuActive
 ---@return CKeybind
 function lib.addKeybind(data)
     data.defaultKey = data.defaultKey or ''
-    data.keybind = GetControlInstructionalButton(0, joaat('+' .. data.name) | 0x80000000, true):sub(3)
+    data.currentKey = GetControlInstructionalButton(0, joaat('+' .. data.name) | 0x80000000, true):sub(3)
     data.disabled = data.disabled or false
     data.disable = disableKeybind
 
@@ -34,7 +34,7 @@ function lib.addKeybind(data)
         data:onReleased()
     end)
 
-    RegisterKeyMapping('+' .. data.name, data.description, 'keyboard', data.keybind)
+    RegisterKeyMapping('+' .. data.name, data.description, 'keyboard', data.defaultKey)
 
     SetTimeout(500, function()
         TriggerEvent('chat:removeSuggestion', ('/+%s'):format(data.name))
