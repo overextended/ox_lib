@@ -2,48 +2,61 @@ import { useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import { fetchNui } from '../../utils/fetchNui';
-import { SkillCheckProps } from './index';
+import skillcheck, { SkillCheckProps } from './index';
+import { useInterval } from '@chakra-ui/react';
+import { Simulate } from 'react-dom/test-utils';
+import keyPress = Simulate.keyPress;
 
 interface Props {
   angle: number;
   offset: number;
   multiplier: number;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setSkillCheck: React.Dispatch<React.SetStateAction<SkillCheckProps>>;
+  skillCheck: SkillCheckProps;
+  handleComplete: (success: boolean) => void;
 }
 
-const Indicator: React.FC<Props> = ({ angle, offset, multiplier, setSkillCheck, setVisible }) => {
+const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete, skillCheck }) => {
   const [indicatorAngle, setIndicatorAngle] = useState(-90);
-  const intervalRef = useRef<NodeJS.Timer | null>(null);
+  const [gameState, setGameState] = useState(false);
   const isKeyPressed = useKeyPress('e');
 
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setIndicatorAngle((prevState) => (prevState += multiplier));
-    }, 1);
+  useInterval(
+    () => {
+      setIndicatorAngle((prevState) => {
+        return (prevState += multiplier);
+      });
+    },
+    gameState ? 1 : null
+  );
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+  useEffect(() => {
+    setIndicatorAngle(-90);
+    setGameState(true);
+  }, [skillCheck]);
 
   useEffect(() => {
-    if (intervalRef.current && indicatorAngle + 90 >= 360) {
-      clearInterval(intervalRef.current);
-      fetchNui('skillCheckOver', { success: false });
-      setVisible(false);
+    if (indicatorAngle + 90 >= 360) {
+      // fetchNui('skillCheckOver', { success: false });
+      setGameState(false);
+      handleComplete(false);
     }
+  }, [indicatorAngle]);
 
-    if (isKeyPressed && intervalRef.current) {
-      clearInterval(intervalRef.current);
+  useEffect(() => {
+    if (!isKeyPressed) return;
+    //
+
+    setGameState(false);
+    if (isKeyPressed) {
       if (indicatorAngle < angle || indicatorAngle > angle + (315 - offset)) {
-        fetchNui('skillCheckOver', { success: false });
+        // fetchNui('skillCheckOver', { success: false });
+        handleComplete(false);
       } else {
-        fetchNui('skillCheckOver', { success: true });
+        // fetchNui('skillCheckOver', { success: true });
+        handleComplete(true);
       }
-      setVisible(false);
     }
-  }, [indicatorAngle, isKeyPressed]);
+  }, [isKeyPressed]);
 
   return (
     <circle
