@@ -23,8 +23,7 @@ function lib.getLocales()
 end
 
 function lib.loadLocale()
-    local locale = GetConvar('ox:locale', 'en')
-	local JSON = LoadResourceFile(cache.resource, ('locales/%s.json'):format(locale)) or LoadResourceFile(cache.resource, ('locales/en.json'):format(locale))
+	local JSON = LoadResourceFile(cache.resource, ('locales/%s.json'):format(GetConvar('ox:locale', 'en'))) or LoadResourceFile(cache.resource, 'locales/en.json')
 	dict = JSON and json.decode(JSON) or {}
 end
 
