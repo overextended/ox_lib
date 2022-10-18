@@ -1,5 +1,5 @@
 import { Box, Center } from '@chakra-ui/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { debugData } from '../../utils/debugData';
 import Indicator from './indicator';
@@ -29,7 +29,7 @@ const difficultyOffsets = {
 debugData([
   {
     action: 'startSkillCheck',
-    data: [{ areaSize: 250, speedMultiplier: 2 }, 'easy'],
+    data: [{ areaSize: 250, speedMultiplier: 2 }, 'easy', 'hard'],
   },
 ]);
 
