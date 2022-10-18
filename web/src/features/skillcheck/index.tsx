@@ -1,8 +1,9 @@
 import { Box, Center } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { debugData } from '../../utils/debugData';
 import Indicator from './indicator';
+import { fetchNui } from '../../utils/fetchNui';
 
 interface CustomGameDifficulty {
   areaSize: number;
@@ -28,27 +29,54 @@ const difficultyOffsets = {
 debugData([
   {
     action: 'startSkillCheck',
-    data: 'easy',
+    data: [{ areaSize: 250, speedMultiplier: 2 }, 'easy'],
   },
 ]);
 
 const SkillCheck: React.FC = () => {
   const [visible, setVisible] = useState(false);
+  const dataRef = useRef<GameDifficulty | GameDifficulty[] | null>(null);
+  const dataIndexRef = useRef<number>(0);
   const [skillCheck, setSkillCheck] = useState<SkillCheckProps>({
     angle: 0,
     difficultyOffset: 315,
     difficulty: 'easy',
   });
 
-  useNuiEvent('startSkillCheck', (data: GameDifficulty) => {
+  useNuiEvent('startSkillCheck', (data: GameDifficulty | GameDifficulty[]) => {
+    dataRef.current = data;
+    dataIndexRef.current = 0;
+    const gameData = Array.isArray(data) ? data[0] : data;
+    const offset = typeof gameData === 'object' ? gameData.areaSize : difficultyOffsets[gameData];
+    setSkillCheck({
+      angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
+      difficultyOffset: offset,
+      difficulty: gameData,
+    });
+
+    setVisible(true);
+  });
+
+  const handleComplete = (success: boolean) => {
+    if (!success || !Array.isArray(dataRef.current)) {
+      setVisible(false);
+      return fetchNui('skillCheckOver', success);
+    }
+
+    if (dataIndexRef.current >= dataRef.current.length - 1) {
+      setVisible(false);
+      return fetchNui('skillCheckOver', success);
+    }
+
+    dataIndexRef.current++;
+    const data = dataRef.current[dataIndexRef.current];
     const offset = typeof data === 'object' ? data.areaSize : difficultyOffsets[data];
     setSkillCheck({
       angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
       difficultyOffset: offset,
       difficulty: data,
     });
-    setVisible(true);
-  });
+  };
 
   return (
     <Center height="100%" width="100%">
@@ -89,8 +117,8 @@ const SkillCheck: React.FC = () => {
                   ? 1.75
                   : skillCheck.difficulty.speedMultiplier
               }
-              setSkillCheck={setSkillCheck}
-              setVisible={setVisible}
+              handleComplete={handleComplete}
+              skillCheck={skillCheck}
             />
           </svg>
           <Box
