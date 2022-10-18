@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useKeyPress } from '../../hooks/useKeyPress';
-import { fetchNui } from '../../utils/fetchNui';
-import skillcheck, { SkillCheckProps } from './index';
+import { SkillCheckProps } from './index';
 import { useInterval } from '@chakra-ui/react';
-import { Simulate } from 'react-dom/test-utils';
-import keyPress = Simulate.keyPress;
 
 interface Props {
   angle: number;
@@ -36,7 +32,6 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
 
   useEffect(() => {
     if (indicatorAngle + 90 >= 360) {
-      // fetchNui('skillCheckOver', { success: false });
       setGameState(false);
       handleComplete(false);
     }
@@ -44,18 +39,10 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
 
   useEffect(() => {
     if (!isKeyPressed) return;
-    //
 
     setGameState(false);
-    if (isKeyPressed) {
-      if (indicatorAngle < angle || indicatorAngle > angle + (315 - offset)) {
-        // fetchNui('skillCheckOver', { success: false });
-        handleComplete(false);
-      } else {
-        // fetchNui('skillCheckOver', { success: true });
-        handleComplete(true);
-      }
-    }
+    if (indicatorAngle < angle || indicatorAngle > angle + (315 - offset)) handleComplete(false);
+    else handleComplete(true);
   }, [isKeyPressed]);
 
   return (
