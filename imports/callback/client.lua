@@ -50,7 +50,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 			return promise:resolve(response and { msgpack.unpack(response) } or {})
 		end
 
-		return cb and cb(msgpack.unpack(response))
+		return cb and cb(response and msgpack.unpack(response))
 	end
 
 	if promise then
