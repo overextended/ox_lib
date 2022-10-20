@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import { SkillCheckProps } from './index';
 import { useInterval } from '@chakra-ui/react';
+import { circleCircumference } from './index';
 
 interface Props {
   angle: number;
@@ -41,7 +42,8 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
     if (!isKeyPressed) return;
 
     setGameState(false);
-    if (indicatorAngle < angle || indicatorAngle > angle + (315 - offset)) handleComplete(false);
+
+    if (indicatorAngle < angle || indicatorAngle > angle + offset) handleComplete(false);
     else handleComplete(true);
   }, [isKeyPressed]);
 
@@ -53,8 +55,8 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
       fill="transparent"
       stroke="red"
       strokeWidth={15}
-      strokeDasharray={315}
-      strokeDashoffset={312}
+      strokeDasharray={circleCircumference}
+      strokeDashoffset={circleCircumference - 3}
       transform={`rotate(${indicatorAngle}, 250, 250)`}
     />
   );

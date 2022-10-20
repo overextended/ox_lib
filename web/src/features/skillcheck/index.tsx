@@ -18,18 +18,20 @@ export interface SkillCheckProps {
   difficulty: GameDifficulty;
 }
 
+export const circleCircumference = 2 * 50 * Math.PI;
+
 const getRandomAngle = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
 
 const difficultyOffsets = {
-  easy: 275,
-  medium: 290,
-  hard: 295,
+  easy: 50,
+  medium: 40,
+  hard: 25,
 };
 
 debugData([
   {
     action: 'startSkillCheck',
-    data: [{ areaSize: 250, speedMultiplier: 2 }, 'easy', 'hard'],
+    data: ['hard'],
   },
 ]);
 
@@ -39,7 +41,7 @@ const SkillCheck: React.FC = () => {
   const dataIndexRef = useRef<number>(0);
   const [skillCheck, setSkillCheck] = useState<SkillCheckProps>({
     angle: 0,
-    difficultyOffset: 315,
+    difficultyOffset: 50,
     difficulty: 'easy',
   });
 
@@ -49,7 +51,7 @@ const SkillCheck: React.FC = () => {
     const gameData = Array.isArray(data) ? data[0] : data;
     const offset = typeof gameData === 'object' ? gameData.areaSize : difficultyOffsets[gameData];
     setSkillCheck({
-      angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
+      angle: -90 + getRandomAngle(120, 360 - offset),
       difficultyOffset: offset,
       difficulty: gameData,
     });
@@ -72,7 +74,7 @@ const SkillCheck: React.FC = () => {
     const data = dataRef.current[dataIndexRef.current];
     const offset = typeof data === 'object' ? data.areaSize : difficultyOffsets[data];
     setSkillCheck({
-      angle: -90 + getRandomAngle(120, 360 - (315 - offset)),
+      angle: -90 + getRandomAngle(120, 360 - offset),
       difficultyOffset: offset,
       difficulty: data,
     });
@@ -91,7 +93,7 @@ const SkillCheck: React.FC = () => {
               fill="transparent"
               stroke="rgba(0, 0, 0, 0.4)"
               strokeWidth={5}
-              strokeDasharray={360}
+              strokeDasharray={circleCircumference}
             />
             {/*SkillCheck area*/}
             <circle
@@ -100,8 +102,8 @@ const SkillCheck: React.FC = () => {
               cy={250}
               fill="transparent"
               stroke="white"
-              strokeDasharray={315}
-              strokeDashoffset={skillCheck.difficultyOffset}
+              strokeDasharray={circleCircumference}
+              strokeDashoffset={circleCircumference - (Math.PI * 50 * skillCheck.difficultyOffset) / 180}
               strokeWidth={5}
               transform={`rotate(${skillCheck.angle}, 250, 250)`}
             />
