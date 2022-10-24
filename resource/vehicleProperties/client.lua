@@ -1,5 +1,6 @@
 ---@class VehicleProperties
 ---@field model? string
+---@field vType? string
 ---@field plate? string
 ---@field plateIndex? number
 ---@field bodyHealth? number
@@ -159,6 +160,7 @@ function lib.getVehicleProperties(vehicle)
 
         return {
             model = GetEntityModel(vehicle),
+            vType = GetVehicleType(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
             plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
             bodyHealth = math.floor(GetVehicleBodyHealth(vehicle) + 0.5),
