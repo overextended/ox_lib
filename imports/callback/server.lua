@@ -31,7 +31,9 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 			return promise:resolve(response and { msgpack.unpack(response) } or {})
 		end
 
-		return cb and cb(response and msgpack.unpack(response))
+        if cb and response then
+            cb(msgpack.unpack(response))
+        end
 	end
 
 	if promise then
