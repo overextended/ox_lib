@@ -22,10 +22,7 @@ local IsPauseMenuActive = IsPauseMenuActive
 ---@param data KeybindProps
 ---@return CKeybind
 function lib.addKeybind(data)
-    data.defaultKey = data.defaultKey or ''
-    data.currentKey = GetControlInstructionalButton(0, joaat('+' .. data.name) | 0x80000000, true):sub(3)
-    data.disabled = data.disabled or false
-    data.disable = disableKeybind
+    if not data.defaultKey then data.defaultKey = '' end
 
     RegisterCommand('+' .. data.name, function()
         if not data.onPressed or data.disabled or IsPauseMenuActive() then return end
@@ -44,6 +41,9 @@ function lib.addKeybind(data)
         TriggerEvent('chat:removeSuggestion', ('/-%s'):format(data.name))
     end)
 
+    data.currentKey = GetControlInstructionalButton(0, joaat('+' .. data.name) | 0x80000000, true):sub(3)
+    data.disabled = data.disabled or false
+    data.disable = disableKeybind
     keybinds[data.name] = data
     ---@cast data -KeybindProps
     return data
