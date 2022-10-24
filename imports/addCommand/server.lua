@@ -47,7 +47,7 @@ function lib.addCommand(group, name, callback, parameters, help)
 	else
 		chatSuggestion(name, parameters, help)
 
-		RegisterCommand(name, function(source, args)
+		RegisterCommand(name, function(source, args, raw)
 			source = tonumber(source) --[[@as number]]
 
 			if parameters then
@@ -86,7 +86,7 @@ function lib.addCommand(group, name, callback, parameters, help)
 				end
 			end
 
-			callback(source, args)
+			callback(source, args, raw)
 		end, group and true)
 
 		name = ('command.%s'):format(name)
