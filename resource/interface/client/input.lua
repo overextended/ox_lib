@@ -9,6 +9,8 @@ local input
 ---@field iconColor? string
 ---@field placeholder? string
 ---@field default? string | number
+---@field readonly? boolean
+---@field disabled? boolean
 ---@field checked? boolean
 ---@field min? number
 ---@field max? number
