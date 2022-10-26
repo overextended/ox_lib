@@ -7,7 +7,7 @@ local function request(native, hasLoaded, requestType, name, timeout)
 		end
 
 		for i = 1, timeout do
-			Wait(0)
+			Wait(1)
 			if hasLoaded(name) then
 				return name
 			end
