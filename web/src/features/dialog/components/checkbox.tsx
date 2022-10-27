@@ -1,6 +1,8 @@
-import { Box, Checkbox } from '@chakra-ui/react';
+import { Box, Checkbox, HStack, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { ICheckbox } from '../../../interfaces/dialog';
+import InfoTooltip from './InfoTooltip';
+import Label from './Label';
 
 interface Props {
   row: ICheckbox;
@@ -20,7 +22,7 @@ const CheckboxField: React.FC<Props> = (props) => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.checked, props.index)}
           defaultChecked={props.row.checked}
         >
-          {props.row.label}
+          <Label label={props.row.label} description={props.row.description} />
         </Checkbox>
       </Box>
     </>

@@ -8,7 +8,12 @@ export const debugInput = () => {
       data: {
         heading: 'Police locker',
         rows: [
-          { type: 'input', label: 'Locker number', placeholder: '420' },
+          {
+            type: 'input',
+            label: 'Locker number',
+            placeholder: '420',
+            description: 'Description that tells you what this input field does',
+          },
           { type: 'checkbox', label: 'Some checkbox' },
           { type: 'input', label: 'Locker PIN', password: true, icon: 'lock' },
           { type: 'checkbox', label: 'Some other checkbox', checked: true },
@@ -29,7 +34,13 @@ export const debugInput = () => {
             max: 10,
             icon: 'receipt',
           },
-          { type: 'slider', label: 'Slide bar', min: 10, max: 50, step: 2 },
+          {
+            type: 'slider',
+            label: 'Slide bar',
+            min: 10,
+            max: 50,
+            step: 2,
+          },
         ],
       },
     },

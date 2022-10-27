@@ -14,6 +14,7 @@ local input
 ---@field min? number
 ---@field max? number
 ---@field step? number
+---@field description? string
 
 ---@param heading string
 ---@param rows string[] | InputDialogRowProps[]

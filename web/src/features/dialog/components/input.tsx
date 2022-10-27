@@ -1,7 +1,8 @@
-import { Box, InputGroup, InputLeftElement, InputRightElement, Text, Input } from '@chakra-ui/react';
+import { Box, InputGroup, InputLeftElement, InputRightElement, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import { IInput } from '../../../interfaces/dialog';
+import Label from './Label';
 
 interface Props {
   row: IInput;
@@ -19,7 +20,7 @@ const InputField: React.FC<Props> = (props) => {
   return (
     <>
       <Box mb={3} textAlign="left">
-        <Text>{props.row.label}</Text>
+        <Label label={props.row.label} description={props.row.description} />
         <InputGroup>
           {props.row.icon && (
             <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />

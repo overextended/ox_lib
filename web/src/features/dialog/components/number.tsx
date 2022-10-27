@@ -11,6 +11,7 @@ import {
 import { useEffect } from 'react';
 import { INumber } from '../../../interfaces/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Label from './Label';
 
 interface Props {
   row: INumber;
@@ -25,7 +26,7 @@ const NumberField: React.FC<Props> = (props) => {
 
   return (
     <Box mb={3}>
-      <Text>{props.row.label}</Text>
+      <Label label={props.row.label} description={props.row.description} />
       <NumberInput
         onChange={(val: string) => props.handleChange(+val, props.index)}
         defaultValue={props.row.default}

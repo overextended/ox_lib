@@ -14,6 +14,7 @@ interface InputDialogRowProps {
   min?: number;
   max?: number;
   step?: number;
+  description?: string;
 }
 
 type inputDialog = (

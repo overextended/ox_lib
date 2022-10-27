@@ -1,6 +1,7 @@
 import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, HStack, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { ISlider } from '../../../interfaces/dialog';
+import Label from './Label';
 
 interface Props {
   row: ISlider;
@@ -18,7 +19,7 @@ const SliderField: React.FC<Props> = (props) => {
   return (
     <>
       <Box mb={3} key={`slider-${props.index}`}>
-        <Text>{props.row.label}</Text>
+        <Label label={props.row.label} description={props.row.description} />
         <Slider
           onChangeEnd={(val: number) => props.handleChange(val, props.index)}
           onChange={(val: number) => setSliderValue(val)}
