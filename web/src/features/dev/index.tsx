@@ -20,6 +20,7 @@ import { debugCustomNotification, debugNotification } from './debug/notification
 import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
 import { debugSettings } from './debug/settings';
+import { debugSkillCheck } from './debug/skillcheck';
 
 const Dev: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -81,6 +82,10 @@ const Dev: React.FC = () => {
               </Button>
               <Button isFullWidth onClick={() => debugTextUI()}>
                 Show TextUI
+              </Button>
+              <Divider />
+              <Button isFullWidth onClick={() => debugSkillCheck()}>
+                Run skill check
               </Button>
             </VStack>
           </DrawerBody>

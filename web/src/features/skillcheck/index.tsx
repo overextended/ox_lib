@@ -10,7 +10,7 @@ interface CustomGameDifficulty {
   speedMultiplier: number;
 }
 
-type GameDifficulty = 'easy' | 'medium' | 'hard' | CustomGameDifficulty;
+export type GameDifficulty = 'easy' | 'medium' | 'hard' | CustomGameDifficulty;
 
 export interface SkillCheckProps {
   angle: number;
@@ -27,13 +27,6 @@ const difficultyOffsets = {
   medium: 40,
   hard: 25,
 };
-
-debugData([
-  {
-    action: 'startSkillCheck',
-    data: ['hard'],
-  },
-]);
 
 const SkillCheck: React.FC = () => {
   const [visible, setVisible] = useState(false);
