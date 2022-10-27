@@ -88,7 +88,7 @@ const CircleProgressbar: React.FC = () => {
           >
             <CircularProgressLabel fontFamily="Fira Mono">{value}%</CircularProgressLabel>
           </CircularProgress>
-          <Text fontFamily="Inter" isTruncated fontSize={18} fontWeight="light">
+          <Text fontFamily="Inter" fontSize={18} fontWeight="light">
             {label}
           </Text>
         </Flex>

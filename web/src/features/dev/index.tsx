@@ -49,42 +49,42 @@ const Dev: React.FC = () => {
           <DrawerBody>
             <VStack>
               <Divider />
-              <Button isFullWidth onClick={() => debugInput()}>
+              <Button width="full" onClick={() => debugInput()}>
                 Open input dialog
               </Button>
-              <Button isFullWidth onClick={() => debugAlert()}>
+              <Button width="full" onClick={() => debugAlert()}>
                 Open alert dialog
               </Button>
               <Divider />
-              <Button isFullWidth onClick={() => debugContext()}>
+              <Button width="full" onClick={() => debugContext()}>
                 Open context menu
               </Button>
-              <Button isFullWidth onClick={() => debugMenu()}>
+              <Button width="full" onClick={() => debugMenu()}>
                 Open list menu
               </Button>
               <Divider />
-              <Button isFullWidth onClick={() => debugCustomNotification()}>
+              <Button width="full" onClick={() => debugCustomNotification()}>
                 Send custom notification
               </Button>
-              <Button isFullWidth onClick={() => debugNotification()}>
+              <Button width="full" onClick={() => debugNotification()}>
                 Send default notification
               </Button>
               <Divider />
-              <Button isFullWidth onClick={() => debugProgressbar()}>
+              <Button width="full" onClick={() => debugProgressbar()}>
                 Activate progress bar
               </Button>
-              <Button isFullWidth onClick={() => debugCircleProgressbar()}>
+              <Button width="full" onClick={() => debugCircleProgressbar()}>
                 Activate progress circle
               </Button>
               <Divider />
-              <Button isFullWidth onClick={() => debugSettings()}>
+              <Button width="full" onClick={() => debugSettings()}>
                 Open settings page
               </Button>
-              <Button isFullWidth onClick={() => debugTextUI()}>
+              <Button width="full" onClick={() => debugTextUI()}>
                 Show TextUI
               </Button>
               <Divider />
-              <Button isFullWidth onClick={() => debugSkillCheck()}>
+              <Button width="full" onClick={() => debugSkillCheck()}>
                 Run skill check
               </Button>
             </VStack>

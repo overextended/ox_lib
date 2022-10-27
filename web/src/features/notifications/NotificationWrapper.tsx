@@ -1,4 +1,4 @@
-import { useToast, type ToastPositionWithLogical, Box, HStack, Text } from '@chakra-ui/react';
+import { useToast, type ToastPosition, Box, HStack, Text } from '@chakra-ui/react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,7 +7,7 @@ export interface NotificationProps {
   title?: string;
   description?: string;
   duration?: number;
-  position?: ToastPositionWithLogical;
+  position?: ToastPosition;
   status?: 'info' | 'warning' | 'success' | 'error';
   id?: number;
 }
@@ -19,7 +19,7 @@ export interface CustomNotificationProps {
   duration?: number;
   icon?: IconProp;
   iconColor?: string;
-  position?: ToastPositionWithLogical;
+  position?: ToastPosition;
   id?: number;
   type?: string;
 }

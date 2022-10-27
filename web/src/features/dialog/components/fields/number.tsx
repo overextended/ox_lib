@@ -6,6 +6,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   InputLeftElement,
+  InputGroup,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { INumber } from '../../../../interfaces/dialog';
@@ -26,22 +27,24 @@ const NumberField: React.FC<Props> = (props) => {
   return (
     <Box mb={3}>
       <Label label={props.row.label} description={props.row.description} />
-      <NumberInput
-        onChange={(val: string) => props.handleChange(+val, props.index)}
-        defaultValue={props.row.default}
-        min={props.row.min}
-        max={props.row.max}
-        isDisabled={props.row.disabled}
-      >
-        {props.row.icon && (
-          <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
-        )}
-        <NumberInputField placeholder={props.row.placeholder} pl={props.row.icon ? '40px' : undefined} />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+      <InputGroup>
+        <NumberInput
+          onChange={(val: string) => props.handleChange(+val, props.index)}
+          defaultValue={props.row.default}
+          min={props.row.min}
+          max={props.row.max}
+          isDisabled={props.row.disabled}
+        >
+          {props.row.icon && (
+            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
+          )}
+          <NumberInputField placeholder={props.row.placeholder} pl={props.row.icon ? '40px' : undefined} />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </InputGroup>
     </Box>
   );
 };

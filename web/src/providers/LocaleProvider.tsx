@@ -46,7 +46,7 @@ interface LocaleContextValue {
 
 const LocaleCtx = createContext<LocaleContextValue | null>(null);
 
-const LocaleProvider: React.FC = ({ children }) => {
+const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [locale, setLocale] = useState<Locale>({
     language: '',
     ui: {

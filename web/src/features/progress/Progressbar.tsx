@@ -65,8 +65,11 @@ const Progressbar: React.FC = () => {
               }
             />
             <Text
+              maxWidth={350}
               fontFamily="Inter"
-              isTruncated
+              textOverflow="ellipsis"
+              overflow="hidden"
+              whiteSpace="nowrap"
               fontSize={22}
               fontWeight="light"
               position="absolute"
