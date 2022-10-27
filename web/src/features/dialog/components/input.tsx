@@ -30,7 +30,6 @@ const InputField: React.FC<Props> = (props) => {
             defaultValue={props.row.default}
             type={!props.row.password || props.passwordStates[props.index] ? 'text' : 'password'}
             isDisabled={props.row.disabled}
-            isReadOnly={props.row.readonly}
           />
           {props.row.password && (
             <InputRightElement

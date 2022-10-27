@@ -27,7 +27,6 @@ const SliderField: React.FC<Props> = (props) => {
           max={props.row.max}
           step={props.row.step}
           isDisabled={props.row.disabled}
-          isReadOnly={props.row.readonly}
         >
           <SliderTrack>
             <SliderFilledTrack />

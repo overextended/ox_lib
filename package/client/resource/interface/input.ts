@@ -10,7 +10,6 @@ interface InputDialogRowProps {
   placeholder?: string;
   default?: string | number;
   disabled?: boolean;
-  readonly?: boolean;
   checked?: boolean;
   min?: number;
   max?: number;

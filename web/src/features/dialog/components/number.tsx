@@ -32,7 +32,6 @@ const NumberField: React.FC<Props> = (props) => {
         min={props.row.min}
         max={props.row.max}
         isDisabled={props.row.disabled}
-        isReadOnly={props.row.readonly}
       >
         {props.row.icon && (
           <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />

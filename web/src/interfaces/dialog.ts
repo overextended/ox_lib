@@ -8,7 +8,6 @@ export interface IInput {
   password?: boolean;
   icon?: IconProp;
   disabled?: boolean;
-  readonly?: boolean;
 }
 
 export interface ICheckbox {
@@ -16,7 +15,6 @@ export interface ICheckbox {
   label: string;
   checked?: boolean;
   disabled?: boolean;
-  readonly?: boolean;
 }
 
 export interface ISelect {
@@ -25,7 +23,6 @@ export interface ISelect {
   default?: string;
   options?: { value: string; label?: string }[];
   disabled?: boolean;
-  readonly?: boolean;
 }
 
 export interface INumber {
@@ -37,7 +34,6 @@ export interface INumber {
   min?: number;
   max?: number;
   disabled?: boolean;
-  readonly?: boolean;
 }
 
 export interface ISlider {
@@ -48,5 +44,4 @@ export interface ISlider {
   max?: number;
   step?: number;
   disabled?: boolean;
-  readonly?: boolean;
 }
