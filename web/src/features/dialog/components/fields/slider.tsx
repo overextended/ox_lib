@@ -1,7 +1,7 @@
 import { Box, Text, Slider, SliderTrack, SliderFilledTrack, SliderThumb, HStack, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { ISlider } from '../../../interfaces/dialog';
-import Label from './Label';
+import { ISlider } from '../../../../interfaces/dialog';
+import Label from '../Label';
 
 interface Props {
   row: ISlider;

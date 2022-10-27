@@ -1,8 +1,7 @@
 import { Box, Checkbox, HStack, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { ICheckbox } from '../../../interfaces/dialog';
-import InfoTooltip from './InfoTooltip';
-import Label from './Label';
+import { ICheckbox } from '../../../../interfaces/dialog';
+import Label from '../Label';
 
 interface Props {
   row: ICheckbox;

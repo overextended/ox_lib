@@ -1,6 +1,6 @@
 import { Box, Select } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { ISelect } from '../../../interfaces/dialog';
+import { ISelect } from '../../../../interfaces/dialog';
 
 interface Props {
   row: ISelect;

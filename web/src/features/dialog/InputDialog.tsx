@@ -4,11 +4,11 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
 import { IInput, ICheckbox, ISelect, INumber, ISlider } from '../../interfaces/dialog';
-import InputField from './components/input';
-import CheckboxField from './components/checkbox';
-import SelectField from './components/select';
-import NumberField from './components/number';
-import SliderField from './components/slider';
+import InputField from './components/fields/input';
+import CheckboxField from './components/fields/checkbox';
+import SelectField from './components/fields/select';
+import NumberField from './components/fields/number';
+import SliderField from './components/fields/slider';
 
 export interface InputProps {
   heading: string;

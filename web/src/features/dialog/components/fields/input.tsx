@@ -1,8 +1,8 @@
 import { Box, InputGroup, InputLeftElement, InputRightElement, Input } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
-import { IInput } from '../../../interfaces/dialog';
-import Label from './Label';
+import { IInput } from '../../../../interfaces/dialog';
+import Label from '../Label';
 
 interface Props {
   row: IInput;

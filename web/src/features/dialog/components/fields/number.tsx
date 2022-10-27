@@ -1,6 +1,5 @@
 import {
   Box,
-  Text,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -9,9 +8,9 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { INumber } from '../../../interfaces/dialog';
+import { INumber } from '../../../../interfaces/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Label from './Label';
+import Label from '../Label';
 
 interface Props {
   row: INumber;
