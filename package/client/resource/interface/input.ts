@@ -9,6 +9,7 @@ interface InputDialogRowProps {
   iconColor?: string;
   placeholder?: string;
   default?: string | number;
+  disabled?: boolean;
   checked?: boolean;
   min?: number;
   max?: number;

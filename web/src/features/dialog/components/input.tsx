@@ -29,6 +29,7 @@ const InputField: React.FC<Props> = (props) => {
             placeholder={props.row.placeholder}
             defaultValue={props.row.default}
             type={!props.row.password || props.passwordStates[props.index] ? 'text' : 'password'}
+            isDisabled={props.row.disabled}
           />
           {props.row.password && (
             <InputRightElement
