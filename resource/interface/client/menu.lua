@@ -10,7 +10,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@class MenuOptions
 ---@field label string
 ---@field icon? string
----@field values? string[]
+---@field values? Array<string | { label: string, description: string }>
 ---@field description? string
 ---@field defaultIndex? number
 ---@field args? any

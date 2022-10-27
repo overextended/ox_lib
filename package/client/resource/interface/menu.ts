@@ -6,7 +6,7 @@ type ChangeFunction = (selected: number, scrollIndex: number | null, args: any |
 interface MenuOptions {
   label: string;
   icon?: IconName | [IconPrefix, IconName];
-  values?: string[];
+  values?: Array<string | { label: string; description: string }>;
   description?: string;
   defaultIndex?: number;
   args?: any;

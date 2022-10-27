@@ -17,7 +17,11 @@ export const debugMenu = () => {
           },
           {
             label: 'Vehicle class',
-            values: ['Nice', 'Super nice', 'Extra nice'],
+            values: [
+              { label: 'nice', description: 'description 1' },
+              { label: 'even nicer', description: 'description 2' },
+              'pogchamp',
+            ],
             icon: 'tag',
             description: 'Tooltip description 2',
           },

@@ -38,7 +38,12 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
                 {item.label}
               </Text>
-              <Text>{item.values[scrollIndex]}</Text>
+              <Text>
+                {typeof item.values[scrollIndex] === 'object'
+                  ? // @ts-ignore for some reason even checking the type TS still thinks it's a string
+                    item.values[scrollIndex].label
+                  : item.values[scrollIndex]}
+              </Text>
             </Stack>
             <Stack direction="row" spacing="sm" pr={3} justifyContent="center" alignItems="center">
               <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />

@@ -11,7 +11,7 @@ import React from 'react';
 
 export interface MenuItem {
   label: string;
-  values?: string[];
+  values?: Array<string | { label: string; description: string }>;
   description?: string;
   icon?: IconProp;
   defaultIndex?: number;
@@ -147,7 +147,12 @@ const ListMenu: React.FC = () => {
     <>
       {visible && (
         <Tooltip
-          label={menu.items[selected].description}
+          label={
+            Array.isArray(menu.items[selected].values) && typeof menu.items[selected].values === 'object'
+              ? // @ts-ignore
+                menu.items[selected].values[indexStates[selected]].description
+              : menu.items[selected].description
+          }
           isOpen={!!menu.items[selected].description}
           bg="#25262B"
           color="#909296"
