@@ -26,7 +26,6 @@ const SelectField: React.FC<Props> = (props) => {
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
           defaultValue={props.row.default || ''}
           isDisabled={props.row.disabled}
-          isReadOnly={props.row.readonly}
         >
           {/* Hacky workaround for selectable placeholder issue */}
           {!props.row.default && (
