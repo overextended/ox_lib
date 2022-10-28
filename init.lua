@@ -7,10 +7,15 @@ if not _VERSION:find('5.4') then
 end
 
 local ox_lib = 'ox_lib'
+local export = exports[ox_lib]
 
 if not GetResourceState(ox_lib):find('start') then
-	error('^1ox_lib should be started before this resource^0', 2)
+	error('^1ox_lib should be started before this resource.^0', 2)
 end
+
+local status = export.hasLoaded()
+
+if status ~= true then error(status, 2) end
 
 -----------------------------------------------------------------------------------------------
 -- Module
@@ -45,8 +50,6 @@ end
 -----------------------------------------------------------------------------------------------
 -- API
 -----------------------------------------------------------------------------------------------
-
-local export = exports[ox_lib]
 
 local function call(self, index, ...)
 	local module = rawget(self, index)
