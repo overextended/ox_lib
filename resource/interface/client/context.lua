@@ -50,6 +50,7 @@ function lib.showContext(id)
         }
     }, { sort_keys = true }))
 end
+RegisterNetEvent('ox_lib:showContext', lib.showContext)
 
 ---@param context ContextMenuProps | ContextMenuProps[]
 function lib.registerContext(context)
@@ -62,6 +63,7 @@ function lib.registerContext(context)
         end
     end
 end
+RegisterNetEvent('ox_lib:registerContext', lib.registerContext)
 
 ---@return string?
 function lib.getOpenContextMenu() return openContextMenu end
