@@ -1,6 +1,6 @@
 import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from './index';
 
@@ -68,4 +68,4 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
   );
 });
 
-export default ListItem;
+export default React.memo(ListItem);

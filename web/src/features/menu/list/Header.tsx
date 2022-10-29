@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+import React from 'react';
 
 const Header: React.FC<{ title: string }> = ({ title }) => {
   return (
@@ -18,4 +19,4 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
