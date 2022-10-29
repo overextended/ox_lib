@@ -87,11 +87,11 @@ const ListMenu: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!menu.items[selected]?.values) return;
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
+    if (!menu.items[selected]?.values) return;
     const timer = setTimeout(() => {
       fetchNui('changeIndex', [selected, indexStates[selected]]).catch();
     }, 100);
