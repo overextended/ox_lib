@@ -4,16 +4,17 @@ local registeredMenus = {}
 local openMenu = nil
 local keepInput = IsNuiFocusKeepingInput()
 
----@alias MenuPosition 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
----@alias MenuChangeFunction fun(selected: number, scrollIndex?: number, args?: any)
+---@alias MenuPosition 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+---@alias MenuChangeFunction fun(selected: number, scrollIndex?: number, args?: any, checked?: boolean)
 
 ---@class MenuOptions
 ---@field label string
 ---@field icon? string
+---@field checked? boolean
 ---@field values? Array<string | { label: string, description: string }>
 ---@field description? string
 ---@field defaultIndex? number
----@field args? any
+---@field args? {[any]: any}
 ---@field close? boolean
 
 ---@class MenuProps
@@ -26,6 +27,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field onClose? fun(keyPressed?: 'Escape' | 'Backspace')
 ---@field onSelected? MenuChangeFunction
 ---@field onSideScroll? MenuChangeFunction
+---@field onCheck? MenuChangeFunction
 ---@field cb? MenuChangeFunction
 
 ---@param data MenuProps
@@ -132,13 +134,13 @@ RegisterNUICallback('confirmSelected', function(data, cb)
     end
 
     if menu.cb then
-        menu.cb(data[1], data[2], menu.options[data[1]].args)
+        menu.cb(data[1], data[2], menu.options[data[1]].args, data[3])
     end
 end)
 
 RegisterNUICallback('changeIndex', function(data, cb)
     cb(1)
-    if not openMenu.onSideScroll then return end
+    if not openMenu?.onSideScroll then return end
 
     data[1] += 1 -- selected
 
@@ -151,15 +153,36 @@ end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
-    if not openMenu.onSelected then return end
+    if not openMenu?.onSelected then return end
 
     data[1] += 1 -- selected
 
-    if data[2] then
+
+    local args = openMenu.options[data[1]].args
+
+    if args and type(args) ~= 'table' then
+        return error("Menu args must be passed as a table")
+    end
+
+    if not args then args = {} end
+    print(data[2], data[3])
+    if data[2] then args[data[3]] = true end
+    print(args.isScroll, args.isCheck)
+
+    if data[2] and not args.isCheck then
         data[2] += 1 -- scrollIndex
     end
 
-    openMenu.onSelected(data[1], data[2], openMenu.options[data[1]].args)
+    openMenu.onSelected(data[1], data[2], args)
+end)
+
+RegisterNUICallback('changeChecked', function(data, cb)
+    cb(1)
+    if not openMenu?.onCheck then return end
+
+    data[1] += 1 -- selected
+
+    openMenu.onCheck(data[1], data[2], openMenu.options[data[1]].args)
 end)
 
 RegisterNUICallback('closeMenu', function(data, cb)

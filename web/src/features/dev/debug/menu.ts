@@ -14,6 +14,7 @@ export const debugMenu = () => {
             label: 'Option 2',
             icon: 'basket-shopping',
             description: 'Tooltip description 1',
+            checked: true,
           },
           {
             label: 'Vehicle class',

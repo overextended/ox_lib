@@ -11,6 +11,7 @@ import React from 'react';
 
 export interface MenuItem {
   label: string;
+  checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;
   icon?: IconProp;
@@ -35,6 +36,7 @@ const ListMenu: React.FC = () => {
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
+  const [checkedStates, setCheckedStates] = useState<Record<number, boolean>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
   const firstRenderRef = useRef(false);
 
@@ -59,32 +61,47 @@ const ListMenu: React.FC = () => {
         });
         break;
       case 'ArrowRight':
-        if (!Array.isArray(menu.items[selected].values)) return;
-        setIndexStates({
-          ...indexStates,
-          [selected]:
-            indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
-              ? indexStates[selected] + 1
-              : (indexStates[selected] = 0),
-        });
+        if (Array.isArray(menu.items[selected].values))
+          setIndexStates({
+            ...indexStates,
+            [selected]:
+              indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1 ? indexStates[selected] + 1 : 0,
+          });
         break;
       case 'ArrowLeft':
-        if (!Array.isArray(menu.items[selected].values)) return;
-        setIndexStates({
-          ...indexStates,
-          [selected]:
-            indexStates[selected] - 1 >= 0
-              ? indexStates[selected] - 1
-              : (indexStates[selected] = menu.items[selected].values?.length! - 1),
-        });
+        if (Array.isArray(menu.items[selected].values))
+          setIndexStates({
+            ...indexStates,
+            [selected]:
+              indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : menu.items[selected].values?.length! - 1,
+          });
+
         break;
       case 'Enter':
         if (!menu.items[selected]) return;
+        if (menu.items[selected].checked !== undefined && !menu.items[selected].values) {
+          return setCheckedStates({
+            ...checkedStates,
+            [selected]: !checkedStates[selected],
+          });
+        }
         fetchNui('confirmSelected', [selected, indexStates[selected]]).catch();
         if (menu.items[selected].close === undefined || menu.items[selected].close) setVisible(false);
         break;
     }
   };
+
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    if (menu.items[selected]?.checked === undefined) return;
+    const timer = setTimeout(() => {
+      fetchNui('changeChecked', [selected, checkedStates[selected]]).catch();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [checkedStates]);
 
   useEffect(() => {
     if (firstRenderRef.current) {
@@ -107,7 +124,15 @@ const ListMenu: React.FC = () => {
     listRefs.current[selected]?.focus({ preventScroll: true });
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
-      fetchNui('changeSelected', [selected, indexStates[selected]]).catch();
+      fetchNui('changeSelected', [
+        selected,
+        menu.items[selected].values
+          ? indexStates[selected]
+          : menu.items[selected].checked
+          ? checkedStates[selected]
+          : null,
+        menu.items[selected].values ? 'isScroll' : menu.items[selected].checked ? 'isCheck' : null,
+      ]).catch();
     }, 100);
     return () => clearTimeout(timer);
   }, [selected, menu]);
@@ -135,11 +160,14 @@ const ListMenu: React.FC = () => {
     listRefs.current = [];
     setMenu(data);
     setVisible(true);
-    let arrayIndexes: { [key: number]: number } = {};
+    const arrayIndexes: { [key: number]: number } = {};
+    const checkedIndexes: { [key: number]: boolean } = {};
     for (let i = 0; i < data.items.length; i++) {
       if (Array.isArray(data.items[i].values)) arrayIndexes[i] = (data.items[i].defaultIndex || 1) - 1;
+      else if (data.items[i].checked !== undefined) checkedIndexes[i] = data.items[i].checked || false;
     }
     setIndexStates(arrayIndexes);
+    setCheckedStates(checkedIndexes);
     listRefs.current[data.startItemIndex]?.focus();
   });
 
@@ -189,7 +217,13 @@ const ListMenu: React.FC = () => {
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
-                        <ListItem index={index} item={item} scrollIndex={indexStates[index]} ref={listRefs} />
+                        <ListItem
+                          index={index}
+                          item={item}
+                          scrollIndex={indexStates[index]}
+                          checked={checkedStates[index]}
+                          ref={listRefs}
+                        />
                       )}
                     </React.Fragment>
                   ))}
