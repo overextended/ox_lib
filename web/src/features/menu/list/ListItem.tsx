@@ -30,7 +30,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
     >
       <Flex alignItems="center" height="100%" gap="20px">
         {item.icon && (
-          <Box>
+          <Box display="flex" alignItems="center">
             <FontAwesomeIcon icon={item.icon} fontSize={24} color="#909296" fixedWidth />
           </Box>
         )}
