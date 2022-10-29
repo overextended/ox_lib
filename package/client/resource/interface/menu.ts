@@ -10,7 +10,7 @@ interface MenuOptions {
   values?: Array<string | { label: string; description: string }>;
   description?: string;
   defaultIndex?: number;
-  args?: any;
+  args?: Record<any, any>;
   close?: boolean;
 }
 

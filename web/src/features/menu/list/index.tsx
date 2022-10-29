@@ -61,43 +61,28 @@ const ListMenu: React.FC = () => {
         });
         break;
       case 'ArrowRight':
-        if (Array.isArray(menu.items[selected].values)) {
+        if (Array.isArray(menu.items[selected].values))
           setIndexStates({
             ...indexStates,
             [selected]:
-              indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1
-                ? indexStates[selected] + 1
-                : 0
+              indexStates[selected] + 1 <= menu.items[selected].values?.length! - 1 ? indexStates[selected] + 1 : 0,
           });
-        } else if (menu.items[selected].checked !== undefined) {
-          setCheckedStates({
-            ...checkedStates,
-            [selected]: !checkedStates[selected]
-          });
-        }
         break;
       case 'ArrowLeft':
-        if (Array.isArray(menu.items[selected].values)) {
+        if (Array.isArray(menu.items[selected].values))
           setIndexStates({
             ...indexStates,
             [selected]:
-              indexStates[selected] - 1 >= 0
-                ? indexStates[selected] - 1
-                : menu.items[selected].values?.length! - 1
+              indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : menu.items[selected].values?.length! - 1,
           });
-        } else if (menu.items[selected].checked !== undefined) {
-          setCheckedStates({
-            ...checkedStates,
-            [selected]: !checkedStates[selected]
-          });
-        }
+
         break;
       case 'Enter':
         if (!menu.items[selected]) return;
-        if (menu.items[selected].checked !== undefined) {
-          setCheckedStates({
+        if (menu.items[selected].checked !== undefined && !menu.items[selected].values) {
+          return setCheckedStates({
             ...checkedStates,
-            [selected]: !checkedStates[selected]
+            [selected]: !checkedStates[selected],
           });
         }
         fetchNui('confirmSelected', [selected, indexStates[selected]]).catch();
@@ -113,10 +98,10 @@ const ListMenu: React.FC = () => {
     }
     if (menu.items[selected]?.checked === undefined) return;
     const timer = setTimeout(() => {
-      fetchNui('changeChecked', [selected, indexStates[selected], checkedStates[selected]]).catch();
+      fetchNui('changeChecked', [selected, checkedStates[selected]]).catch();
     }, 100);
     return () => clearTimeout(timer);
-  }, [checkedStates])
+  }, [checkedStates]);
 
   useEffect(() => {
     if (firstRenderRef.current) {
@@ -125,7 +110,7 @@ const ListMenu: React.FC = () => {
     }
     if (!menu.items[selected]?.values) return;
     const timer = setTimeout(() => {
-      fetchNui('changeIndex', [selected, indexStates[selected], checkedStates[selected]]).catch();
+      fetchNui('changeIndex', [selected, indexStates[selected]]).catch();
     }, 100);
     return () => clearTimeout(timer);
   }, [indexStates]);
@@ -139,7 +124,15 @@ const ListMenu: React.FC = () => {
     listRefs.current[selected]?.focus({ preventScroll: true });
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
-      fetchNui('changeSelected', [selected, indexStates[selected], checkedStates[selected]]).catch();
+      fetchNui('changeSelected', [
+        selected,
+        menu.items[selected].values
+          ? indexStates[selected]
+          : menu.items[selected].checked
+          ? checkedStates[selected]
+          : null,
+        menu.items[selected].values ? 'isScroll' : menu.items[selected].checked ? 'isCheck' : null,
+      ]).catch();
     }, 100);
     return () => clearTimeout(timer);
   }, [selected, menu]);
@@ -224,7 +217,13 @@ const ListMenu: React.FC = () => {
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
-                        <ListItem index={index} item={item} scrollIndex={indexStates[index]} checked={checkedStates[index]} ref={listRefs} />
+                        <ListItem
+                          index={index}
+                          item={item}
+                          scrollIndex={indexStates[index]}
+                          checked={checkedStates[index]}
+                          ref={listRefs}
+                        />
                       )}
                     </React.Fragment>
                   ))}

@@ -14,7 +14,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field values? Array<string | { label: string, description: string }>
 ---@field description? string
 ---@field defaultIndex? number
----@field args? any
+---@field args? {[any]: any}
 ---@field close? boolean
 
 ---@class MenuProps
@@ -148,7 +148,7 @@ RegisterNUICallback('changeIndex', function(data, cb)
         data[2] += 1 -- scrollIndex
     end
 
-    openMenu.onSideScroll(data[1], data[2], openMenu.options[data[1]].args, data[3])
+    openMenu.onSideScroll(data[1], data[2], openMenu.options[data[1]].args)
 end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
@@ -157,11 +157,23 @@ RegisterNUICallback('changeSelected', function(data, cb)
 
     data[1] += 1 -- selected
 
-    if data[2] then
+
+    local args = openMenu.options[data[1]].args
+
+    if args and type(args) ~= 'table' then
+        return error("Menu args must be passed as a table")
+    end
+
+    if not args then args = {} end
+    print(data[2], data[3])
+    if data[2] then args[data[3]] = true end
+    print(args.isScroll, args.isCheck)
+
+    if data[2] and not args.isCheck then
         data[2] += 1 -- scrollIndex
     end
 
-    openMenu.onSelected(data[1], data[2], openMenu.options[data[1]].args, data[3])
+    openMenu.onSelected(data[1], data[2], args)
 end)
 
 RegisterNUICallback('changeChecked', function(data, cb)
@@ -170,11 +182,7 @@ RegisterNUICallback('changeChecked', function(data, cb)
 
     data[1] += 1 -- selected
 
-    if data[2] then
-        data[2] += 1 -- scrollIndex
-    end
-
-    openMenu.onCheck(data[1], data[2], openMenu.options[data[1]].args, data[3])
+    openMenu.onCheck(data[1], data[2], openMenu.options[data[1]].args)
 end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
