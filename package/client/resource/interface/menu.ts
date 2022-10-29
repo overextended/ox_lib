@@ -1,11 +1,12 @@
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-type ChangeFunction = (selected: number, scrollIndex: number | null, args: any | null) => void;
+type ChangeFunction = (selected: number, scrollIndex?: number, args?: any, checked?: boolean) => void;
 
 interface MenuOptions {
   label: string;
   icon?: IconName | [IconPrefix, IconName];
+  checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;
   defaultIndex?: number;
@@ -23,6 +24,7 @@ interface MenuProps {
   onClose?: (keyPressed?: 'Escape' | 'Backspace') => void;
   onSelected?: ChangeFunction;
   onSideScroll?: ChangeFunction;
+  onChecked?: ChangeFunction;
   cb?: ChangeFunction;
 }
 

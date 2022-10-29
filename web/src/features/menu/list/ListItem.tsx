@@ -1,15 +1,17 @@
-import { Box, Flex, Stack, Spacer, Text, IconProps } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { forwardRef } from 'react';
+import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from './index';
 
 interface Props {
   item: MenuItem;
   index: number;
   scrollIndex: number;
+  checked: boolean;
 }
 
-const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex }, ref) => {
+const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex, checked }, ref) => {
   return (
     <Box
       bg="#25262B"
@@ -52,6 +54,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               </Text>
               <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
             </Stack>
+          </Flex>
+        ) : item.checked !== undefined ? (
+          <Flex alignItems="center" justifyContent="space-between" w="100%">
+            <Text>{item.label}</Text>
+            <CustomCheckbox checked={checked}></CustomCheckbox>
           </Flex>
         ) : (
           <Text>{item.label}</Text>
