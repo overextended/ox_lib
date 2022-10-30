@@ -27,6 +27,10 @@ export interface MenuSettings {
   startItemIndex?: number;
 }
 
+const isValuesObject = (values?: Array<string | { label: string; description: string }>) => {
+  return Array.isArray(values) && typeof values === 'object';
+};
+
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
     position: 'top-left',
@@ -176,12 +180,17 @@ const ListMenu: React.FC = () => {
       {visible && (
         <Tooltip
           label={
-            Array.isArray(menu.items[selected].values) && typeof menu.items[selected].values === 'object'
+            isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
                 menu.items[selected].values[indexStates[selected]].description
               : menu.items[selected].description
           }
-          isOpen={!!menu.items[selected].description}
+          isOpen={
+            isValuesObject(menu.items[selected].values)
+              ? // @ts-ignore
+                !!menu.items[selected].values[indexStates[selected]].description
+              : !!menu.items[selected].description
+          }
           bg="#25262B"
           color="#909296"
           placement="bottom"

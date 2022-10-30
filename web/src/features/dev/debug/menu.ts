@@ -24,7 +24,6 @@ export const debugMenu = () => {
               'pogchamp',
             ],
             icon: 'tag',
-            description: 'Tooltip description 2',
           },
           { label: 'Option 1' },
           { label: 'Option 2' },
