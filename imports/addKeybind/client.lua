@@ -23,25 +23,34 @@ local IsPauseMenuActive = IsPauseMenuActive
 ---@return CKeybind
 function lib.addKeybind(data)
     if not data.defaultKey then data.defaultKey = '' end
+    local command = data.name
+    if data.onReleased then command = ('+%s'):format(data.name) end
 
-    RegisterCommand('+' .. data.name, function()
-        if not data.onPressed or data.disabled or IsPauseMenuActive() then return end
+    if not data.onPressed then 
+        error('expected onPressed function for table (received nil)')
+        return 
+    end
+
+    RegisterCommand(command, function()
+        if data.disabled or IsPauseMenuActive() then return end
         data:onPressed()
     end)
 
-    RegisterCommand('-' .. data.name, function()
-        if not data.onReleased or data.disabled or IsPauseMenuActive() then return end
-        data:onReleased()
-    end)
+    if data.onReleased then
+        RegisterCommand('-' .. data.name, function()
+            if data.disabled or IsPauseMenuActive() then return end
+            data:onReleased()
+        end) 
+    end
 
-    RegisterKeyMapping('+' .. data.name, data.description, 'keyboard', data.defaultKey)
+    RegisterKeyMapping(command, data.description, 'keyboard', data.defaultKey)
 
     SetTimeout(500, function()
-        TriggerEvent('chat:removeSuggestion', ('/+%s'):format(data.name))
+        TriggerEvent('chat:removeSuggestion', ('/%s'):format(command))
         TriggerEvent('chat:removeSuggestion', ('/-%s'):format(data.name))
     end)
 
-    data.currentKey = GetControlInstructionalButton(0, joaat('+' .. data.name) | 0x80000000, true):sub(3)
+    data.currentKey = GetControlInstructionalButton(0, joaat(command) | 0x80000000, 1):sub(3)
     data.disabled = data.disabled or false
     data.disable = disableKeybind
     keybinds[data.name] = data
