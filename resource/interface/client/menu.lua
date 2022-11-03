@@ -165,9 +165,7 @@ RegisterNUICallback('changeSelected', function(data, cb)
     end
 
     if not args then args = {} end
-    print(data[2], data[3])
     if data[2] then args[data[3]] = true end
-    print(args.isScroll, args.isCheck)
 
     if data[2] and not args.isCheck then
         data[2] += 1 -- scrollIndex
