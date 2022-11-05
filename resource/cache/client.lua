@@ -40,7 +40,7 @@ CreateThread(function()
 		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
 
 		if hasWeapon then
-			if not cache.weapon or cache.weapon ~= currentWeapon then
+			if cache.weapon ~= currentWeapon then
 				cache:set('weapon', currentWeapon)
 			end
 		else
