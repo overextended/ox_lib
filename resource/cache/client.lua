@@ -37,6 +37,16 @@ CreateThread(function()
 			cache:set('seat', false)
 		end
 
+		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
+
+		if hasWeapon then
+			if not cache.weapon or cache.weapon ~= currentWeapon then
+				cache:set('weapon', currentWeapon)
+			end
+		else
+			cache:set('weapon', false)
+		end
+
 		Wait(100)
 	end
 end)
