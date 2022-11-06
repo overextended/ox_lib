@@ -39,7 +39,13 @@ CreateThread(function()
 
 		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
 
-		cache:set('weapon', hasWeapon and currentWeapon or false)
+		if hasWeapon then
+			if cache.weapon ~= currentWeapon then
+				cache:set('weapon', currentWeapon)
+			end
+		else
+			cache:set('weapon', false)
+		end
 
 		Wait(100)
 	end
