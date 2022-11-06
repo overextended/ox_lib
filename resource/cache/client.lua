@@ -13,6 +13,7 @@ end
 local GetVehiclePedIsIn = GetVehiclePedIsIn
 local GetPedInVehicleSeat = GetPedInVehicleSeat
 local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
+local GetCurrentPedWeapon = GetCurrentPedWeapon
 
 CreateThread(function()
 	while true do
