@@ -9,6 +9,7 @@ export interface Option {
   icon?: IconProp;
   iconColor?: string;
   metadata?: string[] | { [key: string]: any } | { label: string; value: any }[];
+  disabled?: boolean;
   event?: string;
   serverEvent?: string;
   args?: any;

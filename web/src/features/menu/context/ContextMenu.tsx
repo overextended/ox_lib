@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fetchNui } from '../../../utils/fetchNui';
 
 const openMenu = (id: string | undefined) => {
-  fetchNui<ContextMenuProps>('openContext', {id: id, back: true});
+  fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
 };
 
 const ContextMenu: React.FC = () => {

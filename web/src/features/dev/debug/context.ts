@@ -15,6 +15,7 @@ export const debugContext = () => {
             icon: 'inbox',
             image: 'https://i.imgur.com/YAe7k17.jpeg',
             metadata: [{ label: 'Value 1', value: 300 }],
+            disabled: true,
           },
           {
             title: 'Menu button',

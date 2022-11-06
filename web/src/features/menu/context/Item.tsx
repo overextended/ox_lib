@@ -34,7 +34,7 @@ const Item: React.FC<{
       <Popover placement="right-start" trigger="hover" eventListeners={{ scroll: true }} isLazy>
         <PopoverTrigger>
           <Box
-            bg="gray.800"
+            bg={button.disabled ? 'gray.600' : 'gray.800'}
             borderRadius="md"
             h="fit-content"
             w="100%"
@@ -43,12 +43,16 @@ const Item: React.FC<{
             fontFamily="Poppins"
             fontSize="md"
             transition="300ms"
-            _hover={{ bg: 'gray.700' }}
+            _hover={{ bg: !button.disabled && 'gray.700' }}
+            cursor={(button.disabled && 'not-allowed') || undefined}
           >
             <Flex
               w="100%"
               alignItems="center"
-              onClick={() => (button.menu ? openMenu(button.menu) : clickContext(buttonKey))}
+              color={button.disabled ? '#718096' : undefined}
+              onClick={() =>
+                !button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null
+              }
             >
               {button?.icon && (
                 <FontAwesomeIcon
@@ -64,12 +68,12 @@ const Item: React.FC<{
               )}
               <Box>
                 <Box paddingBottom={button.description ? 1 : 0}>
-                  <Text w="100%" fontWeight="medium">
+                  <Text w="100%" fontWeight="medium" color={button.disabled ? '#718096' : undefined}>
                     {button.title ? button.title : buttonKey}
                   </Text>
                 </Box>
                 {button.description && (
-                  <Box paddingBottom={1}>
+                  <Box paddingBottom={1} color={button.disabled ? '#718096' : undefined}>
                     <Text>{button.description}</Text>
                   </Box>
                 )}
@@ -84,7 +88,7 @@ const Item: React.FC<{
               )}
             </Flex>
             <Portal>
-              {(button.metadata || button.image) && (
+              {!button.disabled && (button.metadata || button.image) && (
                 <PopoverContent
                   fontFamily="Poppins"
                   bg="gray.800"

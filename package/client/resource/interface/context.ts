@@ -9,6 +9,7 @@ interface ContextMenuItem {
   arrow?: boolean;
   description?: string;
   metadata?: string | { [key: string]: any } | string[];
+  disabled?: boolean;
   event?: string;
   serverEvent?: string;
   args?: any;
