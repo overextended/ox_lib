@@ -13,6 +13,7 @@ end
 local GetVehiclePedIsIn = GetVehiclePedIsIn
 local GetPedInVehicleSeat = GetPedInVehicleSeat
 local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
+local GetCurrentPedWeapon = GetCurrentPedWeapon
 
 CreateThread(function()
 	while true do
@@ -36,6 +37,10 @@ CreateThread(function()
 			cache:set('vehicle', false)
 			cache:set('seat', false)
 		end
+
+		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
+
+		cache:set('weapon', hasWeapon and currentWeapon or false)
 
 		Wait(100)
 	end
