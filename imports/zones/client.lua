@@ -360,7 +360,7 @@ local function convertToVector(coords)
     local _type = type(coords)
 
     if _type ~= 'vector3' then
-        if _type == 'table' then
+        if _type == 'table' or _type == 'vector4' then
             return vec3(coords[1] or coords.x, coords[2] or coords.y, coords[3] or coords.z)
         end
 
