@@ -1,5 +1,5 @@
 import { Box, Stack, Tooltip } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
@@ -26,10 +26,6 @@ export interface MenuSettings {
   items: Array<MenuItem>;
   startItemIndex?: number;
 }
-
-const isValuesObject = (values?: Array<string | { label: string; description: string }>) => {
-  return Array.isArray(values) && typeof values === 'object';
-};
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
@@ -152,6 +148,13 @@ const ListMenu: React.FC = () => {
 
     return () => window.removeEventListener('keydown', keyHandler);
   }, [visible]);
+
+  const isValuesObject = useCallback(
+    (values?: Array<string | { label: string; description: string }>) => {
+      return Array.isArray(values) && typeof values[indexStates[selected]] === 'object';
+    },
+    [indexStates, selected]
+  );
 
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
