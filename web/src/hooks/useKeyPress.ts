@@ -5,7 +5,7 @@ export const useKeyPress = (targetKey: KeyboardEvent['key']) => {
 
   const downHandler = React.useCallback(
     ({ key }: KeyboardEvent) => {
-      if (key === targetKey) {
+      if (key.toLowerCase() === targetKey) {
         setKeyPressed(true);
       }
     },
@@ -14,7 +14,7 @@ export const useKeyPress = (targetKey: KeyboardEvent['key']) => {
 
   const upHandler = React.useCallback(
     ({ key }: KeyboardEvent) => {
-      if (key === targetKey) {
+      if (key.toLowerCase() === targetKey) {
         setKeyPressed(false);
       }
     },
