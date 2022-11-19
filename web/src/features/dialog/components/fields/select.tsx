@@ -21,7 +21,7 @@ const SelectField: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Box mb={3} key={`select-${props.index}`}>
+      <Box mb={3} key={`select-${props.row.label}-${props.index}`}>
         <Select
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
           defaultValue={props.row.default || ''}
