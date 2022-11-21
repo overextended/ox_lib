@@ -30,7 +30,7 @@ files {
 	'locales/*.json',
 }
 
-shared_script 'resource/main.lua'
+shared_script 'resource/init.lua'
 
 shared_scripts {
     'resource/**/shared.lua',
