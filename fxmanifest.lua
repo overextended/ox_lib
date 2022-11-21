@@ -39,6 +39,8 @@ shared_scripts {
 
 client_scripts {
 	'imports/callback/client.lua',
+	'imports/requestModel/client.lua',
+	'imports/requestAnimDict/client.lua',
     'resource/**/client.lua',
     'resource/**/client/*.lua'
 }

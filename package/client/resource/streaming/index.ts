@@ -1,14 +1,47 @@
-export const requestAnimDict = (animDict: string, timeout?: number): string =>
-  exports.ox_lib.requestAnimDict(animDict, timeout);
+function streamingRequest(
+  request: Function,
+  hasLoaded: Function,
+  assetType: string,
+  asset: any,
+  timeout?: number
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (hasLoaded(asset)) resolve(asset);
 
-export const requestAnimSet = (animSet: string, timeout?: number): string =>
-  exports.ox_lib.requestAnimSet(animSet, timeout);
+    request(asset);
 
-export const requestModel = (model: string | number, timeout?: number): string =>
-  exports.ox_lib.requestModel(model, timeout);
+    if (typeof timeout !== 'number') timeout = 500;
 
-export const requestStreamedTextureDict = (dict: string, timeout?: number): string =>
-  exports.ox_lib.requestStreamedTextureDict(dict, timeout);
+    let i = 0;
 
-export const requestNamedPtfxAsset = (fxName: string, timeout?: number): string =>
-  exports.ox_lib.requestNamedPtfxAsset(fxName, timeout);
+    setTick(() => {
+      if (hasLoaded(asset)) resolve(asset);
+
+      i++;
+
+      if (i === timeout) reject(`failed to load ${assetType} '${asset}' after ${timeout} ticks`);
+    });
+  });
+}
+
+export const requestAnimDict = (animDict: string, timeout?: number): Promise<string> => {
+  if (!DoesAnimDictExist(animDict)) throw new Error(`attempted to load invalid animDict '${animDict}'`);
+
+  return streamingRequest(RequestAnimDict, HasAnimDictLoaded, 'animDict', animDict, timeout);
+};
+
+export const requestAnimSet = (animSet: string, timeout?: number): Promise<string> =>
+  streamingRequest(RequestAnimSet, HasAnimSetLoaded, 'animSet', animSet, timeout);
+
+export const requestModel = (model: string | number, timeout?: number): Promise<number> => {
+  if (typeof model !== 'number') model = GetHashKey(model);
+  if (!IsModelValid(model)) throw new Error(`attempted to load invalid model '${model}'`);
+
+  return streamingRequest(RequestModel, HasModelLoaded, 'model', model, timeout);
+};
+
+export const requestStreamedTextureDict = (textureDict: string, timeout?: number): Promise<string> =>
+  streamingRequest(RequestStreamedTextureDict, HasStreamedTextureDictLoaded, 'textureDict', textureDict, timeout);
+
+export const requestNamedPtfxAsset = (ptFxName: string, timeout?: number): Promise<string> =>
+  streamingRequest(RequestNamedPtfxAsset, HasNamedPtfxAssetLoaded, 'ptFxName', ptFxName, timeout);
