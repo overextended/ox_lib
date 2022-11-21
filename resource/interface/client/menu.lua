@@ -1,7 +1,7 @@
 ---@type { [string]: MenuProps }
 local registeredMenus = {}
 ---@type MenuProps | nil
-local openMenu = nil
+local openMenu
 local keepInput = IsNuiFocusKeepingInput()
 
 ---@alias MenuPosition 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
@@ -11,7 +11,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field label string
 ---@field icon? string
 ---@field checked? boolean
----@field values? Array<string | { label: string, description: string }>
+---@field values? table<string | { label: string, description: string }>
 ---@field description? string
 ---@field defaultIndex? number
 ---@field args? {[any]: any}
@@ -91,6 +91,9 @@ end
 ---@param onExit boolean?
 function lib.hideMenu(onExit)
     local menu = openMenu
+
+    if not menu then return end
+
     openMenu = nil
 
     if onExit and menu.onClose then
@@ -116,7 +119,7 @@ function lib.setMenuOptions(id, options, index)
 end
 
 ---@return string?
-function lib.getOpenMenu() return openMenu?.id end
+function lib.getOpenMenu() return openMenu and openMenu.id end
 
 RegisterNUICallback('confirmSelected', function(data, cb)
     cb(1)
@@ -127,6 +130,8 @@ RegisterNUICallback('confirmSelected', function(data, cb)
     end
 
     local menu = openMenu
+
+    if not menu then return end
 
     if menu.options[data[1]].close ~= false then
         resetFocus()
@@ -140,7 +145,7 @@ end)
 
 RegisterNUICallback('changeIndex', function(data, cb)
     cb(1)
-    if not openMenu?.onSideScroll then return end
+    if not openMenu or not openMenu.onSideScroll then return end
 
     data[1] += 1 -- selected
 
@@ -153,7 +158,7 @@ end)
 
 RegisterNUICallback('changeSelected', function(data, cb)
     cb(1)
-    if not openMenu?.onSelected then return end
+    if not openMenu or not openMenu.onSelected then return end
 
     data[1] += 1 -- selected
 
@@ -176,7 +181,7 @@ end)
 
 RegisterNUICallback('changeChecked', function(data, cb)
     cb(1)
-    if not openMenu?.onCheck then return end
+    if not openMenu or not openMenu.onCheck then return end
 
     data[1] += 1 -- selected
 
@@ -188,6 +193,9 @@ RegisterNUICallback('closeMenu', function(data, cb)
     resetFocus()
 
     local menu = openMenu
+
+    if not menu then return end
+
     openMenu = nil
 
     if menu.onClose then

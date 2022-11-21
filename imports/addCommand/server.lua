@@ -33,7 +33,7 @@ local function chatSuggestion(name, parameters, help)
 	}
 end
 
----@param group string | string[]
+---@param group string | string[] | false
 ---@param name string | string[]
 ---@param callback function
 ---@param parameters table
