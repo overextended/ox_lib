@@ -19,6 +19,7 @@ local GetCurrentPedWeapon = GetCurrentPedWeapon
 CreateThread(function()
 	while true do
 		local ped = PlayerPedId()
+		cache:set('ped', ped)
 		local coords = GetEntityCoords(ped)
 		cache:set('coords', coords)
 
