@@ -10,6 +10,7 @@ function cache:set(key, value)
 	end
 end
 
+local GetEntityCoords = GetEntityCoords
 local GetVehiclePedIsIn = GetVehiclePedIsIn
 local GetPedInVehicleSeat = GetPedInVehicleSeat
 local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
@@ -18,7 +19,8 @@ local GetCurrentPedWeapon = GetCurrentPedWeapon
 CreateThread(function()
 	while true do
 		local ped = PlayerPedId()
-		cache:set('ped', ped)
+		local coords = GetEntityCoords(ped)
+		cache:set('coords', coords)
 
 		local vehicle = GetVehiclePedIsIn(ped, false)
 

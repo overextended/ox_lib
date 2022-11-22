@@ -155,7 +155,7 @@ const ListMenu: React.FC = () => {
     },
     [indexStates, selected]
   );
-
+  
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
@@ -181,7 +181,7 @@ const ListMenu: React.FC = () => {
   return (
     <>
       {visible && (
-        <Tooltip
+        <Tooltip hasArrow
           label={
             isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
@@ -203,7 +203,7 @@ const ListMenu: React.FC = () => {
           <Box
             position="absolute"
             pointerEvents="none"
-            mt={menu.position === 'top-left' || menu.position === 'top-right' ? 5 : 0}
+            mt={menu.position === 'top-left' || menu.position === 'top-right' ? 12 : 0}
             ml={menu.position === 'top-left' || menu.position === 'bottom-left' ? 5 : 0}
             mr={menu.position === 'top-right' || menu.position === 'bottom-right' ? 5 : 0}
             mb={menu.position === 'bottom-left' || menu.position === 'bottom-right' ? 5 : 0}
