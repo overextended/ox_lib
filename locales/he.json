@@ -1,0 +1,12 @@
+{
+  "language": "עברית",
+  "ui": {
+    "settings": {
+      "title": "הגדרות",
+      "language": "שפה"
+    },
+    "cancel": "ביטול",
+    "close": "סגירה",
+    "confirm": "אישור"
+  }
+}
