@@ -136,10 +136,11 @@ local function drawLines()
 	end
 end
 
+local gameType = cache.game
 local controls = {
-    ['INPUT_LOOK_LR'] = cache.game == 'fivem' and 1 or 0xA987235F,
-    ['INPUT_LOOK_UD'] = cache.game == 'fivem' and 2 or 0xD2047988,
-    ['INPUT_MP_TEXT_CHAT_ALL'] = cache.game == 'fivem' and 245 or 0x9720FCEE
+    ['INPUT_LOOK_LR'] = gameType == 'fivem' and 1 or 0xA987235F,
+    ['INPUT_LOOK_UD'] = gameType == 'fivem' and 2 or 0xD2047988,
+    ['INPUT_MP_TEXT_CHAT_ALL'] = gameType == 'fivem' and 245 or 0x9720FCEE
 }
 
 local function startCreator(arg)
