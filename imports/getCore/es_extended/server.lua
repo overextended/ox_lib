@@ -1,3 +1,4 @@
+if cache.game == 'redm' then return end
 if not lib.player then lib.player() end
 
 return function(resource)
