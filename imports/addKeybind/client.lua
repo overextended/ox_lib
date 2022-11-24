@@ -10,6 +10,8 @@
 
 ---@class CKeybind : KeybindProps
 ---@field currentKey string
+---@field disabled boolean
+---@field hash number
 ---@field getCurrentKey fun(): string
 
 local keybinds = {}
@@ -20,7 +22,6 @@ end
 
 local IsPauseMenuActive = IsPauseMenuActive
 local GetControlInstructionalButton = GetControlInstructionalButton
-local joaat = joaat
 
 local keybind_mt = {
     disabled = false,
@@ -39,7 +40,7 @@ function keybind_mt:__index(index)
 end
 
 function keybind_mt:getCurrentKey()
-    return GetControlInstructionalButton(0, joaat('+' .. self.name) | 0x80000000, true):sub(3)
+    return GetControlInstructionalButton(0, self.hash, true):sub(3)
 end
 
 ---@param data KeybindProps
@@ -64,11 +65,12 @@ function lib.addKeybind(data)
         TriggerEvent('chat:removeSuggestion', ('/-%s'):format(data.name))
     end)
 
+    data.hash = joaat('+' .. data.name) | 0x80000000
     data.disabled = data.disabled
     data.disable = disableKeybind
     keybinds[data.name] = setmetatable(data, keybind_mt)
-    ---@cast data -KeybindProps
-    return data
+
+    return data --[[@as CKeybind]]
 end
 
 return lib.addKeybind
