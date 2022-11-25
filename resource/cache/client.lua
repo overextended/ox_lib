@@ -43,7 +43,6 @@ CreateThread(function()
 		if cache.game == 'redm' then
 			local mount = GetMount(ped)
 			local onMount = IsPedOnMount(ped)
-			cache:set('mounted', onMount)
 			cache:set('mount', onMount and mount or false)
 		end
 
