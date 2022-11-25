@@ -2,18 +2,25 @@ local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 
----@param flags number? Defaults to 1|2|8|16 (see: https://docs.fivem.net/natives/?_0x377906D8A31E5586)
----@param p8 number? A bit mask with bits 1, 2, 4, or 7 relating to collider types. 4 and 7 are usually used.
+---@alias ShapetestIgnore
+---| 1 GLASS
+---| 2 SEE_THROUGH
+---| 3 GLASS | SEE_THROUGH
+---| 4 NO_COLLISION
+---| 7 GLASS | SEE_THROUGH | NO_COLLISION
+
+---@param flags number? Line of sight flags, defaults to 511 (see: https://docs.fivem.net/natives/?_0x377906D8A31E5586).
+---@param ignore ShapetestIgnore Defaults to 4.
 ---@return boolean hit
 ---@return number entityHit
 ---@return vector3 endCoords
 ---@return vector3 surfaceNormal
 ---@return number materialHash
-function lib.raycast.cam(flags, p8)
+function lib.raycast.cam(flags, ignore)
 	local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
 	local destination = coords + normal * 10
 	local handle = StartShapeTestLosProbe(coords.x, coords.y, coords.z, destination.x, destination.y, destination.z,
-		flags or 1 | 2 | 8 | 16, cache.ped, p8 or 4)
+		flags or 511, cache.ped, ignore or 4)
 
 	while true do
 		Wait(0)
