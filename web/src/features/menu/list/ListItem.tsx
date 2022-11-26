@@ -19,7 +19,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       tabIndex={index}
       scrollMargin={2}
       p={2}
-      height="60px"
+      height="50px"
       key={`item-${index}`}
       _focus={{ bg: '#373A40', outline: 'none' }}
       ref={(element) => {

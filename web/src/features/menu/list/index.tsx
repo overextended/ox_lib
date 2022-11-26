@@ -181,7 +181,7 @@ const ListMenu: React.FC = () => {
   return (
     <>
       {visible && (
-        <Tooltip
+        <Tooltip hasArrow
           label={
             isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
