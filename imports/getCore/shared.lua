@@ -1,3 +1,4 @@
+if cache.game == 'redm' then return end
 --[[
 	This module was experimental and won't be worked on or used further.
 	May be removed in the future.

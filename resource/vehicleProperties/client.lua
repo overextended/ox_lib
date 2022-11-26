@@ -1,3 +1,5 @@
+if cache.game == 'redm' then return end
+
 ---@class VehicleProperties
 ---@field model? string
 ---@field plate? string

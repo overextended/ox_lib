@@ -144,7 +144,7 @@ end
 -- Cache
 -----------------------------------------------------------------------------------------------
 
-cache = { resource = GetCurrentResourceName() }
+cache = { game = GetGameName(), resource = GetCurrentResourceName() }
 
 if context == 'client' then
 	setmetatable(cache, {

@@ -1,3 +1,5 @@
+if cache.game == 'redm' then return end
+
 ---@class KeybindProps
 ---@field name string
 ---@field description string
