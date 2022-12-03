@@ -33,7 +33,8 @@ export const debugMenu = () => {
             progress: 80,
             icon: 'car-side',
             description: 'Durability: 80%',
-            colorScheme: 'blue'
+            colorScheme: 'blue',
+            iconColor: '#55778d'
           },
           { label: 'Option 1' },
           { label: 'Option 2' },

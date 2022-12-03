@@ -17,6 +17,7 @@ export interface MenuItem {
   values?: Array<string | { label: string; description: string }>;
   description?: string;
   icon?: IconProp;
+  iconColor?: string;
   defaultIndex?: number;
   close?: boolean;
 }

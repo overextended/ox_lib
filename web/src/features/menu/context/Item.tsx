@@ -79,7 +79,7 @@ const Item: React.FC<{
                   </Box>
                 )}
                 { button?.progress && (
-                    <Progress value={button.progress} size="sm" colorScheme={button.colorScheme ? button.colorScheme : "gray"} borderRadius="md" marginRight="5px"/>
+                    <Progress value={button.progress} size="sm" colorScheme={button.colorScheme || "gray"} borderRadius="md" marginRight="5px"/>
                 )}
               </Box>
               {(button.menu || button.arrow) && button.arrow !== false && (

@@ -31,7 +31,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       <Flex alignItems="center" height="100%" gap="15px">
         {item.icon && (
           <Box display="flex" alignItems="center">
-            <FontAwesomeIcon icon={item.icon} fontSize={24} color="#909296" fixedWidth />
+            <FontAwesomeIcon icon={item.icon} fontSize={24} color={item.iconColor || "#909296"} fixedWidth />
           </Box>
         )}
         {Array.isArray(item.values) ? (
@@ -63,7 +63,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
         ) : item.progress !== undefined ? (
           <Flex flexDirection="column" w="100%" marginRight="5px">
             <Text verticalAlign="middle" marginBottom="3px"> {item.label} </Text>
-            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme ? item.colorScheme : 'gray'} borderRadius="md"/>
+            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme || 'gray'} borderRadius="md"/>
           </Flex>
         ) : (
           <Text>{item.label}</Text>
