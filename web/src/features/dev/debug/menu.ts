@@ -26,8 +26,14 @@ export const debugMenu = () => {
             label: 'Oil Level',
             progress: 30,
             icon: 'oil-can',
-            colorScheme: 'orange',
             description: 'Remaining Oil: 30%',
+          },
+          {
+            label: 'Durability',
+            progress: 80,
+            icon: 'car-side',
+            description: 'Durability: 80%',
+            colorScheme: 'blue'
           },
           { label: 'Option 1' },
           { label: 'Option 2' },

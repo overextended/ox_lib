@@ -63,7 +63,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
         ) : item.progress !== undefined ? (
           <Flex flexDirection="column" w="100%" marginRight="5px">
             <Text verticalAlign="middle" marginBottom="3px"> {item.label} </Text>
-            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme} borderRadius="md"/>
+            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme ? item.colorScheme : 'gray'} borderRadius="md"/>
           </Flex>
         ) : (
           <Text>{item.label}</Text>

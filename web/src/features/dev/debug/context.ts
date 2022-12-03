@@ -22,8 +22,15 @@ export const debugContext = () => {
             description: 'Vehicle oil level',
             progress: 30,
             icon: 'oil-can',
-            colorScheme: 'orange',
             metadata: [{ label: 'Remaining Oil', value: '30%' }],
+            arrow: true,
+          },
+          {
+            title: 'Durability',
+            progress: 80,
+            icon: 'car-side',
+            metadata: [{ label: 'Durability', value: '80%' }],
+            colorScheme: 'blue'
           },
           {
             title: 'Menu button',
