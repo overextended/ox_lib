@@ -74,7 +74,7 @@ const Item: React.FC<{
                   </Text>
                 </Box>
                 { button.description && (
-                  <Box paddingBottom={1} color={button.disabled ? '#718096' : undefined} fontWeight="light">
+                  <Box paddingBottom={1} color={button.disabled ? '#718096' : undefined}">
                     <Text>{button.description}</Text>
                   </Box>
                 )}
