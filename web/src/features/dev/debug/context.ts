@@ -18,6 +18,14 @@ export const debugContext = () => {
             disabled: true,
           },
           {
+            title: 'Oil Level',
+            description: 'Vehicle oil level',
+            progress: 30,
+            icon: 'oil-can',
+            colorScheme: 'orange',
+            metadata: [{ label: 'Remaining Oil', value: '30%' }],
+          },
+          {
             title: 'Menu button',
             icon: 'bars',
             menu: 'other_example_menu',

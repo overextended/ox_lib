@@ -8,6 +8,8 @@ export interface Option {
   image?: string;
   icon?: IconProp;
   iconColor?: string;
+  progress?: number;
+  colorScheme?: string;
   metadata?: string[] | { [key: string]: any } | { label: string; value: any }[];
   disabled?: boolean;
   event?: string;

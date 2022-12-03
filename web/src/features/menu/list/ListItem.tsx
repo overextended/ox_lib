@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text, Progress } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
@@ -28,7 +28,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           return (ref.current = [...ref.current, element]);
       }}
     >
-      <Flex alignItems="center" height="100%" gap="20px">
+      <Flex alignItems="center" height="100%" gap="15px">
         {item.icon && (
           <Box display="flex" alignItems="center">
             <FontAwesomeIcon icon={item.icon} fontSize={24} color="#909296" fixedWidth />
@@ -59,6 +59,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           <Flex alignItems="center" justifyContent="space-between" w="100%">
             <Text>{item.label}</Text>
             <CustomCheckbox checked={checked}></CustomCheckbox>
+          </Flex>
+        ) : item.progress !== undefined ? (
+          <Flex flexDirection="column" w="100%" marginRight="5px">
+            <Text verticalAlign="middle" marginBottom="3px"> {item.label} </Text>
+            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme} borderRadius="md"/>
           </Flex>
         ) : (
           <Text>{item.label}</Text>

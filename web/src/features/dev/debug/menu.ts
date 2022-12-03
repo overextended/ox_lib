@@ -22,6 +22,13 @@ export const debugMenu = () => {
             icon: 'tag',
             description: 'Side scroll general description',
           },
+          {
+            label: 'Oil Level',
+            progress: 30,
+            icon: 'oil-can',
+            colorScheme: 'orange',
+            description: 'Remaining Oil: 30%',
+          },
           { label: 'Option 1' },
           { label: 'Option 2' },
           {
