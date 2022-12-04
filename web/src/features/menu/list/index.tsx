@@ -11,10 +11,13 @@ import React from 'react';
 
 export interface MenuItem {
   label: string;
+  progress?: number;
+  colorScheme?: string;
   checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;
   icon?: IconProp;
+  iconColor?: string;
   defaultIndex?: number;
   close?: boolean;
 }

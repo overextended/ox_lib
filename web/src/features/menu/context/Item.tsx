@@ -10,6 +10,7 @@ import {
   Spacer,
   Image,
   HStack,
+  Progress,
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Option, ContextMenuProps } from '../../../interfaces/context';
@@ -66,8 +67,8 @@ const Item: React.FC<{
                   }}
                 />
               )}
-              <Box>
-                <Box paddingBottom={button.description ? 1 : 0}>
+              <Box w="100%">
+                <Box>
                   <Text w="100%" fontWeight="medium" color={button.disabled ? '#718096' : undefined}>
                     {button.title ? button.title : buttonKey}
                   </Text>
@@ -76,6 +77,15 @@ const Item: React.FC<{
                   <Box paddingBottom={1} color={button.disabled ? '#718096' : undefined}>
                     <Text>{button.description}</Text>
                   </Box>
+                )}
+                {button?.progress && (
+                  <Progress
+                    value={button.progress}
+                    size="sm"
+                    colorScheme={button.colorScheme || 'gray'}
+                    borderRadius="md"
+                    marginRight="5px"
+                  />
                 )}
               </Box>
               {(button.menu || button.arrow) && button.arrow !== false && (
