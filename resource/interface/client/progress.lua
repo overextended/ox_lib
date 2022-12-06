@@ -40,6 +40,24 @@ local function interruptProgress(data)
     if not data.allowFalling and IsPedFalling(cache.ped) then return true end
 end
 
+local isFivem = cache.game == 'fivem'
+
+local controls = {
+    INPUT_LOOK_LR = isFivem and 1 or 0xA987235F,
+    INPUT_LOOK_UD = isFivem and 2 or 0xD2047988,
+    INPUT_SPRINT = isFivem and 21 or 0x8FFC75D6,
+    INPUT_AIM = isFivem and 25 or 0xF84FA74F,
+    INPUT_MOVE_LR = isFivem and 30 or 0x4D8FB4C1,
+    INPUT_MOVE_UD = isFivem and 31 or 0xFDA83190,
+    INPUT_DUCK = isFivem and 36 or 0xDB096B85,
+    INPUT_VEH_MOVE_LEFT_ONLY = isFivem and 63 or 0x9DF54706,
+    INPUT_VEH_MOVE_RIGHT_ONLY = isFivem and 64 or 0x97A8FD98,
+    INPUT_VEH_ACCELERATE = isFivem and 71 or 0x5B9FD4E2,
+    INPUT_VEH_BRAKE = isFivem and 72 or 0x6E1F639B,
+    INPUT_VEH_EXIT = isFivem and 75 or 0xFEFAB9B4,
+    INPUT_VEH_MOUSE_CONTROL_OVERRIDE = isFivem and 106 or 0x39CCABD5
+}
+
 local function startProgress(data)
     playerState.invBusy = true
     progress = data
@@ -74,48 +92,32 @@ local function startProgress(data)
     end
 
     local disable = data.disable
-    local isFivem = cache.game == 'fivem'
-    local controls = {
-        ['INPUT_LOOK_LR'] = isFivem and 1 or 0xA987235F,
-        ['INPUT_LOOK_UD'] = isFivem and 2 or 0xD2047988,
-        ['INPUT_SPRINT'] = isFivem and 21 or 0x8FFC75D6,
-        ['INPUT_AIM'] = isFivem and 25 or 0xF84FA74F,
-        ['INPUT_MOVE_LR'] = isFivem and 30 or 0x4D8FB4C1,
-        ['INPUT_MOVE_UD'] = isFivem and 31 or 0xFDA83190,
-        ['INPUT_DUCK'] = isFivem and 36 or 0xDB096B85,
-        ['INPUT_VEH_MOVE_LEFT_ONLY'] = isFivem and 63 or 0x9DF54706,
-        ['INPUT_VEH_MOVE_RIGHT_ONLY'] = isFivem and 64 or 0x97A8FD98,
-        ['INPUT_VEH_ACCELERATE'] = isFivem and 71 or 0x5B9FD4E2,
-        ['INPUT_VEH_BRAKE'] = isFivem and 72 or 0x6E1F639B,
-        ['INPUT_VEH_EXIT'] = isFivem and 75 or 0xFEFAB9B4,
-        ['INPUT_VEH_MOUSE_CONTROL_OVERRIDE'] = isFivem and 106 or 0x39CCABD5
-    }
 
     while progress do
         if disable then
             if disable.mouse then
-                DisableControlAction(0, controls['INPUT_LOOK_LR'], true)
-                DisableControlAction(0, controls['INPUT_LOOK_UD'], true)
-                DisableControlAction(0, controls['INPUT_VEH_MOUSE_CONTROL_OVERRIDE'], true)
+                DisableControlAction(0, controls.INPUT_LOOK_LR, true)
+                DisableControlAction(0, controls.INPUT_LOOK_UD, true)
+                DisableControlAction(0, controls.INPUT_VEH_MOUSE_CONTROL_OVERRIDE, true)
             end
 
             if disable.move then
-                DisableControlAction(0, controls['INPUT_SPRINT'], true)
-                DisableControlAction(0, controls['INPUT_MOVE_LR'], true)
-                DisableControlAction(0, controls['INPUT_MOVE_UD'], true)
-                DisableControlAction(0, controls['INPUT_DUCK'], true)
+                DisableControlAction(0, controls.INPUT_SPRINT, true)
+                DisableControlAction(0, controls.INPUT_MOVE_LR, true)
+                DisableControlAction(0, controls.INPUT_MOVE_UD, true)
+                DisableControlAction(0, controls.INPUT_DUCK, true)
             end
 
             if disable.car then
-                DisableControlAction(0, controls['INPUT_VEH_MOVE_LEFT_ONLY'], true)
-                DisableControlAction(0, controls['INPUT_VEH_MOVE_RIGHT_ONLY'], true)
-                DisableControlAction(0, controls['INPUT_VEH_ACCELERATE'], true)
-                DisableControlAction(0, controls['INPUT_VEH_BRAKE'], true)
-                DisableControlAction(0, controls['INPUT_VEH_EXIT'], true)
+                DisableControlAction(0, controls.INPUT_VEH_MOVE_LEFT_ONLY, true)
+                DisableControlAction(0, controls.INPUT_VEH_MOVE_RIGHT_ONLY, true)
+                DisableControlAction(0, controls.INPUT_VEH_ACCELERATE, true)
+                DisableControlAction(0, controls.INPUT_VEH_BRAKE, true)
+                DisableControlAction(0, controls.INPUT_VEH_EXIT, true)
             end
 
             if disable.combat then
-                DisableControlAction(0, controls['INPUT_AIM'], true)
+                DisableControlAction(0, controls.INPUT_AIM, true)
                 DisablePlayerFiring(cache.playerId, true)
             end
         end
