@@ -14,7 +14,8 @@ lib = setmetatable({
 })
 
 cache = {
-    resource = lib.name
+    resource = lib.name,
+    game = GetGameName(),
 }
 
 if not LoadResourceFile(lib.name, 'web/build/index.html') then
