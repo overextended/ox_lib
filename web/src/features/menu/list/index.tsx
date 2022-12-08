@@ -95,11 +95,11 @@ const ListMenu: React.FC = () => {
   };
 
   useEffect(() => {
+    if (menu.items[selected]?.checked === undefined) return;
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
-    if (menu.items[selected]?.checked === undefined) return;
     const timer = setTimeout(() => {
       fetchNui('changeChecked', [selected, checkedStates[selected]]).catch();
     }, 100);
@@ -107,11 +107,11 @@ const ListMenu: React.FC = () => {
   }, [checkedStates]);
 
   useEffect(() => {
+    if (!menu.items[selected]?.values) return;
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
-    if (!menu.items[selected]?.values) return;
     const timer = setTimeout(() => {
       fetchNui('changeIndex', [selected, indexStates[selected]]).catch();
     }, 100);
@@ -162,7 +162,6 @@ const ListMenu: React.FC = () => {
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
-    firstRenderRef.current = true;
     if (!data.startItemIndex || data.startItemIndex < 0) data.startItemIndex = 0;
     else if (data.startItemIndex >= data.items.length) data.startItemIndex = data.items.length - 1;
     setSelected(data.startItemIndex);
@@ -179,6 +178,7 @@ const ListMenu: React.FC = () => {
     setIndexStates(arrayIndexes);
     setCheckedStates(checkedIndexes);
     listRefs.current[data.startItemIndex]?.focus();
+    firstRenderRef.current = true;
   });
 
   return (
