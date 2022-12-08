@@ -5,6 +5,7 @@ local alert = nil
 ---@field content string;
 ---@field centered? boolean?;
 ---@field cancel? boolean?;
+---@field labels? {cancel?: string, confirm?: string}
 
 ---@param data AlertDialogProps
 ---@return 'cancel' | 'confirm' | nil

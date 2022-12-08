@@ -3,6 +3,10 @@ interface AlertDialogProps {
   content: string;
   centered?: boolean;
   cancel?: boolean;
+  labels?: {
+    cancel?: string;
+    confirm?: string;
+  };
 }
 
 type alertDialog = (data: AlertDialogProps) => Promise<'cancel' | 'confirm'>;

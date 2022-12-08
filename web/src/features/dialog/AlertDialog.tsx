@@ -19,6 +19,10 @@ export interface AlertProps {
   content: string;
   centered?: boolean;
   cancel?: boolean;
+  labels?: {
+    cancel?: string;
+    confirm?: string;
+  };
 }
 
 const AlertDialog: React.FC = () => {
@@ -65,11 +69,11 @@ const AlertDialog: React.FC = () => {
           <AlertDialogFooter>
             {dialogData.cancel && (
               <Button onClick={() => closeAlert('cancel')} mr={3}>
-                {locale.ui.cancel}
+                {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}
             <Button colorScheme={dialogData.cancel ? 'blue' : undefined} onClick={() => closeAlert('confirm')}>
-              {locale.ui.confirm}
+              {dialogData.labels?.confirm || locale.ui.confirm}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
