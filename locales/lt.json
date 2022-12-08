@@ -1,10 +1,6 @@
 {
   "language": "Lietuvių",
   "ui": {
-    "settings": {
-      "title": "Nustatymai",
-      "language": "Kalba"
-    },
     "cancel": "Cancel",
     "close": "Uždaryti",
     "confirm": "Patvirtinti"

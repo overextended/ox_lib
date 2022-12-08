@@ -1,10 +1,6 @@
 {
   "language": "Русский",
   "ui": {
-    "settings": {
-      "title": "Настройки",
-      "language": "Язык"
-    },
     "cancel": "Отменить",
     "close": "Закрывать",
     "confirm": "Подтверждать"

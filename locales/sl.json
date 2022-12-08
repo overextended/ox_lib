@@ -1,10 +1,6 @@
 {
   "language": "Slovenski",
   "ui": {
-    "settings": {
-      "title": "Nastavitve",
-      "language": "Jezik"
-    },
     "cancel": "Cancel",
     "close": "Zapri",
     "confirm": "Potrdi"

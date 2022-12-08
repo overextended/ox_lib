@@ -15,10 +15,6 @@ debugData([
     data: {
       language: 'English',
       ui: {
-        settings: {
-          title: 'Settings',
-          language: 'Language',
-        },
         close: 'Close',
         confirm: 'Confirm',
       },
@@ -29,10 +25,6 @@ debugData([
 interface Locale {
   language: string;
   ui: {
-    settings: {
-      title: string;
-      language: string;
-    };
     cancel: string;
     close: string;
     confirm: string;
@@ -50,10 +42,6 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const [locale, setLocale] = useState<Locale>({
     language: '',
     ui: {
-      settings: {
-        title: '',
-        language: '',
-      },
       cancel: '',
       close: '',
       confirm: '',

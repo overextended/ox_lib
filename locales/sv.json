@@ -1,10 +1,6 @@
 {
   "language": "Svenska",
   "ui": {
-    "settings": {
-      "title": "Inställningar",
-      "language": "Språk"
-    },
     "cancel": "Avbryt",
     "close": "Stäng",
     "confirm": "Acceptera"

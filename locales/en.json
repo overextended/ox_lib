@@ -1,10 +1,6 @@
 {
   "language": "English",
   "ui": {
-    "settings": {
-      "title": "Settings",
-      "language": "Language"
-    },
     "cancel": "Cancel",
     "close": "Close",
     "confirm": "Confirm"

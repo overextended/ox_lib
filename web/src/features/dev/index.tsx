@@ -19,7 +19,6 @@ import { debugMenu } from './debug/menu';
 import { debugCustomNotification, debugNotification } from './debug/notification';
 import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
-import { debugSettings } from './debug/settings';
 import { debugSkillCheck } from './debug/skillcheck';
 
 const Dev: React.FC = () => {
@@ -77,9 +76,6 @@ const Dev: React.FC = () => {
                 Activate progress circle
               </Button>
               <Divider />
-              <Button width="full" onClick={() => debugSettings()}>
-                Open settings page
-              </Button>
               <Button width="full" onClick={() => debugTextUI()}>
                 Show TextUI
               </Button>

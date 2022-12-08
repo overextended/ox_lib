@@ -1,10 +1,6 @@
 {
   "language": "Nederlands",
   "ui": {
-    "settings": {
-      "title": "Instellingen",
-      "language": "Taal"
-    },
     "cancel": "Annuleren",
     "close": "Sluiten",
     "confirm": "Bevestig"
