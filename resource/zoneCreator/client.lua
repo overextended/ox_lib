@@ -182,13 +182,13 @@ local function startCreator(arg)
             local rad = math.rad(-heading)
             local sinH = math.sin(rad)
             local cosH = math.cos(rad)
-            local center = vec(xCoord, yCoord)
+            local center = vec2(xCoord, yCoord)
             ---@type vector2[]
             points = {
-                center + vec((width * cosH + length * sinH), (length * cosH - width * sinH)) / 2,
-                center + vec(-(width * cosH - length * sinH), (length * cosH + width * sinH)) / 2,
-                center + vec(-(width * cosH + length * sinH), -(length * cosH - width * sinH)) / 2,
-                center + vec((width * cosH - length * sinH), -(length * cosH + width * sinH)) / 2,
+                center + vec2((width * cosH + length * sinH), (length * cosH - width * sinH)) / 2,
+                center + vec2(-(width * cosH - length * sinH), (length * cosH + width * sinH)) / 2,
+                center + vec2(-(width * cosH + length * sinH), -(length * cosH - width * sinH)) / 2,
+                center + vec2((width * cosH - length * sinH), -(length * cosH + width * sinH)) / 2,
             }
 
             drawLines()
