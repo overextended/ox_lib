@@ -1,6 +1,6 @@
 import { cache } from '../cache';
 
-const activeEvents: Record<string, Function> = {};
+const activeEvents: Record<string, (...args) => void> = {};
 
 onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
   const resolve = activeEvents[key];
@@ -21,7 +21,11 @@ export function eventTimer(eventName: string, delay: number | null) {
   return true;
 }
 
-export function triggerServerCallback(eventName: string, delay: number | null, ...args: any) {
+export function triggerServerCallback<T = unknown>(
+  eventName: string,
+  delay: number | null,
+  ...args: any
+): Promise<T> | void {
   if (!eventTimer(eventName, delay)) return;
 
   let key: string;
@@ -32,13 +36,13 @@ export function triggerServerCallback(eventName: string, delay: number | null, .
 
   emitNet(`__ox_cb_${eventName}`, cache.resource, key, ...args);
 
-  return new Promise((resolve) => {
+  return new Promise<T>((resolve) => {
     activeEvents[key] = resolve;
   });
 }
 
-export function onServerCallback(eventName: string, cb: (...args: any) => any) {
-  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args: any) => {
+export function onServerCallback(eventName: string, cb: (...args) => any) {
+  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args) => {
     let response: any;
 
     try {
