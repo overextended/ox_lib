@@ -1,13 +1,17 @@
 import { cache } from '../cache';
 
-const activeEvents: Record<string, Function> = {};
+const activeEvents: Record<string, (...args) => void> = {};
 
 onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
   const resolve = activeEvents[key];
   return resolve && resolve(...args);
 });
 
-export function triggerClientCallback(eventName: string, playerId: number, ...args: any) {
+export function triggerClientCallback<T = unknown>(
+  eventName: string,
+  playerId: number,
+  ...args: any
+): Promise<T> | void {
   let key: string;
 
   do {
@@ -16,13 +20,13 @@ export function triggerClientCallback(eventName: string, playerId: number, ...ar
 
   emitNet(`__ox_cb_${eventName}`, playerId, cache.resource, key, ...args);
 
-  return new Promise((resolve) => {
+  return new Promise<T>((resolve) => {
     activeEvents[key] = resolve;
   });
 }
 
-export function onClientCallback(eventName: string, cb: (playerId: number, ...args: any) => any) {
-  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args: any) => {
+export function onClientCallback(eventName: string, cb: (playerId: number, ...args) => any) {
+  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args) => {
     const src = source;
     let response: any;
 
