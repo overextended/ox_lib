@@ -95,8 +95,7 @@ const ListMenu: React.FC = () => {
   };
 
   useEffect(() => {
-    if (menu.items[selected]?.checked === undefined) return;
-    if (firstRenderRef.current) {
+    if (menu.items[selected]?.checked === undefined || firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
@@ -107,8 +106,7 @@ const ListMenu: React.FC = () => {
   }, [checkedStates]);
 
   useEffect(() => {
-    if (!menu.items[selected]?.values) return;
-    if (firstRenderRef.current) {
+    if (!menu.items[selected]?.values || firstRenderRef.current) {
       firstRenderRef.current = false;
       return;
     }
@@ -119,7 +117,10 @@ const ListMenu: React.FC = () => {
   }, [indexStates]);
 
   useEffect(() => {
-    if (!menu.items[selected]) return;
+    if (!menu.items[selected] || firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
     listRefs.current[selected]?.scrollIntoView({
       block: 'nearest',
       inline: 'start',
