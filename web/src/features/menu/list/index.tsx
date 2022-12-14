@@ -50,7 +50,7 @@ const ListMenu: React.FC = () => {
   };
 
   const moveMenu = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (firstRenderRef.current) firstRenderRef.current = false
+    if (firstRenderRef.current) firstRenderRef.current = false;
     switch (e.code) {
       case 'ArrowDown':
         setSelected((selected) => {
@@ -118,7 +118,6 @@ const ListMenu: React.FC = () => {
       inline: 'start',
     });
     listRefs.current[selected]?.focus({ preventScroll: true });
-    if (firstRenderRef.current) return;
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
       fetchNui('changeSelected', [
