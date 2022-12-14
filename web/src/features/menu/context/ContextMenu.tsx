@@ -5,6 +5,7 @@ import { ContextMenuProps } from '../../../interfaces/context';
 import Item from './Item';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fetchNui } from '../../../utils/fetchNui';
+import ReactMarkdown from 'react-markdown';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
@@ -72,7 +73,7 @@ const ContextMenu: React.FC = () => {
             )}
             <Box borderRadius="md" bg="gray.800" flex="1 85%">
               <Text fontFamily="Poppins" fontSize="md" p={2} textAlign="center" fontWeight="light">
-                {contextMenu.title}
+                <ReactMarkdown>{contextMenu.title}</ReactMarkdown>
               </Text>
             </Box>
             <Flex
