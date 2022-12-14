@@ -8,6 +8,7 @@ export interface NotificationProps {
   description?: string;
   duration?: number;
   position?: ToastPosition;
+  variant?: string;
   status?: 'info' | 'warning' | 'success' | 'error';
   id?: number;
 }
@@ -20,6 +21,7 @@ export interface CustomNotificationProps {
   icon?: IconProp;
   iconColor?: string;
   position?: ToastPosition;
+  variant?: string;
   id?: number;
   type?: string;
 }
@@ -71,6 +73,7 @@ const Notifications: React.FC = () => {
       description: data.description,
       duration: data.duration || 4000,
       position: data.position || 'top-right',
+      variant: data.variant,
       status: data.status,
     });
   });
