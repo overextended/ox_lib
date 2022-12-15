@@ -13,6 +13,7 @@ import {
   Progress,
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReactMarkdown from 'react-markdown';
 import { Option, ContextMenuProps } from '../../../interfaces/context';
 import { fetchNui } from '../../../utils/fetchNui';
 
@@ -70,12 +71,12 @@ const Item: React.FC<{
               <Box w="100%">
                 <Box>
                   <Text w="100%" fontWeight="medium" color={button.disabled ? '#718096' : undefined}>
-                    {button.title ? button.title : buttonKey}
+                    <ReactMarkdown>{button.title ? button.title : buttonKey}</ReactMarkdown>
                   </Text>
                 </Box>
                 {button.description && (
                   <Box paddingBottom={1} color={button.disabled ? '#718096' : undefined}>
-                    <Text>{button.description}</Text>
+                    <Text><ReactMarkdown>{button.description}</ReactMarkdown></Text>
                   </Box>
                 )}
                 {button?.progress && (
