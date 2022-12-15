@@ -3,16 +3,8 @@ local hostname = GetConvar('sv_projectName', 'fxserver')
 local buffer
 local bufferSize = 0
 
-local function badResponse(endpoint, response)
-    print(('unable to submit logs to %s\n%s'):format(endpoint, json.encode(response, { indent = true })))
-end
-
--- idk where to put this?
-
-local function split(str,pat)
-    local tbl = {}
-    str:gsub(pat, function(x) tbl[#tbl+1]=x end)
-    return tbl
+local function badResponse(endpoint, status, response)
+    warn(('unable to submit logs to %s (status: %s)\n%s'):format(endpoint, status, json.encode(response, { indent = true })))
 end
 
 local playerData = {}
@@ -70,7 +62,10 @@ if service == 'datadog' then
                 SetTimeout(500, function()
                     PerformHttpRequest(endpoint, function(status, _, _, response)
                         if status ~= 202 then
-                            badResponse(endpoint, json.decode(response:sub(10)).errors[1])
+                            if type(response) == 'string' then
+                                response = json.decode(response:sub(10)) or response
+                                badResponse(endpoint, status, type(response) == 'table' and response.errors[1] or response)
+                            end
                         end
                     end, 'POST', json.encode(buffer), headers)
 
@@ -129,7 +124,7 @@ if service == 'loki' then
                 local postBody = json.encode({streams = tempBuffer})
                 PerformHttpRequest(endpoint, function(status, _, _, _)
                     if status ~= 204 then
-                        badResponse(endpoint, ("Error Code: %s\n%s"):format(status, postBody))
+                        badResponse(endpoint, status, ("%s"):format(status, postBody))
                     end
                 end, 'POST', postBody, {
                     ['Content-Type'] = 'application/json',
