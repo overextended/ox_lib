@@ -26,6 +26,7 @@ CreateThread(function()
 
 		if vehicle > 0 then
 			cache:set('vehicle', vehicle)
+			cache:set('vehiclecam', GetFollowVehicleCamViewMode())
 
 			if not cache.seat or GetPedInVehicleSeat(vehicle, cache.seat) ~= ped then
 				for i = -1, GetVehicleMaxNumberOfPassengers(vehicle) - 1 do
@@ -37,6 +38,7 @@ CreateThread(function()
 			end
 		else
 			cache:set('vehicle', false)
+			cache:set('vehiclecam', false)
 			cache:set('seat', false)
 		end
 
