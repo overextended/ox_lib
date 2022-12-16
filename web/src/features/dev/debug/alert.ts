@@ -10,10 +10,10 @@ export const debugAlert = () => {
         content: 'General kenobi  \n Markdown works',
         centered: true,
         cancel: true,
-        labels: {
-          confirm: 'Ok',
-          cancel: 'Not ok',
-        },
+        // labels: {
+        //   confirm: 'Ok',
+        //   cancel: 'Not ok',
+        // },
       },
     },
   ]);

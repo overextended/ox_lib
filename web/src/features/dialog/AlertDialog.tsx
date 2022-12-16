@@ -1,14 +1,5 @@
-import {
-  AlertDialog as Dialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  useDisclosure,
-  Button,
-} from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { Modal, Button, Stack, Group } from '@mantine/core';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
@@ -27,57 +18,66 @@ export interface AlertProps {
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef(null);
+  const [opened, setOpened] = useState(false);
   const [dialogData, setDialogData] = useState<AlertProps>({
     header: '',
     content: '',
   });
 
   const closeAlert = (button: string) => {
-    onClose();
+    setOpened(false);
     fetchNui('closeAlert', button);
   };
 
   useNuiEvent('sendAlert', (data: AlertProps) => {
     setDialogData(data);
-    onOpen();
+    setOpened(true);
   });
 
   useNuiEvent('closeAlertDialog', () => {
-    onClose();
+    setOpened(false);
   });
 
   return (
     <>
-      <Dialog
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered={dialogData.centered}
-        closeOnOverlayClick={false}
-        onEsc={() => closeAlert('cancel')}
+      <Modal
+        opened={opened}
+        centered={dialogData.centered}
+        closeOnClickOutside={false}
+        onClose={() => {
+          setOpened(false);
+          closeAlert('cancel');
+        }}
+        withCloseButton={false}
+        overlayOpacity={0.5}
+        exitTransitionDuration={150}
+        title={<ReactMarkdown>{dialogData.header}</ReactMarkdown>}
       >
-        <AlertDialogOverlay />
-        <AlertDialogContent fontFamily="Inter">
-          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            {dialogData.header}
-          </AlertDialogHeader>
-          <AlertDialogBody>
-            <ReactMarkdown>{dialogData.content}</ReactMarkdown>
-          </AlertDialogBody>
-          <AlertDialogFooter>
+        <Stack>
+          <ReactMarkdown>{dialogData.content}</ReactMarkdown>
+          <Group position="right" spacing={10}>
             {dialogData.cancel && (
-              <Button onClick={() => closeAlert('cancel')} mr={3}>
+              <Button
+                uppercase
+                variant="default"
+                sx={{ transition: '150ms' }}
+                onClick={() => closeAlert('cancel')}
+                mr={3}
+              >
                 {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}
-            <Button colorScheme={dialogData.cancel ? 'blue' : undefined} onClick={() => closeAlert('confirm')}>
+            <Button
+              uppercase
+              variant="light"
+              color={dialogData.cancel ? 'blue' : undefined}
+              onClick={() => closeAlert('confirm')}
+            >
               {dialogData.labels?.confirm || locale.ui.confirm}
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </Dialog>
+          </Group>
+        </Stack>
+      </Modal>
     </>
   );
 };
