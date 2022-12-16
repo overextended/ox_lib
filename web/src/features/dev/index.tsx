@@ -1,16 +1,4 @@
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  IconButton,
-  Tooltip,
-  VStack,
-  Divider,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { ActionIcon, Tooltip, Drawer, Stack, Divider, Button } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { debugAlert } from './debug/alert';
 import { debugContext } from './debug/context';
@@ -20,72 +8,67 @@ import { debugCustomNotification, debugNotification } from './debug/notification
 import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
+import { useState } from 'react';
 
 const Dev: React.FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [opened, setOpened] = useState(false);
 
   return (
     <>
-      <Tooltip label="Developer drawer">
-        <IconButton
-          position="absolute"
-          bottom={0}
-          right={0}
-          mr={20}
-          mb={20}
-          borderRadius="50%"
-          icon={<FontAwesomeIcon icon="wrench" fixedWidth size="lg" />}
-          colorScheme="orange"
-          size="lg"
-          aria-label="Dev tools"
-          onClick={() => onOpen()}
-        />
+      <Tooltip label="Developer drawer" position="bottom">
+        <ActionIcon
+          onClick={() => setOpened(true)}
+          radius="xl"
+          variant="filled"
+          color="orange"
+          sx={{ position: 'absolute', bottom: 0, right: 0, width: 50, height: 50 }}
+          size="xl"
+          mr={50}
+          mb={50}
+        >
+          <FontAwesomeIcon icon="wrench" fontSize={24} />
+        </ActionIcon>
       </Tooltip>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader>Developer drawer</DrawerHeader>
-          <DrawerBody>
-            <VStack>
-              <Divider />
-              <Button width="full" onClick={() => debugInput()}>
-                Open input dialog
-              </Button>
-              <Button width="full" onClick={() => debugAlert()}>
-                Open alert dialog
-              </Button>
-              <Divider />
-              <Button width="full" onClick={() => debugContext()}>
-                Open context menu
-              </Button>
-              <Button width="full" onClick={() => debugMenu()}>
-                Open list menu
-              </Button>
-              <Divider />
-              <Button width="full" onClick={() => debugCustomNotification()}>
-                Send custom notification
-              </Button>
-              <Button width="full" onClick={() => debugNotification()}>
-                Send default notification
-              </Button>
-              <Divider />
-              <Button width="full" onClick={() => debugProgressbar()}>
-                Activate progress bar
-              </Button>
-              <Button width="full" onClick={() => debugCircleProgressbar()}>
-                Activate progress circle
-              </Button>
-              <Divider />
-              <Button width="full" onClick={() => debugTextUI()}>
-                Show TextUI
-              </Button>
-              <Divider />
-              <Button width="full" onClick={() => debugSkillCheck()}>
-                Run skill check
-              </Button>
-            </VStack>
-          </DrawerBody>
-        </DrawerContent>
+
+      <Drawer position="left" onClose={() => setOpened(false)} opened={opened} title="Developer drawer" padding="xl">
+        <Stack>
+          <Divider />
+          <Button fullWidth onClick={() => debugInput()}>
+            Open input dialog
+          </Button>
+          <Button fullWidth onClick={() => debugAlert()}>
+            Open alert dialog
+          </Button>
+          <Divider />
+          <Button fullWidth onClick={() => debugContext()}>
+            Open context menu
+          </Button>
+          <Button fullWidth onClick={() => debugMenu()}>
+            Open list menu
+          </Button>
+          <Divider />
+          <Button fullWidth onClick={() => debugCustomNotification()}>
+            Send custom notification
+          </Button>
+          <Button fullWidth onClick={() => debugNotification()}>
+            Send default notification
+          </Button>
+          <Divider />
+          <Button fullWidth onClick={() => debugProgressbar()}>
+            Activate progress bar
+          </Button>
+          <Button fullWidth onClick={() => debugCircleProgressbar()}>
+            Activate progress circle
+          </Button>
+          <Divider />
+          <Button fullWidth onClick={() => debugTextUI()}>
+            Show TextUI
+          </Button>
+          <Divider />
+          <Button fullWidth onClick={() => debugSkillCheck()}>
+            Run skill check
+          </Button>
+        </Stack>
       </Drawer>
     </>
   );
