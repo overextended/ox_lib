@@ -1,17 +1,7 @@
-import {
-  Box,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  InputLeftElement,
-  InputGroup,
-} from '@chakra-ui/react';
+import { NumberInput } from '@mantine/core';
 import { useEffect } from 'react';
 import { INumber } from '../../../../interfaces/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Label from '../Label';
 
 interface Props {
   row: INumber;
@@ -25,28 +15,16 @@ const NumberField: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <Box mb={3}>
-      <Label label={props.row.label} description={props.row.description} />
-      <InputGroup>
-        <NumberInput
-          onChange={(val: string) => props.handleChange(+val, props.index)}
-          defaultValue={props.row.default}
-          min={props.row.min}
-          max={props.row.max}
-          isDisabled={props.row.disabled}
-          w="100%"
-        >
-          {props.row.icon && (
-            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
-          )}
-          <NumberInputField placeholder={props.row.placeholder} pl={props.row.icon ? '40px' : undefined} />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </InputGroup>
-    </Box>
+    <NumberInput
+      label={props.row.label}
+      description={props.row.description}
+      defaultValue={props.row.default}
+      min={props.row.min}
+      max={props.row.max}
+      disabled={props.row.disabled}
+      onChange={(value) => props.handleChange(value as number, props.index)}
+      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+    />
   );
 };
 

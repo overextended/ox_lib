@@ -1,8 +1,7 @@
-import { Box, InputGroup, InputLeftElement, InputRightElement, Input } from '@chakra-ui/react';
+import { TextInput } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import { IInput } from '../../../../interfaces/dialog';
-import Label from '../Label';
 
 interface Props {
   row: IInput;
@@ -18,37 +17,25 @@ const InputField: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <>
-      <Box mb={3} textAlign="left">
-        <Label label={props.row.label} description={props.row.description} />
-        <InputGroup>
-          {props.row.icon && (
-            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
-          )}
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.value, props.index)}
-            placeholder={props.row.placeholder}
-            defaultValue={props.row.default}
-            type={!props.row.password || props.passwordStates[props.index] ? 'text' : 'password'}
-            isDisabled={props.row.disabled}
+    <TextInput
+      label={props.row.label}
+      description={props.row.description}
+      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      placeholder={props.row.placeholder}
+      defaultValue={props.row.default}
+      disabled={props.row.disabled}
+      type={!props.row.password || props.passwordStates[props.index] ? 'text' : 'password'}
+      rightSection={
+        props.row.password && (
+          <FontAwesomeIcon
+            onClick={() => props.handlePasswordStates(props.index)}
+            cursor="pointer"
+            icon={props.passwordStates[props.index] ? 'eye' : 'eye-slash'}
+            fixedWidth
           />
-          {props.row.password && (
-            <InputRightElement
-              cursor="pointer"
-              onClick={() => props.handlePasswordStates(props.index)}
-              children={
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={props.passwordStates[props.index] ? 'eye' : 'eye-slash'}
-                  fontSize="1em"
-                  style={{ paddingRight: 8 }}
-                />
-              }
-            />
-          )}
-        </InputGroup>
-      </Box>
-    </>
+        )
+      }
+    />
   );
 };
 

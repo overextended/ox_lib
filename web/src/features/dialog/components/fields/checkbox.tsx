@@ -1,7 +1,6 @@
-import { Box, Checkbox, HStack, Text } from '@chakra-ui/react';
+import { Checkbox } from '@mantine/core';
 import { useEffect } from 'react';
 import { ICheckbox } from '../../../../interfaces/dialog';
-import Label from '../Label';
 
 interface Props {
   row: ICheckbox;
@@ -15,16 +14,12 @@ const CheckboxField: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <>
-      <Box mb={3}>
-        <Checkbox
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.checked, props.index)}
-          defaultChecked={props.row.checked}
-        >
-          <Label label={props.row.label} description={props.row.description} />
-        </Checkbox>
-      </Box>
-    </>
+    <Checkbox
+      sx={{ display: 'flex' }}
+      label={props.row.label}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.checked, props.index)}
+      defaultChecked={props.row.checked}
+    />
   );
 };
 

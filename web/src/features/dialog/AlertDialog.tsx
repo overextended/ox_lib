@@ -57,13 +57,7 @@ const AlertDialog: React.FC = () => {
           <ReactMarkdown>{dialogData.content}</ReactMarkdown>
           <Group position="right" spacing={10}>
             {dialogData.cancel && (
-              <Button
-                uppercase
-                variant="default"
-                sx={{ transition: '150ms' }}
-                onClick={() => closeAlert('cancel')}
-                mr={3}
-              >
+              <Button uppercase variant="default" onClick={() => closeAlert('cancel')} mr={3}>
                 {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}

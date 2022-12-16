@@ -1,4 +1,4 @@
-import { Box, Select } from '@chakra-ui/react';
+import { Select } from '@mantine/core';
 import { useEffect } from 'react';
 import { ISelect } from '../../../../interfaces/dialog';
 
@@ -8,6 +8,7 @@ interface Props {
   handleChange: (value: string, index: number) => void;
 }
 
+// TODO: set label to value of value when there is no label provided
 const SelectField: React.FC<Props> = (props) => {
   useEffect(() => {
     if (props.row.default) {
@@ -20,27 +21,14 @@ const SelectField: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <>
-      <Box mb={3}>
-        <Select
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
-          defaultValue={props.row.default || ''}
-          isDisabled={props.row.disabled}
-        >
-          {/* Hacky workaround for selectable placeholder issue */}
-          {!props.row.default && (
-            <option value="" hidden disabled>
-              {props.row.label}
-            </option>
-          )}
-          {props.row.options?.map((option, index) => (
-            <option key={`option-${index}`} value={option.value}>
-              {option.label || option.value}
-            </option>
-          ))}
-        </Select>
-      </Box>
-    </>
+    <Select
+      onChange={(value) => props.handleChange(value as string, props.index)}
+      defaultValue={props.row.default || ''}
+      disabled={props.row.disabled}
+      data={props.row.options}
+      label={props.row.label}
+      description={props.row.description}
+    />
   );
 };
 

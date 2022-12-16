@@ -1,4 +1,5 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { SelectItem } from '@mantine/core';
 
 export interface IInput {
   type: 'input';
@@ -23,7 +24,7 @@ export interface ISelect {
   type: 'select';
   label: string;
   default?: string;
-  options?: { value: string; label?: string }[];
+  options: Array<SelectItem>;
   disabled?: boolean;
   description?: string;
 }

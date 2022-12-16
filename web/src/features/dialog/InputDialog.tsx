@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay, ModalContent, ModalFooter, ModalHeader, ModalBody, Button } from '@chakra-ui/react';
+import { Group, Modal, Button, Stack } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
@@ -62,42 +62,48 @@ const InputDialog: React.FC = () => {
 
   return (
     <>
-      <Modal isOpen={visible} onClose={handleClose} isCentered closeOnEsc closeOnOverlayClick={false} size="xs">
-        <ModalOverlay />
-        <ModalContent
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && visible) return handleConfirm();
-          }}
-        >
-          <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
-          <ModalBody fontFamily="Poppins" textAlign="left">
-            {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
-              <React.Fragment key={`row-${index}-${row.type}-${row.label}`}>
-                {row.type === 'input' && (
-                  <InputField
-                    row={row}
-                    index={index}
-                    handleChange={handleChange}
-                    passwordStates={passwordStates}
-                    handlePasswordStates={handlePasswordStates}
-                  />
-                )}
-                {row.type === 'checkbox' && <CheckboxField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'select' && <SelectField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'number' && <NumberField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'slider' && <SliderField row={row} index={index} handleChange={handleChange} />}
-              </React.Fragment>
-            ))}
-          </ModalBody>
-          <ModalFooter>
-            <Button mr={3} onClick={handleClose}>
-              {locale.ui.close}
+      <Modal
+        opened={visible}
+        onClose={handleClose}
+        centered
+        closeOnClickOutside={false}
+        size="xs"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && visible) return handleConfirm();
+        }}
+        styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
+        title={fields.heading}
+        withCloseButton={false}
+        overlayOpacity={0.5}
+        exitTransitionDuration={150}
+      >
+        <Stack>
+          {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
+            <React.Fragment key={`row-${index}-${row.type}-${row.label}`}>
+              {row.type === 'input' && (
+                <InputField
+                  row={row}
+                  index={index}
+                  handleChange={handleChange}
+                  passwordStates={passwordStates}
+                  handlePasswordStates={handlePasswordStates}
+                />
+              )}
+              {row.type === 'checkbox' && <CheckboxField row={row} index={index} handleChange={handleChange} />}
+              {row.type === 'select' && <SelectField row={row} index={index} handleChange={handleChange} />}
+              {row.type === 'number' && <NumberField row={row} index={index} handleChange={handleChange} />}
+              {row.type === 'slider' && <SliderField row={row} index={index} handleChange={handleChange} />}
+            </React.Fragment>
+          ))}
+          <Group position="right" spacing={10}>
+            <Button uppercase variant="default" onClick={handleClose} mr={3}>
+              {locale.ui.cancel}
             </Button>
-            <Button colorScheme="blue" onClick={handleConfirm}>
+            <Button uppercase variant="light" onClick={handleClose}>
               {locale.ui.confirm}
             </Button>
-          </ModalFooter>
-        </ModalContent>
+          </Group>
+        </Stack>
       </Modal>
     </>
   );
