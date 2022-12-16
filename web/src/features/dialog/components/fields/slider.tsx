@@ -18,7 +18,7 @@ const SliderField: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Box mb={3} key={`slider-${props.index}`}>
+      <Box mb={3}>
         <Label label={props.row.label} description={props.row.description} />
         <Slider
           onChangeEnd={(val: number) => props.handleChange(val, props.index)}

@@ -72,10 +72,9 @@ const InputDialog: React.FC = () => {
           <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
           <ModalBody fontFamily="Poppins" textAlign="left">
             {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
-              <React.Fragment key={`row-${index}`}>
+              <React.Fragment key={`row-${index}-${row.type}-${row.label}`}>
                 {row.type === 'input' && (
                   <InputField
-                    key={`input-${index}`}
                     row={row}
                     index={index}
                     handleChange={handleChange}
