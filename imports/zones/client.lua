@@ -307,8 +307,7 @@ local function debugPoly(self)
 end
 
 local function debugSphere(self)
-    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius,
-        self.radius, 255, 42, 24, 100, false, false, 0, true, false, false, false)
+    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 42, 24, 100, false, false, 0, false, false, false, false)
 end
 
 local function contains(self, coords)
