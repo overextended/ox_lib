@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { VisibilityProvider } from './providers/VisibilityProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from './theme';
 import { debugData } from './utils/debugData';
@@ -12,6 +11,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { isEnvBrowser } from './utils/misc';
 import LocaleProvider from './providers/LocaleProvider';
+import { MantineProvider } from '@mantine/core';
 
 library.add(fas, far, fab);
 
@@ -25,22 +25,15 @@ if (isEnvBrowser()) {
   root!.style.backgroundPosition = 'center';
 }
 
-debugData([
-  {
-    action: 'setVisible',
-    data: true,
-  },
-]);
-
 const root = document.getElementById('root');
 ReactDOM.createRoot(root!).render(
   <React.StrictMode>
     <LocaleProvider>
-      <VisibilityProvider>
+      <MantineProvider withNormalizeCSS withGlobalStyles theme={{ colorScheme: 'dark', fontFamily: 'Roboto' }}>
         <ChakraProvider theme={theme}>
           <App />
         </ChakraProvider>
-      </VisibilityProvider>
+      </MantineProvider>
     </LocaleProvider>
   </React.StrictMode>
 );
