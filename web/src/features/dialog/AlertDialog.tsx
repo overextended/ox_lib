@@ -1,4 +1,4 @@
-import { Modal, Button, Stack, Group } from '@mantine/core';
+import { Modal, Button, Stack, Group, useMantineTheme } from '@mantine/core';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
@@ -18,6 +18,7 @@ export interface AlertProps {
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
+  const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [dialogData, setDialogData] = useState<AlertProps>({
     header: '',
@@ -63,8 +64,8 @@ const AlertDialog: React.FC = () => {
             )}
             <Button
               uppercase
-              variant="light"
-              color={dialogData.cancel ? 'blue' : undefined}
+              variant={dialogData.cancel ? 'light' : 'default'}
+              color={dialogData.cancel ? theme.primaryColor : undefined}
               onClick={() => closeAlert('confirm')}
             >
               {dialogData.labels?.confirm || locale.ui.confirm}
