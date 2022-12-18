@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Flex, Box } from '@chakra-ui/react';
+import { Progress, Box, Text, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 
@@ -8,7 +8,38 @@ export interface ProgressbarProps {
   duration: number;
 }
 
+const useStyles = createStyles((theme) => ({
+  container: {
+    width: 350,
+    height: 45,
+    position: 'absolute',
+    bottom: '15%',
+    left: '50%',
+    transform: 'translate(-50%)',
+    borderRadius: theme.radius.xs,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  bar: {
+    height: '100%',
+    borderRadius: theme.radius.xs,
+    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+  },
+  label: {
+    maxWidth: 350,
+    padding: 8,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    fontSize: 20,
+  },
+}));
+
 const Progressbar: React.FC = () => {
+  const { classes } = useStyles();
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
@@ -34,55 +65,20 @@ const Progressbar: React.FC = () => {
   });
 
   return (
-    <Flex h="30%" w="100%" position="absolute" bottom="0" justifyContent="center" alignItems="center">
-      <Box width={350}>
-        {visible && (
-          <Box
-            height={45}
-            bg="rgba(0, 0, 0, 0.6)"
-            textAlign="center"
-            borderRadius="sm"
-            boxShadow="lg"
-            overflow="hidden"
-          >
-            <Box
-              height={45}
-              onAnimationEnd={progressComplete}
-              sx={
-                !cancelled
-                  ? {
-                      width: '0%',
-                      backgroundColor: 'green.400',
-                      animation: 'progress-bar linear',
-                      animationDuration: `${duration}ms`,
-                    }
-                  : {
-                      // Currently unused
-                      width: '100%',
-                      animationPlayState: 'paused',
-                      backgroundColor: 'rgb(198, 40, 40)',
-                    }
-              }
-            />
-            <Text
-              maxWidth={350}
-              fontFamily="Inter"
-              textOverflow="ellipsis"
-              overflow="hidden"
-              whiteSpace="nowrap"
-              fontSize={22}
-              fontWeight="light"
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-            >
-              {label}
-            </Text>
-          </Box>
-        )}
+    <>
+      <Box className={classes.container}>
+        <Box
+          className={classes.bar}
+          onAnimationEnd={progressComplete}
+          sx={{
+            width: '0%',
+            animation: 'progress-bar linear',
+            animationDuration: `${duration}ms`,
+          }}
+        />
+        <Text className={classes.label}>{label}</Text>
       </Box>
-    </Flex>
+    </>
   );
 };
 
