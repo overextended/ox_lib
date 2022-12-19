@@ -12,6 +12,7 @@ local Core = {
 
 ---@deprecated
 function lib.getCore()
+    print('^3lib.getCore will be removed in a future update (v3.0.0).^0')
 	local result
 
 	Citizen.CreateThreadNow(function()
