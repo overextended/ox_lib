@@ -87,6 +87,20 @@ CreateThread(function()
 	end
 end)
 
+local function toVector(coords)
+    local _type = type(coords)
+
+    if _type ~= 'vector3' then
+        if _type == 'table' or _type == 'vector4' then
+            return vec3(coords[1] or coords.x, coords[2] or coords.y, coords[3] or coords.z)
+        end
+
+        error(("expected type 'vector3' or 'table' (received %s)"):format(_type))
+    end
+
+    return coords
+end
+
 lib.points = {
     ---@return CPoint
 	new = function(...)
@@ -108,7 +122,7 @@ lib.points = {
 			}
 		end
 
-
+        self.coords = toVector(self.coords)
 		self.distance = self.distance or args[2]
 
 		if args[3] then
