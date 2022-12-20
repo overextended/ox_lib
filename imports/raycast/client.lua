@@ -1,3 +1,5 @@
+lib.raycast = {}
+
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
