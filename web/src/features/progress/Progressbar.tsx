@@ -66,18 +66,20 @@ const Progressbar: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.container}>
-        <Box
-          className={classes.bar}
-          onAnimationEnd={progressComplete}
-          sx={{
-            width: '0%',
-            animation: 'progress-bar linear',
-            animationDuration: `${duration}ms`,
-          }}
-        />
-        <Text className={classes.label}>{label}</Text>
-      </Box>
+      {visible && (
+        <Box className={classes.container}>
+          <Box
+            className={classes.bar}
+            onAnimationEnd={progressComplete}
+            sx={{
+              width: '0%',
+              animation: 'progress-bar linear',
+              animationDuration: `${duration}ms`,
+            }}
+          />
+          <Text className={classes.label}>{label}</Text>
+        </Box>
+      )}
     </>
   );
 };
