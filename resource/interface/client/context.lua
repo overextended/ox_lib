@@ -38,7 +38,7 @@ local function closeContext(_, cb, onExit)
     if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
 
     resetFocus()
-
+    PlaySoundFrontend(-1, 'Highlight_Cancel', 'DLC_HEIST_PLANNING_BOARD_SOUNDS', 1)
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
 
     openContextMenu = nil
@@ -53,7 +53,7 @@ function lib.showContext(id)
 
     SetNuiFocus(true, true)
     SetNuiFocusKeepInput(false)
-
+    PlaySoundFrontend(-1, 'Highlight_Cancel', 'DLC_HEIST_PLANNING_BOARD_SOUNDS', 1)
     SendNuiMessage(json.encode({
         action = 'showContext',
         data = {
@@ -86,6 +86,7 @@ function lib.hideContext(onExit) closeContext(nil, nil, onExit) end
 RegisterNUICallback('openContext', function(data, cb)
     if data.back and contextMenus[openContextMenu].onBack then contextMenus[openContextMenu].onBack() end
     cb(1)
+    PlaySoundFrontend(-1, 'Highlight_Cancel', 'DLC_HEIST_PLANNING_BOARD_SOUNDS', 1)
     lib.showContext(data.id)
 end)
 
@@ -109,7 +110,7 @@ RegisterNUICallback('clickContext', function(id, cb)
     if data.onSelect then data.onSelect(data.args) end
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
-
+    PlaySoundFrontend(-1, 'Highlight_Cancel', 'DLC_HEIST_PLANNING_BOARD_SOUNDS', 1)
     SendNUIMessage({
         action = 'hideContext'
     })
