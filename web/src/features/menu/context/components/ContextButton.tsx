@@ -21,6 +21,9 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
     whiteSpace: 'pre-wrap',
   },
+  description: {
+    color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2]
+  },
   dropdown: {
     padding: 10,
     color: theme.colors.dark[0],
@@ -67,7 +70,7 @@ const ContextButton: React.FC<{
                   </Text>
                 </Group>
                 {button.description && (
-                  <Text size={12}>
+                  <Text size={12} className={classes.description}>
                     <ReactMarkdown>{button.description}</ReactMarkdown>
                   </Text>
                 )}
