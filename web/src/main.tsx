@@ -28,7 +28,11 @@ const root = document.getElementById('root');
 ReactDOM.createRoot(root!).render(
   <React.StrictMode>
     <LocaleProvider>
-      <MantineProvider withNormalizeCSS withGlobalStyles theme={{ colorScheme: 'dark', fontFamily: 'Roboto' }}>
+      <MantineProvider
+        withNormalizeCSS
+        withGlobalStyles
+        theme={{ colorScheme: 'dark', fontFamily: 'Roboto', shadows: { sm: '1px 1px 3px rgba(0, 0, 0, 0.5)' } }}
+      >
         <ChakraProvider theme={theme}>
           <App />
         </ChakraProvider>
