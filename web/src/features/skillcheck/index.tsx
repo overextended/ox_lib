@@ -1,9 +1,8 @@
-import { Box, Center } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { debugData } from '../../utils/debugData';
 import Indicator from './indicator';
 import { fetchNui } from '../../utils/fetchNui';
+import { useMantineTheme, Box, createStyles } from '@mantine/core';
 
 interface CustomGameDifficulty {
   areaSize: number;
@@ -28,7 +27,46 @@ const difficultyOffsets = {
   hard: 25,
 };
 
+const useStyles = createStyles((theme) => ({
+  svg: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  track: {
+    fill: 'transparent',
+    stroke: theme.colors.dark[4],
+    strokeWidth: 8,
+  },
+  skillArea: {
+    fill: 'transparent',
+    stroke: theme.fn.primaryColor(),
+    strokeWidth: 8,
+  },
+  indicator: {
+    stroke: 'red',
+    strokeWidth: 16,
+    fill: 'transparent',
+  },
+  button: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: theme.colors.dark[4],
+    width: 25,
+    height: 25,
+    textAlign: 'center',
+    borderRadius: 5,
+    fontSize: 16,
+    fontWeight: 500,
+  },
+}));
+
 const SkillCheck: React.FC = () => {
+  const theme = useMantineTheme();
+  const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const dataRef = useRef<GameDifficulty | GameDifficulty[] | null>(null);
   const dataIndexRef = useRef<number>(0);
@@ -74,31 +112,21 @@ const SkillCheck: React.FC = () => {
   };
 
   return (
-    <Center height="100%" width="100%">
+    <>
       {visible && (
         <>
-          <svg width={500} height={500}>
+          <svg r={50} width={500} height={500} className={classes.svg}>
             {/*Circle track*/}
-            <circle
-              r={50}
-              cx={250}
-              cy={250}
-              fill="transparent"
-              stroke="rgba(0, 0, 0, 0.4)"
-              strokeWidth={5}
-              strokeDasharray={circleCircumference}
-            />
+            <circle r={50} cx={250} cy={250} className={classes.track} strokeDasharray={circleCircumference} />
             {/*SkillCheck area*/}
             <circle
               r={50}
               cx={250}
               cy={250}
-              fill="transparent"
-              stroke="white"
               strokeDasharray={circleCircumference}
               strokeDashoffset={circleCircumference - (Math.PI * 50 * skillCheck.difficultyOffset) / 180}
-              strokeWidth={5}
               transform={`rotate(${skillCheck.angle}, 250, 250)`}
+              className={classes.skillArea}
             />
             <Indicator
               angle={skillCheck.angle}
@@ -113,27 +141,14 @@ const SkillCheck: React.FC = () => {
                   : skillCheck.difficulty.speedMultiplier
               }
               handleComplete={handleComplete}
+              className={classes.indicator}
               skillCheck={skillCheck}
             />
           </svg>
-          <Box
-            position="absolute"
-            left="50%"
-            top="50%"
-            transform="translate(-50%, -50%)"
-            backgroundColor="rgba(0, 0, 0, 0.4)"
-            w={25}
-            h={25}
-            textAlign="center"
-            borderRadius={5}
-            fontFamily="Inter"
-            fontSize={16}
-          >
-            E
-          </Box>
+          <Box className={classes.button}>E</Box>
         </>
       )}
-    </Center>
+    </>
   );
 };
 
