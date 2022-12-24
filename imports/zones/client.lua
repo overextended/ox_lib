@@ -196,19 +196,17 @@ local function removeZone(self)
     Zones[self.id] = nil
 end
 
-local inside = {}
-local insideCount = 0
+local insideZones = {}
+local enteringZones = {}
+local exitingZones = {}
+local enteringSize = 0
+local exitingSize = 0
 local tick
 
 local glm_polygon_contains = glm.polygon.contains
 
 CreateThread(function()
     while true do
-        if insideCount ~= 0 then
-            table.wipe(inside)
-            insideCount = 0
-        end
-
         local coords = GetEntityCoords(cache.ped)
         cache.coords = coords
 
@@ -227,36 +225,61 @@ CreateThread(function()
                     zone.insideZone = true
 
                     if zone.onEnter then
-                        zone:onEnter()
+                        enteringSize += 1
+                        enteringZones[enteringSize] = zone
                     end
-                end
 
-                if zone.inside or zone.debug then
-                    insideCount += 1
-                    inside[insideCount] = zone
+                    if zone.inside or zone.debug then
+                        insideZones[zone.id] = zone
+                    end
                 end
             else
                 if zone.insideZone then
                     zone.insideZone = false
+                    insideZones[zone.id] = nil
 
                     if zone.onExit then
-                        zone:onExit()
+                        exitingSize += 1
+                        exitingZones[exitingSize] = zone
                     end
                 end
 
                 if zone.debug then
-                    insideCount += 1
-                    inside[insideCount] = zone
+                    insideZones[zone.id] = zone
                 end
             end
         end
 
-        if not tick then
-            if insideCount ~= 0 then
-                tick = SetInterval(function()
-                    for i = 1, insideCount do
-                        local zone = inside[i]
+        if exitingSize > 0 then
+            table.sort(exitingZones, function(a, b)
+                return a.distance > b.distance
+            end)
 
+            for i = 1, exitingSize do
+                exitingZones[i]:onExit()
+            end
+
+            exitingSize = 0
+            table.wipe(exitingZones)
+        end
+
+        if enteringSize > 0 then
+            table.sort(enteringZones, function(a, b)
+                return a.distance < b.distance
+            end)
+
+            for i = 1, enteringSize do
+                enteringZones[i]:onEnter()
+            end
+
+            enteringSize = 0
+            table.wipe(enteringZones)
+        end
+
+        if not tick then
+            if next(insideZones) then
+                tick = SetInterval(function()
+                    for _, zone in pairs(insideZones) do
                         if zone.debug then
                             zone:debug()
 
@@ -269,7 +292,7 @@ CreateThread(function()
                     end
                 end)
             end
-        elseif insideCount == 0 then
+        elseif not next(insideZones) then
             tick = ClearInterval(tick)
         end
 
