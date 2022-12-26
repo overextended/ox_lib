@@ -75,7 +75,9 @@ CreateThread(function()
 			if nearbyCount ~= 0 then
 				tick = SetInterval(function()
 					for i = 1, nearbyCount do
-						nearbyPoints[i]:nearby()
+                        if nearbyPoints[i] then
+                            nearbyPoints[i]:nearby()
+                        end
 					end
 				end)
 			end
