@@ -146,7 +146,7 @@ local function drawLines()
 	end
 end
 
-local function rotate(origin, point, theta)
+local function getRelativePos(origin, point, theta)
     if theta == 0.0 then return point end
     local p = point - origin
     local pX, pY = p.x, p.y
@@ -276,7 +276,7 @@ local function startCreator(arg, useLast)
             elseif IsDisabledControlJustReleased(0, 32) then -- w
                 change = true
                 if useRelativeMomvement then
-                    local newX, newY = rotate(vec2(xCoord, yCoord), vec2(xCoord, yCoord + lStep), GetGameplayCamRot(2).z)
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord + lStep), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
                     end
@@ -295,7 +295,7 @@ local function startCreator(arg, useLast)
             elseif IsDisabledControlJustReleased(0, 33) then -- s
                 change = true
                 if useRelativeMomvement then
-                    local newX, newY = rotate(vec2(xCoord, yCoord), vec2(xCoord, yCoord - lStep), GetGameplayCamRot(2).z)
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord - lStep), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
                     end
@@ -314,7 +314,7 @@ local function startCreator(arg, useLast)
             elseif IsDisabledControlJustReleased(0, 35) then -- d
                 change = true
                 if useRelativeMomvement then
-                    local newX, newY = rotate(vec2(xCoord, yCoord), vec2(xCoord + lStep, yCoord), GetGameplayCamRot(2).z)
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord + lStep, yCoord), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
                     end
@@ -333,7 +333,7 @@ local function startCreator(arg, useLast)
             elseif IsDisabledControlJustReleased(0, 34) then -- a
                 change = true
                 if useRelativeMomvement then
-                    local newX, newY = rotate(vec2(xCoord, yCoord), vec2(xCoord - lStep, yCoord), GetGameplayCamRot(2).z)
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord - lStep, yCoord), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
                     end
