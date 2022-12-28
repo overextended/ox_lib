@@ -7,6 +7,7 @@ local format = 'array'
 local displayModes = {'basic', 'walls', 'axes', 'both'}
 local displayMode = 1
 local minCheck = steps[1][1] / 2
+local lastZone = nil
 
 local function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
@@ -63,7 +64,7 @@ local function closeCreator(cancel)
             }}
         }) or {}
 
-        format = input[2]
+        format = input[2] or 'array'
 
 		TriggerServerEvent('ox_lib:saveZone', {
 			zoneType = zoneType,
@@ -78,6 +79,13 @@ local function closeCreator(cancel)
 			length = length,
 			points = points
 		})
+        lastZone = {
+            zoneType = zoneType,
+            heading = heading,
+            height = height,
+            width = width,
+            length = length,
+        }
 	end
 
 	creatorActive = false
@@ -143,7 +151,7 @@ local controls = {
     ['INPUT_MP_TEXT_CHAT_ALL'] = isFivem and 245 or 0x9720FCEE
 }
 
-local function startCreator(arg)
+local function startCreator(arg, useLast)
 	creatorActive = true
     controlsActive = true
 	zoneType = arg
@@ -153,10 +161,10 @@ local function startCreator(arg)
 	xCoord = round(coords.x) + 0.0
 	yCoord = round(coords.y) + 0.0
 	zCoord = round(coords.z) + 0.0
-	heading = 0.0
-	height = 4.0
-	width = 4.0
-	length = 4.0
+	heading = useLast and lastZone.heading or 0.0
+	height = useLast and lastZone.height or 4.0
+	width = useLast and lastZone.width or 4.0
+	length = useLast and lastZone.length or 4.0
 	points = {}
 
 	updateText()
@@ -344,3 +352,23 @@ end, true)
 TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
     { name = 'zoneType', help = 'poly, box, sphere' },
 })
+
+RegisterCommand('zonelast', function(source, args, rawCommand)
+    if not lastZone then
+        lib.notify({title = 'No last zone', type = 'error'})
+        return
+    end
+    if creatorActive then
+        lib.notify({title = 'Already creating a zone', type = 'error'})
+        return
+    end
+    if lastZone.zoneType == 'poly' then
+        lib.notify({title = 'Cannot duplicate a poly zone', type = 'error'})
+        return
+    end
+    CreateThread(function()
+        startCreator(lastZone.zoneType, true)
+    end)
+end, true)
+
+TriggerEvent('chat:addSuggestion', '/zonelast', 'Starts creation of a zone using data from your last created zone')
