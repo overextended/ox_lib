@@ -36,7 +36,7 @@ const useStyles = createStyles((theme) => ({
   },
   track: {
     fill: 'transparent',
-    stroke: theme.colors.dark[4],
+    stroke: theme.colors.dark[5],
     strokeWidth: 8,
   },
   skillArea: {
@@ -54,7 +54,7 @@ const useStyles = createStyles((theme) => ({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: theme.colors.dark[4],
+    backgroundColor: theme.colors.dark[5],
     width: 25,
     height: 25,
     textAlign: 'center',
