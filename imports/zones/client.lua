@@ -192,18 +192,20 @@ local function getTriangles(polygon)
     return triangles
 end
 
-local function removeZone(self)
-    Zones[self.id] = nil
-end
-
 local insideZones = {}
 local enteringZones = {}
 local exitingZones = {}
 local enteringSize = 0
 local exitingSize = 0
 local tick
-
 local glm_polygon_contains = glm.polygon.contains
+
+local function removeZone(self)
+    Zones[self.id] = nil
+    insideZones[self.id] = nil
+    enteringZones[self.id] = nil
+    exitingZones[self.id] = nil
+end
 
 CreateThread(function()
     while true do
