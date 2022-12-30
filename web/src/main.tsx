@@ -31,7 +31,11 @@ ReactDOM.createRoot(root!).render(
       <MantineProvider
         withNormalizeCSS
         withGlobalStyles
-        theme={{ colorScheme: 'dark', fontFamily: 'Roboto', shadows: { sm: '1px 1px 3px rgba(0, 0, 0, 0.5)' } }}
+        theme={{
+          colorScheme: 'dark',
+          fontFamily: 'Roboto',
+          shadows: { sm: '1px 1px 3px rgba(0, 0, 0, 0.5)' },
+        }}
       >
         <ChakraProvider theme={theme}>
           <App />

@@ -1,17 +1,41 @@
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { Box, Flex, ScaleFade } from '@chakra-ui/react';
+import { Box, createStyles, Group } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
+type Position = 'right-center' | 'left-center' | 'top-center';
+
 export interface TextUiProps {
   text: string;
-  position?: 'right-center' | 'left-center' | 'top-center';
+  position?: Position;
   icon?: IconProp;
   iconColor?: string;
   style?: React.CSSProperties;
 }
+
+const useStyles = createStyles((theme, params: { position?: Position }) => ({
+  wrapper: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    display: 'flex',
+    alignItems: params.position === 'top-center' ? 'baseline' : 'center',
+    justifyContent:
+      params.position === 'right-center' ? 'flex-end' : params.position === 'left-center' ? 'flex-start' : 'center',
+  },
+  container: {
+    fontSize: 16,
+    padding: 12,
+    margin: 8,
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[0],
+    fontFamily: 'Roboto',
+    borderRadius: theme.radius.sm,
+    boxShadow: theme.shadows.sm,
+  },
+}));
 
 const TextUI: React.FC = () => {
   const [data, setData] = React.useState<TextUiProps>({
@@ -19,6 +43,7 @@ const TextUI: React.FC = () => {
     position: 'right-center',
   });
   const [visible, setVisible] = React.useState(false);
+  const { classes } = useStyles({ position: data.position });
 
   useNuiEvent<TextUiProps>('textUi', (data) => {
     if (!data.position) data.position = 'right-center'; // Default right position
@@ -29,42 +54,18 @@ const TextUI: React.FC = () => {
   useNuiEvent('textUiHide', () => setVisible(false));
 
   return (
-    <Flex
-      w="100%"
-      h="100%"
-      p={3}
-      position="absolute"
-      alignItems={data.position === 'top-center' ? 'baseline' : 'center'}
-      justifyContent={
-        data.position === 'right-center' ? 'flex-end' : data.position === 'left-center' ? 'flex-start' : 'center'
-      }
-    >
-      <ScaleFade in={visible} unmountOnExit>
-        <Box
-          bg="gray.700"
-          boxShadow="md"
-          p={3}
-          fontFamily="Poppins"
-          fontSize="0.95em"
-          style={data.style}
-          borderRadius="sm"
-          maxW="xs"
-        >
-          <Flex justifyContent="center" alignItems="center">
-            {data.icon && (
-              <FontAwesomeIcon
-                fixedWidth
-                icon={data.icon}
-                color={data.iconColor}
-                fontSize="1.3em"
-                style={{ paddingRight: 8 }}
-              />
-            )}
-            <ReactMarkdown>{data.text}</ReactMarkdown>
-          </Flex>
+    <>
+      {visible && (
+        <Box className={classes.wrapper}>
+          <Box style={data.style} className={classes.container}>
+            <Group spacing={12}>
+              {data.icon && <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" style={{ color: data.iconColor }} />}
+              <ReactMarkdown>{data.text}</ReactMarkdown>
+            </Group>
+          </Box>
         </Box>
-      </ScaleFade>
-    </Flex>
+      )}
+    </>
   );
 };
 
