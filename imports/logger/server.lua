@@ -135,6 +135,7 @@ if service == 'loki' then
         end
 
         -- Generates a nanosecond unix timestamp
+        ---@diagnostic disable-next-line: param-type-mismatch
         local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
 
         -- Initializes values table with the message
