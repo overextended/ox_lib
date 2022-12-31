@@ -2,6 +2,7 @@ import React from 'react';
 import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
+import ScaleFade from '../../transitions/ScaleFade';
 
 export interface CircleProgressbarProps {
   label?: string;
@@ -18,11 +19,11 @@ const progressCircle = keyframes({
 
 const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; duration: number }) => ({
   container: {
+    width: '100%',
+    height: params.position === 'middle' ? '100%' : '20%',
+    bottom: 0,
     position: 'absolute',
-    top: params.position === 'middle' ? '50%' : undefined,
-    bottom: params.position === 'bottom' ? '20%' : undefined,
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -85,8 +86,8 @@ const CircleProgressbar: React.FC = () => {
 
   return (
     <>
-      {visible && (
-        <Stack spacing={0} className={classes.container} bottom="0">
+      <Stack spacing={0} className={classes.container}>
+        <ScaleFade visible={visible}>
           <RingProgress
             size={90}
             thickness={7}
@@ -96,8 +97,8 @@ const CircleProgressbar: React.FC = () => {
             label={<Text className={classes.value}>{value}%</Text>}
           />
           {label && <Text className={classes.label}>{label}</Text>}
-        </Stack>
-      )}
+        </ScaleFade>
+      </Stack>
     </>
   );
 };

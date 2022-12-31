@@ -2,6 +2,7 @@ import React from 'react';
 import { Progress, Box, Text, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
+import ScaleFade from '../../transitions/ScaleFade';
 
 export interface ProgressbarProps {
   label: string;
@@ -12,17 +13,30 @@ const useStyles = createStyles((theme) => ({
   container: {
     width: 350,
     height: 45,
-    position: 'absolute',
-    bottom: '15%',
-    left: '50%',
-    transform: 'translate(-50%)',
     borderRadius: theme.radius.xs,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  wrapper: {
+    width: '100%',
+    height: '20%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 0,
+    position: 'absolute',
   },
   bar: {
     height: '100%',
     borderRadius: theme.radius.xs,
     backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+  },
+  labelWrapper: {
+    position: 'absolute',
+    display: 'flex',
+    width: 350,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
     maxWidth: 350,
@@ -30,11 +44,8 @@ const useStyles = createStyles((theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     fontSize: 20,
+    textShadow: theme.shadows.sm,
   },
 }));
 
@@ -66,20 +77,24 @@ const Progressbar: React.FC = () => {
 
   return (
     <>
-      {visible && (
-        <Box className={classes.container}>
-          <Box
-            className={classes.bar}
-            onAnimationEnd={progressComplete}
-            sx={{
-              width: '0%',
-              animation: 'progress-bar linear',
-              animationDuration: `${duration}ms`,
-            }}
-          />
-          <Text className={classes.label}>{label}</Text>
-        </Box>
-      )}
+      <Box className={classes.wrapper}>
+        <ScaleFade visible={visible}>
+          <Box className={classes.container}>
+            <Box
+              className={classes.bar}
+              onAnimationEnd={progressComplete}
+              sx={{
+                animation: 'progress-bar linear',
+                animationDuration: `${duration}ms`,
+              }}
+            >
+              <Box className={classes.labelWrapper}>
+                <Text className={classes.label}>{label}</Text>
+              </Box>
+            </Box>
+          </Box>
+        </ScaleFade>
+      </Box>
     </>
   );
 };
