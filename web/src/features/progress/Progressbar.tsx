@@ -14,7 +14,7 @@ const useStyles = createStyles((theme) => ({
     width: 350,
     height: 45,
     borderRadius: theme.radius.xs,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: theme.colors.dark[5],
   },
   wrapper: {
     width: '100%',
