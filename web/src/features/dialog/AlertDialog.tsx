@@ -52,6 +52,7 @@ const AlertDialog: React.FC = () => {
         withCloseButton={false}
         overlayOpacity={0.5}
         exitTransitionDuration={150}
+        transition="fade"
         title={<ReactMarkdown>{dialogData.header}</ReactMarkdown>}
       >
         <Stack>

@@ -75,6 +75,7 @@ const InputDialog: React.FC = () => {
         title={fields.heading}
         withCloseButton={false}
         overlayOpacity={0.5}
+        transition="fade"
         exitTransitionDuration={150}
       >
         <Stack>
