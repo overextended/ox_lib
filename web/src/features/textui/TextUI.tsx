@@ -4,6 +4,7 @@ import { Box, createStyles, Group } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import ScaleFade from '../../transitions/ScaleFade';
 
 type Position = 'right-center' | 'left-center' | 'top-center';
 
@@ -55,16 +56,16 @@ const TextUI: React.FC = () => {
 
   return (
     <>
-      {visible && (
-        <Box className={classes.wrapper}>
+      <Box className={classes.wrapper}>
+        <ScaleFade visible={visible}>
           <Box style={data.style} className={classes.container}>
             <Group spacing={12}>
               {data.icon && <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" style={{ color: data.iconColor }} />}
               <ReactMarkdown>{data.text}</ReactMarkdown>
             </Group>
           </Box>
-        </Box>
-      )}
+        </ScaleFade>
+      </Box>
     </>
   );
 };
