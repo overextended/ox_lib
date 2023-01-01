@@ -66,8 +66,14 @@
     "@testing-library/dom": "^8.11.4",
     "autoprefixer": "^10.0.2",
     "cross-env": "^7.0.3",
+    "csstype": "^3.0.10",
     "postcss": "^8.1.0",
     "prop-types": "^15.8.1",
     "rimraf": "^3.0.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "react-hot-toast@2.4.0": "patches/react-hot-toast@2.4.0.patch"
+    }
   }
 }

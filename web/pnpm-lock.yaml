@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  react-hot-toast@2.4.0:
+    hash: 6dztgcaza2bodipt2i5a4is4mu
+    path: patches/react-hot-toast@2.4.0.patch
+
 specifiers:
   '@babel/core': '>=7.0.0 <8.0.0'
   '@babel/plugin-syntax-flow': ^7.14.5
@@ -26,6 +31,7 @@ specifiers:
   '@vitejs/plugin-react': ^1.3.2
   autoprefixer: ^10.0.2
   cross-env: ^7.0.3
+  csstype: ^3.0.10
   dayjs: ^1.11.7
   focus-trap-react: ^9.0.2
   framer-motion: ^8.0.2
@@ -67,7 +73,7 @@ dependencies:
   prettier: 2.7.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
+  react-hot-toast: 2.4.0_6dztgcaza2bodipt2i5a4is4mu_npw22p3c4ehm7n7vxn2gqac44u
   react-markdown: 8.0.1_bbvjflvjoibwhtpmedigb26h6y
   typescript: 4.6.3
   vite: 2.9.13
@@ -80,6 +86,7 @@ devDependencies:
   '@testing-library/dom': 8.11.4
   autoprefixer: 10.4.4_postcss@8.4.12
   cross-env: 7.0.3
+  csstype: 3.0.11
   postcss: 8.4.12
   prop-types: 15.8.1
   rimraf: 3.0.2
@@ -2598,7 +2605,6 @@ packages:
 
   /csstype/3.0.11:
     resolution: {integrity: sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==}
-    dev: false
 
   /csstype/3.0.9:
     resolution: {integrity: sha512-rpw6JPxK6Rfg1zLOYCSwle2GFOOsnjmDYDaBwEcwoOg4qlsIVCN789VkBZDJAGi4T07gI4YSutR43t9Zz4Lzuw==}
@@ -2986,10 +2992,12 @@ packages:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
 
-  /goober/2.1.11:
+  /goober/2.1.11_csstype@3.0.11:
     resolution: {integrity: sha512-5SS2lmxbhqH0u9ABEWq7WPU69a4i2pYcHeCxqaNq6Cw3mnrF0ghWNM4tEGid4dKy8XNIAUbuThuozDHHKJVh3A==}
     peerDependencies:
       csstype: ^3.0.10
+    dependencies:
+      csstype: 3.0.11
     dev: false
 
   /has-flag/3.0.0:
@@ -3555,19 +3563,20 @@ packages:
       use-sidecar: 1.1.2_bbvjflvjoibwhtpmedigb26h6y
     dev: false
 
-  /react-hot-toast/2.4.0_biqbaboplfbrettd7655fr4n2y:
+  /react-hot-toast/2.4.0_6dztgcaza2bodipt2i5a4is4mu_npw22p3c4ehm7n7vxn2gqac44u:
     resolution: {integrity: sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      goober: 2.1.11
+      goober: 2.1.11_csstype@3.0.11
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     transitivePeerDependencies:
       - csstype
     dev: false
+    patched: true
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}

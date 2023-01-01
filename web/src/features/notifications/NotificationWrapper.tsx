@@ -1,10 +1,9 @@
-import { useToast, Box, HStack, Text } from '@chakra-ui/react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { toast, Toaster, ToastPosition } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, createStyles, Group, keyframes, Stack } from '@mantine/core';
+import { Avatar, createStyles, Group, Stack, Box, Text } from '@mantine/core';
 import React from 'react';
 
 export interface NotificationProps {
@@ -46,6 +45,7 @@ const useStyles = createStyles((theme) => ({
   description: {
     fontSize: 12,
     color: theme.colors.dark[2],
+    fontFamily: 'Roboto',
   },
 }));
 
@@ -88,11 +88,7 @@ const Notifications: React.FC = () => {
           )}
           <Stack spacing={0}>
             {data.title && <Text className={classes.title}>{data.title}</Text>}
-            {data.description && (
-              <Text className={classes.description}>
-                <ReactMarkdown>{data.description}</ReactMarkdown>
-              </Text>
-            )}
+            {data.description && <ReactMarkdown className={classes.description}>{data.description}</ReactMarkdown>}
           </Stack>
         </Group>
       </Box>,
@@ -109,7 +105,7 @@ const Notifications: React.FC = () => {
     );
   });
 
-  return <Toaster></Toaster>;
+  return <Toaster />;
 };
 
 export default Notifications;
