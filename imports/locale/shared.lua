@@ -3,18 +3,19 @@ local dict
 ---@param str string
 ---@param ... string | number
 ---@return string
+---@return boolean
 function locale(str, ...)
 	local lstr = dict[str]
 
 	if lstr then
 		if ... then
-			return lstr and lstr:format(...)
+			return lstr and lstr:format(...), true
 		end
 
-		return lstr
+		return lstr, true
 	end
 
-	return ("Translation for '%s' does not exist"):format(str)
+	return ("Translation for '%s' does not exist"):format(str), false
 end
 
 ---@return { [string]: string }

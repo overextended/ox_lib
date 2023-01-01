@@ -160,11 +160,13 @@ if context == 'client' then
 	RegisterNetEvent(('%s:notify'):format(cache.resource), function(data)
 		if locale then
 			if data.title then
-				data.title = locale(data.title) or data.title
+				local title, success = locale(data.title)
+				data.title = success and title or data.title
 			end
 
 			if data.description then
-				data.description = locale(data.description) or data.description
+				local description, success = locale(data.description)
+				data.description = success and description or data.description
 			end
 		end
 
