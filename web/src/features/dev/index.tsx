@@ -4,7 +4,7 @@ import { debugAlert } from './debug/alert';
 import { debugContext } from './debug/context';
 import { debugInput } from './debug/input';
 import { debugMenu } from './debug/menu';
-import { debugCustomNotification, debugNotification } from './debug/notification';
+import { debugCustomNotification } from './debug/notification';
 import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
@@ -48,10 +48,7 @@ const Dev: React.FC = () => {
           </Button>
           <Divider />
           <Button fullWidth onClick={() => debugCustomNotification()}>
-            Send custom notification
-          </Button>
-          <Button fullWidth onClick={() => debugNotification()}>
-            Send default notification
+            Send notification
           </Button>
           <Divider />
           <Button fullWidth onClick={() => debugProgressbar()}>

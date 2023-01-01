@@ -1,14 +1,17 @@
-import { useToast, type ToastPosition, Box, HStack, Text } from '@chakra-ui/react';
+import { useToast, Box, HStack, Text } from '@chakra-ui/react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { toast, Toaster, ToastPosition } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
+import { Avatar, createStyles, Group, keyframes, Stack } from '@mantine/core';
+import React from 'react';
 
 export interface NotificationProps {
   title?: string;
   description?: string;
   duration?: number;
-  position?: ToastPosition;
+  position?: ToastPosition | 'top' | 'bottom';
   variant?: string;
   status?: 'info' | 'warning' | 'success' | 'error';
   id?: number;
@@ -21,64 +24,92 @@ export interface CustomNotificationProps {
   duration?: number;
   icon?: IconProp;
   iconColor?: string;
-  position?: ToastPosition;
+  position?: ToastPosition | 'top' | 'bottom';
   id?: number;
   type?: string;
 }
 
+const useStyles = createStyles((theme) => ({
+  container: {
+    width: 300,
+    height: 'fit-content',
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[0],
+    padding: 12,
+    borderRadius: theme.radius.sm,
+    fontFamily: 'Roboto',
+    boxShadow: theme.shadows.sm,
+  },
+  title: {
+    fontWeight: 500,
+  },
+  description: {
+    fontSize: 12,
+    color: theme.colors.dark[2],
+  },
+}));
+
 const Notifications: React.FC = () => {
-  const toast = useToast();
+  const { classes } = useStyles();
 
   useNuiEvent<CustomNotificationProps>('customNotify', (data) => {
     if (!data.title && !data.description) return;
-    if (data.id && toast.isActive(data.id)) return;
+    // Backwards compat with old notifications
+    let position = data.position;
+    switch (position) {
+      case 'top':
+        position = 'top-center';
+        break;
+      case 'bottom':
+        position = 'bottom-center';
+        break;
+    }
     if (!data.icon) {
-      data.icon = data.type === 'error' ? 'circle-xmark' : data.type === 'success' ? 'circle-check' : 'circle-info';
+      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : 'info';
     }
 
-    const id = data.id;
-    toast({
-      id,
-      duration: data.duration || 3000,
-      position: data.position || 'top-right',
-      render: () => (
-        <Box className={`toast-${data.type || 'inform'}`} style={data.style} p={2} borderRadius="sm" boxShadow="md">
-          <HStack spacing={0}>
-            {data.icon && (
-              <FontAwesomeIcon
-                fixedWidth
-                icon={data.icon}
-                fontSize="1.3em"
-                style={{ paddingRight: 8 }}
-                color={data.iconColor}
-              />
+    toast(
+      <Box style={data.style} className={`${classes.container}`}>
+        <Group noWrap spacing={12}>
+          {data.icon && (
+            <>
+              {!data.iconColor ? (
+                <Avatar
+                  color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
+                  radius="xl"
+                  size={(data.title && !data.description) || (data.description && !data.title) ? 28 : undefined}
+                >
+                  <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
+                </Avatar>
+              ) : (
+                <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
+              )}
+            </>
+          )}
+          <Stack spacing={0}>
+            {data.title && <Text className={classes.title}>{data.title}</Text>}
+            {data.description && (
+              <Text className={classes.description}>
+                <ReactMarkdown>{data.description}</ReactMarkdown>
+              </Text>
             )}
-            <Box w="100%">
-              {data.title && <Text as="b">{data.title}</Text>}
-              {data.description && <Text><ReactMarkdown>{data.description}</ReactMarkdown></Text>}
-            </Box>
-          </HStack>
-        </Box>
-      ),
-    });
+          </Stack>
+        </Group>
+      </Box>,
+      {
+        id: data.id?.toString(),
+        duration: data.duration || 3000,
+        position: position || 'top-right',
+        style: {
+          padding: 0,
+          boxShadow: 'none',
+          backgroundColor: 'transparent',
+        },
+      }
+    );
   });
 
-  useNuiEvent<NotificationProps>('notify', (data) => {
-    if (!data.title && !data.description) return;
-    if (data.id && toast.isActive(data.id)) return;
-    const id = data.id;
-    toast({
-      id,
-      title: data.title,
-      description: data.description,
-      duration: data.duration || 4000,
-      position: data.position || 'top-right',
-      variant: data.variant,
-      status: data.status,
-    });
-  });
-
-  return <></>;
+  return <Toaster></Toaster>;
 };
 
 export default Notifications;
