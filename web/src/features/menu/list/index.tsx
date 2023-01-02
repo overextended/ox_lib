@@ -1,4 +1,4 @@
-import { Box, Stack, Tooltip } from '@chakra-ui/react';
+import { Box, createStyles, Stack, Tooltip } from '@mantine/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
@@ -8,6 +8,8 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { fetchNui } from '../../../utils/fetchNui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+
+type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 export interface MenuItem {
   label: string;
@@ -23,12 +25,52 @@ export interface MenuItem {
 }
 
 export interface MenuSettings {
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  position?: MenuPosition;
   title: string;
   canClose?: boolean;
   items: Array<MenuItem>;
   startItemIndex?: number;
 }
+
+const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCount: number; selected: number }) => ({
+  tooltip: {
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[2],
+    borderRadius: theme.radius.sm,
+  },
+  container: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    marginTop: params.position === 'top-left' || params.position === 'top-right' ? 5 : 0,
+    marginLeft: params.position === 'top-left' || params.position === 'bottom-left' ? 5 : 0,
+    marginRight: params.position === 'top-right' || params.position === 'bottom-right' ? 5 : 0,
+    marginBottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 5 : 0,
+    right: params.position === 'top-right' || params.position === 'bottom-right' ? 1 : undefined,
+    left: params.position === 'bottom-left' ? 1 : undefined,
+    bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 1 : undefined,
+    fontFamily: 'Roboto',
+  },
+  buttonsWrapper: {
+    height: 'fit-content',
+    maxHeight: 415,
+    overflow: 'hidden',
+    borderRadius: params.itemCount <= 6 || params.selected === params.itemCount - 1 ? theme.radius.md : undefined,
+    backgroundColor: theme.colors.dark[8],
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  scrollArrow: {
+    backgroundColor: theme.colors.dark[8],
+    textAlign: 'center',
+    borderBottomLeftRadius: theme.radius.md,
+    borderBottomRightRadius: theme.radius.md,
+    height: 25,
+  },
+  scrollArrowIcon: {
+    color: theme.colors.dark[2],
+    fontSize: 20,
+  },
+}));
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
@@ -42,6 +84,7 @@ const ListMenu: React.FC = () => {
   const [checkedStates, setCheckedStates] = useState<Record<number, boolean>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
   const firstRenderRef = useRef(false);
+  const { classes } = useStyles({ position: menu.position, itemCount: menu.items.length, selected });
 
   const closeMenu = (ignoreFetch?: boolean, keyPressed?: string, forceClose?: boolean) => {
     if (menu.canClose === false && !forceClose) return;
@@ -184,44 +227,20 @@ const ListMenu: React.FC = () => {
                 menu.items[selected].values[indexStates[selected]].description
               : menu.items[selected].description
           }
-          isOpen={
+          opened={
             isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
                 !!menu.items[selected].values[indexStates[selected]].description
               : !!menu.items[selected].description
           }
-          bg="#25262B"
-          color="#909296"
-          placement="bottom"
-          borderRadius="md"
-          fontFamily="Nunito"
+          transitionDuration={0}
+          classNames={{ tooltip: classes.tooltip }}
         >
-          <Box
-            position="absolute"
-            pointerEvents="none"
-            mt={menu.position === 'top-left' || menu.position === 'top-right' ? 5 : 0}
-            ml={menu.position === 'top-left' || menu.position === 'bottom-left' ? 5 : 0}
-            mr={menu.position === 'top-right' || menu.position === 'bottom-right' ? 5 : 0}
-            mb={menu.position === 'bottom-left' || menu.position === 'bottom-right' ? 5 : 0}
-            right={menu.position === 'top-right' || menu.position === 'bottom-right' ? 1 : undefined}
-            left={menu.position === 'bottom-left' ? 1 : undefined}
-            bottom={menu.position === 'bottom-left' || menu.position === 'bottom-right' ? 1 : undefined}
-          >
+          <Box className={classes.container}>
             <Header title={menu.title} />
-            <Box
-              width="sm"
-              height="fit-content"
-              maxHeight={415}
-              overflow="hidden"
-              borderRadius={menu.items.length <= 6 || selected === menu.items.length - 1 ? 'md' : undefined}
-              bg="#141517"
-              fontFamily="Nunito"
-              borderTopLeftRadius="none"
-              borderTopRightRadius="none"
-              onKeyDown={(e) => moveMenu(e)}
-            >
+            <Box className={classes.buttonsWrapper} onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => moveMenu(e)}>
               <FocusTrap active={visible}>
-                <Stack direction="column" p={2} overflowY="scroll">
+                <Stack spacing={8} p={8} sx={{ overflowY: 'scroll' }}>
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
@@ -239,8 +258,8 @@ const ListMenu: React.FC = () => {
               </FocusTrap>
             </Box>
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <Box bg="#141517" textAlign="center" borderBottomLeftRadius="md" borderBottomRightRadius="md" height={25}>
-                <FontAwesomeIcon icon="chevron-down" color="#909296" fontSize={20} />
+              <Box className={classes.scrollArrow}>
+                <FontAwesomeIcon icon="chevron-down" className={classes.scrollArrowIcon} />
               </Box>
             )}
           </Box>
