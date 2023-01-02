@@ -1,5 +1,5 @@
 import React from 'react';
-import { Progress, Box, Text, createStyles } from '@mantine/core';
+import { Box, Text, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
@@ -45,6 +45,7 @@ const useStyles = createStyles((theme) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     fontSize: 20,
+    color: theme.colors.gray[3],
     textShadow: theme.shadows.sm,
   },
 }));

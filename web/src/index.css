@@ -22,6 +22,10 @@ body {
   overflow: hidden !important;
 }
 
+p {
+  margin: 0;
+}
+
 #root {
   height: 100%;
 }
