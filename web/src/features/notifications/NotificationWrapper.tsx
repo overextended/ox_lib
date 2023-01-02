@@ -3,7 +3,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { toast, Toaster, ToastPosition } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, createStyles, Group, Stack, Box, Text } from '@mantine/core';
+import { Avatar, createStyles, Group, Stack, Box, Text, keyframes } from '@mantine/core';
 import React from 'react';
 
 export interface NotificationProps {
@@ -49,6 +49,73 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+// I hate this
+const enterAnimationTop = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(-30px)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+});
+
+const enterAnimationBottom = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(30px)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+});
+
+const exitAnimationTop = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateY(-100%)',
+  },
+});
+
+const exitAnimationRight = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateX(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateX(100%)',
+  },
+});
+
+const exitAnimationLeft = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateX(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateX(-100%)',
+  },
+});
+
+const exitAnimationBottom = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateY(100%)',
+  },
+});
+
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
@@ -68,39 +135,56 @@ const Notifications: React.FC = () => {
       data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : 'info';
     }
 
-    toast(
-      <Box style={data.style} className={`${classes.container}`}>
-        <Group noWrap spacing={12}>
-          {data.icon && (
-            <>
-              {!data.iconColor ? (
-                <Avatar
-                  color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
-                  radius="xl"
-                  size={(data.title && !data.description) || (data.description && !data.title) ? 28 : undefined}
-                >
-                  <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
-                </Avatar>
-              ) : (
-                <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
-              )}
-            </>
-          )}
-          <Stack spacing={0}>
-            {data.title && <Text className={classes.title}>{data.title}</Text>}
-            {data.description && <ReactMarkdown className={classes.description}>{data.description}</ReactMarkdown>}
-          </Stack>
-        </Group>
-      </Box>,
+    toast.custom(
+      (t) => (
+        <Box
+          sx={{
+            animation: t.visible
+              ? `${position?.includes('bottom') ? enterAnimationBottom : enterAnimationTop} 0.2s ease-out forwards`
+              : `${
+                  position?.includes('right')
+                    ? exitAnimationRight
+                    : position?.includes('left')
+                    ? exitAnimationLeft
+                    : position === 'top-center'
+                    ? exitAnimationTop
+                    : position
+                    ? exitAnimationBottom
+                    : exitAnimationRight
+                } 0.4s ease-in forwards`,
+          }}
+          style={{
+            ...data.style,
+          }}
+          className={`${classes.container}`}
+        >
+          <Group noWrap spacing={12}>
+            {data.icon && (
+              <>
+                {!data.iconColor ? (
+                  <Avatar
+                    color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
+                    radius="xl"
+                    size={(data.title && !data.description) || (data.description && !data.title) ? 28 : undefined}
+                  >
+                    <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
+                  </Avatar>
+                ) : (
+                  <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
+                )}
+              </>
+            )}
+            <Stack spacing={0}>
+              {data.title && <Text className={classes.title}>{data.title}</Text>}
+              {data.description && <ReactMarkdown className={classes.description}>{data.description}</ReactMarkdown>}
+            </Stack>
+          </Group>
+        </Box>
+      ),
       {
         id: data.id?.toString(),
         duration: data.duration || 3000,
         position: position || 'top-right',
-        style: {
-          padding: 0,
-          boxShadow: 'none',
-          backgroundColor: 'transparent',
-        },
       }
     );
   });
