@@ -1,25 +1,17 @@
 import { Checkbox } from '@mantine/core';
 import { useEffect } from 'react';
 import { ICheckbox } from '../../../../interfaces/dialog';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Props {
   row: ICheckbox;
   index: number;
-  handleChange: (value: boolean, index: number) => void;
+  register: UseFormRegisterReturn;
 }
 
 const CheckboxField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.checked) props.handleChange(props.row.checked, props.index);
-  }, []);
-
   return (
-    <Checkbox
-      sx={{ display: 'flex' }}
-      label={props.row.label}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.checked, props.index)}
-      defaultChecked={props.row.checked}
-    />
+    <Checkbox {...props.register} sx={{ display: 'flex' }} label={props.row.label} defaultChecked={props.row.checked} />
   );
 };
 

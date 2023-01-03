@@ -1,31 +1,31 @@
 import { Select } from '@mantine/core';
-import { useEffect } from 'react';
 import { ISelect } from '../../../../interfaces/dialog';
+import { Control, FieldValues, useController, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
+import { FormValues } from '../../InputDialog';
 
 interface Props {
   row: ISelect;
   index: number;
-  handleChange: (value: string, index: number) => void;
+  control: Control<FormValues>;
 }
 
 // TODO: set label to value of value when there is no label provided
 const SelectField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default) {
-      props.row.options?.map((option) => {
-        if (props.row.default === option.value) {
-          props.handleChange(option.value, props.index);
-        }
-      });
-    }
-  }, []);
+  const controller = useController({
+    name: `test.${props.index}.value`,
+    control: props.control,
+    defaultValue: props.row.default,
+  });
 
   return (
     <Select
-      onChange={(value) => props.handleChange(value as string, props.index)}
-      defaultValue={props.row.default || ''}
-      disabled={props.row.disabled}
       data={props.row.options}
+      value={controller.field.value}
+      name={controller.field.name}
+      ref={controller.field.ref}
+      onBlur={controller.field.onBlur}
+      onChange={controller.field.onChange}
+      disabled={props.row.disabled}
       label={props.row.label}
       description={props.row.description}
     />

@@ -1,27 +1,32 @@
 import { Box, Slider, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ISlider } from '../../../../interfaces/dialog';
+import { Control, FieldValues, useController, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
+import { FormValues } from '../../InputDialog';
 
 interface Props {
   row: ISlider;
   index: number;
-  handleChange: (value: number, index: number) => void;
+  control: Control<FormValues>;
 }
 
 const SliderField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default || props.row.min) props.handleChange(props.row.default || props.row.min!, props.index);
-  }, []);
-
-  const [sliderValue, setSliderValue] = useState(props.row.default || props.row.min || 0);
+  const controller = useController({
+    name: `test.${props.index}.value`,
+    control: props.control,
+    defaultValue: props.row.default || props.row.min || 0,
+  });
 
   return (
     <Box>
       <Text sx={{ fontSize: 14, fontWeight: 500 }}>{props.row.label}</Text>
       <Slider
         mb={10}
-        onChangeEnd={(val: number) => props.handleChange(val, props.index)}
-        onChange={(val: number) => setSliderValue(val)}
+        value={controller.field.value}
+        name={controller.field.name}
+        ref={controller.field.ref}
+        onBlur={controller.field.onBlur}
+        onChange={controller.field.onChange}
         defaultValue={props.row.default || props.row.min || 0}
         min={props.row.min}
         max={props.row.max}

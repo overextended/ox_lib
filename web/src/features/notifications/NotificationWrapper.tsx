@@ -153,9 +153,7 @@ const Notifications: React.FC = () => {
                     : exitAnimationRight
                 } 0.4s ease-in forwards`,
           }}
-          style={{
-            ...data.style,
-          }}
+          style={data.style}
           className={`${classes.container}`}
         >
           <Group noWrap spacing={12}>

@@ -38,6 +38,7 @@ specifiers:
   prop-types: ^15.8.1
   react: 18.2.0
   react-dom: 18.2.0
+  react-hook-form: ^7.41.3
   react-hot-toast: ^2.4.0
   react-markdown: ^8.0.1
   rimraf: ^3.0.2
@@ -69,6 +70,7 @@ dependencies:
   prettier: 2.7.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-hook-form: 7.41.3_react@18.2.0
   react-hot-toast: 2.4.0_6dztgcaza2bodipt2i5a4is4mu_npw22p3c4ehm7n7vxn2gqac44u
   react-markdown: 8.0.1_bbvjflvjoibwhtpmedigb26h6y
   typescript: 4.6.3
@@ -2344,6 +2346,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form/7.41.3_react@18.2.0:
+    resolution: {integrity: sha512-5QNTmqJtDb88WV5n41b6+AmcDMVyaJ3tccPgHAgS215w3jZ3bmJhDO27kNTr8u4YHNYXmS7p1/4/KachBAlUtw==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-hot-toast/2.4.0_6dztgcaza2bodipt2i5a4is4mu_npw22p3c4ehm7n7vxn2gqac44u:

@@ -2,27 +2,35 @@ import { NumberInput } from '@mantine/core';
 import { useEffect } from 'react';
 import { INumber } from '../../../../interfaces/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Control, useController, UseFormRegisterReturn } from 'react-hook-form';
+import { FormValues } from '../../InputDialog';
 
 interface Props {
   row: INumber;
   index: number;
-  handleChange: (value: number, index: number) => void;
+  control: Control<FormValues>;
 }
 
 const NumberField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default) props.handleChange(props.row.default, props.index);
-  }, []);
+  const controller = useController({
+    name: `test.${props.index}.value`,
+    control: props.control,
+    defaultValue: props.row.default,
+  });
 
   return (
     <NumberInput
+      value={controller.field.value}
+      name={controller.field.name}
+      ref={controller.field.ref}
+      onBlur={controller.field.onBlur}
+      onChange={controller.field.onChange}
       label={props.row.label}
       description={props.row.description}
       defaultValue={props.row.default}
       min={props.row.min}
       max={props.row.max}
       disabled={props.row.disabled}
-      onChange={(value) => props.handleChange(value as number, props.index)}
       icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
     />
   );
