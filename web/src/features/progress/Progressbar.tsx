@@ -13,8 +13,9 @@ const useStyles = createStyles((theme) => ({
   container: {
     width: 350,
     height: 45,
-    borderRadius: theme.radius.xs,
+    borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.dark[5],
+    overflow: 'hidden',
   },
   wrapper: {
     width: '100%',
@@ -27,7 +28,6 @@ const useStyles = createStyles((theme) => ({
   },
   bar: {
     height: '100%',
-    borderRadius: theme.radius.xs,
     backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
   },
   labelWrapper: {
