@@ -27,7 +27,6 @@ const InputDialog: React.FC = () => {
     heading: '',
     rows: [{ type: 'input', label: '' }],
   });
-  const [inputData, setInputData] = React.useState<Array<string | number | boolean>>([]);
   const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
@@ -48,7 +47,6 @@ const InputDialog: React.FC = () => {
   useNuiEvent<InputProps>('openDialog', (data) => {
     setPasswordStates([]);
     setFields(data);
-    setInputData([]);
     setVisible(true);
     data.rows.forEach((row, index) => {
       fieldForm.insert(index, { value: row.type !== 'checkbox' ? row.default : row.checked } || { value: null });
@@ -64,22 +62,11 @@ const InputDialog: React.FC = () => {
     fetchNui('inputData');
   };
 
-  const handleChange = (value: string | number | boolean, index: number) => {
-    setInputData((previousData) => {
-      previousData[index] = value;
-      return previousData;
-    });
-  };
-
-  const handleConfirm = () => {
-    setVisible(false);
-    fetchNui('inputData', inputData);
-  };
-
   const onSubmit = form.handleSubmit(async (data) => {
+    setVisible(false);
     const values: any[] = [];
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
-    console.log(values);
+    fetchNui('inputData', values);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
     fieldForm.remove();
@@ -93,9 +80,6 @@ const InputDialog: React.FC = () => {
         centered
         closeOnClickOutside={false}
         size="xs"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && visible) return handleConfirm();
-        }}
         styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
         title={fields.heading}
         withCloseButton={false}
