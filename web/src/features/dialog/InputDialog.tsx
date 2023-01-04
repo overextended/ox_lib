@@ -48,9 +48,12 @@ const InputDialog: React.FC = () => {
     setVisible(false);
   });
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setVisible(false);
     fetchNui('inputData');
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    form.reset();
+    fieldForm.remove();
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
