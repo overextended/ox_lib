@@ -27,7 +27,6 @@ const InputDialog: React.FC = () => {
     heading: '',
     rows: [{ type: 'input', label: '' }],
   });
-  const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
 
@@ -37,15 +36,7 @@ const InputDialog: React.FC = () => {
     name: 'test',
   });
 
-  const handlePasswordStates = (index: number) => {
-    setPasswordStates({
-      ...passwordStates,
-      [index]: !passwordStates[index],
-    });
-  };
-
   useNuiEvent<InputProps>('openDialog', (data) => {
-    setPasswordStates([]);
     setFields(data);
     setVisible(true);
     data.rows.forEach((row, index) => {
@@ -94,13 +85,7 @@ const InputDialog: React.FC = () => {
               return (
                 <React.Fragment key={item.id}>
                   {row.type === 'input' && (
-                    <InputField
-                      register={form.register(`test.${index}.value`)}
-                      row={row}
-                      index={index}
-                      passwordStates={passwordStates}
-                      handlePasswordStates={handlePasswordStates}
-                    />
+                    <InputField register={form.register(`test.${index}.value`)} row={row} index={index} />
                   )}
                   {row.type === 'checkbox' && (
                     <CheckboxField register={form.register(`test.${index}.value`)} row={row} index={index} />
