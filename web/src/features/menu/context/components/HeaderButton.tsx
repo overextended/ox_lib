@@ -23,7 +23,7 @@ const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
     border: 'none',
   },
   label: {
-    color: params.canClose ? theme.colors.dark[0] : theme.colors.dark[2],
+    color: params.canClose === false ? theme.colors.dark[2] : theme.colors.dark[0],
   },
 }));
 
