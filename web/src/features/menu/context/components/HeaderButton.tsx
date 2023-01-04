@@ -19,7 +19,9 @@ const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
     justifyContent: 'center',
     padding: 2,
   },
-
+  root: {
+    border: 'none',
+  },
   label: {
     color: params.canClose ? theme.colors.dark[0] : theme.colors.dark[2],
   },
@@ -32,7 +34,7 @@ const HeaderButton: React.FC<Props> = ({ icon, canClose, iconSize, handleClick }
     <Button
       variant="default"
       className={classes.button}
-      classNames={{ label: classes.label }}
+      classNames={{ label: classes.label, root: classes.root }}
       disabled={canClose === false}
       onClick={handleClick}
     >

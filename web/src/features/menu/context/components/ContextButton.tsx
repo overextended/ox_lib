@@ -16,13 +16,16 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
     justifyContent: 'flex-start',
   },
+  root: {
+    border: 'none',
+  },
   label: {
     width: '100%',
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
     whiteSpace: 'pre-wrap',
   },
   description: {
-    color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2]
+    color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
   },
   dropdown: {
     padding: 10,
@@ -30,6 +33,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     fontSize: 14,
     maxWidth: 256,
     width: 'fit-content',
+    border: 'none',
   },
 }));
 
@@ -49,7 +53,7 @@ const ContextButton: React.FC<{
       >
         <HoverCard.Target>
           <Button
-            classNames={{ inner: classes.inner, label: classes.label }}
+            classNames={{ inner: classes.inner, label: classes.label, root: classes.root }}
             onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
             variant="default"
             h="fit-content"
