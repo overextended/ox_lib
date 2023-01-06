@@ -7,8 +7,9 @@ local format = 'array'
 local displayModes = {'basic', 'walls', 'axes', 'both'}
 local displayMode = 1
 local minCheck = steps[1][1] / 2
-local lastZone = nil
-local useRelativeMomvement = false
+local lastZone = {}
+local alignMovementWithCamera = false
+local useLastZoneFalsyInputs = {['0'] = true, [''] = true, ['false'] = true, ['nil'] = true}
 
 local function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
@@ -40,7 +41,7 @@ local function updateText()
 	end
 
 	text[#text + 1] = 'Toggle controls - [X]  \n'
-    text[#text + 1] = 'Toggle relative movement - [M]  \n'
+    text[#text + 1] = 'Toggle movement mode - [M]  \n'
 	text[#text + 1] = 'Save - [Enter]  \n'
 	text[#text + 1] = 'Cancel - [Esc]'
 
@@ -81,7 +82,8 @@ local function closeCreator(cancel)
 			length = length,
 			points = points
 		})
-        lastZone = {
+
+        lastZone[zoneType] = {
             zoneType = zoneType,
             heading = heading,
             height = height,
@@ -175,10 +177,10 @@ local function startCreator(arg, useLast)
 	xCoord = round(coords.x) + 0.0
 	yCoord = round(coords.y) + 0.0
 	zCoord = round(coords.z) + 0.0
-	heading = useLast and lastZone.heading or 0.0
-	height = useLast and lastZone.height or 4.0
-	width = useLast and lastZone.width or 4.0
-	length = useLast and lastZone.length or 4.0
+	heading = useLast and lastZone[zoneType].heading or 0.0
+	height = useLast and lastZone[zoneType].height or 4.0
+	width = useLast and lastZone[zoneType].width or 4.0
+	length = useLast and lastZone[zoneType].length or 4.0
 	points = {}
 
 	updateText()
@@ -191,12 +193,12 @@ local function startCreator(arg, useLast)
                 controlsActive = not controlsActive
             end
         end
+        
         if IsDisabledControlJustReleased(0, 301) then -- m
             if creatorActive then
-                useRelativeMomvement = not useRelativeMomvement
+                alignMovementWithCamera = not alignMovementWithCamera
             end
         end
-
 
         if displayMode == 3 or displayMode == 4 then
             DrawLine(xCoord, yCoord, zCoord, xCoord + 2, yCoord, zCoord, 0, 0, 255, 225)
@@ -275,7 +277,7 @@ local function startCreator(arg, useLast)
                 end
             elseif IsDisabledControlJustReleased(0, 32) then -- w
                 change = true
-                if useRelativeMomvement then
+                if alignMovementWithCamera then
                     local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord + lStep), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
@@ -294,7 +296,7 @@ local function startCreator(arg, useLast)
                 end
             elseif IsDisabledControlJustReleased(0, 33) then -- s
                 change = true
-                if useRelativeMomvement then
+                if alignMovementWithCamera then
                     local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord - lStep), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
@@ -313,7 +315,7 @@ local function startCreator(arg, useLast)
                 end
             elseif IsDisabledControlJustReleased(0, 35) then -- d
                 change = true
-                if useRelativeMomvement then
+                if alignMovementWithCamera then
                     local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord + lStep, yCoord), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
@@ -332,7 +334,7 @@ local function startCreator(arg, useLast)
                 end
             elseif IsDisabledControlJustReleased(0, 34) then -- a
                 change = true
-                if useRelativeMomvement then
+                if alignMovementWithCamera then
                     local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord - lStep, yCoord), GetGameplayCamRot(2).z)
                     if math.abs(newX) < minCheck then
                         newX = 0.0
@@ -406,37 +408,30 @@ local function startCreator(arg, useLast)
 end
 
 RegisterCommand('zone', function(source, args, rawCommand)
-	if args[1] == 'poly' or args[1] == 'box' or args[1] == 'sphere' then
-		if creatorActive then
-			lib.notify({title = 'Already creating a zone', type = 'error'})
-		else
-            CreateThread(function()
-			    startCreator(args[1])
-            end)
-		end
-	end
-end, true)
-
-TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
-    { name = 'zoneType', help = 'poly, box, sphere' },
-})
-
-RegisterCommand('zonelast', function(source, args, rawCommand)
-    if not lastZone then
-        lib.notify({title = 'No last zone', type = 'error'})
+	if args[1] ~= 'poly' and args[1] ~= 'box' and args[1] ~= 'sphere' then
+        lib.notify({title = 'Invalid zone type', type = 'error'})
         return
     end
     if creatorActive then
         lib.notify({title = 'Already creating a zone', type = 'error'})
         return
     end
-    if lastZone.zoneType == 'poly' then
-        lib.notify({title = 'Cannot duplicate a poly zone', type = 'error'})
-        return
+    local useLast = args[2] and not useLastZoneFalsyInputs[args[2]]
+    if useLast then
+        if not lastZone[args[1]] then
+            lib.notify({title = 'No last zone to duplicate', type = 'error'})
+            return
+        end
+        if args[1] == 'poly' then
+            lib.notify({title = 'Cannot duplicate a poly zone', type = 'error'})
+            return
+        end
     end
     CreateThread(function()
-        startCreator(lastZone.zoneType, true)
+        startCreator(args[1], useLast)
     end)
 end, true)
 
-TriggerEvent('chat:addSuggestion', '/zonelast', 'Starts creation of a zone using data from your last created zone')
+TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
+    { name = 'zoneType', help = 'poly, box, sphere' }, { name = 'useLast', help = 'duplicates the last created zone of the specified type (box and sphere only, optional)'}
+})
