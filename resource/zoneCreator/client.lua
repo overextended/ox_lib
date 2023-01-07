@@ -7,6 +7,9 @@ local format = 'array'
 local displayModes = {'basic', 'walls', 'axes', 'both'}
 local displayMode = 1
 local minCheck = steps[1][1] / 2
+local lastZone = {}
+local alignMovementWithCamera = false
+local useLastZoneFalsyInputs = {['0'] = true, [''] = true, ['false'] = true, ['nil'] = true}
 
 local function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
@@ -38,6 +41,7 @@ local function updateText()
 	end
 
 	text[#text + 1] = 'Toggle controls - [X]  \n'
+    text[#text + 1] = 'Toggle movement mode - [M]  \n'
 	text[#text + 1] = 'Save - [Enter]  \n'
 	text[#text + 1] = 'Cancel - [Esc]'
 
@@ -78,6 +82,14 @@ local function closeCreator(cancel)
 			length = length,
 			points = points
 		})
+
+        lastZone[zoneType] = {
+            zoneType = zoneType,
+            heading = heading,
+            height = height,
+            width = width,
+            length = length,
+        }
 	end
 
 	creatorActive = false
@@ -136,6 +148,18 @@ local function drawLines()
 	end
 end
 
+local function getRelativePos(origin, point, theta)
+    if theta == 0.0 then return point end
+    local p = point - origin
+    local pX, pY = p.x, p.y
+    theta = math.rad(theta)
+    local cosTheta = math.cos(theta)
+    local sinTheta = math.sin(theta)
+    local x = math.floor(((pX * cosTheta - pY * sinTheta) + origin.x) * 100 + 0.0) / 100
+    local y = math.floor(((pX * sinTheta + pY * cosTheta) + origin.y) * 100 + 0.0) / 100
+    return x, y
+  end
+
 local isFivem = cache.game == 'fivem'
 local controls = {
     ['INPUT_LOOK_LR'] = isFivem and 1 or 0xA987235F,
@@ -143,7 +167,7 @@ local controls = {
     ['INPUT_MP_TEXT_CHAT_ALL'] = isFivem and 245 or 0x9720FCEE
 }
 
-local function startCreator(arg)
+local function startCreator(arg, useLast)
 	creatorActive = true
     controlsActive = true
 	zoneType = arg
@@ -153,10 +177,10 @@ local function startCreator(arg)
 	xCoord = round(coords.x) + 0.0
 	yCoord = round(coords.y) + 0.0
 	zCoord = round(coords.z) + 0.0
-	heading = 0.0
-	height = 4.0
-	width = 4.0
-	length = 4.0
+	heading = useLast and lastZone[zoneType].heading or 0.0
+	height = useLast and lastZone[zoneType].height or 4.0
+	width = useLast and lastZone[zoneType].width or 4.0
+	length = useLast and lastZone[zoneType].length or 4.0
 	points = {}
 
 	updateText()
@@ -167,6 +191,12 @@ local function startCreator(arg)
         if IsDisabledControlJustReleased(0, 73) then -- x
             if creatorActive then
                 controlsActive = not controlsActive
+            end
+        end
+        
+        if IsDisabledControlJustReleased(0, 301) then -- m
+            if creatorActive then
+                alignMovementWithCamera = not alignMovementWithCamera
             end
         end
 
@@ -247,32 +277,80 @@ local function startCreator(arg)
                 end
             elseif IsDisabledControlJustReleased(0, 32) then -- w
                 change = true
-                local newValue = yCoord + lStep
-                if math.abs(newValue) < minCheck then
-                    newValue = 0.0
+                if alignMovementWithCamera then
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord + lStep), GetGameplayCamRot(2).z)
+                    if math.abs(newX) < minCheck then
+                        newX = 0.0
+                    end
+                    if math.abs(newY) < minCheck then
+                        newY = 0.0
+                    end
+                    xCoord = newX
+                    yCoord = newY
+                else
+                    local newValue = yCoord + lStep
+                    if math.abs(newValue) < minCheck then
+                        newValue = 0.0
+                    end
+                    yCoord = newValue
                 end
-                yCoord = newValue
             elseif IsDisabledControlJustReleased(0, 33) then -- s
                 change = true
-                local newValue = yCoord - lStep
-                if math.abs(newValue) < minCheck then
-                    newValue = 0.0
+                if alignMovementWithCamera then
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord - lStep), GetGameplayCamRot(2).z)
+                    if math.abs(newX) < minCheck then
+                        newX = 0.0
+                    end
+                    if math.abs(newY) < minCheck then
+                        newY = 0.0
+                    end
+                    xCoord = newX
+                    yCoord = newY
+                else
+                    local newValue = yCoord - lStep
+                    if math.abs(newValue) < minCheck then
+                        newValue = 0.0
+                    end
+                    yCoord = newValue
                 end
-                yCoord = newValue
             elseif IsDisabledControlJustReleased(0, 35) then -- d
                 change = true
-                local newValue = xCoord + lStep
-                if math.abs(newValue) < minCheck then
-                    newValue = 0.0
+                if alignMovementWithCamera then
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord + lStep, yCoord), GetGameplayCamRot(2).z)
+                    if math.abs(newX) < minCheck then
+                        newX = 0.0
+                    end
+                    if math.abs(newY) < minCheck then
+                        newY = 0.0
+                    end
+                    xCoord = newX
+                    yCoord = newY
+                else
+                    local newValue = xCoord + lStep
+                    if math.abs(newValue) < minCheck then
+                        newValue = 0.0
+                    end
+                    xCoord = newValue
                 end
-                xCoord = newValue
             elseif IsDisabledControlJustReleased(0, 34) then -- a
                 change = true
-                local newValue = xCoord - lStep
-                if math.abs(newValue) < minCheck then
-                    newValue = 0.0
+                if alignMovementWithCamera then
+                    local newX, newY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord - lStep, yCoord), GetGameplayCamRot(2).z)
+                    if math.abs(newX) < minCheck then
+                        newX = 0.0
+                    end
+                    if math.abs(newY) < minCheck then
+                        newY = 0.0
+                    end
+                    xCoord = newX
+                    yCoord = newY
+                else
+                    local newValue = xCoord - lStep
+                    if math.abs(newValue) < minCheck then
+                        newValue = 0.0
+                    end
+                    xCoord = newValue
                 end
-                xCoord = newValue
             elseif IsDisabledControlJustReleased(0, 45) then -- r
                 change = true
                 local newValue = zCoord + lStep
@@ -330,17 +408,30 @@ local function startCreator(arg)
 end
 
 RegisterCommand('zone', function(source, args, rawCommand)
-	if args[1] == 'poly' or args[1] == 'box' or args[1] == 'sphere' then
-		if creatorActive then
-			lib.notify({title = 'Already creating a zone', type = 'error'})
-		else
-            CreateThread(function()
-			    startCreator(args[1])
-            end)
-		end
-	end
+	if args[1] ~= 'poly' and args[1] ~= 'box' and args[1] ~= 'sphere' then
+        lib.notify({title = 'Invalid zone type', type = 'error'})
+        return
+    end
+    if creatorActive then
+        lib.notify({title = 'Already creating a zone', type = 'error'})
+        return
+    end
+    local useLast = args[2] and not useLastZoneFalsyInputs[args[2]]
+    if useLast then
+        if not lastZone[args[1]] then
+            lib.notify({title = 'No last zone to duplicate', type = 'error'})
+            return
+        end
+        if args[1] == 'poly' then
+            lib.notify({title = 'Cannot duplicate a poly zone', type = 'error'})
+            return
+        end
+    end
+    CreateThread(function()
+        startCreator(args[1], useLast)
+    end)
 end, true)
 
 TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
-    { name = 'zoneType', help = 'poly, box, sphere' },
+    { name = 'zoneType', help = 'poly, box, sphere' }, { name = 'useLast', help = 'duplicates the last created zone of the specified type (box and sphere only, optional)'}
 })
