@@ -27,6 +27,7 @@ local function updateText()
 	if zoneType == 'poly' then
 		text[#text + 1] = ('Height [Shift + Scroll]: %s  \n'):format(height)
 		text[#text + 1] = ('Cycle display mode [G]: %s  \n'):format(firstToUpper(displayModes[displayMode]))
+        text[#text + 1] = ('Toggle Axis mode [C]: %s  \n'):format(alignMovementWithCamera and 'Camera' or 'Grid')
 		text[#text + 1] = 'Create new point - [Space]  \n'
 	elseif zoneType == 'box' then
 		text[#text + 1] = ('Heading [Q/E]: %s&deg;  \n'):format(heading)
@@ -34,14 +35,15 @@ local function updateText()
 		text[#text + 1] = ('Width [Ctrl + Scroll]: %s  \n'):format(width)
 		text[#text + 1] = ('Length [Alt + Scroll]: %s  \n'):format(length)
 		text[#text + 1] = ('Cycle display mode [G]: %s  \n'):format(firstToUpper(displayModes[displayMode]))
+        text[#text + 1] = ('Toggle Axis mode [C]: %s  \n'):format(alignMovementWithCamera and 'Camera' or 'Grid')
 		text[#text + 1] = 'Recenter - [Space]  \n'
 	elseif zoneType == 'sphere' then
 		text[#text + 1] = ('Size [Shift + Scroll]: %s  \n'):format(height)
+        text[#text + 1] = ('Toggle Axis mode [C]: %s  \n'):format(alignMovementWithCamera and 'Camera' or 'Grid')
 		text[#text + 1] = 'Recenter - [Space]  \n'
 	end
 
 	text[#text + 1] = 'Toggle controls - [X]  \n'
-    text[#text + 1] = 'Toggle movement mode - [M]  \n'
 	text[#text + 1] = 'Save - [Enter]  \n'
 	text[#text + 1] = 'Cancel - [Esc]'
 
@@ -192,13 +194,15 @@ local function startCreator(arg, useLast)
             controlsActive = not controlsActive
         end
 
-        if IsDisabledControlJustReleased(0, 301) then -- m
-            if creatorActive then
-                alignMovementWithCamera = not alignMovementWithCamera
-            end
-        end
-
         if displayMode == 3 or displayMode == 4 then
+            if alignMovementWithCamera then
+                local rightX, rightY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord + 2, yCoord), GetGameplayCamRot(2).z)
+                local forwardX, forwardY = getRelativePos(vec2(xCoord, yCoord), vec2(xCoord, yCoord + 2), GetGameplayCamRot(2).z)
+
+                DrawLine(xCoord, yCoord, zCoord, rightX, rightY, zCoord, 0, 255, 0, 225)
+                DrawLine(xCoord, yCoord, zCoord, forwardX, forwardY, zCoord, 0, 255, 0, 225)
+            end
+
             DrawLine(xCoord, yCoord, zCoord, xCoord + 2, yCoord, zCoord, 0, 0, 255, 225)
             DrawLine(xCoord, yCoord, zCoord, xCoord, yCoord + 2, zCoord, 0, 0, 255, 225)
             DrawLine(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord + 2, 0, 0, 255, 225)
@@ -417,6 +421,9 @@ local function startCreator(arg, useLast)
                 else
                     displayMode += 1
                 end
+            elseif IsDisabledControlJustReleased(0, 26) then -- c
+                change = true
+                alignMovementWithCamera = not alignMovementWithCamera
             elseif IsDisabledControlJustReleased(0, 22) then -- space
                 change = true
 
@@ -455,13 +462,12 @@ RegisterCommand('zone', function(source, args, rawCommand)
     local useLast = args[2] and not useLastZoneFalsyInputs[args[2]]
 
     if useLast then
-        if not lastZone[args[1]] then
-            lib.notify({title = 'No last zone to duplicate', type = 'error'})
-            return
-        end
         if args[1] == 'poly' then
             lib.notify({title = 'Cannot duplicate a poly zone', type = 'error'})
-            return
+            useLast = false
+        elseif not lastZone[args[1]] then
+            lib.notify({title = ('No previous %s zone to duplicate'):format(args[1]), type = 'error'})
+            useLast = false
         end
     end
 
