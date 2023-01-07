@@ -14,6 +14,18 @@ local glm = require 'glm'
 ---@type { [number]: CZone }
 Zones = {}
 
+local function nextFreePoint(points, b, len)
+    for i = 1, len do
+        local n = (i + b) % len
+
+        n = n ~= 0 and n or len
+
+        if points[n] then
+            return n
+        end
+    end
+end
+
 local function getTriangles(polygon)
     local triangles = {}
 
@@ -24,168 +36,26 @@ local function getTriangles(polygon)
         return triangles
     end
 
-    local verticals = {}
-    local verticalGroups = {}
+    local points = {}
 
     for i = 1, #polygon do
-        local point = polygon[i]
-        local x = point.x
-        local vertical = verticalGroups[x]
+        points[i] = polygon[i]
+    end
 
-        if vertical then
-            vertical[#vertical + 1] = point
+    local a, b, c = 1, 2, 3
+    local len = #points
+
+    while len - #triangles > 2 do
+        if polygon:containsSegment(glm.segment.getPoint(polygon[a], polygon[c], 0.01), glm.segment.getPoint(polygon[a], polygon[c], 0.99)) then
+            triangles[#triangles + 1] = mat(polygon[a], polygon[b], polygon[c])
+            points[b] = false
+
+            b = c
+            c = nextFreePoint(points, b, len)
         else
-            verticalGroups[x] = { point }
-            verticals[#verticals + 1] = x
-        end
-    end
-
-    table.sort(verticals, function(a, b)
-        return a < b
-    end)
-
-    local sides = {}
-
-    for i = 1, #polygon do
-        local point = polygon[i]
-        local side = {}
-
-        for k, v in pairs(verticalGroups) do
-            local newPoint, d, d2 = glm.line.closestSegment(v[1], vec3(0, 1, 0), point, polygon[i + 1] or polygon[1])
-
-            if d ~= 0 and d2 > 0 and d2 < 1 then
-                local internal
-
-                for j = 1, #v do
-                    if polygon:containsSegment(glm.segment.getPoint(v[j], newPoint, 0.01), glm.segment.getPoint(v[j], newPoint, 0.99)) then
-                        internal = true
-                        break
-                    end
-                end
-
-                if internal then
-                    side[#side + 1] = newPoint
-                    v[#v + 1] = newPoint
-                end
-            end
-        end
-
-        if next(side) then
-            sides[point] = side
-        end
-    end
-
-    for k, v in pairs(verticalGroups) do
-        table.sort(v, function(a, b)
-            return a.y < b.y
-        end)
-    end
-
-    local orderedPoints = {}
-    local count = 1
-
-    for i = 1, #polygon do
-        local point = polygon[i]
-        orderedPoints[point] = count
-        count += 1
-        local sidePoints = sides[point]
-
-        if sidePoints then
-            local direction = (#point - #(polygon[i + 1] or polygon[1])) > 0
-            table.sort(sidePoints, function(a, b)
-                if direction then
-                    return #a > #b
-                end
-                return #a < #b
-            end)
-
-            for j = 1, #sidePoints do
-                orderedPoints[sidePoints[j]] = count
-                count += 1
-            end
-        end
-    end
-
-    for i = 1, #verticals - 1 do
-        local verticalGroupA = verticalGroups[verticals[i]]
-        local countA = #verticalGroupA
-        local sections = {}
-
-        for j = i + 1, #verticals do
-            local verticalGroupB = verticalGroups[verticals[j]]
-            local countB = #verticalGroupB
-            local adjacent
-
-            for l = 1, countA do
-                local pointA = verticalGroupA[l]
-                local numA = orderedPoints[pointA]
-
-                for m = 1, countB do
-                    local pointB = verticalGroupB[m]
-                    local numB = orderedPoints[pointB]
-                    local difference = math.abs(numA - numB)
-
-                    if difference == 1 or difference == count - 2 then
-                        adjacent = true
-                        break
-                    end
-                end
-
-                if adjacent then
-                    break
-                end
-            end
-
-            if adjacent then
-                if countA < 3 and countB < 3 then
-                    sections[1] = {
-                        a = verticalGroupA[1],
-                        b = verticalGroupA[2],
-                        c = verticalGroupB[1],
-                        d = verticalGroupB[2],
-                    }
-                else
-                    local paired = {}
-
-                    for l = 1, countA do
-                        local pointA = verticalGroupA[l]
-                        local numA = orderedPoints[pointA]
-
-                        for m = 1, countB do
-                            local pointB = verticalGroupB[m]
-                            local numB = orderedPoints[pointB]
-                            local difference = math.abs(numA - numB)
-
-                            if difference == 1 or difference == count - 2 then
-                                paired[#paired + 1] = { pointA, pointB }
-                                break
-                            end
-                        end
-                    end
-
-                    for l = 1, #paired - 1 do
-                        sections[#sections + 1] = {
-                            a = paired[l][1],
-                            b = paired[l + 1][1],
-                            c = paired[l][2],
-                            d = paired[l + 1][2],
-                        }
-                    end
-                end
-            end
-        end
-
-        for j = 1, #sections do
-            local section = sections[j]
-
-            if section.a and section.b and section.c and section.d then
-                triangles[#triangles + 1] = mat(section.a, section.b, section.c)
-                triangles[#triangles + 1] = mat(section.b, section.c, section.d)
-            elseif section.a and section.b then
-                triangles[#triangles + 1] = mat(section.a, section.b, section.c or section.d)
-            elseif section.c and section.d then
-                triangles[#triangles + 1] = mat(section.a or section.b, section.c, section.d)
-            end
+            a = b
+            b = c
+            c = nextFreePoint(points, b, len)
         end
     end
 
