@@ -67,6 +67,8 @@ local function closeCreator(cancel)
             }}
         }) or {}
 
+        format = input[2]
+
 		TriggerServerEvent('ox_lib:saveZone', {
 			zoneType = zoneType,
 			name = input[1] or 'none',
