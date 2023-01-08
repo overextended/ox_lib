@@ -16,9 +16,6 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
     justifyContent: 'flex-start',
   },
-  root: {
-    border: 'none',
-  },
   label: {
     width: '100%',
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
@@ -53,7 +50,7 @@ const ContextButton: React.FC<{
       >
         <HoverCard.Target>
           <Button
-            classNames={{ inner: classes.inner, label: classes.label, root: classes.root }}
+            classNames={{ inner: classes.inner, label: classes.label }}
             onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
             variant="default"
             h="fit-content"
