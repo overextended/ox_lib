@@ -51,3 +51,12 @@ export interface ISlider {
   disabled?: boolean;
   description?: string;
 }
+
+export interface IColorInput {
+  type: 'color';
+  label: string;
+  default?: string;
+  disabled?: boolean;
+  description?: string;
+  format?: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla';
+}

@@ -3,17 +3,18 @@ import React, { FormEvent, useRef } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import { IInput, ICheckbox, ISelect, INumber, ISlider } from '../../interfaces/dialog';
+import { IInput, ICheckbox, ISelect, INumber, ISlider, IColorInput } from '../../interfaces/dialog';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
 import SelectField from './components/fields/select';
 import NumberField from './components/fields/number';
 import SliderField from './components/fields/slider';
 import { useFieldArray, useForm } from 'react-hook-form';
+import ColorField from './components/fields/color';
 
 export interface InputProps {
   heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider>;
+  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput>;
 }
 
 export type FormValues = {
@@ -96,6 +97,7 @@ const InputDialog: React.FC = () => {
                   {row.type === 'select' && <SelectField row={row} index={index} control={form.control} />}
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
+                  {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
                 </React.Fragment>
               );
             })}
