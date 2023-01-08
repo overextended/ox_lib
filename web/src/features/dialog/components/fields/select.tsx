@@ -15,6 +15,7 @@ const SelectField: React.FC<Props> = (props) => {
     name: `test.${props.index}.value`,
     control: props.control,
     defaultValue: props.row.default,
+    rules: { required: props.row.required },
   });
 
   return (
@@ -28,6 +29,7 @@ const SelectField: React.FC<Props> = (props) => {
       disabled={props.row.disabled}
       label={props.row.label}
       description={props.row.description}
+      withAsterisk={props.row.required}
     />
   );
 };

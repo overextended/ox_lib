@@ -61,6 +61,7 @@ const InputDialog: React.FC = () => {
     setVisible(false);
     const values: any[] = [];
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
+    console.log(values);
     fetchNui('inputData', values);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
@@ -89,10 +90,18 @@ const InputDialog: React.FC = () => {
               return (
                 <React.Fragment key={item.id}>
                   {row.type === 'input' && (
-                    <InputField register={form.register(`test.${index}.value`)} row={row} index={index} />
+                    <InputField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
                   )}
                   {row.type === 'checkbox' && (
-                    <CheckboxField register={form.register(`test.${index}.value`)} row={row} index={index} />
+                    <CheckboxField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
                   )}
                   {row.type === 'select' && <SelectField row={row} index={index} control={form.control} />}
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
@@ -105,7 +114,7 @@ const InputDialog: React.FC = () => {
               <Button uppercase variant="default" onClick={handleClose} mr={3}>
                 {locale.ui.cancel}
               </Button>
-              <Button uppercase variant="light" onClick={handleClose} type="submit">
+              <Button uppercase variant="light" type="submit">
                 {locale.ui.confirm}
               </Button>
             </Group>

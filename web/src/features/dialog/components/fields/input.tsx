@@ -30,6 +30,7 @@ const InputField: React.FC<Props> = (props) => {
           icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
           disabled={props.row.disabled}
+          withAsterisk={props.row.required}
         />
       ) : (
         <PasswordInput
@@ -40,6 +41,7 @@ const InputField: React.FC<Props> = (props) => {
           icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
           disabled={props.row.disabled}
+          withAsterisk={props.row.required}
           visibilityToggleIcon={({ reveal, size }) => (
             <FontAwesomeIcon
               icon={reveal ? 'eye-slash' : 'eye'}

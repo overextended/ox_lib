@@ -14,6 +14,7 @@ const ColorField: React.FC<Props> = (props) => {
     name: `test.${props.index}.value`,
     control: props.control,
     defaultValue: props.row.default,
+    rules: { required: props.row.required },
   });
 
   return (
@@ -29,6 +30,7 @@ const ColorField: React.FC<Props> = (props) => {
       disabled={props.row.disabled}
       defaultValue={props.row.default}
       format={props.row.format}
+      withAsterisk={props.row.required}
     />
   );
 };

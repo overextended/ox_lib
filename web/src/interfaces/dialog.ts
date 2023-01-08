@@ -10,6 +10,7 @@ export interface IInput {
   icon?: IconProp;
   disabled?: boolean;
   description?: string;
+  required?: boolean;
 }
 
 export interface ICheckbox {
@@ -18,6 +19,7 @@ export interface ICheckbox {
   checked?: boolean;
   disabled?: boolean;
   description?: string;
+  required?: boolean;
 }
 
 export interface ISelect {
@@ -27,6 +29,7 @@ export interface ISelect {
   options: Array<SelectItem>;
   disabled?: boolean;
   description?: string;
+  required?: boolean;
 }
 
 export interface INumber {
@@ -39,6 +42,7 @@ export interface INumber {
   max?: number;
   disabled?: boolean;
   description?: string;
+  required?: boolean;
 }
 
 export interface ISlider {
@@ -59,4 +63,5 @@ export interface IColorInput {
   disabled?: boolean;
   description?: string;
   format?: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla';
+  required?: boolean;
 }

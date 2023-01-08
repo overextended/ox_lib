@@ -16,6 +16,7 @@ const NumberField: React.FC<Props> = (props) => {
     name: `test.${props.index}.value`,
     control: props.control,
     defaultValue: props.row.default,
+    rules: { required: props.row.required },
   });
 
   return (
@@ -32,6 +33,7 @@ const NumberField: React.FC<Props> = (props) => {
       max={props.row.max}
       disabled={props.row.disabled}
       icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      withAsterisk={props.row.required}
     />
   );
 };
