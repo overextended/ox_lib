@@ -22,11 +22,12 @@ export interface ICheckbox {
   required?: boolean;
 }
 
+export type OptionValue = { value: string; label?: string };
 export interface ISelect {
   type: 'select';
   label: string;
   default?: string;
-  options: Array<SelectItem>;
+  options: Array<OptionValue>;
   disabled?: boolean;
   description?: string;
   required?: boolean;

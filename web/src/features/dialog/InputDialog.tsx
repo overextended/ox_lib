@@ -1,9 +1,9 @@
-import { Group, Modal, Button, Stack } from '@mantine/core';
+import { Group, Modal, Button, Stack, SelectItem } from '@mantine/core';
 import React, { FormEvent, useRef } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import { IInput, ICheckbox, ISelect, INumber, ISlider, IColorInput } from '../../interfaces/dialog';
+import { IInput, ICheckbox, ISelect, INumber, ISlider, IColorInput, OptionValue } from '../../interfaces/dialog';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
 import SelectField from './components/fields/select';
@@ -42,6 +42,12 @@ const InputDialog: React.FC = () => {
     setVisible(true);
     data.rows.forEach((row, index) => {
       fieldForm.insert(index, { value: row.type !== 'checkbox' ? row.default : row.checked } || { value: null });
+      // Backwards compat with new Select data type
+      if (row.type === 'select') {
+        row.options = row.options.map((option) =>
+          !option.label ? { ...option, label: option.value } : option
+        ) as Array<OptionValue>;
+      }
     });
   });
 

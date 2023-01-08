@@ -9,7 +9,6 @@ interface Props {
   control: Control<FormValues>;
 }
 
-// TODO: set label to value of value when there is no label provided
 const SelectField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
