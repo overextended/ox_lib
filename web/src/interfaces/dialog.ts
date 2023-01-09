@@ -30,6 +30,7 @@ export interface ISelect {
   disabled?: boolean;
   description?: string;
   required?: boolean;
+  clearable?: boolean;
 }
 
 export interface INumber {

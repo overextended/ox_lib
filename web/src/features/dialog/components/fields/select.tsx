@@ -29,6 +29,7 @@ const SelectField: React.FC<Props> = (props) => {
       label={props.row.label}
       description={props.row.description}
       withAsterisk={props.row.required}
+      clearable={props.row.clearable}
     />
   );
 };
