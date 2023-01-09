@@ -2,6 +2,7 @@ import { Select } from '@mantine/core';
 import { ISelect } from '../../../../interfaces/dialog';
 import { Control, FieldValues, useController, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   row: ISelect;
@@ -30,6 +31,7 @@ const SelectField: React.FC<Props> = (props) => {
       description={props.row.description}
       withAsterisk={props.row.required}
       clearable={props.row.clearable}
+      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
     />
   );
 };

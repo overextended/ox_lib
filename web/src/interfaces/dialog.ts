@@ -31,6 +31,7 @@ export interface ISelect {
   description?: string;
   required?: boolean;
   clearable?: boolean;
+  icon?: IconProp;
 }
 
 export interface INumber {
