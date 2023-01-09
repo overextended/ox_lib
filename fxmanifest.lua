@@ -7,7 +7,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 
 --[[ Resource Information ]]--
 name         'ox_lib'
-author       'Linden'
+author       'Overextended'
 version      '2.18.0'
 license      'LGPL-3.0-or-later'
 repository   'https://github.com/overextended/ox_lib'
