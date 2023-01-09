@@ -1,5 +1,4 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { SelectItem } from '@mantine/core';
 
 export interface IInput {
   type: 'input';

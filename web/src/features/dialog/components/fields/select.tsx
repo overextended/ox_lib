@@ -13,7 +13,7 @@ const SelectField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
     control: props.control,
-    defaultValue: props.row.default,
+    defaultValue: props.row.default || props.row.options[0].value,
     rules: { required: props.row.required },
   });
 
