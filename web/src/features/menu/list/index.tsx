@@ -37,6 +37,8 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
     backgroundColor: theme.colors.dark[6],
     color: theme.colors.dark[2],
     borderRadius: theme.radius.sm,
+    maxWidth: 350,
+    whiteSpace: 'normal',
   },
   container: {
     position: 'absolute',
