@@ -75,7 +75,7 @@ const ContextButton: React.FC<{
                     <ReactMarkdown>{button.description}</ReactMarkdown>
                   </Text>
                 )}
-                {button?.progress && (
+                {button.progress !== undefined && (
                   <Progress value={button.progress} size="sm" color={button.colorScheme || 'dark.3'} />
                 )}
               </Stack>
