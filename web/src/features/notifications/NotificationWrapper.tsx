@@ -47,6 +47,11 @@ const useStyles = createStyles((theme) => ({
     color: theme.colors.dark[2],
     fontFamily: 'Roboto',
   },
+  descriptionOnly: {
+    fontSize: 14,
+    color: theme.colors.dark[2],
+    fontFamily: 'Roboto',
+  },
 }));
 
 // I hate this
@@ -174,7 +179,11 @@ const Notifications: React.FC = () => {
             )}
             <Stack spacing={0}>
               {data.title && <Text className={classes.title}>{data.title}</Text>}
-              {data.description && <ReactMarkdown className={classes.description}>{data.description}</ReactMarkdown>}
+              {data.description && (
+                <ReactMarkdown className={!data.title ? classes.descriptionOnly : classes.description}>
+                  {data.description}
+                </ReactMarkdown>
+              )}
             </Stack>
           </Group>
         </Box>
