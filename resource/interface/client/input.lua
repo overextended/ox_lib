@@ -16,10 +16,14 @@ local input
 ---@field step? number
 ---@field description? string
 
+---@class InputDialogOptionsProps
+---@field allowCancel? boolean
+
 ---@param heading string
 ---@param rows string[] | InputDialogRowProps[]
+---@param options InputDialogOptionsProps[]
 ---@return string[] | number[] | boolean[] | nil
-function lib.inputDialog(heading, rows)
+function lib.inputDialog(heading, rows, options)
     if input then return end
     input = promise.new()
 
@@ -35,7 +39,8 @@ function lib.inputDialog(heading, rows)
         action = 'openDialog',
         data = {
             heading = heading,
-            rows = rows
+            rows = rows,
+            options = options
         }
     })
 

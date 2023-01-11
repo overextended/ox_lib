@@ -15,6 +15,9 @@ import ColorField from './components/fields/color';
 export interface InputProps {
   heading: string;
   rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput>;
+  options?: {
+    allowCancel?: boolean;
+  };
 }
 
 export type FormValues = {
@@ -80,6 +83,7 @@ const InputDialog: React.FC = () => {
         opened={visible}
         onClose={handleClose}
         centered
+        closeOnEscape={fields.options?.allowCancel !== false}
         closeOnClickOutside={false}
         size="xs"
         styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
@@ -117,7 +121,13 @@ const InputDialog: React.FC = () => {
               );
             })}
             <Group position="right" spacing={10}>
-              <Button uppercase variant="default" onClick={handleClose} mr={3}>
+              <Button
+                uppercase
+                variant="default"
+                onClick={handleClose}
+                mr={3}
+                disabled={fields.options?.allowCancel === false}
+              >
                 {locale.ui.cancel}
               </Button>
               <Button uppercase variant="light" type="submit">
