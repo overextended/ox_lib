@@ -119,7 +119,7 @@ const exitAnimationBottom = keyframes({
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
-  useNuiEvent<CustomNotificationProps>('customNotify', (data) => {
+  useNuiEvent<CustomNotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
     // Backwards compat with old notifications
     let position = data.position;

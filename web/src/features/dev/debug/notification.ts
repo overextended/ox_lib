@@ -4,7 +4,7 @@ import { debugData } from '../../../utils/debugData';
 export const debugCustomNotification = () => {
   debugData<CustomNotificationProps>([
     {
-      action: 'customNotify',
+      action: 'notify',
       data: {
         title: 'Success',
         description: 'Notification description',
@@ -14,7 +14,7 @@ export const debugCustomNotification = () => {
   ]);
   debugData<CustomNotificationProps>([
     {
-      action: 'customNotify',
+      action: 'notify',
       data: {
         title: 'Info',
         description: 'Notification description',
@@ -24,7 +24,7 @@ export const debugCustomNotification = () => {
   ]);
   debugData<CustomNotificationProps>([
     {
-      action: 'customNotify',
+      action: 'notify',
       data: {
         title: 'Error',
         description: 'Notification description',
@@ -34,7 +34,7 @@ export const debugCustomNotification = () => {
   ]);
   debugData<CustomNotificationProps>([
     {
-      action: 'customNotify',
+      action: 'notify',
       data: {
         title: 'Custom icon success',
         description: 'Notification description',
