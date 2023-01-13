@@ -255,6 +255,58 @@ lib.zones = {
         end
 
         data.polygon = glm.polygon.new(points)
+
+        if not data.polygon:isPlanar() then
+            local zCoords = {}
+
+            for i = 1, pointN do
+                local zCoord = points[i].z
+
+                if zCoords[zCoord] then
+                    zCoords[zCoord] += 1
+                else
+                    zCoords[zCoord] = 1
+                end
+            end
+
+            local coordsArray = {}
+
+            for coord, count in pairs(zCoords) do
+                coordsArray[#coordsArray + 1] = {
+                    coord = coord,
+                    count = count
+                }
+            end
+
+            table.sort(coordsArray, function(a, b)
+                return a.count > b.count
+            end)
+
+            local zCoord = coordsArray[1].coord
+            local averageTo
+
+            for i = 1, #coordsArray do
+                if coordsArray[i].count < coordsArray[1].count then
+                    averageTo = i - 1
+                    break
+                end
+            end
+
+            if averageTo > 1 then
+                for i = 2, averageTo do
+                    zCoord += coordsArray[i].coord
+                end
+
+                zCoord /= averageTo
+            end
+
+            for i = 1, pointN do
+                points[i] = vec3(data.points[i].xy, zCoord)
+            end
+
+            data.polygon = glm.polygon.new(points)
+        end
+
         data.coords = data.polygon:centroid()
         data.remove = removeZone
         data.contains = contains
