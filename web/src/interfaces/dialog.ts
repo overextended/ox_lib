@@ -67,3 +67,13 @@ export interface IColorInput {
   format?: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla';
   required?: boolean;
 }
+
+export interface IDateInput {
+  type: 'date';
+  label: string;
+  default?: string;
+  disabled?: boolean;
+  description?: string;
+  required?: boolean;
+  placeholder?: string;
+}
