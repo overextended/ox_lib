@@ -41,16 +41,19 @@ const useStyles = createStyles((theme) => ({
   },
   title: {
     fontWeight: 500,
+    lineHeight: 'normal',
   },
   description: {
     fontSize: 12,
     color: theme.colors.dark[2],
     fontFamily: 'Roboto',
+    lineHeight: 'normal',
   },
   descriptionOnly: {
     fontSize: 14,
     color: theme.colors.dark[2],
     fontFamily: 'Roboto',
+    lineHeight: 'normal',
   },
 }));
 
@@ -168,7 +171,7 @@ const Notifications: React.FC = () => {
                   <Avatar
                     color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
                     radius="xl"
-                    size={(data.title && !data.description) || (data.description && !data.title) ? 28 : undefined}
+                    size={32}
                   >
                     <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
                   </Avatar>
