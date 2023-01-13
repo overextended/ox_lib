@@ -476,7 +476,7 @@ end, true)
 
 CreateThread(function()
     Wait(1000)
-    exports.chat:addSuggestion('/zone', 'Starts creation of the specified zone', {
+    TriggerEvent('chat:addSuggestion', '/zone', 'Starts creation of the specified zone', {
         { name = 'zoneType', help = 'poly, box, sphere' },
         { name = 'useLast', help = 'duplicates the last created zone of the specified type (box and sphere only, optional)' }
     })
