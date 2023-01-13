@@ -45,6 +45,7 @@ local function getTriangles(polygon)
     local a, b, c = 1, 2, 3
     local len = #points
     local zValue = polygon[1].z
+    local count = 0
 
     while len - #triangles > 2 do
         if polygon:containsSegment(vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.01), zValue), vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.99), zValue)) then
@@ -57,6 +58,18 @@ local function getTriangles(polygon)
             a = b
             b = c
             c = nextFreePoint(points, b, len)
+        end
+
+        count += 1
+
+        if count > len and #triangles == 0 then
+            print('The following polygon failed to be split into triangles for debug')
+
+            for k, v in pairs(polygon) do
+                print(k, v)
+            end
+
+            break
         end
     end
 
