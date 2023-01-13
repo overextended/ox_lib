@@ -44,9 +44,10 @@ local function getTriangles(polygon)
 
     local a, b, c = 1, 2, 3
     local len = #points
+    local zValue = polygon[1].z
 
     while len - #triangles > 2 do
-        if polygon:containsSegment(glm.segment.getPoint(polygon[a], polygon[c], 0.01), glm.segment.getPoint(polygon[a], polygon[c], 0.99)) then
+        if polygon:containsSegment(vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.01), zValue), vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.99), zValue)) then
             triangles[#triangles + 1] = mat(polygon[a], polygon[b], polygon[c])
             points[b] = false
 
