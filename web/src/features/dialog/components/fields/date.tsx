@@ -13,7 +13,7 @@ const DateField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
     control: props.control,
-    defaultValue: props.row.default && new Date(props.row.default),
+    defaultValue: props.row.default === true ? new Date() : props.row.default ? new Date(props.row.default) : undefined,
     rules: { required: props.row.required },
   });
 

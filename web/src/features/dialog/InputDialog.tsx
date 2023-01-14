@@ -59,8 +59,11 @@ const InputDialog: React.FC = () => {
         {
           value:
             row.type !== 'checkbox'
-              ? row.type === 'date' && row.default
-                ? new Date(row.default)
+              ? row.type === 'date'
+                ? // Set date to current one if default is set to true
+                  row.default === true
+                  ? new Date()
+                  : row.default && new Date(row.default)
                 : row.default
               : row.checked,
         } || { value: null }
