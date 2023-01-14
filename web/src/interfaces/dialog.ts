@@ -76,4 +76,7 @@ export interface IDateInput {
   description?: string;
   required?: boolean;
   placeholder?: string;
+  clearable?: boolean;
+  min?: string;
+  max?: string;
 }

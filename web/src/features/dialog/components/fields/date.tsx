@@ -31,6 +31,8 @@ const DateField: React.FC<Props> = (props) => {
       inputFormat="DD/MM/YYYY"
       withAsterisk={props.row.required}
       clearable={props.row.clearable}
+      minDate={props.row.min ? new Date(props.row.min) : undefined}
+      maxDate={props.row.max ? new Date(props.row.max) : undefined}
     />
   );
 };
