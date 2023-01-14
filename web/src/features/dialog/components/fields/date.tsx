@@ -2,6 +2,7 @@ import { IDateInput } from '../../../../interfaces/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { DatePicker } from '@mantine/dates';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   row: IDateInput;
@@ -31,6 +32,7 @@ const DateField: React.FC<Props> = (props) => {
       inputFormat="DD/MM/YYYY"
       withAsterisk={props.row.required}
       clearable={props.row.clearable}
+      icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
       minDate={props.row.min ? new Date(props.row.min) : undefined}
       maxDate={props.row.max ? new Date(props.row.max) : undefined}
     />

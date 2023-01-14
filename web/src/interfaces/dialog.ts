@@ -79,4 +79,5 @@ export interface IDateInput {
   clearable?: boolean;
   min?: string;
   max?: string;
+  icon?: IconProp;
 }
