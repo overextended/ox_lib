@@ -62,10 +62,10 @@ const InputDialog: React.FC = () => {
               ? row.type === 'date' || row.type === 'date-range'
                 ? // Set date to current one if default is set to true
                   row.default === true
-                  ? new Date()
+                  ? new Date().getTime()
                   : Array.isArray(row.default)
-                  ? row.default.map((date) => new Date(date))
-                  : row.default && new Date(row.default)
+                  ? row.default.map((date) => new Date(date).getTime())
+                  : row.default && new Date(row.default).getTime()
                 : row.default
               : row.checked,
         } || { value: null }
@@ -142,8 +142,9 @@ const InputDialog: React.FC = () => {
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
                   {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
-                  {row.type === 'date' ||
-                    (row.type === 'date-range' && <DateField control={form.control} row={row} index={index} />)}
+                  {row.type === 'date' || row.type === 'date-range' ? (
+                    <DateField control={form.control} row={row} index={index} />
+                  ) : null}
                 </React.Fragment>
               );
             })}
