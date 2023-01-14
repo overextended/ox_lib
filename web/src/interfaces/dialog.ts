@@ -69,9 +69,9 @@ export interface IColorInput {
 }
 
 export interface IDateInput {
-  type: 'date';
+  type: 'date' | 'date-range';
   label: string;
-  default?: string | true;
+  default?: string | [string, string] | true;
   disabled?: boolean;
   description?: string;
   required?: boolean;

@@ -59,10 +59,12 @@ const InputDialog: React.FC = () => {
         {
           value:
             row.type !== 'checkbox'
-              ? row.type === 'date'
+              ? row.type === 'date' || row.type === 'date-range'
                 ? // Set date to current one if default is set to true
                   row.default === true
                   ? new Date()
+                  : Array.isArray(row.default)
+                  ? row.default.map((date) => new Date(date))
                   : row.default && new Date(row.default)
                 : row.default
               : row.checked,
@@ -140,7 +142,8 @@ const InputDialog: React.FC = () => {
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
                   {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
-                  {row.type === 'date' && <DateField control={form.control} row={row} index={index} />}
+                  {row.type === 'date' ||
+                    (row.type === 'date-range' && <DateField control={form.control} row={row} index={index} />)}
                 </React.Fragment>
               );
             })}
