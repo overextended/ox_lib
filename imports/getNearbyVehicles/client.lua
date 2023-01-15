@@ -19,7 +19,7 @@ function lib.getNearbyVehicles(coords, maxDistance, includePlayerVehicle)
 				count += 1
 				nearby[count] = {
 					vehicle = vehicle,
-					coords = coords
+					coords = vehicleCoords
 				}
 			end
 		end
