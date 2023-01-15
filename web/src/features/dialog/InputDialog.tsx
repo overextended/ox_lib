@@ -12,6 +12,7 @@ import {
   IColorInput,
   OptionValue,
   IDateInput,
+  ITextarea,
 } from '../../interfaces/dialog';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
@@ -21,10 +22,11 @@ import SliderField from './components/fields/slider';
 import { useFieldArray, useForm } from 'react-hook-form';
 import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
+import TextareaField from './components/fields/textarea';
 
 export interface InputProps {
   heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput>;
+  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea>;
   options?: {
     allowCancel?: boolean;
   };
@@ -145,6 +147,13 @@ const InputDialog: React.FC = () => {
                   {row.type === 'date' || row.type === 'date-range' ? (
                     <DateField control={form.control} row={row} index={index} />
                   ) : null}
+                  {row.type === 'textarea' && (
+                    <TextareaField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
+                  )}
                 </React.Fragment>
               );
             })}

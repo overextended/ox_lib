@@ -81,3 +81,17 @@ export interface IDateInput {
   max?: string;
   icon?: IconProp;
 }
+
+export interface ITextarea {
+  type: 'textarea';
+  label: string;
+  default?: string;
+  disabled?: boolean;
+  description?: string;
+  required?: boolean;
+  placeholder?: string;
+  icon?: IconProp;
+  autosize?: boolean;
+  min?: number;
+  max?: number;
+}
