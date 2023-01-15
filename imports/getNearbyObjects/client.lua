@@ -17,7 +17,7 @@ function lib.getNearbyObjects(coords, maxDistance)
             count += 1
             nearby[count] = {
                 object = object,
-                coords = coords
+                coords = objectCoords
             }
         end
 	end
