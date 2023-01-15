@@ -26,6 +26,14 @@ local function nextFreePoint(points, b, len)
     end
 end
 
+local function unableToSplit(polygon)
+    print('The following polygon is malformed and has failed to be split into triangles for debug')
+
+    for k, v in pairs(polygon) do
+        print(k, v)
+    end
+end
+
 local function getTriangles(polygon)
     local triangles = {}
 
@@ -33,43 +41,49 @@ local function getTriangles(polygon)
         for i = 2, #polygon - 1 do
             triangles[#triangles + 1] = mat(polygon[1], polygon[i], polygon[i + 1])
         end
+
+        return triangles
+    end
+
+    if not polygon:isSimple() then
+        unableToSplit(polygon)
+
         return triangles
     end
 
     local points = {}
+    local polygonN = #polygon
 
-    for i = 1, #polygon do
+    for i = 1, polygonN do
         points[i] = polygon[i]
     end
 
     local a, b, c = 1, 2, 3
-    local len = #points
     local zValue = polygon[1].z
     local count = 0
 
-    while len - #triangles > 2 do
-        if polygon:containsSegment(vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.01), zValue), vec3(glm.segment2d.getPoint(polygon[a].xy, polygon[c].xy, 0.99), zValue)) then
+    while polygonN - #triangles > 2 do
+        local a2d = polygon[a].xy
+        local c2d = polygon[c].xy
+
+        if polygon:containsSegment(vec3(glm.segment2d.getPoint(a2d, c2d, 0.01), zValue), vec3(glm.segment2d.getPoint(a2d, c2d, 0.99), zValue)) then
             triangles[#triangles + 1] = mat(polygon[a], polygon[b], polygon[c])
             points[b] = false
 
             b = c
-            c = nextFreePoint(points, b, len)
+            c = nextFreePoint(points, b, polygonN)
         else
             a = b
             b = c
-            c = nextFreePoint(points, b, len)
+            c = nextFreePoint(points, b, polygonN)
         end
 
         count += 1
 
-        if count > len and #triangles == 0 then
-            print('The following polygon failed to be split into triangles for debug')
+        if count > polygonN and #triangles == 0 then
+            unableToSplit(polygon)
 
-            for k, v in pairs(polygon) do
-                print(k, v)
-            end
-
-            break
+            return triangles
         end
     end
 
