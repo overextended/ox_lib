@@ -55,6 +55,23 @@ local function table_deepclone(tbl)
 end
 table.deepclone = table_deepclone
 
+local function table_merge(t1, t2)
+    for k, v in pairs(t2) do
+        local type1 = type(t1[k])
+        local type2 = type(v)
+
+		if type1 == 'table' and type2 == 'table' then
+            table_merge(t1[k], v)
+        elseif type1 == 'number' and type2 == 'number' then
+            t1[k] += v
+		else
+			t1[k] = v
+        end
+    end
+    return t1
+end
+table.merge = table_merge
+
 lib.table = table
 
 return table
