@@ -23,9 +23,9 @@ export interface ICheckbox {
 
 export type OptionValue = { value: string; label?: string };
 export interface ISelect {
-  type: 'select';
+  type: 'select' | 'multi-select';
   label: string;
-  default?: string;
+  default?: string | string[];
   options: Array<OptionValue>;
   disabled?: boolean;
   description?: string;

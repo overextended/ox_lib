@@ -73,7 +73,7 @@ const InputDialog: React.FC = () => {
         } || { value: null }
       );
       // Backwards compat with new Select data type
-      if (row.type === 'select') {
+      if (row.type === 'select' || row.type === 'multi-select') {
         row.options = row.options.map((option) =>
           !option.label ? { ...option, label: option.value } : option
         ) as Array<OptionValue>;
@@ -140,7 +140,9 @@ const InputDialog: React.FC = () => {
                       index={index}
                     />
                   )}
-                  {row.type === 'select' && <SelectField row={row} index={index} control={form.control} />}
+                  {(row.type === 'select' || row.type === 'multi-select') && (
+                    <SelectField row={row} index={index} control={form.control} />
+                  )}
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
                   {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}

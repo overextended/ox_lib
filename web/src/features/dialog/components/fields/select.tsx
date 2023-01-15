@@ -1,4 +1,4 @@
-import { Select } from '@mantine/core';
+import { MultiSelect, Select } from '@mantine/core';
 import { ISelect } from '../../../../interfaces/dialog';
 import { Control, FieldValues, useController, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
@@ -14,25 +14,48 @@ const SelectField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
     control: props.control,
-    defaultValue: props.row.default || props.row.options[0].value,
+    defaultValue: props.row.default || props.row.type !== 'multi-select' ? props.row.options[0].value : undefined,
     rules: { required: props.row.required },
   });
 
   return (
-    <Select
-      data={props.row.options}
-      value={controller.field.value}
-      name={controller.field.name}
-      ref={controller.field.ref}
-      onBlur={controller.field.onBlur}
-      onChange={controller.field.onChange}
-      disabled={props.row.disabled}
-      label={props.row.label}
-      description={props.row.description}
-      withAsterisk={props.row.required}
-      clearable={props.row.clearable}
-      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
-    />
+    <>
+      {props.row.type === 'select' ? (
+        <Select
+          data={props.row.options}
+          value={controller.field.value}
+          name={controller.field.name}
+          ref={controller.field.ref}
+          onBlur={controller.field.onBlur}
+          onChange={controller.field.onChange}
+          disabled={props.row.disabled}
+          label={props.row.label}
+          description={props.row.description}
+          withAsterisk={props.row.required}
+          clearable={props.row.clearable}
+          icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+        />
+      ) : (
+        <>
+          {props.row.type === 'multi-select' && (
+            <MultiSelect
+              data={props.row.options}
+              value={controller.field.value}
+              name={controller.field.name}
+              ref={controller.field.ref}
+              onBlur={controller.field.onBlur}
+              onChange={controller.field.onChange}
+              disabled={props.row.disabled}
+              label={props.row.label}
+              description={props.row.description}
+              withAsterisk={props.row.required}
+              clearable={props.row.clearable}
+              icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+            />
+          )}
+        </>
+      )}
+    </>
   );
 };
 
