@@ -17,11 +17,34 @@ const ContextMenu: React.FC = () => {
     title: '',
     options: { '': { description: '', metadata: [] } },
   });
+  const [search, setSearch] = useState('');
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const filteredOptions = Object.entries(contextMenu.options).filter(
+    ([key, option]) => {
+      if (option.type === 'search' || search === '') {
+        return true;
+      } else {
+        let match = false;
+        if (option.title) {
+          match = option.title.toLowerCase().includes(search.toLowerCase());
+        }
+        if (option.description) {
+          match = match || option.description.toLowerCase().includes(search.toLowerCase());
+        }
+        return match;
+      }
+    }
+  );
+  
   const closeContext = () => {
     if (contextMenu.canClose === false) return;
     setVisible(false);
     fetchNui('closeContext');
+    setSearch('');
   };
 
   // Hides the context menu on ESC
@@ -100,9 +123,12 @@ const ContextMenu: React.FC = () => {
             </Flex>
           </Flex>
           <Box maxH={560} overflowY="scroll">
-            {Object.entries(contextMenu.options).map((option, index) => (
-              <Item option={option} key={`context-item-${index}`} />
-            ))}
+            {filteredOptions.map((option, index) => {
+              const isSearch = option[1].type === 'search';
+              return isSearch ? 
+                <Item option={option} key={`context-item-${index}`} handleChange={handleChange} search={search}/> : 
+                <Item option={option} key={`context-item-${index}`} />
+            })}
           </Box>
         </Box>
       </ScaleFade>

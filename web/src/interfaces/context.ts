@@ -1,6 +1,8 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export interface Option {
+  type?: string;
+  placeholder?: string;
   menu?: string;
   title?: string;
   description?: string;
