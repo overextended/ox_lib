@@ -26,11 +26,13 @@ function lib.loadLocale()
 	local locales = json.decode(LoadResourceFile(cache.resource, ('locales/%s.json'):format(GetConvar('ox:locale', 'en'))) or LoadResourceFile(cache.resource, 'locales/en.json') or '[]')
 
     for k, v in pairs(locales) do
-        for var in v:gmatch('${[%w%s%p]-}') do
-            local locale = locales[var:sub(3, -2)]
+        if type(v) == 'string' then
+            for var in v:gmatch('${[%w%s%p]-}') do
+                local locale = locales[var:sub(3, -2)]
 
-            if locale then
-                v = v:gsub(var, locale:gsub('%%', '%%%%'))
+                if locale then
+                    v = v:gsub(var, locale:gsub('%%', '%%%%'))
+                end
             end
         end
 
