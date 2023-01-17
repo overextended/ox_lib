@@ -48,6 +48,10 @@ const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; 
     textAlign: 'center',
     textShadow: theme.shadows.sm,
     color: theme.colors.gray[3],
+    height: 25,
+  },
+  wrapper: {
+    marginTop: params.position === 'middle' ? 25 : undefined,
   },
 }));
 
@@ -93,15 +97,17 @@ const CircleProgressbar: React.FC = () => {
     <>
       <Stack spacing={0} className={classes.container}>
         <ScaleFade visible={visible}>
-          <RingProgress
-            size={90}
-            thickness={7}
-            sections={[{ value: 0, color: theme.primaryColor }]}
-            onAnimationEnd={progressComplete}
-            className={classes.progress}
-            label={<Text className={classes.value}>{value}%</Text>}
-          />
-          {label && <Text className={classes.label}>{label}</Text>}
+          <Stack spacing={0} align="center" className={classes.wrapper}>
+            <RingProgress
+              size={90}
+              thickness={7}
+              sections={[{ value: 0, color: theme.primaryColor }]}
+              onAnimationEnd={progressComplete}
+              className={classes.progress}
+              label={<Text className={classes.value}>{value}%</Text>}
+            />
+            {label && <Text className={classes.label}>{label}</Text>}
+          </Stack>
         </ScaleFade>
       </Stack>
     </>
