@@ -38,6 +38,7 @@ const ListMenu: React.FC = () => {
   });
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [trapFocus, setTrapFocus] = useState(false);
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const [checkedStates, setCheckedStates] = useState<Record<number, boolean>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -154,6 +155,12 @@ const ListMenu: React.FC = () => {
 
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
 
+  useNuiEvent('setMenuFocus', (newFocus: boolean) => {
+    setTrapFocus(newFocus)
+    if (!newFocus)
+      listRefs.current[selected]?.focus();
+  });
+
   useNuiEvent('setMenu', (data: MenuSettings) => {
     firstRenderRef.current = true;
     if (!data.startItemIndex || data.startItemIndex < 0) data.startItemIndex = 0;
@@ -220,7 +227,7 @@ const ListMenu: React.FC = () => {
               borderTopRightRadius="none"
               onKeyDown={(e) => moveMenu(e)}
             >
-              <FocusTrap active={visible}>
+              <FocusTrap active={visible} paused={trapFocus}>
                 <Stack direction="column" p={2} overflowY="scroll">
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
