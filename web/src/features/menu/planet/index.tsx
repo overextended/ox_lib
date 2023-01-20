@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Stack, Text, Transition } from '@mantine/core';
+import { ActionIcon, Box, createStyles, Stack, Text, Transition } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useState } from 'react';
@@ -31,13 +31,75 @@ debugData<{ items: MenuItem[]; sub?: boolean }>([
         { icon: 'palette', label: 'Paint' },
         { icon: 'warehouse', label: 'Garage' },
         { icon: 'handcuffs', label: 'Arrest' },
+        { icon: 'handcuffs', label: 'Arrest' },
       ],
       sub: false,
     },
   },
 ]);
 
+const useStyles = createStyles((theme) => ({
+  wrapper: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  centerButton: {
+    width: 50,
+    height: 50,
+    zIndex: 99,
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 120,
+    height: 120,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[0],
+    boxShadow: theme.shadows.sm,
+    padding: 12,
+    '&:hover': {
+      backgroundColor: theme.colors.dark[5],
+      cursor: 'pointer',
+    },
+  },
+  labelWrapper: {
+    marginTop: 120,
+    position: 'absolute',
+    width: '100%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  labelContainer: {
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[2],
+    padding: 8,
+    borderRadius: theme.radius.sm,
+    fontWeight: 500,
+    fontSize: 14,
+    boxShadow: theme.shadows.sm,
+    textAlign: 'center',
+  },
+}));
+
 const PlanetMenu: React.FC = () => {
+  const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const [menu, setMenu] = useState<{ items: MenuItem[]; sub?: boolean }>({
     items: [],
@@ -57,56 +119,23 @@ const PlanetMenu: React.FC = () => {
 
   return (
     <>
-      <Box
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-      >
+      <Box className={classes.wrapper}>
         <>
           {visible && (
             <>
-              <ActionIcon variant="filled" radius="xl" size="xl" color="primary" sx={{ zIndex: 99 }} w={50} h={50}>
+              <ActionIcon variant="filled" radius="xl" size="xl" color="primary" className={classes.centerButton}>
                 <FontAwesomeIcon fixedWidth icon="xmark" size="lg" />
               </ActionIcon>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 120,
-                  height: 120,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
+              <Box className={classes.buttonsContainer}>
                 {menu.items.map((item, index) => (
                   <Box
                     onMouseEnter={() => setCurrentItem({ label: item.label, visible: true })}
                     onMouseLeave={() => setCurrentItem((prevState) => ({ ...prevState, visible: false }))}
                     onClick={() => handleItemClick(index)}
-                    sx={(theme) => ({
+                    sx={{
                       transform: getTransform(index, menu.items.length),
-                      position: 'absolute',
-                      width: 40,
-                      height: 40,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '50%',
-                      backgroundColor: theme.colors.dark[6],
-                      color: theme.colors.dark[0],
-                      boxShadow: theme.shadows.sm,
-                      padding: 12,
-                      '&:hover': {
-                        backgroundColor: theme.colors.dark[5],
-                        cursor: 'pointer',
-                      },
-                    })}
+                    }}
+                    className={classes.button}
                   >
                     <FontAwesomeIcon icon={item.icon} fixedWidth />
                   </Box>
@@ -116,27 +145,10 @@ const PlanetMenu: React.FC = () => {
           )}
         </>
       </Box>
-      <Stack
-        sx={{ position: 'absolute', width: '100%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-        mt={120}
-        justify="center"
-        align="center"
-      >
+      <Stack justify="center" align="center" className={classes.labelWrapper}>
         <Transition transition="fade" mounted={currentItem.visible}>
           {(styles) => (
-            <Box
-              style={styles}
-              sx={(theme) => ({
-                backgroundColor: theme.colors.dark[6],
-                color: theme.colors.dark[2],
-                padding: 8,
-                borderRadius: theme.radius.sm,
-                fontWeight: 500,
-                fontSize: 14,
-                boxShadow: theme.shadows.sm,
-                textAlign: 'center',
-              })}
-            >
+            <Box style={styles} className={classes.labelContainer}>
               <Text>{currentItem.label}</Text>
             </Box>
           )}
