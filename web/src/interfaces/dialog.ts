@@ -66,6 +66,7 @@ export interface IColorInput {
   description?: string;
   format?: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla';
   required?: boolean;
+  icon?: IconProp;
 }
 
 export interface IDateInput {
