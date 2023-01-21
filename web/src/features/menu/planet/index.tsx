@@ -138,13 +138,10 @@ const PlanetMenu: React.FC = () => {
           {menu.items.map((item, index) => {
             // TODO: center labels and icon inside sector
             const pieAngle = 360 / menu.items.length;
-            const startAngle = index * pieAngle;
-            const endAngle = startAngle + pieAngle;
-            console.log(startAngle + endAngle / 2);
-            const angle = degToRad((startAngle + endAngle) / 2);
+            const angle = degToRad(pieAngle / 2 + 90);
             const radius = 250 / 2;
-            const iconX = Math.sin(angle) * radius;
-            const iconY = Math.cos(angle) * radius;
+            const iconX = 250 + Math.sin(angle) * radius;
+            const iconY = 250 + Math.cos(angle) * radius;
 
             return (
               <>
