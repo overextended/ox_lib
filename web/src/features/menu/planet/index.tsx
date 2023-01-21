@@ -30,8 +30,8 @@ debugData<{ items: MenuItem[]; sub?: boolean }>([
       items: [
         { icon: 'palette', label: 'Paint' },
         { icon: 'warehouse', label: 'Garage' },
-        { icon: 'handcuffs', label: 'Arrest' },
-        { icon: 'handcuffs', label: 'Arrest' },
+        { icon: 'palette', label: 'Paint' },
+        // { icon: 'warehouse', label: 'Garage' },
       ],
       sub: false,
     },
@@ -96,7 +96,21 @@ const useStyles = createStyles((theme) => ({
     boxShadow: theme.shadows.sm,
     textAlign: 'center',
   },
+  sector: {
+    fill: theme.colors.dark[6],
+    color: theme.colors.dark[0],
+    '&:hover': {
+      fill: theme.fn.primaryColor(),
+    },
+    stroke: '#fff',
+    strokeWidth: '1px',
+  },
+  circleIcon: {
+    // position: 'relative',
+  },
 }));
+
+const degToRad = (deg: number) => deg * (Math.PI / 180);
 
 const PlanetMenu: React.FC = () => {
   const { classes } = useStyles();
@@ -120,40 +134,46 @@ const PlanetMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.wrapper}>
-        <>
-          {visible && (
-            <>
-              <ActionIcon variant="filled" radius="xl" size="xl" color="primary" className={classes.centerButton}>
-                <FontAwesomeIcon fixedWidth icon="xmark" size="lg" />
-              </ActionIcon>
-              <Box className={classes.buttonsContainer}>
-                {menu.items.map((item, index) => (
-                  <Box
-                    onMouseEnter={() => setCurrentItem({ label: item.label, visible: true })}
-                    onMouseLeave={() => setCurrentItem((prevState) => ({ ...prevState, visible: false }))}
-                    onClick={() => handleItemClick(index)}
-                    sx={{
-                      transform: getTransform(index, menu.items.length),
-                    }}
-                    className={classes.button}
-                  >
-                    <FontAwesomeIcon icon={item.icon} fixedWidth />
-                  </Box>
-                ))}
-              </Box>
-            </>
-          )}
-        </>
+        <svg width="500px" height="500px" transform="rotate(90)">
+          {menu.items.map((item, index) => {
+            // TODO: center labels and icon inside sector
+            const pieAngle = 360 / menu.items.length;
+            const startAngle = index * pieAngle;
+            const endAngle = startAngle + pieAngle;
+            console.log(startAngle + endAngle / 2);
+            const angle = degToRad((startAngle + endAngle) / 2);
+            const radius = 250 / 2;
+            const iconX = Math.sin(angle) * radius;
+            const iconY = Math.cos(angle) * radius;
+
+            return (
+              <>
+                <g transform={`rotate(-${index * pieAngle} 250 250)`}>
+                  <path
+                    className={classes.sector}
+                    d={`M250,250 l250,0 A250,250 0 0,0 ${250 + 250 * Math.cos(-degToRad(pieAngle))}, ${
+                      250 + 250 * Math.sin(-degToRad(pieAngle))
+                    } z`}
+                  />
+                  <text x={iconX} y={iconY} textAnchor="middle" fill="#fff" width={50} height={50}>
+                    {item.label}
+                  </text>
+                  {/*<FontAwesomeIcon*/}
+                  {/*  icon={item.icon}*/}
+                  {/*  fixedWidth*/}
+                  {/*  className={classes.circleIcon}*/}
+                  {/*  width={50}*/}
+                  {/*  height={50}*/}
+                  {/*  x={iconX}*/}
+                  {/*  y={iconY}*/}
+                  {/*  // transform="translate(-5,-5)"*/}
+                  {/*/>*/}
+                </g>
+              </>
+            );
+          })}
+        </svg>
       </Box>
-      <Stack justify="center" align="center" className={classes.labelWrapper}>
-        <Transition transition="fade" mounted={currentItem.visible}>
-          {(styles) => (
-            <Box style={styles} className={classes.labelContainer}>
-              <Text>{currentItem.label}</Text>
-            </Box>
-          )}
-        </Transition>
-      </Stack>
     </>
   );
 };
