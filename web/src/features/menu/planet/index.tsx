@@ -30,9 +30,11 @@ debugData<{ items: MenuItem[]; sub?: boolean }>([
       items: [
         { icon: 'palette', label: 'Paint' },
         { icon: 'warehouse', label: 'Garage' },
+        { icon: 'palette', label: 'Quite long text' },
         { icon: 'palette', label: 'Paint' },
-        // { icon: 'warehouse', label: 'Garage' },
+        { icon: 'warehouse', label: 'Garage' },
       ],
+
       sub: false,
     },
   },
@@ -99,14 +101,16 @@ const useStyles = createStyles((theme) => ({
   sector: {
     fill: theme.colors.dark[6],
     color: theme.colors.dark[0],
+
     '&:hover': {
       fill: theme.fn.primaryColor(),
+      '> g > text, > g > svg > path': {
+        fill: '#fff',
+      },
     },
-    stroke: '#fff',
-    strokeWidth: '1px',
-  },
-  circleIcon: {
-    // position: 'relative',
+    '> g > text': {
+      fill: theme.colors.dark[0],
+    },
   },
 }));
 
@@ -134,37 +138,29 @@ const PlanetMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.wrapper}>
-        <svg width="500px" height="500px" transform="rotate(90)">
+        <svg width="350px" height="350px" transform="rotate(90)">
           {menu.items.map((item, index) => {
-            // TODO: center labels and icon inside sector
             const pieAngle = 360 / menu.items.length;
             const angle = degToRad(pieAngle / 2 + 90);
-            const radius = 250 / 2;
-            const iconX = 250 + Math.sin(angle) * radius;
-            const iconY = 250 + Math.cos(angle) * radius;
+            const radius = 175 / 2;
+            const iconX = 175 + Math.sin(angle) * radius;
+            const iconY = 175 + Math.cos(angle) * radius;
 
             return (
               <>
-                <g transform={`rotate(-${index * pieAngle} 250 250)`}>
+                <g transform={`rotate(-${index * pieAngle} 175 175)`} className={classes.sector}>
                   <path
-                    className={classes.sector}
-                    d={`M250,250 l250,0 A250,250 0 0,0 ${250 + 250 * Math.cos(-degToRad(pieAngle))}, ${
-                      250 + 250 * Math.sin(-degToRad(pieAngle))
+                    stroke="#fff"
+                    d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
+                      175 + 175 * Math.sin(-degToRad(pieAngle))
                     } z`}
                   />
-                  <text x={iconX} y={iconY} textAnchor="middle" fill="#fff" width={50} height={50}>
-                    {item.label}
-                  </text>
-                  {/*<FontAwesomeIcon*/}
-                  {/*  icon={item.icon}*/}
-                  {/*  fixedWidth*/}
-                  {/*  className={classes.circleIcon}*/}
-                  {/*  width={50}*/}
-                  {/*  height={50}*/}
-                  {/*  x={iconX}*/}
-                  {/*  y={iconY}*/}
-                  {/*  // transform="translate(-5,-5)"*/}
-                  {/*/>*/}
+                  <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
+                    <FontAwesomeIcon x={iconX - 13} y={iconY - 35} icon={item.icon} width={25} height={25} fixedWidth />
+                    <text x={iconX} y={iconY + 10} fill="#fff" textAnchor="middle" pointerEvents="none">
+                      {item.label}
+                    </text>
+                  </g>
                 </g>
               </>
             );
