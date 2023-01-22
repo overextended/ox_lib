@@ -1,7 +1,7 @@
 import { IDateInput } from '../../../../interfaces/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
-import { DatePicker, DateRangePicker } from '@mantine/dates';
+import { DatePicker, DateRangePicker, TimeInput } from '@mantine/dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
@@ -19,7 +19,7 @@ const DateField: React.FC<Props> = (props) => {
 
   return (
     <>
-      {props.row.type === 'date' ? (
+      {props.row.type === 'date' && (
         <DatePicker
           value={controller.field.value ? new Date(controller.field.value) : controller.field.value}
           name={controller.field.name}
@@ -38,8 +38,8 @@ const DateField: React.FC<Props> = (props) => {
           minDate={props.row.min ? new Date(props.row.min) : undefined}
           maxDate={props.row.max ? new Date(props.row.max) : undefined}
         />
-      ) : (
-        props.row.type === 'date-range' && (
+      )} 
+      {props.row.type === 'date-range' && (
           <DateRangePicker
             value={
               controller.field.value
@@ -65,8 +65,25 @@ const DateField: React.FC<Props> = (props) => {
             minDate={props.row.min ? new Date(props.row.min) : undefined}
             maxDate={props.row.max ? new Date(props.row.max) : undefined}
           />
-        )
-      )}
+        )}
+
+        {props.row.type === 'time' && (
+          <TimeInput 
+            value={controller.field.value ? new Date(controller.field.value) : controller.field.value}
+            name={controller.field.name}
+            ref={controller.field.ref}
+            onBlur={controller.field.onBlur}
+            onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
+            label={props.row.label}
+            description={props.row.description}
+            placeholder={props.row.placeholder}
+            disabled={props.row.disabled}
+            format={props.row.format || "12"}
+            withAsterisk={props.row.required}
+            clearable={props.row.clearable}
+            icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
+          />
+        )}
     </>
   );
 };
