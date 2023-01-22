@@ -141,8 +141,8 @@ const PlanetMenu: React.FC = () => {
         <svg width="350px" height="350px" transform="rotate(90)">
           {menu.items.map((item, index) => {
             const pieAngle = 360 / menu.items.length;
-            const angle = degToRad(pieAngle / 2 + 90);
-            const radius = 175 / 2;
+            const angle = degToRad(pieAngle/ 2 + 90);
+            const radius = 175 * 0.65;
             const iconX = 175 + Math.sin(angle) * radius;
             const iconY = 175 + Math.cos(angle) * radius;
 
@@ -156,8 +156,8 @@ const PlanetMenu: React.FC = () => {
                     } z`}
                   />
                   <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                    <FontAwesomeIcon x={iconX - 13} y={iconY - 35} icon={item.icon} width={25} height={25} fixedWidth />
-                    <text x={iconX} y={iconY + 10} fill="#fff" textAnchor="middle" pointerEvents="none">
+                    <FontAwesomeIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon} width={25} height={25} fixedWidth />
+                    <text x={iconX} y={iconY + 25} fill="#fff" textAnchor="middle" pointerEvents="none">
                       {item.label}
                     </text>
                   </g>
