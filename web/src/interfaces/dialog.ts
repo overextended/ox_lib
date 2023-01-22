@@ -34,6 +34,16 @@ export interface ISelect {
   icon?: IconProp;
 }
 
+export interface IRadio {
+  type: 'radio';
+  label: string;
+  default?: string;
+  options: Array<OptionValue & { disabled?: boolean }>;
+  disabled?: boolean;
+  description?: string;
+  required?: boolean;
+}
+
 export interface INumber {
   type: 'number';
   label: string;

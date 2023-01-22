@@ -33,6 +33,17 @@ export const debugInput = () => {
             ],
           },
           {
+            type: 'radio',
+            label: 'Pick one',
+            description: 'Description that tells you what this input field does',
+            default: 'radio3',
+            options: [
+              { value: 'radio1' },
+              { value: 'radio2', label: 'Radio 2', disabled: true },
+              { value: 'radio3', label: 'Radio 3' },
+            ],
+          },
+          {
             type: 'number',
             label: 'Number counter',
             default: 12,
