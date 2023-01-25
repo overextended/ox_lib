@@ -40,6 +40,7 @@ debugData<{ items: MenuItem[]; sub?: boolean }>([
   },
 ]);
 
+// TODO: remove unused styling
 const useStyles = createStyles((theme) => ({
   wrapper: {
     position: 'absolute',
@@ -104,6 +105,7 @@ const useStyles = createStyles((theme) => ({
 
     '&:hover': {
       fill: theme.fn.primaryColor(),
+      cursor: 'pointer',
       '> g > text, > g > svg > path': {
         fill: '#fff',
       },
@@ -111,6 +113,21 @@ const useStyles = createStyles((theme) => ({
     '> g > text': {
       fill: theme.colors.dark[0],
     },
+  },
+  backgroundCircle: {
+    fill: theme.colors.dark[6],
+  },
+  centerCircle: {
+    fill: theme.fn.primaryColor(),
+    color: '#fff',
+    '&:hover': {
+      fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
+      cursor: 'pointer',
+    },
+  },
+  centerIcon: {
+    color: '#fff',
+    pointerEvents: 'none',
   },
 }));
 
@@ -139,9 +156,12 @@ const PlanetMenu: React.FC = () => {
     <>
       <Box className={classes.wrapper}>
         <svg width="350px" height="350px" transform="rotate(90)">
+          <g transform="translate(175, 175)">
+            <circle r={175} className={classes.backgroundCircle} />
+          </g>
           {menu.items.map((item, index) => {
             const pieAngle = 360 / menu.items.length;
-            const angle = degToRad(pieAngle/ 2 + 90);
+            const angle = degToRad(pieAngle / 2 + 90);
             const radius = 175 * 0.65;
             const iconX = 175 + Math.sin(angle) * radius;
             const iconY = 175 + Math.cos(angle) * radius;
@@ -150,13 +170,19 @@ const PlanetMenu: React.FC = () => {
               <>
                 <g transform={`rotate(-${index * pieAngle} 175 175)`} className={classes.sector}>
                   <path
-                    stroke="#fff"
                     d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
                       175 + 175 * Math.sin(-degToRad(pieAngle))
                     } z`}
                   />
                   <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                    <FontAwesomeIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon} width={25} height={25} fixedWidth />
+                    <FontAwesomeIcon
+                      x={iconX - 12.5}
+                      y={iconY - 17.5}
+                      icon={item.icon}
+                      width={25}
+                      height={25}
+                      fixedWidth
+                    />
                     <text x={iconX} y={iconY + 25} fill="#fff" textAnchor="middle" pointerEvents="none">
                       {item.label}
                     </text>
@@ -165,6 +191,18 @@ const PlanetMenu: React.FC = () => {
               </>
             );
           })}
+          <g transform="translate(175, 175)">
+            <circle r={40} className={classes.centerCircle} />
+          </g>
+          <FontAwesomeIcon
+            icon="xmark"
+            className={classes.centerIcon}
+            color="#fff"
+            width={35}
+            height={35}
+            x={175 - 35 / 2}
+            y={175 - 35 / 2}
+          />
         </svg>
       </Box>
     </>
