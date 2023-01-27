@@ -141,16 +141,16 @@ const PlanetMenu: React.FC = () => {
             );
           })}
           <g transform="translate(175, 175)">
-            <circle r={40} className={classes.centerCircle} />
+            <circle r={30} className={classes.centerCircle} />
           </g>
           <FontAwesomeIcon
             icon="xmark"
             className={classes.centerIcon}
             color="#fff"
-            width={35}
-            height={35}
-            x={175 - 35 / 2}
-            y={175 - 35 / 2}
+            width={28}
+            height={28}
+            x={175 - 28 / 2}
+            y={175 - 28 / 2}
           />
         </svg>
       </Box>
