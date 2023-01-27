@@ -25,9 +25,10 @@ interface MenuItem {
 
 debugData<{ items: MenuItem[]; sub?: boolean }>([
   {
-    action: 'openPlanetMenu',
+    action: 'openRadialMenu',
     data: {
       items: [
+        // TODO: Fix wheel being broken when there's only one item
         { icon: 'palette', label: 'Paint' },
         { icon: 'warehouse', label: 'Garage' },
         { icon: 'palette', label: 'Quite long text' },
@@ -40,7 +41,6 @@ debugData<{ items: MenuItem[]; sub?: boolean }>([
   },
 ]);
 
-// TODO: remove unused styling
 const useStyles = createStyles((theme) => ({
   wrapper: {
     position: 'absolute',
@@ -82,16 +82,15 @@ const useStyles = createStyles((theme) => ({
 
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
-const PlanetMenu: React.FC = () => {
+const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const [menu, setMenu] = useState<{ items: MenuItem[]; sub?: boolean }>({
     items: [],
     sub: false,
   });
-  const [currentItem, setCurrentItem] = useState({ label: '', visible: false });
 
-  useNuiEvent('openPlanetMenu', (data: { items: MenuItem[]; sub?: boolean }) => {
+  useNuiEvent('openRadialMenu', (data: { items: MenuItem[]; sub?: boolean }) => {
     setMenu(data);
     setVisible(true);
   });
@@ -141,6 +140,7 @@ const PlanetMenu: React.FC = () => {
             );
           })}
           <g transform="translate(175, 175)">
+            {/*TODO: Fix background circle when there's 2 items*/}
             <circle r={30} className={classes.centerCircle} />
           </g>
           <FontAwesomeIcon
@@ -158,4 +158,4 @@ const PlanetMenu: React.FC = () => {
   );
 };
 
-export default PlanetMenu;
+export default RadialMenu;
