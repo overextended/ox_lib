@@ -104,9 +104,12 @@ const RadialMenu: React.FC = () => {
     <>
       <Box className={classes.wrapper}>
         <svg width="350px" height="350px" transform="rotate(90)">
-          <g transform="translate(175, 175)">
-            <circle r={175} className={classes.backgroundCircle} />
-          </g>
+          {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
+          {menu.items.length >= 3 && (
+            <g transform="translate(175, 175)">
+              <circle r={175} className={classes.backgroundCircle} />
+            </g>
+          )}
           {menu.items.map((item, index) => {
             const pieAngle = 360 / menu.items.length;
             const angle = degToRad(pieAngle / 2 + 90);
@@ -140,7 +143,6 @@ const RadialMenu: React.FC = () => {
             );
           })}
           <g transform="translate(175, 175)">
-            {/*TODO: Fix background circle when there's 2 items*/}
             <circle r={30} className={classes.centerCircle} />
           </g>
           <FontAwesomeIcon
