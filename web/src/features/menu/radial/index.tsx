@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { debugData } from '../../../utils/debugData';
 import { fetchNui } from '../../../utils/fetchNui';
+import ScaleFade from '../../../transitions/ScaleFade';
 
 const radius = 60;
 
@@ -18,28 +19,10 @@ function getTransform(index: number, totalItems: number) {
   return `translate(${x}px, ${y}px)`;
 }
 
-interface MenuItem {
+export interface MenuItem {
   icon: IconProp;
   label: string;
 }
-
-debugData<{ items: MenuItem[]; sub?: boolean }>([
-  {
-    action: 'openRadialMenu',
-    data: {
-      items: [
-        // TODO: Fix wheel being broken when there's only one item
-        { icon: 'palette', label: 'Paint' },
-        { icon: 'warehouse', label: 'Garage' },
-        { icon: 'palette', label: 'Quite long text' },
-        { icon: 'palette', label: 'Paint' },
-        { icon: 'warehouse', label: 'Garage' },
-      ],
-
-      sub: false,
-    },
-  },
-]);
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -103,58 +86,60 @@ const RadialMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.wrapper}>
-        <svg width="350px" height="350px" transform="rotate(90)">
-          {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
-          {menu.items.length >= 3 && (
-            <g transform="translate(175, 175)">
-              <circle r={175} className={classes.backgroundCircle} />
-            </g>
-          )}
-          {menu.items.map((item, index) => {
-            const pieAngle = 360 / menu.items.length;
-            const angle = degToRad(pieAngle / 2 + 90);
-            const radius = 175 * 0.65;
-            const iconX = 175 + Math.sin(angle) * radius;
-            const iconY = 175 + Math.cos(angle) * radius;
+        <ScaleFade visible={visible}>
+          <svg width="350px" height="350px" transform="rotate(90)">
+            {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
+            {menu.items.length >= 3 && (
+              <g transform="translate(175, 175)">
+                <circle r={175} className={classes.backgroundCircle} />
+              </g>
+            )}
+            {menu.items.map((item, index) => {
+              const pieAngle = 360 / menu.items.length;
+              const angle = degToRad(pieAngle / 2 + 90);
+              const radius = 175 * 0.65;
+              const iconX = 175 + Math.sin(angle) * radius;
+              const iconY = 175 + Math.cos(angle) * radius;
 
-            return (
-              <>
-                <g transform={`rotate(-${index * pieAngle} 175 175)`} className={classes.sector}>
-                  <path
-                    d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
-                      175 + 175 * Math.sin(-degToRad(pieAngle))
-                    } z`}
-                  />
-                  <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                    <FontAwesomeIcon
-                      x={iconX - 12.5}
-                      y={iconY - 17.5}
-                      icon={item.icon}
-                      width={25}
-                      height={25}
-                      fixedWidth
+              return (
+                <>
+                  <g transform={`rotate(-${index * pieAngle} 175 175)`} className={classes.sector}>
+                    <path
+                      d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
+                        175 + 175 * Math.sin(-degToRad(pieAngle))
+                      } z`}
                     />
-                    <text x={iconX} y={iconY + 25} fill="#fff" textAnchor="middle" pointerEvents="none">
-                      {item.label}
-                    </text>
+                    <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
+                      <FontAwesomeIcon
+                        x={iconX - 12.5}
+                        y={iconY - 17.5}
+                        icon={item.icon}
+                        width={25}
+                        height={25}
+                        fixedWidth
+                      />
+                      <text x={iconX} y={iconY + 25} fill="#fff" textAnchor="middle" pointerEvents="none">
+                        {item.label}
+                      </text>
+                    </g>
                   </g>
-                </g>
-              </>
-            );
-          })}
-          <g transform="translate(175, 175)">
-            <circle r={30} className={classes.centerCircle} />
-          </g>
-          <FontAwesomeIcon
-            icon="xmark"
-            className={classes.centerIcon}
-            color="#fff"
-            width={28}
-            height={28}
-            x={175 - 28 / 2}
-            y={175 - 28 / 2}
-          />
-        </svg>
+                </>
+              );
+            })}
+            <g transform="translate(175, 175)" onClick={() => setVisible(false)}>
+              <circle r={30} className={classes.centerCircle} />
+            </g>
+            <FontAwesomeIcon
+              icon="xmark"
+              className={classes.centerIcon}
+              color="#fff"
+              width={28}
+              height={28}
+              x={175 - 28 / 2}
+              y={175 - 28 / 2}
+            />
+          </svg>
+        </ScaleFade>
       </Box>
     </>
   );

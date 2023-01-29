@@ -9,6 +9,7 @@ import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
 import { useState } from 'react';
+import { debugRadial } from './debug/radial';
 
 const Dev: React.FC = () => {
   const [opened, setOpened] = useState(false);
@@ -45,6 +46,9 @@ const Dev: React.FC = () => {
           </Button>
           <Button fullWidth onClick={() => debugMenu()}>
             Open list menu
+          </Button>
+          <Button fullWidth onClick={() => debugRadial()}>
+            Open radial menu
           </Button>
           <Divider />
           <Button fullWidth onClick={() => debugCustomNotification()}>
