@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import { useLocales } from '../../providers/LocaleProvider';
+import remarkGfm from 'remark-gfm';
 
 export interface AlertProps {
   header: string;
@@ -56,7 +57,7 @@ const AlertDialog: React.FC = () => {
         title={<ReactMarkdown>{dialogData.header}</ReactMarkdown>}
       >
         <Stack>
-          <ReactMarkdown>{dialogData.content}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{dialogData.content}</ReactMarkdown>
           <Group position="right" spacing={10}>
             {dialogData.cancel && (
               <Button uppercase variant="default" onClick={() => closeAlert('cancel')} mr={3}>
