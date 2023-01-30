@@ -1,23 +1,12 @@
-import { ActionIcon, Box, createStyles, Stack, Text, Transition } from '@mantine/core';
+import { Box, createStyles } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { debugData } from '../../../utils/debugData';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
 
 const radius = 60;
-
-// https://codesandbox.io/embed/circular-menu-e94ug
-function getTransform(index: number, totalItems: number) {
-  const value = index / totalItems;
-
-  const x = radius * Math.cos(Math.PI * 2 * (value - 0.25));
-  const y = radius * Math.sin(Math.PI * 2 * (value - 0.25));
-
-  return `translate(${x}px, ${y}px)`;
-}
 
 export interface MenuItem {
   icon: IconProp;
