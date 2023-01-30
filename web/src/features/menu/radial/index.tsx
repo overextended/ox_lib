@@ -79,13 +79,12 @@ const RadialMenu: React.FC = () => {
         <ScaleFade visible={visible}>
           <svg width="350px" height="350px" transform="rotate(90)">
             {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
-            {menu.items.length >= 3 && (
-              <g transform="translate(175, 175)">
-                <circle r={175} className={classes.backgroundCircle} />
-              </g>
-            )}
+            <g transform="translate(175, 175)">
+              <circle r={175} className={classes.backgroundCircle} />
+            </g>
             {menu.items.map((item, index) => {
-              const pieAngle = 360 / menu.items.length;
+              // Always draw full circle to avoid elipse circles with 2 or less items
+              const pieAngle = 360 / (menu.items.length < 3 ? 3 : menu.items.length);
               const angle = degToRad(pieAngle / 2 + 90);
               const radius = 175 * 0.65;
               const iconX = 175 + Math.sin(angle) * radius;
