@@ -78,9 +78,10 @@ const RadialMenu: React.FC = () => {
     setVisible(true);
   });
 
-  const handleItemClick = (index: number) => {
-    // fetchNui('planetClick', index)
-    // setVisible(false);
+  const handleClick = (index: number) => {
+    fetchNui('radialClick', index);
+    // TODO: shouldClose
+    setVisible(false);
   };
 
   return (
@@ -103,7 +104,11 @@ const RadialMenu: React.FC = () => {
 
               return (
                 <>
-                  <g transform={`rotate(-${index * pieAngle} 175 175)`} className={classes.sector}>
+                  <g
+                    transform={`rotate(-${index * pieAngle} 175 175)`}
+                    className={classes.sector}
+                    onClick={() => handleClick(index)}
+                  >
                     <path
                       d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
                         175 + 175 * Math.sin(-degToRad(pieAngle))
