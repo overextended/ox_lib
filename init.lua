@@ -76,8 +76,6 @@ end
 
 lib = setmetatable({
 	name = ox_lib,
-    ---@deprecated
-	service = context,
 	context = context,
 	exports = {},
 	onCache = function(key, cb)
