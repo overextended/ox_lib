@@ -62,7 +62,8 @@ const RadialMenu: React.FC = () => {
     sub: false,
   });
 
-  useNuiEvent('openRadialMenu', (data: { items: MenuItem[]; sub?: boolean }) => {
+  useNuiEvent('openRadialMenu', (data: { items: MenuItem[]; sub?: boolean } | false) => {
+    if (!data) return setVisible(false);
     setMenu(data);
     setVisible(true);
   });
