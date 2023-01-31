@@ -30,7 +30,7 @@ export interface MenuSettings {
   startItemIndex?: number;
 }
 
-const ListMenu: React.FC = () => {
+const ListMenu: React.FC<{pauseFocus: boolean}> = ({ pauseFocus }) => {
   const [menu, setMenu] = useState<MenuSettings>({
     position: 'top-left',
     title: '',
@@ -38,7 +38,6 @@ const ListMenu: React.FC = () => {
   });
   const [selected, setSelected] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [trapFocus, setTrapFocus] = useState(false);
   const [indexStates, setIndexStates] = useState<Record<number, number>>({});
   const [checkedStates, setCheckedStates] = useState<Record<number, boolean>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -154,12 +153,8 @@ const ListMenu: React.FC = () => {
   );
 
   useNuiEvent('closeMenu', () => closeMenu(true, undefined, true));
-
-  useNuiEvent('setMenuFocus', (newFocus: boolean) => {
-    setTrapFocus(newFocus)
-    if (!newFocus)
-      listRefs.current[selected]?.focus();
-  });
+  useNuiEvent('moveMenu', (newPosition: MenuSettings["position"]) => setMenu({ ...menu, position: newPosition }))
+  
 
   useNuiEvent('setMenu', (data: MenuSettings) => {
     firstRenderRef.current = true;
@@ -227,7 +222,7 @@ const ListMenu: React.FC = () => {
               borderTopRightRadius="none"
               onKeyDown={(e) => moveMenu(e)}
             >
-              <FocusTrap active={visible} paused={trapFocus}>
+              <FocusTrap active={visible} paused={pauseFocus}>
                 <Stack direction="column" p={2} overflowY="scroll">
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
