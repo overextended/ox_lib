@@ -10,6 +10,8 @@ export interface AlertProps {
   header: string;
   content: string;
   centered?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  overflow?: boolean;
   cancel?: boolean;
   labels?: {
     cancel?: string;
@@ -45,6 +47,8 @@ const AlertDialog: React.FC = () => {
       <Modal
         opened={opened}
         centered={dialogData.centered}
+        size={dialogData.size || 'md'}
+        overflow={dialogData.overflow ? 'inside' : 'outside'}
         closeOnClickOutside={false}
         onClose={() => {
           setOpened(false);
