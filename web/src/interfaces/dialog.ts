@@ -34,16 +34,6 @@ export interface ISelect {
   icon?: IconProp;
 }
 
-export interface IRadio {
-  type: 'radio';
-  label: string;
-  default?: string;
-  options: Array<OptionValue & { disabled?: boolean }>;
-  disabled?: boolean;
-  description?: string;
-  required?: boolean;
-}
-
 export interface INumber {
   type: 'number';
   label: string;
@@ -85,7 +75,7 @@ export interface IDateInput {
   default?: string | [string, string] | true;
   disabled?: boolean;
   description?: string;
-  format?: "12" | "24" | undefined;
+  format?: '12' | '24' | undefined;
   required?: boolean;
   placeholder?: string;
   clearable?: boolean;

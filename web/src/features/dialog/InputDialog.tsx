@@ -13,7 +13,6 @@ import {
   OptionValue,
   IDateInput,
   ITextarea,
-  IRadio,
 } from '../../interfaces/dialog';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
@@ -24,11 +23,10 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
-import RadioField from './components/fields/radio';
 
 export interface InputProps {
   heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea | IRadio>;
+  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea>;
   options?: {
     allowCancel?: boolean;
   };
@@ -141,13 +139,6 @@ const InputDialog: React.FC = () => {
                       row={row}
                       index={index}
                     />
-                  )}
-                  {row.type === 'radio' && (
-                    <RadioField
-                      register={form.register(`test.${index}.value`, { required: row.required })}
-                      row={row}
-                      index={index}
-                      />
                   )}
                   {(row.type === 'select' || row.type === 'multi-select') && (
                     <SelectField row={row} index={index} control={form.control} />
