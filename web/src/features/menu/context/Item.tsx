@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
 import { Option, ContextMenuProps } from '../../../interfaces/context';
 import { fetchNui } from '../../../utils/fetchNui';
+import SearchInput from './SearchInput';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -27,7 +28,9 @@ const clickContext = (id: string) => {
 
 const Item: React.FC<{
   option: [string, Option];
-}> = ({ option }) => {
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  search?: string;
+}> = ({ option, handleChange, search }) => {
   const button = option[1];
   const buttonKey = option[0];
 
@@ -52,8 +55,11 @@ const Item: React.FC<{
               w="100%"
               alignItems="center"
               color={button.disabled ? '#718096' : undefined}
-              onClick={() =>
+              onClick={() => {
+                if (button.type === 'search') 
+                  return;
                 !button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null
+                } 
               }
             >
               {button?.icon && (
@@ -71,7 +77,10 @@ const Item: React.FC<{
               <Box w="100%">
                 <Box>
                   <Text w="100%" fontWeight="medium" color={button.disabled ? '#718096' : undefined}>
-                    <ReactMarkdown>{button.title ? button.title : buttonKey}</ReactMarkdown>
+                    {button.type === "search" && handleChange && search !== undefined? 
+                      <SearchInput option={option} handleChange={handleChange} search={search}/> :
+                      <ReactMarkdown>{button.title ? button.title : buttonKey}</ReactMarkdown>  
+                      }
                   </Text>
                 </Box>
                 {button.description && (
