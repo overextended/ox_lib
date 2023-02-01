@@ -159,6 +159,11 @@ function lib.getVehicleProperties(vehicle)
             neons[i + 1] = IsVehicleNeonLightEnabled(vehicle, i)
         end
 
+        local deformation = {}
+        if (GetResourceState("VehicleDeformation") == "started") then
+            deformation = exports["VehicleDeformation"]:GetVehicleDeformation(vehicle)
+        end
+
         return {
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
@@ -240,6 +245,7 @@ function lib.getVehicleProperties(vehicle)
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
+            deformation = deformation,
             -- no setters?
             -- leftHeadlight = GetIsLeftVehicleHeadlightDamaged(vehicle),
             -- rightHeadlight = GetIsRightVehicleHeadlightDamaged(vehicle),
@@ -591,6 +597,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.modLightbar then
         SetVehicleMod(vehicle, 49, props.modLightbar, false)
+    end
+
+    if props.deformation and GetResourceState("VehicleDeformation") == "started" then
+        exports["VehicleDeformation"]:SetVehicleDeformation(vehicle, props.deformation)
     end
 
     return true
