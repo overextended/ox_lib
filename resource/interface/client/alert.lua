@@ -4,6 +4,8 @@ local alert = nil
 ---@field header string;
 ---@field content string;
 ---@field centered? boolean?;
+---@field size? 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+---@field overflow? boolean?;
 ---@field cancel? boolean?;
 ---@field labels? {cancel?: string, confirm?: string}
 
