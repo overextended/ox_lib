@@ -112,10 +112,22 @@ const Item: React.FC<{
                     <>
                       {button.image && <Image src={button.image} />}
                       {Array.isArray(button.metadata) ? (
-                        button.metadata.map((metadata: string | { label: string; value: any }, index: number) => (
-                          <Text key={`context-metadata-${index}`}>
-                            {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata.value}`}
-                          </Text>
+                        button.metadata.map((metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+                          <>
+                            <Text key={`context-metadata-${index}`}>
+                              {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ""}`}
+                            </Text>
+  
+                            {typeof metadata === 'object' && metadata?.progress && (
+                              <Progress
+                                value={metadata.progress || 0}
+                                size="sm"
+                                colorScheme={button.colorScheme || 'gray'}
+                                borderRadius="md"
+                                marginRight="5px"
+                              />
+                            )}
+                          </>
                         ))
                       ) : (
                         <>
