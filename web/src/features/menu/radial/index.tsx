@@ -68,6 +68,10 @@ const RadialMenu: React.FC = () => {
     setVisible(true);
   });
 
+  useNuiEvent('refreshItems', (data: MenuItem[]) => {
+    setMenu({ ...menu, items: data });
+  });
+
   const handleClick = (index: number) => {
     fetchNui('radialClick', index);
     // TODO: shouldClose
