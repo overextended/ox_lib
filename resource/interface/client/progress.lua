@@ -61,15 +61,16 @@ local controls = {
 local function startProgress(data)
     playerState.invBusy = true
     progress = data
+    local anim = data.anim
 
-    if data.anim then
-        if data.anim.dict then
-            lib.requestAnimDict(data.anim.dict)
+    if anim then
+        if anim.dict then
+            lib.requestAnimDict(anim.dict)
 
-            TaskPlayAnim(cache.ped, data.anim.dict, data.anim.clip, data.anim.blendIn or 3.0, data.anim.blendOut or 1.0, data.anim.duration or -1, data.anim.flag or 49, data.anim.playbackRate or 0, data.anim.lockX, data.anim.lockY, data.anim.lockZ)
-            RemoveAnimDict(data.anim.dict)
-        elseif data.anim.scenario then
-            TaskStartScenarioInPlace(cache.ped, data.anim.scenario, 0, data.anim.playEnter ~= nil and data.anim.playEnter or true)
+            TaskPlayAnim(cache.ped, anim.dict, anim.clip, anim.blendIn or 3.0, anim.blendOut or 1.0, anim.duration or -1, anim.flag or 49, anim.playbackRate or 0, anim.lockX, anim.lockY, anim.lockZ)
+            RemoveAnimDict(anim.dict)
+        elseif anim.scenario then
+            TaskStartScenarioInPlace(cache.ped, anim.scenario, 0, anim.playEnter ~= nil and anim.playEnter or true)
         end
     end
 
@@ -135,12 +136,14 @@ local function startProgress(data)
             end
         end
     end
-    
-    if data.anim then
-        StopAnimTask(cache.ped, data.anim.dict, data.anim.clip, 1.0)
-        Wait(0) -- This is needed here otherwise the StopAnimTask is cancelled
-    elseif data.anim.scenario then
-        ClearPedTasks(cache.ped)
+
+    if anim then
+        if anim.dict then
+            StopAnimTask(cache.ped, anim.dict, anim.clip, 1.0)
+            Wait(0) -- This is needed here otherwise the StopAnimTask is cancelled
+        else
+            ClearPedTasks(cache.ped)
+        end
     end
 
     playerState.invBusy = false
