@@ -1,21 +1,5 @@
 local isOpen = false
 local menuItems = {}
-local activeItems = {}
-
-local function getActiveItems()
-    activeItems = {}
-    for i = 1, #menuItems do
-        local item = menuItems[i]
-        if item.canInteract == nil or item.canInteract() then
-            activeItems[#activeItems+1] = {
-                icon = item.icon,
-                label = item.label,
-                key = item.key
-            }
-        end
-    end
-    return activeItems
-end
 
 function lib.addRadialItem(items)
     if table.type(items) == 'array' then
@@ -33,35 +17,23 @@ function lib.removeRadialItem(key)
         local item = menuItems[i]
         if item.key == key then
             table.remove(menuItems, i)
+            break
         end
     end
     if isOpen then
-        local refresh = false
-        for i = 1, #activeItems do
-            local activeItem = activeItems[i]
-            if activeItem.key == key then
-                table.remove(activeItems, i)
-                refresh = true
-            end
-        end
-        if refresh then
-            local items = getActiveItems()
-            SendNUIMessage({
-                action = 'refreshItems',
-                data = items
-            })
-        end
+        SendNUIMessage({
+            action = 'refreshItems',
+            data = menuItems
+        })
     end
 end
 
--- TODO: Interval canInteract checking and sending new items to NUI
 local function openRadial()
     isOpen = true
-    local items = getActiveItems()
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
-            items = items
+            items = menuItems
         }
     })
     SetNuiFocus(true, true)
