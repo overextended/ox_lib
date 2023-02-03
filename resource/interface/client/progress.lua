@@ -68,12 +68,8 @@ local function startProgress(data)
 
             TaskPlayAnim(cache.ped, data.anim.dict, data.anim.clip, data.anim.blendIn or 3.0, data.anim.blendOut or 1.0, data.anim.duration or -1, data.anim.flag or 49, data.anim.playbackRate or 0, data.anim.lockX, data.anim.lockY, data.anim.lockZ)
             RemoveAnimDict(data.anim.dict)
-
-            data.anim = true
         elseif data.anim.scenario then
             TaskStartScenarioInPlace(cache.ped, data.anim.scenario, 0, data.anim.playEnter ~= nil and data.anim.playEnter or true)
-
-            data.anim = true
         end
     end
 
@@ -129,10 +125,6 @@ local function startProgress(data)
         Wait(0)
     end
 
-    if data.anim then
-        ClearPedTasks(cache.ped)
-    end
-
     if data.prop then
         local n = #data.prop
         for i = 1, n > 0 and n or 1 do
@@ -142,6 +134,13 @@ local function startProgress(data)
                 DeleteEntity(prop)
             end
         end
+    end
+    
+    if data.anim then
+        StopAnimTask(cache.ped, data.anim.dict, data.anim.clip, 1.0)
+        Wait(0) -- This is needed here otherwise the StopAnimTask is cancelled
+    elseif data.anim.scenario then
+        ClearPedTasks(cache.ped)
     end
 
     playerState.invBusy = false
