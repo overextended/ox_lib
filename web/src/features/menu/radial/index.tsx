@@ -6,8 +6,6 @@ import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
 
-const radius = 60;
-
 export interface MenuItem {
   icon: IconProp;
   label: string;
@@ -62,8 +60,12 @@ const RadialMenu: React.FC = () => {
     sub: false,
   });
 
-  useNuiEvent('openRadialMenu', (data: { items: MenuItem[]; sub?: boolean } | false) => {
+  useNuiEvent('openRadialMenu', async (data: { items: MenuItem[]; sub?: boolean } | false) => {
     if (!data) return setVisible(false);
+    if (visible) {
+      setVisible(false);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     setMenu(data);
     setVisible(true);
   });
@@ -72,7 +74,7 @@ const RadialMenu: React.FC = () => {
     setMenu({ ...menu, items: data });
   });
 
-  const handleClick = (index: number) => {
+  const handleClick = async (index: number) => {
     fetchNui('radialClick', index);
     // TODO: shouldClose
     setVisible(false);
@@ -124,11 +126,18 @@ const RadialMenu: React.FC = () => {
                 </>
               );
             })}
-            <g transform="translate(175, 175)" onClick={() => setVisible(false)}>
+            {/* TODO: rotate go back icon */}
+            <g
+              transform={`translate(175, 175)`}
+              onClick={() => {
+                setVisible(false);
+                menu.sub && fetchNui('radialBack');
+              }}
+            >
               <circle r={30} className={classes.centerCircle} />
             </g>
             <FontAwesomeIcon
-              icon="xmark"
+              icon={!menu.sub ? 'xmark' : 'arrow-rotate-left'}
               className={classes.centerIcon}
               color="#fff"
               width={28}
