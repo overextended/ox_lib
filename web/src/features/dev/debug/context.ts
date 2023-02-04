@@ -10,6 +10,32 @@ export const debugContext = () => {
         options: [
           { title: 'Empty button' },
           {
+            title: 'Karin Kuruma',
+            image: 'https://cdn.discordapp.com/attachments/1063098499027173461/1064276343585505330/screenshot.jpg',
+            arrow: true,
+            colorScheme: 'blue',
+            metadata: [
+              {
+                ["label"]: "Body",
+                ["value"]: "55%",
+                ["progress"]: 55
+              },
+              {
+                ["label"]: "Engine",
+                ["value"]: "100%",
+                ["progress"]: 100
+              },
+              {
+                ["label"]: "Oil",
+                ["progress"]: 11
+              },
+              {
+                ["label"]: "Fuel",
+                ["progress"]: 87
+              },
+            ],
+          },
+          {
             title: 'Example button',
             description: 'Example button description',
             icon: 'inbox',
