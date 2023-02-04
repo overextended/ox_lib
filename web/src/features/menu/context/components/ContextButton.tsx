@@ -96,8 +96,8 @@ const ContextButton: React.FC<{
                   {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ""}`}
                 </Text>
 
-                {typeof metadata === 'object' && metadata?.progress && (
-                  <Progress value={metadata.progress || 0} size="sm" color={button.colorScheme || 'dark.3'} />
+                {typeof metadata === 'object' && metadata.progress !== undefined && (
+                  <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
                 )}
               </>
             ))
