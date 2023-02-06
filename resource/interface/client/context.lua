@@ -8,6 +8,8 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field icon? string
 ---@field iconColor? string
 ---@field onSelect? fun(args: any)
+---@field onEnter? fun(args: any)
+---@field onLeave? fun(args: any)
 ---@field arrow? boolean
 ---@field description? string
 ---@field metadata? string | { [string]: any } | string[]
@@ -115,7 +117,36 @@ RegisterNUICallback('clickContext', function(id, cb)
     })
 end)
 
+RegisterNUICallback('onEnter', function(id, cb)
+    cb(1)
+
+    if math.type(tonumber(id)) == 'float' then
+        id = math.tointeger(id)
+    elseif tonumber(id) then
+        id += 1
+    end
+
+    local data = contextMenus[openContextMenu].options[id]
+
+    if not data.onEnter then return end
+
+    if data.onEnter then data.onEnter(data.args) end
+end)
+
+RegisterNUICallback('onLeave', function(id, cb)
+    cb(1)
+
+    if math.type(tonumber(id)) == 'float' then
+        id = math.tointeger(id)
+    elseif tonumber(id) then
+        id += 1
+    end
+
+    local data = contextMenus[openContextMenu].options[id]
+
+    if not data.onLeave then return end
+
+    if data.onLeave then data.onLeave(data.args) end
+end)
+
 RegisterNUICallback('closeContext', closeContext)
-
-
-

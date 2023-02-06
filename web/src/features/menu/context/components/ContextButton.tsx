@@ -12,6 +12,14 @@ const clickContext = (id: string) => {
   fetchNui('clickContext', id);
 };
 
+const onEnterContext = (id: string) => {
+  fetchNui('onEnter', id);
+};
+
+const onLeaveContext = (id: string) => {
+  fetchNui('onLeave', id);
+};
+
 const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
     justifyContent: 'flex-start',
@@ -52,6 +60,8 @@ const ContextButton: React.FC<{
           <Button
             classNames={{ inner: classes.inner, label: classes.label }}
             onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
+            onMouseEnter={() => (!button.disabled ? onEnterContext(buttonKey) : null)}
+            onMouseLeave={() => (!button.disabled ? onLeaveContext(buttonKey) : null)}
             variant="default"
             h="fit-content"
             p={10}
@@ -90,17 +100,19 @@ const ContextButton: React.FC<{
         <HoverCard.Dropdown className={classes.dropdown}>
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
-            button.metadata.map((metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
-              <>
-                <Text key={`context-metadata-${index}`}>
-                  {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ""}`}
-                </Text>
+            button.metadata.map(
+              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+                <>
+                  <Text key={`context-metadata-${index}`}>
+                    {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
+                  </Text>
 
-                {typeof metadata === 'object' && metadata.progress !== undefined && (
-                  <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
-                )}
-              </>
-            ))
+                  {typeof metadata === 'object' && metadata.progress !== undefined && (
+                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
+                  )}
+                </>
+              )
+            )
           ) : (
             <>
               {typeof button.metadata === 'object' &&
