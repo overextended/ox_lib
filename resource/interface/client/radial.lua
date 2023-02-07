@@ -10,8 +10,11 @@ end
 
 function lib.showRadial(id)
     local radial = menus[id]
+
     if not radial then return error('No radial menu with such id found.') end
+
     currentRadial = radial
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
@@ -29,13 +32,16 @@ function lib.hideRadial()
 end
 
 function lib.addRadialItem(items)
+    local menuSize = #menuItems
+
     if table.type(items) == 'array' then
         for i = 1, #items do
             local item = items[i]
-            menuItems[#menuItems+1] = item
+            menuSize += 1
+            menuItems[menuSize] = item
         end
     else
-        menuItems[#menuItems+1] = items
+        menuItems[menuSize + 1] = items
     end
 end
 
@@ -58,28 +64,33 @@ end
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
     local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
+
     if item.menu then lib.showRadial(item.menu) end
     if item.onSelect then item.onSelect() end
+
     lib.hideRadial()
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
     if currentRadial.menu then
-        lib.showRadial(currentRadial.menu)
-    else
-        currentRadial = nil
-        SendNUIMessage({
-            action = 'openRadialMenu',
-            data = {
-                items = menuItems
-            }
-        })
+        return lib.showRadial(currentRadial.menu)
     end
+
+    currentRadial = nil
+
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = {
+            items = menuItems
+        }
+    })
 end)
 
 local function openRadial()
+    if #menuItems == 0 then return end
     isOpen = true
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
@@ -89,6 +100,7 @@ local function openRadial()
     SetNuiFocus(true, true)
     SetNuiFocusKeepInput(true)
     SetCursorLocation(0.5, 0.5)
+
     CreateThread(function()
         while isOpen do
             DisablePlayerFiring(cache.playerId, true)
@@ -100,12 +112,16 @@ local function openRadial()
 end
 
 local function closeRadial()
+    if not isOpen then return end
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = false
     })
     SetNuiFocus(false, false)
+
     isOpen = false
+
     if currentRadial then currentRadial = nil end
 end
 
