@@ -8,18 +8,6 @@ const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
 };
 
-const clickContext = (id: string) => {
-  fetchNui('clickContext', id);
-};
-
-const onEnterContext = (id: string) => {
-  fetchNui('onEnter', id);
-};
-
-const onLeaveContext = (id: string) => {
-  fetchNui('onLeave', id);
-};
-
 const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
     justifyContent: 'flex-start',
@@ -59,9 +47,11 @@ const ContextButton: React.FC<{
         <HoverCard.Target>
           <Button
             classNames={{ inner: classes.inner, label: classes.label }}
-            onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
-            onMouseEnter={() => (!button.disabled ? onEnterContext(buttonKey) : null)}
-            onMouseLeave={() => (!button.disabled ? onLeaveContext(buttonKey) : null)}
+            onClick={() =>
+              !button.disabled ? (button.menu ? openMenu(button.menu) : fetchNui('clickContext', buttonKey)) : null
+            }
+            onMouseEnter={() => (!button.disabled ? fetchNui('onHover', { hoverState: true, id: buttonKey }) : null)}
+            onMouseLeave={() => (!button.disabled ? fetchNui('onHover', { hoverState: false, id: buttonKey }) : null)}
             variant="default"
             h="fit-content"
             p={10}

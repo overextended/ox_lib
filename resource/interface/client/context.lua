@@ -8,8 +8,7 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field icon? string
 ---@field iconColor? string
 ---@field onSelect? fun(args: any)
----@field onEnter? fun(args: any)
----@field onLeave? fun(args: any)
+---@field onHover? fun(hoverState: boolean, args: any)
 ---@field arrow? boolean
 ---@field description? string
 ---@field metadata? string | { [string]: any } | string[]
@@ -44,6 +43,16 @@ local function closeContext(_, cb, onExit)
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
 
     openContextMenu = nil
+end
+
+local function checkID(id) 
+    if math.type(tonumber(id)) == 'float' then
+        id = math.tointeger(id)
+    elseif tonumber(id) then
+        id += 1
+    end
+
+    return id
 end
 
 ---@param id string
@@ -91,14 +100,11 @@ RegisterNUICallback('openContext', function(data, cb)
     lib.showContext(data.id)
 end)
 
+
 RegisterNUICallback('clickContext', function(id, cb)
     cb(1)
 
-    if math.type(tonumber(id)) == 'float' then
-        id = math.tointeger(id)
-    elseif tonumber(id) then
-        id += 1
-    end
+    local id = checkID(id)
 
     local data = contextMenus[openContextMenu].options[id]
 
@@ -117,36 +123,18 @@ RegisterNUICallback('clickContext', function(id, cb)
     })
 end)
 
-RegisterNUICallback('onEnter', function(id, cb)
+RegisterNUICallback('onHover', function(data, cb)
     cb(1)
 
-    if math.type(tonumber(id)) == 'float' then
-        id = math.tointeger(id)
-    elseif tonumber(id) then
-        id += 1
-    end
+    local id = checkID(data.id)
+    local hoverState = data.hoverState
 
     local data = contextMenus[openContextMenu].options[id]
 
-    if not data.onEnter then return end
+    if not data.onHover then return end
 
-    if data.onEnter then data.onEnter(data.args) end
-end)
-
-RegisterNUICallback('onLeave', function(id, cb)
-    cb(1)
-
-    if math.type(tonumber(id)) == 'float' then
-        id = math.tointeger(id)
-    elseif tonumber(id) then
-        id += 1
-    end
-
-    local data = contextMenus[openContextMenu].options[id]
-
-    if not data.onLeave then return end
-
-    if data.onLeave then data.onLeave(data.args) end
+    if data.onHover and hoverState == true then data.onHover(true, data.args) end
+    if data.onHover and hoverState == false then data.onHover(false, data.args) end
 end)
 
 RegisterNUICallback('closeContext', closeContext)
