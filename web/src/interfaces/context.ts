@@ -10,7 +10,7 @@ export interface Option {
   iconColor?: string;
   progress?: number;
   colorScheme?: string;
-  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress: number; }[];
+  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
   disabled?: boolean;
   event?: string;
   serverEvent?: string;
