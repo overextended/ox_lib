@@ -33,14 +33,17 @@ end
 
 function lib.addRadialItem(items)
     local menuSize = #menuItems
+    local invokingResource = GetInvokingResource()
 
     if table.type(items) == 'array' then
         for i = 1, #items do
             local item = items[i]
+            item.resource = invokingResource
             menuSize += 1
             menuItems[menuSize] = item
         end
     else
+        items.resource = invokingResource
         menuItems[menuSize + 1] = items
     end
 end
@@ -130,3 +133,13 @@ RegisterCommand('+ox_lib-radial', openRadial)
 RegisterCommand('-ox_lib-radial', closeRadial)
 
 RegisterKeyMapping('+ox_lib-radial', 'Open radial menu', 'keyboard', 'z')
+
+AddEventHandler('onClientResourceStop', function(resource)
+    for i = #menuItems, 1, -1 do
+        local item = menuItems[i]
+
+        if item.resource == resource then
+            table.remove(menuItems, i)
+        end
+    end
+end)
