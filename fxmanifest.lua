@@ -41,6 +41,7 @@ client_scripts {
 	'imports/callback/client.lua',
 	'imports/requestModel/client.lua',
 	'imports/requestAnimDict/client.lua',
+	'imports/addKeybind/client.lua',
     'resource/**/client.lua',
     'resource/**/client/*.lua'
 }
