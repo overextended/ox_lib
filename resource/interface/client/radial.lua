@@ -39,10 +39,10 @@ function lib.addRadialItem(items)
     end
 end
 
-function lib.removeRadialItem(key)
+function lib.removeRadialItem(id)
     for i = 1, #menuItems do
         local item = menuItems[i]
-        if item.key == key then
+        if item.id == id then
             table.remove(menuItems, i)
             break
         end
