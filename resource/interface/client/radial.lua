@@ -8,7 +8,7 @@ function lib.registerRadial(radial)
     menus[radial.id] = radial
 end
 
-function lib.showRadial(id)
+local function showRadial(id)
     local radial = menus[id]
 
     if not radial then return error('No radial menu with such id found.') end
@@ -25,10 +25,17 @@ function lib.showRadial(id)
 end
 
 function lib.hideRadial()
+    if not isOpen then return end
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = false
     })
+
+    SetNuiFocus(false, false)
+
+    isOpen = false
+    currentRadial = nil
 end
 
 function lib.addRadialItem(items)
@@ -68,8 +75,8 @@ RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
     local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
 
-    if item.menu then lib.showRadial(item.menu) end
     if item.onSelect then item.onSelect() end
+    if item.menu then return showRadial(item.menu) end
 
     lib.hideRadial()
 end)
@@ -77,7 +84,7 @@ end)
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
     if currentRadial.menu then
-        return lib.showRadial(currentRadial.menu)
+        return showRadial(currentRadial.menu)
     end
 
     currentRadial = nil
@@ -90,49 +97,34 @@ RegisterNUICallback('radialBack', function(_, cb)
     })
 end)
 
-local function openRadial()
-    if #menuItems == 0 then return end
-    isOpen = true
+lib.addKeybind({
+    name = 'ox_lib-radial',
+    description = 'Open radial menu',
+    defaultKey = 'z',
+    onPressed = function()
+        if isOpen or #menuItems == 0 then return end
 
-    SendNUIMessage({
-        action = 'openRadialMenu',
-        data = {
-            items = menuItems
-        }
-    })
-    SetNuiFocus(true, true)
-    SetNuiFocusKeepInput(true)
-    SetCursorLocation(0.5, 0.5)
+        isOpen = true
 
-    CreateThread(function()
+        SendNUIMessage({
+            action = 'openRadialMenu',
+            data = {
+                items = menuItems
+            }
+        })
+        SetNuiFocus(true, true)
+        SetNuiFocusKeepInput(true)
+        SetCursorLocation(0.5, 0.5)
+
         while isOpen do
             DisablePlayerFiring(cache.playerId, true)
             DisableControlAction(0, 1, true)
             DisableControlAction(0, 2, true)
             Wait(0)
         end
-    end)
-end
-
-local function closeRadial()
-    if not isOpen then return end
-
-    SendNUIMessage({
-        action = 'openRadialMenu',
-        data = false
-    })
-    SetNuiFocus(false, false)
-
-    isOpen = false
-
-    if currentRadial then currentRadial = nil end
-end
-
-RegisterCommand('+ox_lib-radial', openRadial)
-
-RegisterCommand('-ox_lib-radial', closeRadial)
-
-RegisterKeyMapping('+ox_lib-radial', 'Open radial menu', 'keyboard', 'z')
+    end,
+    onReleased = lib.hideRadial,
+})
 
 AddEventHandler('onClientResourceStop', function(resource)
     for i = #menuItems, 1, -1 do
