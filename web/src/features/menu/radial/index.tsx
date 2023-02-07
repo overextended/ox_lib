@@ -74,12 +74,6 @@ const RadialMenu: React.FC = () => {
     setMenu({ ...menu, items: data });
   });
 
-  const handleClick = async (index: number) => {
-    fetchNui('radialClick', index);
-    // TODO: shouldClose
-    setVisible(false);
-  };
-
   return (
     <>
       <Box className={classes.wrapper}>
@@ -102,7 +96,7 @@ const RadialMenu: React.FC = () => {
                   <g
                     transform={`rotate(-${index * pieAngle} 175 175)`}
                     className={classes.sector}
-                    onClick={() => handleClick(index)}
+                    onClick={() => fetchNui('radialClick', index)}
                   >
                     <path
                       d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
@@ -130,8 +124,7 @@ const RadialMenu: React.FC = () => {
             <g
               transform={`translate(175, 175)`}
               onClick={() => {
-                setVisible(false);
-                menu.sub && fetchNui('radialBack');
+                menu.sub ? fetchNui('radialBack') : setVisible(false);
               }}
             >
               <circle r={30} className={classes.centerCircle} />

@@ -21,6 +21,13 @@ function lib.showRadial(id)
     })
 end
 
+function lib.hideRadial()
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = false
+    })
+end
+
 function lib.addRadialItem(items)
     if table.type(items) == 'array' then
         for i = 1, #items do
@@ -53,9 +60,9 @@ RegisterNUICallback('radialClick', function(index, cb)
     local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
     if item.menu then lib.showRadial(item.menu) end
     if item.onSelect then item.onSelect() end
+    lib.hideRadial()
 end)
 
--- TODO: fix transition?
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
     if currentRadial.menu then
