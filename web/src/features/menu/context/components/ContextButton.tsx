@@ -50,8 +50,8 @@ const ContextButton: React.FC<{
             onClick={() =>
               !button.disabled ? (button.menu ? openMenu(button.menu) : fetchNui('clickContext', buttonKey)) : null
             }
-            onMouseEnter={() => (!button.disabled ? fetchNui('onHover', { entered: true, id: buttonKey }) : null)}
-            onMouseLeave={() => (!button.disabled ? fetchNui('onHover', { entered: false, id: buttonKey }) : null)}
+            onMouseEnter={() => (!button.disabled ? fetchNui('onHover', { hoverState: true, id: buttonKey }) : null)}
+            onMouseLeave={() => (!button.disabled ? fetchNui('onHover', { hoverState: false, id: buttonKey }) : null)}
             variant="default"
             h="fit-content"
             p={10}

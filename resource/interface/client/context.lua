@@ -1,5 +1,5 @@
 local contextMenus = {}
-local currentHover = nil
+local lastHoveredContextItem = nil
 local openContextMenu = nil
 local keepInput = IsNuiFocusKeepingInput()
 
@@ -43,16 +43,16 @@ local function closeContext(_, cb, onExit)
 
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
 
-    if currentHover then
-        local data = contextMenus[openContextMenu].options[currentHover]
+    if lastHoveredContextItem then
+        local data = contextMenus[openContextMenu].options[lastHoveredContextItem]
         if data.onHover then data.onHover(false, data.args) end
-        currentHover = nil
+        lastHoveredContextItem = nil
     end
 
     openContextMenu = nil
 end
 
-local function checkID(id)
+local function checkID(id) 
     if math.type(tonumber(id)) == 'float' then
         id = math.tointeger(id)
     elseif tonumber(id) then
@@ -125,10 +125,10 @@ RegisterNUICallback('clickContext', function(id, cb)
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
 
-    if currentHover then
-        local data = contextMenus[openContextMenu].options[currentHover]
-        if data.onHover then data.onHover(false) end
-        currentHover = nil
+    if lastHoveredContextItem then
+        local data = contextMenus[openContextMenu].options[lastHoveredContextItem]
+        if data.onHover then data.onHover(false, data.args) end
+        lastHoveredContextItem = nil
     end
 
     SendNUIMessage({
@@ -140,13 +140,20 @@ RegisterNUICallback('onHover', function(data, cb)
     cb(1)
 
     local id = checkID(data.id)
-    local entered = data.entered
+    local hoverState = data.hoverState
+
     local data = contextMenus[openContextMenu].options[id]
 
     if not data.onHover then return end
 
-    currentHover = entered and id
-    data.onHover(entered)
+    if data.onHover and hoverState == true then
+        lastHoveredContextItem = id
+        data.onHover(true, data.args)
+    end
+    if data.onHover and hoverState == false then
+        lastHoveredContextItem = nil
+        data.onHover(false, data.args)
+    end
 end)
 
 RegisterNUICallback('closeContext', closeContext)
