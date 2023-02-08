@@ -6,7 +6,6 @@ interface ContextMenuItem {
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
   onSelect?: (args: any) => void;
-  onHover?: (hoverState: boolean, args: any) => void;
   arrow?: boolean;
   description?: string;
   metadata?: string | { [key: string]: any } | string[];

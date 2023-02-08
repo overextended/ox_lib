@@ -8,6 +8,10 @@ const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
 };
 
+const clickContext = (id: string) => {
+  fetchNui('clickContext', id);
+};
+
 const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
     justifyContent: 'flex-start',
@@ -47,11 +51,7 @@ const ContextButton: React.FC<{
         <HoverCard.Target>
           <Button
             classNames={{ inner: classes.inner, label: classes.label }}
-            onClick={() =>
-              !button.disabled ? (button.menu ? openMenu(button.menu) : fetchNui('clickContext', buttonKey)) : null
-            }
-            onMouseEnter={() => (!button.disabled ? fetchNui('onHover', { hoverState: true, id: buttonKey }) : null)}
-            onMouseLeave={() => (!button.disabled ? fetchNui('onHover', { hoverState: false, id: buttonKey }) : null)}
+            onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
             variant="default"
             h="fit-content"
             p={10}
@@ -90,19 +90,17 @@ const ContextButton: React.FC<{
         <HoverCard.Dropdown className={classes.dropdown}>
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
-            button.metadata.map(
-              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
-                <>
-                  <Text key={`context-metadata-${index}`}>
-                    {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
-                  </Text>
+            button.metadata.map((metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+              <>
+                <Text key={`context-metadata-${index}`}>
+                  {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ""}`}
+                </Text>
 
-                  {typeof metadata === 'object' && metadata.progress !== undefined && (
-                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
-                  )}
-                </>
-              )
-            )
+                {typeof metadata === 'object' && metadata.progress !== undefined && (
+                  <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
+                )}
+              </>
+            ))
           ) : (
             <>
               {typeof button.metadata === 'object' &&
