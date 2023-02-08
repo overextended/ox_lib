@@ -2,7 +2,6 @@ local isOpen = false
 local menus = {}
 local menuItems = {}
 local currentRadial = nil
-local currentHover = nil
 
 
 function lib.registerRadial(radial)
@@ -25,18 +24,8 @@ local function showRadial(id)
     })
 end
 
-local function getRadialItem(index)
-    return not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
-end
-
 function lib.hideRadial()
     if not isOpen then return end
-
-    if currentHover then
-        local item = getRadialItem(currentHover)
-        item.onHover(false)
-        currentHover = nil
-    end
 
     SendNUIMessage({
         action = 'openRadialMenu',
@@ -82,18 +71,9 @@ function lib.removeRadialItem(id)
     end
 end
 
-RegisterNUICallback('radialHover', function(data, cb)
-    cb(1)
-    local item = getRadialItem(data.index)
-
-    if not item.onHover then return end
-    item.onHover(data.entered)
-    currentHover = data.entered and data.index
-end)
-
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
-    local item = getRadialItem(index)
+    local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
 
     if item.onSelect then item.onSelect() end
     if item.menu then return showRadial(item.menu) end
