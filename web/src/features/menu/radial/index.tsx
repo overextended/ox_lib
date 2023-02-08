@@ -97,6 +97,8 @@ const RadialMenu: React.FC = () => {
                     transform={`rotate(-${index * pieAngle} 175 175)`}
                     className={classes.sector}
                     onClick={() => fetchNui('radialClick', index)}
+                    onMouseEnter={() => fetchNui('radialHover', { index, entered: true })}
+                    onMouseLeave={() => fetchNui('radialHover', { index, entered: false })}
                   >
                     <path
                       d={`M175.01,175.01 l175,0 A175.01,175.01 0 0,0 ${175 + 175 * Math.cos(-degToRad(pieAngle))}, ${
