@@ -97,6 +97,17 @@ RegisterNUICallback('radialBack', function(_, cb)
     })
 end)
 
+RegisterNUICallback('radialClose', function(_, cb)
+    cb(1)
+
+    if not isOpen then return end
+
+    SetNuiFocus(false, false)
+
+    isOpen = false
+    currentRadial = nil
+end)
+
 lib.addKeybind({
     name = 'ox_lib-radial',
     description = 'Open radial menu',

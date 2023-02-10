@@ -124,7 +124,11 @@ const RadialMenu: React.FC = () => {
             <g
               transform={`translate(175, 175)`}
               onClick={() => {
-                menu.sub ? fetchNui('radialBack') : setVisible(false);
+                if (menu.sub) fetchNui('radialBack');
+                else {
+                  setVisible(false);
+                  fetchNui('radialClose');
+                }
               }}
             >
               <circle r={30} className={classes.centerCircle} />
