@@ -76,7 +76,7 @@ const RadialMenu: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.wrapper}>
+      <Box className={classes.wrapper} onContextMenu={() => menu.sub && fetchNui('radialBack')}>
         <ScaleFade visible={visible}>
           <svg width="350px" height="350px" transform="rotate(90)">
             {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
