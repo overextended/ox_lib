@@ -10,6 +10,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { isEnvBrowser } from './utils/misc';
 import LocaleProvider from './providers/LocaleProvider';
 import { MantineProvider } from '@mantine/core';
+import ConfigProvider from './providers/ConfigProvider';
 
 library.add(fas, far, fab);
 
@@ -27,9 +28,9 @@ const root = document.getElementById('root');
 ReactDOM.createRoot(root!).render(
   <React.StrictMode>
     <LocaleProvider>
-      <MantineProvider withNormalizeCSS withGlobalStyles theme={theme}>
+      <ConfigProvider>
         <App />
-      </MantineProvider>
+      </ConfigProvider>
     </LocaleProvider>
   </React.StrictMode>
 );
