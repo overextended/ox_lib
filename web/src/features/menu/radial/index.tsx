@@ -44,9 +44,15 @@ const useStyles = createStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  centerIconContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    pointerEvents: 'none',
+  },
   centerIcon: {
     color: '#fff',
-    pointerEvents: 'none',
   },
 }));
 
@@ -120,7 +126,6 @@ const RadialMenu: React.FC = () => {
                 </>
               );
             })}
-            {/* TODO: rotate go back icon */}
             <g
               transform={`translate(175, 175)`}
               onClick={() => {
@@ -133,16 +138,16 @@ const RadialMenu: React.FC = () => {
             >
               <circle r={30} className={classes.centerCircle} />
             </g>
+          </svg>
+          <div className={classes.centerIconContainer}>
             <FontAwesomeIcon
               icon={!menu.sub ? 'xmark' : 'arrow-rotate-left'}
+              fixedWidth
               className={classes.centerIcon}
               color="#fff"
-              width={28}
-              height={28}
-              x={175 - 28 / 2}
-              y={175 - 28 / 2}
+              size="2x"
             />
-          </svg>
+          </div>
         </ScaleFade>
       </Box>
     </>
