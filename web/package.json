@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "ox_lib",
   "version": "0.1.0",
   "homepage": "web/build",
   "private": true,
@@ -13,13 +13,6 @@
     "@mantine/core": "^5.10.0",
     "@mantine/dates": "^5.10.0",
     "@mantine/hooks": "^5.10.0",
-    "@testing-library/jest-dom": "^5.16.3",
-    "@testing-library/react": "^12.1.4",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^16.11.26",
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^3.0.1",
     "dayjs": "^1.11.7",
     "focus-trap-react": "^9.0.2",
@@ -41,35 +34,19 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@babel/core": ">=7.0.0 <8.0.0",
     "@babel/plugin-syntax-flow": "^7.14.5",
     "@babel/plugin-transform-react-jsx": "^7.14.9",
-    "@testing-library/dom": "^8.11.4",
     "autoprefixer": "^10.0.2",
     "cross-env": "^7.0.3",
     "csstype": "^3.0.10",
     "postcss": "^8.1.0",
     "prop-types": "^15.8.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "@types/node": "^16.11.26",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8"
   },
   "pnpm": {
     "patchedDependencies": {
