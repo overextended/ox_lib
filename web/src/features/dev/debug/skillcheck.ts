@@ -2,10 +2,13 @@ import { debugData } from '../../../utils/debugData';
 import { GameDifficulty } from '../../skillcheck';
 
 export const debugSkillCheck = () => {
-  debugData<GameDifficulty | GameDifficulty[]>([
+  debugData<{ difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] }>([
     {
       action: 'startSkillCheck',
-      data: ['easy', 'easy', 'hard'],
+      data: {
+        difficulty: ['easy', 'easy', 'hard'],
+        inputs: ['W', 'A', 'S', 'D'],
+      },
     },
   ]);
 };

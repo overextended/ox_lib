@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import { SkillCheckProps } from './index';
-// import { useInterval } from '@chakra-ui/react';
 import { useInterval } from '@mantine/hooks';
 import { circleCircumference } from './index';
 
@@ -16,7 +15,7 @@ interface Props {
 
 const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete, skillCheck, className }) => {
   const [indicatorAngle, setIndicatorAngle] = useState(-90);
-  const isKeyPressed = useKeyPress('e');
+  const [keyPressed, setKeyPressed] = useState(false);
   const interval = useInterval(
     () =>
       setIndicatorAngle((prevState) => {
@@ -25,8 +24,17 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
     1
   );
 
+  const keyHandler = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== skillCheck.key.toLowerCase()) return;
+      setKeyPressed(true);
+    },
+    [skillCheck]
+  );
+
   useEffect(() => {
     setIndicatorAngle(-90);
+    window.addEventListener('keydown', keyHandler);
     interval.start();
   }, [skillCheck]);
 
@@ -38,13 +46,16 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
   }, [indicatorAngle]);
 
   useEffect(() => {
-    if (!isKeyPressed) return;
+    if (!keyPressed) return;
 
     interval.stop();
 
+    setKeyPressed(false);
+    window.removeEventListener('keydown', keyHandler);
+
     if (indicatorAngle < angle || indicatorAngle > angle + offset) handleComplete(false);
     else handleComplete(true);
-  }, [isKeyPressed]);
+  }, [keyPressed]);
 
   return (
     <circle

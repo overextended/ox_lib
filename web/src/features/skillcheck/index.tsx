@@ -15,6 +15,7 @@ export interface SkillCheckProps {
   angle: number;
   difficultyOffset: number;
   difficulty: GameDifficulty;
+  key: string;
 }
 
 export const circleCircumference = 2 * 50 * Math.PI;
@@ -65,49 +66,56 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const SkillCheck: React.FC = () => {
-  const theme = useMantineTheme();
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
-  const dataRef = useRef<GameDifficulty | GameDifficulty[] | null>(null);
+  const dataRef = useRef<{ difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] } | null>(null);
   const dataIndexRef = useRef<number>(0);
   const [skillCheck, setSkillCheck] = useState<SkillCheckProps>({
     angle: 0,
     difficultyOffset: 50,
     difficulty: 'easy',
+    key: 'e',
   });
 
-  useNuiEvent('startSkillCheck', (data: GameDifficulty | GameDifficulty[]) => {
+  useNuiEvent('startSkillCheck', (data: { difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] }) => {
     dataRef.current = data;
     dataIndexRef.current = 0;
-    const gameData = Array.isArray(data) ? data[0] : data;
+    const gameData = Array.isArray(data.difficulty) ? data.difficulty[0] : data.difficulty;
     const offset = typeof gameData === 'object' ? gameData.areaSize : difficultyOffsets[gameData];
+    const randomKey = data.inputs ? data.inputs[Math.floor(Math.random() * data.inputs.length)] : 'e';
     setSkillCheck({
       angle: -90 + getRandomAngle(120, 360 - offset),
       difficultyOffset: offset,
       difficulty: gameData,
+      key: randomKey,
     });
 
     setVisible(true);
   });
 
   const handleComplete = (success: boolean) => {
-    if (!success || !Array.isArray(dataRef.current)) {
+    if (!dataRef.current) return;
+    if (!success || !Array.isArray(dataRef.current.difficulty)) {
       setVisible(false);
       return fetchNui('skillCheckOver', success);
     }
 
-    if (dataIndexRef.current >= dataRef.current.length - 1) {
+    if (dataIndexRef.current >= dataRef.current.difficulty.length - 1) {
       setVisible(false);
       return fetchNui('skillCheckOver', success);
     }
 
     dataIndexRef.current++;
-    const data = dataRef.current[dataIndexRef.current];
+    const data = dataRef.current.difficulty[dataIndexRef.current];
+    const key = dataRef.current.inputs
+      ? dataRef.current.inputs[Math.floor(Math.random() * dataRef.current.inputs.length)]
+      : 'e';
     const offset = typeof data === 'object' ? data.areaSize : difficultyOffsets[data];
     setSkillCheck({
       angle: -90 + getRandomAngle(120, 360 - offset),
       difficultyOffset: offset,
       difficulty: data,
+      key,
     });
   };
 
@@ -145,7 +153,7 @@ const SkillCheck: React.FC = () => {
               skillCheck={skillCheck}
             />
           </svg>
-          <Box className={classes.button}>E</Box>
+          <Box className={classes.button}>{skillCheck.key.toUpperCase()}</Box>
         </>
       )}
     </>
