@@ -1,6 +1,6 @@
 import { MultiSelect, Select } from '@mantine/core';
 import { ISelect } from '../../../../interfaces/dialog';
-import { Control, FieldValues, useController, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

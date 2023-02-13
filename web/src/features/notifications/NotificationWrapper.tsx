@@ -6,16 +6,6 @@ import ReactMarkdown from 'react-markdown';
 import { Avatar, createStyles, Group, Stack, Box, Text, keyframes } from '@mantine/core';
 import React from 'react';
 
-export interface NotificationProps {
-  title?: string;
-  description?: string;
-  duration?: number;
-  position?: ToastPosition | 'top' | 'bottom';
-  variant?: string;
-  status?: 'info' | 'warning' | 'success' | 'error';
-  id?: number;
-}
-
 export interface CustomNotificationProps {
   style?: React.CSSProperties;
   description?: string;

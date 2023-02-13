@@ -1,5 +1,4 @@
 import { Checkbox } from '@mantine/core';
-import { useEffect } from 'react';
 import { ICheckbox } from '../../../../interfaces/dialog';
 import { UseFormRegisterReturn } from 'react-hook-form';
 

@@ -1,4 +1,4 @@
-import { CustomNotificationProps, NotificationProps } from '../../notifications/NotificationWrapper';
+import { CustomNotificationProps } from '../../notifications/NotificationWrapper';
 import { debugData } from '../../../utils/debugData';
 
 export const debugCustomNotification = () => {

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import Indicator from './indicator';
 import { fetchNui } from '../../utils/fetchNui';
-import { useMantineTheme, Box, createStyles } from '@mantine/core';
+import { Box, createStyles } from '@mantine/core';
 
 interface CustomGameDifficulty {
   areaSize: number;

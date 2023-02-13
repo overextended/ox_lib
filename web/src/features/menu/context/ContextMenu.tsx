@@ -1,5 +1,5 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { Box, Stack, Text, Flex, Transition } from '@mantine/core';
+import { Box, Stack, Text, Flex } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ContextMenuProps } from '../../../interfaces/context';
 import ContextButton from './components/ContextButton';

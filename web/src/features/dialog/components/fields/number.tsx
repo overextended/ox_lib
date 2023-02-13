@@ -1,8 +1,7 @@
 import { NumberInput } from '@mantine/core';
-import { useEffect } from 'react';
 import { INumber } from '../../../../interfaces/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Control, useController, UseFormRegisterReturn } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 
 interface Props {

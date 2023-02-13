@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useKeyPress } from '../../hooks/useKeyPress';
 import { SkillCheckProps } from './index';
 import { useInterval } from '@mantine/hooks';
 import { circleCircumference } from './index';

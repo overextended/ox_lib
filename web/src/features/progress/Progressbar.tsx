@@ -55,7 +55,6 @@ const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
-  const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
     setVisible(false);
@@ -63,14 +62,12 @@ const Progressbar: React.FC = () => {
   };
 
   const progressCancel = () => {
-    setCancelled(true);
     setVisible(false);
   };
 
   useNuiEvent('progressCancel', progressCancel);
 
   useNuiEvent<ProgressbarProps>('progress', (data) => {
-    setCancelled(false);
     setVisible(true);
     setLabel(data.label);
     setDuration(data.duration);
