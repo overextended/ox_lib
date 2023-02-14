@@ -29,9 +29,9 @@ const DateField: React.FC<Props> = (props) => {
           onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
           label={props.row.label}
           description={props.row.description}
-          placeholder={props.row.placeholder}
+          placeholder={props.row.format}
           disabled={props.row.disabled}
-          inputFormat="DD/MM/YYYY"
+          inputFormat={props.row.format}
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
           icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
@@ -56,9 +56,9 @@ const DateField: React.FC<Props> = (props) => {
           }
           label={props.row.label}
           description={props.row.description}
-          placeholder={props.row.placeholder}
+          placeholder={props.row.format}
           disabled={props.row.disabled}
-          inputFormat="DD/MM/YYYY"
+          inputFormat={props.row.format}
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
           icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}

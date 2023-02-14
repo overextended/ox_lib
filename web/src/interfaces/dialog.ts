@@ -1,15 +1,18 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-export interface IInput {
-  type: 'input';
+type BaseField<T, U> = {
+  type: T;
   label: string;
+  description?: string;
   placeholder?: string;
-  default?: string;
-  password?: boolean;
+  default?: U;
   icon?: IconProp;
   disabled?: boolean;
-  description?: string;
   required?: boolean;
+};
+
+export interface IInput extends BaseField<'input', string> {
+  password?: boolean;
 }
 
 export interface ICheckbox {
@@ -22,90 +25,40 @@ export interface ICheckbox {
 }
 
 export type OptionValue = { value: string; label?: string };
-export interface ISelect {
-  type: 'select' | 'multi-select';
-  label: string;
-  default?: string | string[];
+export interface ISelect extends BaseField<'select' | 'multi-select', string | string[]> {
   options: Array<OptionValue>;
-  disabled?: boolean;
-  description?: string;
-  required?: boolean;
   clearable?: boolean;
-  icon?: IconProp;
 }
 
-export interface INumber {
-  type: 'number';
-  label: string;
-  placeholder?: string;
-  default?: number;
-  icon?: IconProp;
+export interface INumber extends BaseField<'number', number> {
   min?: number;
   max?: number;
-  disabled?: boolean;
-  description?: string;
-  required?: boolean;
 }
 
-export interface ISlider {
-  type: 'slider';
-  label: string;
-  default?: number;
+export interface ISlider extends Omit<BaseField<'slider', number>, 'description' | 'placeholder'> {
   min?: number;
   max?: number;
   step?: number;
-  disabled?: boolean;
-  description?: string;
 }
 
-export interface IColorInput {
-  type: 'color';
-  label: string;
-  default?: string;
-  disabled?: boolean;
-  description?: string;
+export interface IColorInput extends BaseField<'color', string> {
   format?: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla';
-  required?: boolean;
-  icon?: IconProp;
 }
 
-export interface IDateInput {
-  type: 'date' | 'date-range';
-  label: string;
-  default?: string | [string, string] | true;
-  disabled?: boolean;
-  description?: string;
-  format?: '12' | '24' | undefined;
-  required?: boolean;
-  placeholder?: string;
+export interface IDateInput
+  extends Omit<BaseField<'date' | 'date-range', string | [string, string] | true>, 'placeholder'> {
+  format?: string;
   clearable?: boolean;
   min?: string;
   max?: string;
-  icon?: IconProp;
 }
 
-export interface ITimeInput {
-  type: 'time';
-  label: string;
-  default?: string;
-  disabled?: boolean;
-  description?: string;
+export interface ITimeInput extends Omit<BaseField<'time', string>, 'placeholder'> {
   format?: '12' | '24';
-  required?: boolean;
   clearable?: boolean;
-  placeholder?: string;
-  icon?: IconProp;
 }
 
-export interface ITextarea {
-  type: 'textarea';
-  label: string;
-  default?: string;
-  disabled?: boolean;
-  description?: string;
-  required?: boolean;
-  placeholder?: string;
-  icon?: IconProp;
+export interface ITextarea extends BaseField<'textarea', string> {
   autosize?: boolean;
   min?: number;
   max?: number;
