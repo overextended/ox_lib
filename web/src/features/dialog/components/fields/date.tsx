@@ -38,52 +38,34 @@ const DateField: React.FC<Props> = (props) => {
           minDate={props.row.min ? new Date(props.row.min) : undefined}
           maxDate={props.row.max ? new Date(props.row.max) : undefined}
         />
-      )} 
+      )}
       {props.row.type === 'date-range' && (
-          <DateRangePicker
-            value={
-              controller.field.value
-                ? controller.field.value[0]
-                  ? controller.field.value.map((date: Date) => new Date(date))
-                  : controller.field.value
+        <DateRangePicker
+          value={
+            controller.field.value
+              ? controller.field.value[0]
+                ? controller.field.value.map((date: Date) => new Date(date))
                 : controller.field.value
-            }
-            name={controller.field.name}
-            ref={controller.field.ref}
-            onBlur={controller.field.onBlur}
-            onChange={(dates) =>
-              controller.field.onChange(dates.map((date: Date | null) => (date ? date.getTime() : null)))
-            }
-            label={props.row.label}
-            description={props.row.description}
-            placeholder={props.row.placeholder}
-            disabled={props.row.disabled}
-            inputFormat="DD/MM/YYYY"
-            withAsterisk={props.row.required}
-            clearable={props.row.clearable}
-            icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
-            minDate={props.row.min ? new Date(props.row.min) : undefined}
-            maxDate={props.row.max ? new Date(props.row.max) : undefined}
-          />
-        )}
-
-        {props.row.type === 'time' && (
-          <TimeInput 
-            value={controller.field.value ? new Date(controller.field.value) : controller.field.value}
-            name={controller.field.name}
-            ref={controller.field.ref}
-            onBlur={controller.field.onBlur}
-            onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
-            label={props.row.label}
-            description={props.row.description}
-            placeholder={props.row.placeholder}
-            disabled={props.row.disabled}
-            format={props.row.format || "12"}
-            withAsterisk={props.row.required}
-            clearable={props.row.clearable}
-            icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
-          />
-        )}
+              : controller.field.value
+          }
+          name={controller.field.name}
+          ref={controller.field.ref}
+          onBlur={controller.field.onBlur}
+          onChange={(dates) =>
+            controller.field.onChange(dates.map((date: Date | null) => (date ? date.getTime() : null)))
+          }
+          label={props.row.label}
+          description={props.row.description}
+          placeholder={props.row.placeholder}
+          disabled={props.row.disabled}
+          inputFormat="DD/MM/YYYY"
+          withAsterisk={props.row.required}
+          clearable={props.row.clearable}
+          icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
+          minDate={props.row.min ? new Date(props.row.min) : undefined}
+          maxDate={props.row.max ? new Date(props.row.max) : undefined}
+        />
+      )}
     </>
   );
 };

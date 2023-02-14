@@ -70,7 +70,7 @@ export interface IColorInput {
 }
 
 export interface IDateInput {
-  type: 'date' | 'date-range' | 'time';
+  type: 'date' | 'date-range';
   label: string;
   default?: string | [string, string] | true;
   disabled?: boolean;
@@ -81,6 +81,19 @@ export interface IDateInput {
   clearable?: boolean;
   min?: string;
   max?: string;
+  icon?: IconProp;
+}
+
+export interface ITimeInput {
+  type: 'time';
+  label: string;
+  default?: string;
+  disabled?: boolean;
+  description?: string;
+  format?: '12' | '24';
+  required?: boolean;
+  clearable?: boolean;
+  placeholder?: string;
   icon?: IconProp;
 }
 

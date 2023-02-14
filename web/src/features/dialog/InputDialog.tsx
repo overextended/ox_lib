@@ -13,6 +13,7 @@ import {
   OptionValue,
   IDateInput,
   ITextarea,
+  ITimeInput,
 } from '../../interfaces/dialog';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
@@ -23,10 +24,11 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
+import TimeField from './components/fields/time';
 
 export interface InputProps {
   heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea>;
+  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea | ITimeInput>;
   options?: {
     allowCancel?: boolean;
   };
@@ -146,7 +148,8 @@ const InputDialog: React.FC = () => {
                   {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
                   {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
-                  {row.type === 'date' || row.type === 'date-range' || row.type === 'time' ? (
+                  {row.type === 'time' && <TimeField control={form.control} row={row} index={index} />}
+                  {row.type === 'date' || row.type === 'date-range' ? (
                     <DateField control={form.control} row={row} index={index} />
                   ) : null}
                   {row.type === 'textarea' && (
