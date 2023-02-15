@@ -5,19 +5,7 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import { useLocales } from '../../providers/LocaleProvider';
 import remarkGfm from 'remark-gfm';
-
-export interface AlertProps {
-  header: string;
-  content: string;
-  centered?: boolean;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  overflow?: boolean;
-  cancel?: boolean;
-  labels?: {
-    cancel?: string;
-    confirm?: string;
-  };
-}
+import type { AlertProps } from '../../typings';
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();

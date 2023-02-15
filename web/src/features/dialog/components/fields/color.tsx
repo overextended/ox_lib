@@ -1,4 +1,4 @@
-import { IColorInput } from '../../../../interfaces/dialog';
+import { IColorInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { ColorInput } from '@mantine/core';

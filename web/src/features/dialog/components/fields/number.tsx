@@ -1,5 +1,5 @@
 import { NumberInput } from '@mantine/core';
-import { INumber } from '../../../../interfaces/dialog';
+import { INumber } from '../../../../typings/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';

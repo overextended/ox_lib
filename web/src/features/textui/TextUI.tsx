@@ -3,21 +3,11 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { Box, createStyles, Group } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ScaleFade from '../../transitions/ScaleFade';
 import remarkGfm from 'remark-gfm';
+import type { TextUiProps, TextUiPosition } from '../../typings';
 
-type Position = 'right-center' | 'left-center' | 'top-center';
-
-export interface TextUiProps {
-  text: string;
-  position?: Position;
-  icon?: IconProp;
-  iconColor?: string;
-  style?: React.CSSProperties;
-}
-
-const useStyles = createStyles((theme, params: { position?: Position }) => ({
+const useStyles = createStyles((theme, params: { position?: TextUiPosition }) => ({
   wrapper: {
     height: '100%',
     width: '100%',

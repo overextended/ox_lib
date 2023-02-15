@@ -1,5 +1,5 @@
 import { Box, Slider, Text } from '@mantine/core';
-import { ISlider } from '../../../../interfaces/dialog';
+import { ISlider } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 

@@ -1,4 +1,4 @@
-import { ContextMenuProps } from '../../../interfaces/context';
+import { ContextMenuProps } from '../../../typings';
 import { debugData } from '../../../utils/debugData';
 
 export const debugContext = () => {
@@ -16,22 +16,22 @@ export const debugContext = () => {
             colorScheme: 'blue',
             metadata: [
               {
-                ["label"]: "Body",
-                ["value"]: "55%",
-                ["progress"]: 55
+                ['label']: 'Body',
+                ['value']: '55%',
+                ['progress']: 55,
               },
               {
-                ["label"]: "Engine",
-                ["value"]: "100%",
-                ["progress"]: 100
+                ['label']: 'Engine',
+                ['value']: '100%',
+                ['progress']: 100,
               },
               {
-                ["label"]: "Oil",
-                ["progress"]: 11
+                ['label']: 'Oil',
+                ['progress']: 11,
               },
               {
-                ["label"]: "Fuel",
-                ["progress"]: 87
+                ['label']: 'Fuel',
+                ['progress']: 87,
               },
             ],
           },
@@ -56,7 +56,7 @@ export const debugContext = () => {
             progress: 80,
             icon: 'car-side',
             metadata: [{ label: 'Durability', value: '80%' }],
-            colorScheme: 'blue'
+            colorScheme: 'blue',
           },
           {
             title: 'Menu button',

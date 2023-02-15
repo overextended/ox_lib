@@ -3,20 +3,7 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import Indicator from './indicator';
 import { fetchNui } from '../../utils/fetchNui';
 import { Box, createStyles } from '@mantine/core';
-
-interface CustomGameDifficulty {
-  areaSize: number;
-  speedMultiplier: number;
-}
-
-export type GameDifficulty = 'easy' | 'medium' | 'hard' | CustomGameDifficulty;
-
-export interface SkillCheckProps {
-  angle: number;
-  difficultyOffset: number;
-  difficulty: GameDifficulty;
-  key: string;
-}
+import type { SkillCheckProps, GameDifficulty } from '../../typings';
 
 export const circleCircumference = 2 * 50 * Math.PI;
 

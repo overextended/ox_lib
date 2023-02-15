@@ -1,7 +1,7 @@
 import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { Option, ContextMenuProps } from '../../../../interfaces/context';
+import { Option, ContextMenuProps } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 
 const openMenu = (id: string | undefined) => {
@@ -90,17 +90,19 @@ const ContextButton: React.FC<{
         <HoverCard.Dropdown className={classes.dropdown}>
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
-            button.metadata.map((metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
-              <>
-                <Text key={`context-metadata-${index}`}>
-                  {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ""}`}
-                </Text>
+            button.metadata.map(
+              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+                <>
+                  <Text key={`context-metadata-${index}`}>
+                    {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
+                  </Text>
 
-                {typeof metadata === 'object' && metadata.progress !== undefined && (
-                  <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
-                )}
-              </>
-            ))
+                  {typeof metadata === 'object' && metadata.progress !== undefined && (
+                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
+                  )}
+                </>
+              )
+            )
           ) : (
             <>
               {typeof button.metadata === 'object' &&

@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { AlertProps } from '../../dialog/AlertDialog';
+import { AlertProps } from '../../../typings';
 
 export const debugAlert = () => {
   debugData<AlertProps>([

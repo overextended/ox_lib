@@ -1,28 +1,30 @@
-import { CustomNotificationProps } from '../../notifications/NotificationWrapper';
+import { NotificationProps } from '../../../typings';
 import { debugData } from '../../../utils/debugData';
 
 export const debugCustomNotification = () => {
-  debugData<CustomNotificationProps>([
+  debugData<NotificationProps>([
     {
       action: 'notify',
       data: {
         title: 'Success',
         description: 'Notification description',
         type: 'success',
+        id: 'pogchamp',
       },
     },
   ]);
-  debugData<CustomNotificationProps>([
+  debugData<NotificationProps>([
     {
       action: 'notify',
       data: {
-        title: 'Info',
+        title: 'Success',
         description: 'Notification description',
-        type: 'info',
+        type: 'success',
+        id: 'pogchamp',
       },
     },
   ]);
-  debugData<CustomNotificationProps>([
+  debugData<NotificationProps>([
     {
       action: 'notify',
       data: {
@@ -32,7 +34,7 @@ export const debugCustomNotification = () => {
       },
     },
   ]);
-  debugData<CustomNotificationProps>([
+  debugData<NotificationProps>([
     {
       action: 'notify',
       data: {

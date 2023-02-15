@@ -1,15 +1,10 @@
 import { Box, createStyles } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
-
-export interface MenuItem {
-  icon: IconProp;
-  label: string;
-}
+import type { RadialMenuItem } from '../../../typings';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -61,12 +56,12 @@ const degToRad = (deg: number) => deg * (Math.PI / 180);
 const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
-  const [menu, setMenu] = useState<{ items: MenuItem[]; sub?: boolean }>({
+  const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean }>({
     items: [],
     sub: false,
   });
 
-  useNuiEvent('openRadialMenu', async (data: { items: MenuItem[]; sub?: boolean } | false) => {
+  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean } | false) => {
     if (!data) return setVisible(false);
     if (visible) {
       setVisible(false);
@@ -76,7 +71,7 @@ const RadialMenu: React.FC = () => {
     setVisible(true);
   });
 
-  useNuiEvent('refreshItems', (data: MenuItem[]) => {
+  useNuiEvent('refreshItems', (data: RadialMenuItem[]) => {
     setMenu({ ...menu, items: data });
   });
 

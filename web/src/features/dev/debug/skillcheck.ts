@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { GameDifficulty } from '../../skillcheck';
+import { GameDifficulty } from '../../../typings';
 
 export const debugSkillCheck = () => {
   debugData<{ difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] }>([

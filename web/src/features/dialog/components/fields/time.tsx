@@ -1,7 +1,7 @@
 import { TimeInput } from '@mantine/dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Control, useController } from 'react-hook-form';
-import { ITimeInput } from '../../../../interfaces/dialog';
+import { ITimeInput } from '../../../../typings/dialog';
 import { FormValues } from '../../InputDialog';
 
 interface Props {

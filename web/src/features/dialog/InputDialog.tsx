@@ -3,18 +3,7 @@ import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import {
-  IInput,
-  ICheckbox,
-  ISelect,
-  INumber,
-  ISlider,
-  IColorInput,
-  OptionValue,
-  IDateInput,
-  ITextarea,
-  ITimeInput,
-} from '../../interfaces/dialog';
+import { OptionValue } from '../../typings';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
 import SelectField from './components/fields/select';
@@ -25,14 +14,7 @@ import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
 import TimeField from './components/fields/time';
-
-export interface InputProps {
-  heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider | IColorInput | IDateInput | ITextarea | ITimeInput>;
-  options?: {
-    allowCancel?: boolean;
-  };
-}
+import type { InputProps } from '../../typings';
 
 export type FormValues = {
   test: {

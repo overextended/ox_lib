@@ -4,33 +4,10 @@ import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
 import FocusTrap from 'focus-trap-react';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { fetchNui } from '../../../utils/fetchNui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-
-type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-
-export interface MenuItem {
-  label: string;
-  progress?: number;
-  colorScheme?: string;
-  checked?: boolean;
-  values?: Array<string | { label: string; description: string }>;
-  description?: string;
-  icon?: IconProp;
-  iconColor?: string;
-  defaultIndex?: number;
-  close?: boolean;
-}
-
-export interface MenuSettings {
-  position?: MenuPosition;
-  title: string;
-  canClose?: boolean;
-  items: Array<MenuItem>;
-  startItemIndex?: number;
-}
+import type { MenuPosition, MenuSettings } from '../../../typings';
 
 const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCount: number; selected: number }) => ({
   tooltip: {

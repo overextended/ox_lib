@@ -1,6 +1,6 @@
 import { Textarea } from '@mantine/core';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { ITextarea } from '../../../../interfaces/dialog';
+import { ITextarea } from '../../../../typings/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 

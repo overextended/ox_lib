@@ -1,7 +1,7 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { Box, Stack, Text, Flex } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { ContextMenuProps } from '../../../interfaces/context';
+import { ContextMenuProps } from '../../../typings';
 import ContextButton from './components/ContextButton';
 import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';

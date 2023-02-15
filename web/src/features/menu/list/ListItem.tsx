@@ -2,7 +2,7 @@ import { Box, Group, Stack, Text, Progress } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
-import type { MenuItem } from './index';
+import type { MenuItem } from '../../../typings';
 import { createStyles } from '@mantine/core';
 
 interface Props {

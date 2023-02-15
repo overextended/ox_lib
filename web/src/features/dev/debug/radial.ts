@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import type { MenuItem } from '../../menu/radial';
+import type { MenuItem } from '../../../typings';
 
 export const debugRadial = () => {
   debugData<{ items: MenuItem[]; sub?: boolean }>([

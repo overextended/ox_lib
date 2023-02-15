@@ -3,13 +3,7 @@ import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles } f
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
-
-export interface CircleProgressbarProps {
-  label?: string;
-  duration: number;
-  position?: 'middle' | 'bottom';
-  percent?: boolean;
-}
+import type { CircleProgressbarProps } from '../../typings';
 
 // 33.5 is the r of the circle
 const progressCircle = keyframes({

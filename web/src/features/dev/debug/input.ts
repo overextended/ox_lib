@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { InputProps } from '../../dialog/InputDialog';
+import type { InputProps } from '../../../typings';
 
 export const debugInput = () => {
   debugData<InputProps>([

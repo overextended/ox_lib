@@ -1,22 +1,10 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { toast, Toaster, ToastPosition } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
 import { Avatar, createStyles, Group, Stack, Box, Text, keyframes } from '@mantine/core';
 import React from 'react';
-
-export interface CustomNotificationProps {
-  style?: React.CSSProperties;
-  description?: string;
-  title?: string;
-  duration?: number;
-  icon?: IconProp;
-  iconColor?: string;
-  position?: ToastPosition | 'top' | 'bottom';
-  id?: number | string;
-  type?: string;
-}
+import type { NotificationProps } from '../../typings';
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -117,7 +105,7 @@ const exitAnimationBottom = keyframes({
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
-  useNuiEvent<CustomNotificationProps>('notify', (data) => {
+  useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
     // Backwards compat with old notifications
     let position = data.position;
