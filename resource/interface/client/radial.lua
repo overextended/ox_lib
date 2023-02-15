@@ -53,6 +53,13 @@ function lib.addRadialItem(items)
         items.resource = invokingResource
         menuItems[menuSize + 1] = items
     end
+
+    if isOpen then
+        SendNUIMessage({
+            action = 'refreshItems',
+            data = menuItems
+        })
+    end
 end
 
 function lib.removeRadialItem(id)
