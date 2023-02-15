@@ -12,6 +12,7 @@ export const addRadialItem = (items: RadialItem | RadialItem[]) => exports.ox_li
 
 export const removeRadialItem = (item: string) => exports.ox_lib.removeRadialItem(item);
 
-export const registerRadial = (radial: { id: string; items: RadialItem[] }) => exports.ox_lib.registerRadial(radial);
+export const registerRadial = (radial: { id: string; items: Omit<RadialItem, 'id'>[] }) =>
+  exports.ox_lib.registerRadial(radial);
 
 export const hideRadial = () => exports.ox_lib.hideRadial();
