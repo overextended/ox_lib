@@ -1,14 +1,17 @@
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 interface ContextMenuItem {
-  title?: string;
   menu?: string;
+  title?: string;
+  description?: string;
+  arrow?: boolean;
+  image?: string;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
+  progress?: number;
+  colorScheme?: string;
   onSelect?: (args: any) => void;
-  arrow?: boolean;
-  description?: string;
-  metadata?: string | { [key: string]: any } | string[];
+  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
   disabled?: boolean;
   event?: string;
   serverEvent?: string;

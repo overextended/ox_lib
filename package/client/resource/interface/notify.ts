@@ -1,11 +1,19 @@
 import { CSSProperties } from 'react';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
-type NotificationPosition = 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left';
+type NotificationPosition =
+  | 'top'
+  | 'top-right'
+  | 'top-left'
+  | 'bottom'
+  | 'bottom-right'
+  | 'bottom-left'
+  | 'center-right'
+  | 'center-left';
 type NotificationType = 'inform' | 'error' | 'success';
 
 interface NotifyProps {
-  id?: string;
+  id?: string | number;
   title?: string;
   description?: string;
   duration?: number;
@@ -18,6 +26,7 @@ interface NotifyProps {
 
 export const notify = (data: NotifyProps): void => exports.ox_lib.notify(data);
 
+// Keep for backwards compat with v2
 interface DefaultNotifyProps {
   title?: string;
   description?: string;
