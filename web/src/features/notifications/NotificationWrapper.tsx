@@ -14,7 +14,7 @@ export interface CustomNotificationProps {
   icon?: IconProp;
   iconColor?: string;
   position?: ToastPosition | 'top' | 'bottom';
-  id?: number;
+  id?: number | string;
   type?: string;
 }
 
