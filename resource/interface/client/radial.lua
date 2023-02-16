@@ -3,11 +3,25 @@ local menus = {}
 local menuItems = {}
 local currentRadial = nil
 
+---@class RadialMenuItem
+---@field id string
+---@field icon string
+---@field label string
+---@field menu? string
+---@field onSelect? function
 
+---@class RadialMenuProps
+---@field id string
+---@field items RadialMenuItem[]
+
+---Registers a radial sub menu with predefined options.
+---@param radial RadialMenuProps
 function lib.registerRadial(radial)
     menus[radial.id] = radial
 end
 
+---Open a registered radial submenu with the given id.
+---@param id string
 local function showRadial(id)
     local radial = menus[id]
 
@@ -38,6 +52,8 @@ function lib.hideRadial()
     currentRadial = nil
 end
 
+---Registers an item or array of items in the global radial menu.
+---@param items RadialMenuItem | RadialMenuItem[]
 function lib.addRadialItem(items)
     local menuSize = #menuItems
     local invokingResource = GetInvokingResource()
@@ -62,6 +78,8 @@ function lib.addRadialItem(items)
     end
 end
 
+---Removes an item from the global radial menu with the given id.
+---@param id string
 function lib.removeRadialItem(id)
     for i = 1, #menuItems do
         local item = menuItems[i]
