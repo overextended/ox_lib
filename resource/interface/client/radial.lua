@@ -120,7 +120,7 @@ lib.addKeybind({
     description = 'Open radial menu',
     defaultKey = 'z',
     onPressed = function()
-        if isOpen or #menuItems == 0 then return end
+        if isOpen or #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
         isOpen = true
 
