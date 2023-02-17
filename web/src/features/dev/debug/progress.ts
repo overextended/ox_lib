@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { ProgressbarProps } from '../../progress/Progressbar';
+import { ProgressbarProps } from '../../../typings';
 
 export const debugProgressbar = () => {
   debugData<ProgressbarProps>([

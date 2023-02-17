@@ -1,84 +1,183 @@
-import { useToast, type ToastPosition, Box, HStack, Text } from '@chakra-ui/react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { toast, Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
+import { Avatar, createStyles, Group, Stack, Box, Text, keyframes } from '@mantine/core';
+import React from 'react';
+import type { NotificationProps } from '../../typings';
 
-export interface NotificationProps {
-  title?: string;
-  description?: string;
-  duration?: number;
-  position?: ToastPosition;
-  variant?: string;
-  status?: 'info' | 'warning' | 'success' | 'error';
-  id?: number;
-}
+const useStyles = createStyles((theme) => ({
+  container: {
+    width: 300,
+    height: 'fit-content',
+    backgroundColor: theme.colors.dark[6],
+    color: theme.colors.dark[0],
+    padding: 12,
+    borderRadius: theme.radius.sm,
+    fontFamily: 'Roboto',
+    boxShadow: theme.shadows.sm,
+  },
+  title: {
+    fontWeight: 500,
+    lineHeight: 'normal',
+  },
+  description: {
+    fontSize: 12,
+    color: theme.colors.dark[2],
+    fontFamily: 'Roboto',
+    lineHeight: 'normal',
+  },
+  descriptionOnly: {
+    fontSize: 14,
+    color: theme.colors.dark[2],
+    fontFamily: 'Roboto',
+    lineHeight: 'normal',
+  },
+}));
 
-export interface CustomNotificationProps {
-  style?: React.CSSProperties;
-  description?: string;
-  title?: string;
-  duration?: number;
-  icon?: IconProp;
-  iconColor?: string;
-  position?: ToastPosition;
-  id?: number;
-  type?: string;
-}
+// I hate this
+const enterAnimationTop = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(-30px)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+});
+
+const enterAnimationBottom = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(30px)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+});
+
+const exitAnimationTop = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateY(-100%)',
+  },
+});
+
+const exitAnimationRight = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateX(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateX(100%)',
+  },
+});
+
+const exitAnimationLeft = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateX(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateX(-100%)',
+  },
+});
+
+const exitAnimationBottom = keyframes({
+  from: {
+    opacity: 1,
+    transform: 'translateY(0px)',
+  },
+  to: {
+    opacity: 0,
+    transform: 'translateY(100%)',
+  },
+});
 
 const Notifications: React.FC = () => {
-  const toast = useToast();
-
-  useNuiEvent<CustomNotificationProps>('customNotify', (data) => {
-    if (!data.title && !data.description) return;
-    if (data.id && toast.isActive(data.id)) return;
-    if (!data.icon) {
-      data.icon = data.type === 'error' ? 'circle-xmark' : data.type === 'success' ? 'circle-check' : 'circle-info';
-    }
-
-    const id = data.id;
-    toast({
-      id,
-      duration: data.duration || 3000,
-      position: data.position || 'top-right',
-      render: () => (
-        <Box className={`toast-${data.type || 'inform'}`} style={data.style} p={2} borderRadius="sm" boxShadow="md">
-          <HStack spacing={0}>
-            {data.icon && (
-              <FontAwesomeIcon
-                fixedWidth
-                icon={data.icon}
-                fontSize="1.3em"
-                style={{ paddingRight: 8 }}
-                color={data.iconColor}
-              />
-            )}
-            <Box w="100%">
-              {data.title && <Text as="b">{data.title}</Text>}
-              {data.description && <Text><ReactMarkdown>{data.description}</ReactMarkdown></Text>}
-            </Box>
-          </HStack>
-        </Box>
-      ),
-    });
-  });
+  const { classes } = useStyles();
 
   useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
-    if (data.id && toast.isActive(data.id)) return;
-    const id = data.id;
-    toast({
-      id,
-      title: data.title,
-      description: data.description,
-      duration: data.duration || 4000,
-      position: data.position || 'top-right',
-      variant: data.variant,
-      status: data.status,
-    });
+    // Backwards compat with old notifications
+    let position = data.position;
+    switch (position) {
+      case 'top':
+        position = 'top-center';
+        break;
+      case 'bottom':
+        position = 'bottom-center';
+        break;
+    }
+    if (!data.icon) {
+      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : 'info';
+    }
+
+    toast.custom(
+      (t) => (
+        <Box
+          sx={{
+            animation: t.visible
+              ? `${position?.includes('bottom') ? enterAnimationBottom : enterAnimationTop} 0.2s ease-out forwards`
+              : `${
+                  position?.includes('right')
+                    ? exitAnimationRight
+                    : position?.includes('left')
+                    ? exitAnimationLeft
+                    : position === 'top-center'
+                    ? exitAnimationTop
+                    : position
+                    ? exitAnimationBottom
+                    : exitAnimationRight
+                } 0.4s ease-in forwards`,
+          }}
+          style={data.style}
+          className={`${classes.container}`}
+        >
+          <Group noWrap spacing={12}>
+            {data.icon && (
+              <>
+                {!data.iconColor ? (
+                  <Avatar
+                    color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
+                    radius="xl"
+                    size={32}
+                  >
+                    <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
+                  </Avatar>
+                ) : (
+                  <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
+                )}
+              </>
+            )}
+            <Stack spacing={0}>
+              {data.title && <Text className={classes.title}>{data.title}</Text>}
+              {data.description && (
+                <ReactMarkdown className={!data.title ? classes.descriptionOnly : classes.description}>
+                  {data.description}
+                </ReactMarkdown>
+              )}
+            </Stack>
+          </Group>
+        </Box>
+      ),
+      {
+        id: data.id?.toString(),
+        duration: data.duration || 3000,
+        position: position || 'top-right',
+      }
+    );
   });
 
-  return <></>;
+  return <Toaster />;
 };
 
 export default Notifications;

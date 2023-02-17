@@ -1,53 +1,58 @@
-import { Box, InputGroup, InputLeftElement, InputRightElement, Input } from '@chakra-ui/react';
+import { createStyles, PasswordInput, TextInput } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect } from 'react';
-import { IInput } from '../../../../interfaces/dialog';
-import Label from '../Label';
+import React from 'react';
+import { IInput } from '../../../../typings/dialog';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Props {
+  register: UseFormRegisterReturn;
   row: IInput;
   index: number;
-  handleChange: (value: string, index: number) => void;
-  passwordStates: boolean[];
-  handlePasswordStates: (index: number) => void;
 }
 
+const useStyles = createStyles((theme) => ({
+  eyeIcon: {
+    color: theme.colors.dark[2],
+  },
+}));
+
 const InputField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default) props.handleChange(props.row.default, props.index);
-  }, []);
+  const { classes } = useStyles();
 
   return (
     <>
-      <Box mb={3} textAlign="left">
-        <Label label={props.row.label} description={props.row.description} />
-        <InputGroup>
-          {props.row.icon && (
-            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
-          )}
-          <Input
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e.target.value, props.index)}
-            placeholder={props.row.placeholder}
-            defaultValue={props.row.default}
-            type={!props.row.password || props.passwordStates[props.index] ? 'text' : 'password'}
-            isDisabled={props.row.disabled}
-          />
-          {props.row.password && (
-            <InputRightElement
+      {!props.row.password ? (
+        <TextInput
+          {...props.register}
+          defaultValue={props.row.default}
+          label={props.row.label}
+          description={props.row.description}
+          icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+          placeholder={props.row.placeholder}
+          disabled={props.row.disabled}
+          withAsterisk={props.row.required}
+        />
+      ) : (
+        <PasswordInput
+          {...props.register}
+          defaultValue={props.row.default}
+          label={props.row.label}
+          description={props.row.description}
+          icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+          placeholder={props.row.placeholder}
+          disabled={props.row.disabled}
+          withAsterisk={props.row.required}
+          visibilityToggleIcon={({ reveal, size }) => (
+            <FontAwesomeIcon
+              icon={reveal ? 'eye-slash' : 'eye'}
+              fontSize={size}
               cursor="pointer"
-              onClick={() => props.handlePasswordStates(props.index)}
-              children={
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={props.passwordStates[props.index] ? 'eye' : 'eye-slash'}
-                  fontSize="1em"
-                  style={{ paddingRight: 8 }}
-                />
-              }
+              className={classes.eyeIcon}
+              fixedWidth
             />
           )}
-        </InputGroup>
-      </Box>
+        />
+      )}
     </>
   );
 };

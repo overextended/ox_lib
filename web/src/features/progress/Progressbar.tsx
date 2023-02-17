@@ -1,18 +1,56 @@
 import React from 'react';
-import { Text, Flex, Box } from '@chakra-ui/react';
+import { Box, Text, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
+import ScaleFade from '../../transitions/ScaleFade';
+import type { ProgressbarProps } from '../../typings';
 
-export interface ProgressbarProps {
-  label: string;
-  duration: number;
-}
+const useStyles = createStyles((theme) => ({
+  container: {
+    width: 350,
+    height: 45,
+    borderRadius: theme.radius.sm,
+    backgroundColor: theme.colors.dark[5],
+    overflow: 'hidden',
+  },
+  wrapper: {
+    width: '100%',
+    height: '20%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: 0,
+    position: 'absolute',
+  },
+  bar: {
+    height: '100%',
+    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
+  },
+  labelWrapper: {
+    position: 'absolute',
+    display: 'flex',
+    width: 350,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  label: {
+    maxWidth: 350,
+    padding: 8,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontSize: 20,
+    color: theme.colors.gray[3],
+    textShadow: theme.shadows.sm,
+  },
+}));
 
 const Progressbar: React.FC = () => {
+  const { classes } = useStyles();
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
-  const [cancelled, setCancelled] = React.useState(false);
 
   const progressComplete = () => {
     setVisible(false);
@@ -20,69 +58,38 @@ const Progressbar: React.FC = () => {
   };
 
   const progressCancel = () => {
-    setCancelled(true);
     setVisible(false);
   };
 
   useNuiEvent('progressCancel', progressCancel);
 
   useNuiEvent<ProgressbarProps>('progress', (data) => {
-    setCancelled(false);
     setVisible(true);
     setLabel(data.label);
     setDuration(data.duration);
   });
 
   return (
-    <Flex h="30%" w="100%" position="absolute" bottom="0" justifyContent="center" alignItems="center">
-      <Box width={350}>
-        {visible && (
-          <Box
-            height={45}
-            bg="rgba(0, 0, 0, 0.6)"
-            textAlign="center"
-            borderRadius="sm"
-            boxShadow="lg"
-            overflow="hidden"
-          >
+    <>
+      <Box className={classes.wrapper}>
+        <ScaleFade visible={visible}>
+          <Box className={classes.container}>
             <Box
-              height={45}
+              className={classes.bar}
               onAnimationEnd={progressComplete}
-              sx={
-                !cancelled
-                  ? {
-                      width: '0%',
-                      backgroundColor: 'green.400',
-                      animation: 'progress-bar linear',
-                      animationDuration: `${duration}ms`,
-                    }
-                  : {
-                      // Currently unused
-                      width: '100%',
-                      animationPlayState: 'paused',
-                      backgroundColor: 'rgb(198, 40, 40)',
-                    }
-              }
-            />
-            <Text
-              maxWidth={350}
-              fontFamily="Inter"
-              textOverflow="ellipsis"
-              overflow="hidden"
-              whiteSpace="nowrap"
-              fontSize={22}
-              fontWeight="light"
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
+              sx={{
+                animation: 'progress-bar linear',
+                animationDuration: `${duration}ms`,
+              }}
             >
-              {label}
-            </Text>
+              <Box className={classes.labelWrapper}>
+                <Text className={classes.label}>{label}</Text>
+              </Box>
+            </Box>
           </Box>
-        )}
+        </ScaleFade>
       </Box>
-    </Flex>
+    </>
   );
 };
 

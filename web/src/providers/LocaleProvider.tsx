@@ -15,6 +15,7 @@ debugData([
     data: {
       language: 'English',
       ui: {
+        cancel: 'Cancel',
         close: 'Close',
         confirm: 'Confirm',
       },

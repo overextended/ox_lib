@@ -1,35 +1,29 @@
-import { Box, Flex, useCheckbox, chakra, CheckboxIcon } from '@chakra-ui/react';
+import { Checkbox, createStyles, Stack } from '@mantine/core';
+
+const useStyles = createStyles((theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  input: {
+    backgroundColor: theme.colors.dark[7],
+    '&:checked': { backgroundColor: theme.colors.dark[2], borderColor: theme.colors.dark[2] },
+  },
+  inner: {
+    '> svg > path': {
+      fill: theme.colors.dark[6],
+    },
+  },
+}));
 
 const CustomCheckbox: React.FC<{ checked: boolean }> = ({ checked }) => {
-  const { getCheckboxProps, getInputProps, htmlProps } = useCheckbox();
+  const { classes } = useStyles();
   return (
-    <chakra.label
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      gridColumnGap={2}
-      pr={3}
-      cursor="pointer"
-      {...htmlProps}
-    >
-      <input {...getInputProps()} hidden />
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        border="2px solid"
-        borderColor="#909296"
-        rounded={'sm'}
-        w={5}
-        h={5}
-        {...getCheckboxProps()}
-      >
-        {checked && (
-          <Box w={4} h={4} bg="#909296">
-            <CheckboxIcon isChecked color="#25262B" />
-          </Box>
-        )}
-      </Flex>
-    </chakra.label>
+    <Checkbox
+      checked={checked}
+      size="md"
+      classNames={{ root: classes.root, input: classes.input, inner: classes.inner }}
+    />
   );
 };
 

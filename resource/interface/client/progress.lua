@@ -198,8 +198,6 @@ end
 function lib.cancelProgress()
     if not progress then
         error('No progress bar is active')
-    elseif not progress.canCancel then
-        error('Progress bar cannot be cancelled')
     end
 
     progress = false

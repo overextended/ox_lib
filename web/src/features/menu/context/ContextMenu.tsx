@@ -1,11 +1,12 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { Box, Text, Flex, ScaleFade } from '@chakra-ui/react';
+import { Box, Stack, Text, Flex } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { ContextMenuProps } from '../../../interfaces/context';
-import Item from './Item';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ContextMenuProps } from '../../../typings';
+import ContextButton from './components/ContextButton';
 import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';
+import HeaderButton from './components/HeaderButton';
+import ScaleFade from '../../../transitions/ScaleFade';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
@@ -49,64 +50,28 @@ const ContextMenu: React.FC = () => {
   });
 
   return (
-    <Flex position="absolute" w="75%" h="80%" justifyContent="flex-end" alignItems="center">
-      <ScaleFade in={visible} unmountOnExit>
-        <Box w="xs" h={580}>
-          <Flex justifyContent="center" alignItems="center" mb={3}>
-            {contextMenu.menu && (
-              <Flex
-                borderRadius="md"
-                bg="gray.800"
-                flex="1 15%"
-                alignSelf="stretch"
-                textAlign="center"
-                justifyContent="center"
-                alignItems="center"
-                marginRight={2}
-                p={2}
-                _hover={{ bg: 'gray.700' }}
-                transition="300ms"
-                onClick={() => openMenu(contextMenu.menu)}
-              >
-                <FontAwesomeIcon icon="chevron-left" />
-              </Flex>
-            )}
-            <Box borderRadius="md" bg="gray.800" flex="1 85%">
-              <Text fontFamily="Poppins" fontSize="md" p={2} textAlign="center" fontWeight="light">
-                <ReactMarkdown>{contextMenu.title}</ReactMarkdown>
-              </Text>
-            </Box>
-            <Flex
-              borderRadius="md"
-              as="button"
-              bg={contextMenu.canClose === false ? 'gray.600' : 'gray.800'}
-              flex="1 15%"
-              alignSelf="stretch"
-              textAlign="center"
-              justifyContent="center"
-              alignItems="center"
-              marginLeft={2}
-              p={2}
-              cursor={contextMenu.canClose === false ? 'not-allowed' : undefined}
-              _hover={{ bg: contextMenu.canClose === false ? undefined : 'gray.700' }}
-              transition="300ms"
-              onClick={() => closeContext()}
-            >
-              <FontAwesomeIcon
-                icon="xmark"
-                fontSize={20}
-                color={contextMenu.canClose === false ? '#718096' : undefined}
-              />
-            </Flex>
-          </Flex>
-          <Box maxH={560} overflowY="scroll">
-            {Object.entries(contextMenu.options).map((option, index) => (
-              <Item option={option} key={`context-item-${index}`} />
-            ))}
+    <Box sx={{ position: 'absolute', top: '15%', right: '25%' }} w={320} h={580}>
+      <ScaleFade visible={visible}>
+        <Flex justify="center" align="center" mb={10} gap={6}>
+          {contextMenu.menu && (
+            <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
+          )}
+          <Box sx={{ borderRadius: 4, flex: '1 85%' }} bg="dark.6">
+            <Text color="dark.0" p={6} align="center">
+              <ReactMarkdown>{contextMenu.title}</ReactMarkdown>
+            </Text>
           </Box>
+          <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
+        </Flex>
+        <Box sx={{ height: 560, overflowY: 'scroll' }}>
+          <Stack spacing={3}>
+            {Object.entries(contextMenu.options).map((option, index) => (
+              <ContextButton option={option} key={`context-item-${index}`} />
+            ))}
+          </Stack>
         </Box>
       </ScaleFade>
-    </Flex>
+    </Box>
   );
 };
 

@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { MenuSettings } from '../../menu/list';
+import { MenuSettings } from '../../../typings';
 
 export const debugMenu = () => {
   debugData<MenuSettings>([
@@ -34,7 +34,7 @@ export const debugMenu = () => {
             icon: 'car-side',
             description: 'Durability: 80%',
             colorScheme: 'blue',
-            iconColor: '#55778d'
+            iconColor: '#55778d',
           },
           { label: 'Option 1' },
           { label: 'Option 2' },
