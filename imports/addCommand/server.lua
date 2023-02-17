@@ -13,7 +13,8 @@ local function chatSuggestion(name, parameters, help)
 
 	if parameters then
 		for i = 1, #parameters do
-			local arg, argType = string.strsplit(':', parameters[i])
+			local arg, argType, helpText = string.strsplit(':', parameters[i])
+			argType = argType ~= '' and argType or nil
 
 			if argType and argType:sub(0, 1) == '?' then
 				argType = argType:sub(2, #argType)
@@ -21,7 +22,7 @@ local function chatSuggestion(name, parameters, help)
 
 			params[i] = {
 				name = arg,
-				help = argType
+				help = (helpText and argType and ("%s (%s)"):format(helpText, argType)) or argType or helpText
 			}
 		end
 	end
@@ -57,7 +58,7 @@ function lib.addCommand(group, name, callback, parameters, help)
 
 					if arg == 'target' and value == 'me' then value = source end
 
-					if argType then
+					if argType and argType ~= '' then
 						local optional
 
 						if argType:sub(0, 1) == '?' then
@@ -108,6 +109,6 @@ return lib.addCommand
 		if args.item and args.count > 0 then
 			Inventory.AddItem(args.target, args.item.name, args.count, args.metatype)
 		end
-	end, {'target:number', 'item:string', 'count:number', 'metatype:?string'})
+	end, {'target:number', 'item:string', 'count:number:Number of items to give', 'metatype:?string'})
 	-- /additem 1 burger 1
 ]]
