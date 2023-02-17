@@ -28,7 +28,6 @@ export interface ICheckbox {
   label: string;
   checked?: boolean;
   disabled?: boolean;
-  description?: string;
   required?: boolean;
 }
 
