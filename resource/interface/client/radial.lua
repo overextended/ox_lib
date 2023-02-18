@@ -8,7 +8,10 @@ local currentRadial = nil
 ---@field icon string
 ---@field label string
 ---@field menu? string
----@field onSelect? function
+---@field onSelect? fun(args: any)
+---@field event? string
+---@field serverEvent? string
+---@field args? any
 
 ---@class RadialMenuProps
 ---@field id string
@@ -111,7 +114,9 @@ RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
     local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
 
-    if item.onSelect then item.onSelect() end
+    if item.onSelect then item.onSelect(item.args) end
+    if item.event then TriggerEvent(item.event, item.args) end
+    if item.serverEvent then TriggerServerEvent(item.serverEvent, item.args) end
     if item.menu then return showRadial(item.menu) end
 
     lib.hideRadial()
