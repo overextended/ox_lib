@@ -149,7 +149,11 @@ lib.addKeybind({
     description = 'Open radial menu',
     defaultKey = 'z',
     onPressed = function()
-        if isOpen or #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
+        if isOpen then
+            return lib.hideRadial()
+        end
+
+        if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
         isOpen = true
 
@@ -170,7 +174,7 @@ lib.addKeybind({
             Wait(0)
         end
     end,
-    onReleased = lib.hideRadial,
+    -- onReleased = lib.hideRadial,
 })
 
 AddEventHandler('onClientResourceStop', function(resource)
