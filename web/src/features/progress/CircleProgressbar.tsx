@@ -58,17 +58,10 @@ const CircleProgressbar: React.FC = () => {
   const theme = useMantineTheme();
   const { classes } = useStyles({ position, duration: progressDuration });
 
-  const progressComplete = () => {
+  useNuiEvent('progressCancel', () => {
+    setValue(99);
     setVisible(false);
-    fetchNui('progressComplete');
-  };
-
-  const progressCancel = () => {
-    setValue(99); // Sets the final value to 100% kek
-    setVisible(false);
-  };
-
-  useNuiEvent('progressCancel', progressCancel);
+  });
 
   useNuiEvent<CircleProgressbarProps>('circleProgress', (data) => {
     if (visible) return;
@@ -90,13 +83,13 @@ const CircleProgressbar: React.FC = () => {
   return (
     <>
       <Stack spacing={0} className={classes.container}>
-        <ScaleFade visible={visible}>
+        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
           <Stack spacing={0} align="center" className={classes.wrapper}>
             <RingProgress
               size={90}
               thickness={7}
               sections={[{ value: 0, color: theme.primaryColor }]}
-              onAnimationEnd={progressComplete}
+              onAnimationEnd={() => setVisible(false)}
               className={classes.progress}
               label={<Text className={classes.value}>{value}%</Text>}
             />

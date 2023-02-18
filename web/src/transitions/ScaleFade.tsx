@@ -1,9 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
-const ScaleFade: React.FC<{ visible: boolean; children: React.ReactNode }> = ({ visible, children }) => {
+const ScaleFade: React.FC<{ visible: boolean; children: React.ReactNode; onExitComplete?: () => void }> = ({
+  visible,
+  children,
+  onExitComplete,
+}) => {
   return (
     <>
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={onExitComplete}>
         {visible && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

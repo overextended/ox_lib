@@ -52,16 +52,7 @@ const Progressbar: React.FC = () => {
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
 
-  const progressComplete = () => {
-    setVisible(false);
-    fetchNui('progressComplete');
-  };
-
-  const progressCancel = () => {
-    setVisible(false);
-  };
-
-  useNuiEvent('progressCancel', progressCancel);
+  useNuiEvent('progressCancel', () => setVisible(false));
 
   useNuiEvent<ProgressbarProps>('progress', (data) => {
     setVisible(true);
@@ -72,11 +63,11 @@ const Progressbar: React.FC = () => {
   return (
     <>
       <Box className={classes.wrapper}>
-        <ScaleFade visible={visible}>
+        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
           <Box className={classes.container}>
             <Box
               className={classes.bar}
-              onAnimationEnd={progressComplete}
+              onAnimationEnd={() => setVisible(false)}
               sx={{
                 animation: 'progress-bar linear',
                 animationDuration: `${duration}ms`,
