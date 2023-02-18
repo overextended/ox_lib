@@ -63,10 +63,10 @@ const RadialMenu: React.FC = () => {
 
   useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean } | false) => {
     if (!data) return setVisible(false);
-    if (visible) {
-      setVisible(false);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
+    // if (visible) {
+    //   setVisible(false);
+    //   await new Promise((resolve) => setTimeout(resolve, 100));
+    // }
     setMenu(data);
     setVisible(true);
   });
