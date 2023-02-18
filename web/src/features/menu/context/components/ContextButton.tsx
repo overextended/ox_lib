@@ -21,6 +21,10 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
     whiteSpace: 'pre-wrap',
   },
+  image: {
+    marginRight: '10px',
+    maxWidth: '50px'
+  },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
   },
@@ -61,11 +65,12 @@ const ContextButton: React.FC<{
             <Group position="apart" w="100%" noWrap>
               <Stack spacing={4} style={{ flex: '1' }}>
                 <Group spacing={8} noWrap>
-                  {button?.icon && (
+                  {button?.icon && !button?.image && (
                     <Stack w={25} h={25} justify="center" align="center">
                       <FontAwesomeIcon icon={button.icon} fixedWidth size="lg" style={{ color: button.iconColor }} />
                     </Stack>
                   )}
+                  {button?.image && !button?.icon && <Image src={button.image} className={classes.image} /> }
                   <Text sx={{ overflowWrap: 'break-word' }}>
                     <ReactMarkdown>{button.title || buttonKey}</ReactMarkdown>
                   </Text>

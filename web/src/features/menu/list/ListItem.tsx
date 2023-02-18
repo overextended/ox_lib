@@ -1,4 +1,4 @@
-import { Box, Group, Stack, Text, Progress } from '@mantine/core';
+import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
@@ -23,6 +23,10 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
       backgroundColor: theme.colors.dark[4],
       outline: 'none',
     },
+  },
+  image: {
+    marginRight: '10px',
+    maxWidth: '50px',
   },
   buttonWrapper: {
     paddingLeft: 5,
@@ -77,9 +81,14 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       }}
     >
       <Group spacing={15} noWrap className={classes.buttonWrapper}>
-        {item.icon && (
+        {item.icon && !item.image && (
           <Box className={classes.iconContainer}>
             <FontAwesomeIcon icon={item.icon} className={classes.icon} fixedWidth />
+          </Box>
+        )}
+         {item.image && !item.icon && (
+          <Box className={classes.iconContainer}>
+            <Image src={item.image} className={classes.image} />
           </Box>
         )}
         {Array.isArray(item.values) ? (
