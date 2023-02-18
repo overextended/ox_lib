@@ -29,6 +29,17 @@ local function showRadial(id)
 
     currentRadial = radial
 
+    -- Hide current menu and allow for transition
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = false
+    })
+
+    Wait(100)
+
+    -- If menu was closed during transition, don't open the submenu
+    if not isOpen then return end
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
