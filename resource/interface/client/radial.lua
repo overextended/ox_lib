@@ -111,10 +111,11 @@ RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
     local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
 
+    lib.hideRadial()
+
     if item.onSelect then item.onSelect() end
     if item.menu then return showRadial(item.menu) end
 
-    lib.hideRadial()
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)
