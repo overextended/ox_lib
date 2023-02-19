@@ -5,6 +5,7 @@ import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
 import type { RadialMenuItem } from '../../../typings';
+import { useLocales } from '../../../providers/LocaleProvider';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -55,6 +56,7 @@ const degToRad = (deg: number) => deg * (Math.PI / 180);
 const MAX_ITEMS = 6;
 
 const RadialMenu: React.FC = () => {
+  const { locale } = useLocales();
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean }>({
@@ -73,7 +75,7 @@ const RadialMenu: React.FC = () => {
       moreMenus[i] = menu.items.slice(i * MAX_ITEMS, i * MAX_ITEMS + MAX_ITEMS);
       if (i < nrMenus - 1) {
         moreMenus[i].push({
-          label: 'More',
+          label: locale.ui.more,
           icon: 'ellipsis-h',
         });
       }

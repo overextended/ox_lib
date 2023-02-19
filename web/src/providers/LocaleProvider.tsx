@@ -18,6 +18,7 @@ debugData([
         cancel: 'Cancel',
         close: 'Close',
         confirm: 'Confirm',
+        more: 'More',
       },
     },
   },
@@ -29,6 +30,7 @@ interface Locale {
     cancel: string;
     close: string;
     confirm: string;
+    more: string;
   };
 }
 
@@ -46,6 +48,7 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       cancel: '',
       close: '',
       confirm: '',
+      more: ''
     },
   });
 
