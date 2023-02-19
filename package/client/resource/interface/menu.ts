@@ -5,7 +5,7 @@ type ChangeFunction = (selected: number, scrollIndex?: number, args?: any, check
 
 interface MenuOptions {
   label: string;
-  icon?: IconName | [IconPrefix, IconName];
+  icon?: IconName | [IconPrefix, IconName] | string;
   checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;

@@ -10,7 +10,7 @@ export interface MenuItem {
   checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;
-  icon?: IconProp;
+  icon?: IconProp | string;
   iconColor?: string;
   defaultIndex?: number;
   close?: boolean;
