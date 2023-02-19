@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
 import { Option, ContextMenuProps } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
+import { isIconUrl } from '../../../../utils/isIconUrl';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -20,6 +22,9 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     width: '100%',
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
     whiteSpace: 'pre-wrap',
+  },
+  iconImage: {
+    maxWidth: '25px',
   },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
@@ -63,7 +68,16 @@ const ContextButton: React.FC<{
                 <Group spacing={8} noWrap>
                   {button?.icon && (
                     <Stack w={25} h={25} justify="center" align="center">
-                      <FontAwesomeIcon icon={button.icon} fixedWidth size="lg" style={{ color: button.iconColor }} />
+                      {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
+                        <img src={button.icon} className={classes.iconImage} alt="Missing img" />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={button.icon as IconProp}
+                          fixedWidth
+                          size="lg"
+                          style={{ color: button.iconColor }}
+                        />
+                      )}
                     </Stack>
                   )}
                   <Text sx={{ overflowWrap: 'break-word' }}>

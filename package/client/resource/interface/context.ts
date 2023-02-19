@@ -6,7 +6,7 @@ interface ContextMenuItem {
   description?: string;
   arrow?: boolean;
   image?: string;
-  icon?: IconName | [IconPrefix, IconName];
+  icon?: IconName | [IconPrefix, IconName] | string;
   iconColor?: string;
   progress?: number;
   colorScheme?: string;

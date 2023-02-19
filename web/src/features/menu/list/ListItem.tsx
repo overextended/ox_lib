@@ -1,9 +1,11 @@
-import { Box, Group, Stack, Text, Progress } from '@mantine/core';
+import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
 import { createStyles } from '@mantine/core';
+import { isIconUrl } from '../../../utils/isIconUrl';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface Props {
   item: MenuItem;
@@ -24,6 +26,9 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
       outline: 'none',
     },
   },
+  iconImage: {
+    maxWidth: 32,
+  },
   buttonWrapper: {
     paddingLeft: 5,
     paddingRight: 12,
@@ -32,6 +37,8 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   iconContainer: {
     display: 'flex',
     alignItems: 'center',
+    width: 32,
+    height: 32,
   },
   icon: {
     fontSize: 24,
@@ -79,7 +86,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       <Group spacing={15} noWrap className={classes.buttonWrapper}>
         {item.icon && (
           <Box className={classes.iconContainer}>
-            <FontAwesomeIcon icon={item.icon} className={classes.icon} fixedWidth />
+            {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
+              <img src={item.icon} alt="Missing image" className={classes.iconImage} />
+            ) : (
+              <FontAwesomeIcon icon={item.icon as IconProp} className={classes.icon} fixedWidth />
+            )}
           </Box>
         )}
         {Array.isArray(item.values) ? (
