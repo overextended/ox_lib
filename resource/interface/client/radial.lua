@@ -1,4 +1,5 @@
 local isOpen = false
+local onGlobalMenu = false
 local menus = {}
 local menuItems = {}
 local currentRadial = nil
@@ -60,6 +61,7 @@ function lib.hideRadial()
     SetNuiFocus(false, false)
 
     isOpen = false
+    onGlobalMenu = false
     currentRadial = nil
 end
 
@@ -81,7 +83,7 @@ function lib.addRadialItem(items)
         menuItems[menuSize + 1] = items
     end
 
-    if isOpen then
+    if isOpen and onGlobalMenu then
         SendNUIMessage({
             action = 'refreshItems',
             data = menuItems
@@ -99,7 +101,7 @@ function lib.removeRadialItem(id)
             break
         end
     end
-    if isOpen then
+    if isOpen and onGlobalMenu then
         SendNUIMessage({
             action = 'refreshItems',
             data = menuItems
@@ -114,6 +116,7 @@ RegisterNUICallback('radialClick', function(index, cb)
 
     if item.menu then
         showRadial(item.menu)
+        onGlobalMenu = false
     else
         lib.hideRadial()
     end
@@ -128,6 +131,7 @@ RegisterNUICallback('radialBack', function(_, cb)
     end
 
     currentRadial = nil
+    onGlobalMenu = true
 
     SendNUIMessage({
         action = 'openRadialMenu',
@@ -145,6 +149,7 @@ RegisterNUICallback('radialClose', function(_, cb)
     SetNuiFocus(false, false)
 
     isOpen = false
+    onGlobalMenu = false
     currentRadial = nil
 end)
 
@@ -160,6 +165,7 @@ lib.addKeybind({
         if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
         isOpen = true
+        onGlobalMenu = true
 
         SendNUIMessage({
             action = 'openRadialMenu',
