@@ -22,8 +22,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     whiteSpace: 'pre-wrap',
   },
   image: {
-    marginRight: '10px',
-    maxWidth: '50px'
+    maxWidth: '30px'
   },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],

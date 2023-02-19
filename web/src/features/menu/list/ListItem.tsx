@@ -25,8 +25,7 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
     },
   },
   image: {
-    marginRight: '10px',
-    maxWidth: '50px',
+    maxWidth: '33px',
   },
   buttonWrapper: {
     paddingLeft: 5,
