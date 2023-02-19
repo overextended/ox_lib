@@ -6,7 +6,7 @@ export interface Option {
   description?: string;
   arrow?: boolean;
   image?: string;
-  icon?: IconProp;
+  icon?: IconProp | string;
   iconColor?: string;
   progress?: number;
   colorScheme?: string;
