@@ -12,3 +12,4 @@ export * from './interface/radial';
 export * from './streaming';
 export * from './vehicleProperties';
 export * from './callback';
+export * from './points';
