@@ -1,4 +1,5 @@
 import { Vector3 } from '@nativewrappers/client';
+import { cache } from '../cache';
 
 let points: Point[] = [];
 let nearbyPoints: Point[] = [];
@@ -49,7 +50,7 @@ setInterval(() => {
     nearbyCount = 0;
   }
 
-  const coords = Vector3.fromArray(GetEntityCoords(PlayerPedId(), false));
+  const coords = Vector3.fromArray(GetEntityCoords(cache.ped, false));
 
   if (closestPoint && coords.distance(closestPoint.coords) > closestPoint.distance) {
     closestPoint = undefined;
