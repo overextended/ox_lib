@@ -1,7 +1,12 @@
-local isOpen = false
+local isOpen = 0
 local menus = {}
-local menuItems = {}
+local onGlobalMenu = false
 local currentRadial = nil
+local prevMenuHistory = {}
+local globalMenus = {}
+local MAX_ITEMS <const> = GetConvarInt('ox:radialMaxItems', 6)
+local GLOBL_MENU_PREFIX <const> = 'ox:radial_global_'
+local find = string.find
 
 ---@class RadialMenuItem
 ---@field id string
@@ -17,12 +22,46 @@ local currentRadial = nil
 ---Registers a radial sub menu with predefined options.
 ---@param radial RadialMenuProps
 function lib.registerRadial(radial)
-    menus[radial.id] = radial
+    if menus[radial.id.."_1"] then
+        local submenuId = 1
+        while menus[radial.id.."_"..submenuId] do
+            menus[radial.id.."_"..submenuId] = nil
+            submenuId = submenuId + 1
+        end
+    end
+
+    local numberItems = #radial.items
+    if numberItems > MAX_ITEMS then
+        local numberMenus = math.ceil(numberItems / MAX_ITEMS)
+        for i = 1, numberMenus do
+            local menu = {
+                id = radial.id .. '_' .. i,
+                items = {}
+            }
+            for j = 1, MAX_ITEMS do
+                local index = (i - 1) * MAX_ITEMS + j
+                if index > numberItems then
+                    break
+                end
+                table.insert(menu.items, radial.items[index])
+            end
+            if i < numberMenus then
+                table.insert(menu.items, {
+                    icon = 'fas fa-ellipsis-h',
+                    label = "More",
+                    menu = radial.id .. '_' .. (i + 1)
+                })
+            end
+            menus[menu.id] = menu
+        end
+    else
+        menus[radial.id] = radial
+    end
 end
 
 ---Open a registered radial submenu with the given id.
 ---@param id string
-local function showRadial(id)
+local function showRadial(id, transition)
     local radial = menus[id]
 
     if not radial then return error('No radial menu with such id found.') end
@@ -30,15 +69,17 @@ local function showRadial(id)
     currentRadial = radial
 
     -- Hide current menu and allow for transition
-    SendNUIMessage({
-        action = 'openRadialMenu',
-        data = false
-    })
+    if transition then
+        SendNUIMessage({
+            action = 'openRadialMenu',
+            data = false
+        })
 
-    Wait(100)
+        Wait(100)
+    end
 
     -- If menu was closed during transition, don't open the submenu
-    if not isOpen then return end
+    if isOpen == 0 then return end
 
     SendNUIMessage({
         action = 'openRadialMenu',
@@ -49,8 +90,9 @@ local function showRadial(id)
     })
 end
 
+---Closes the current radial menu if it is open.
 function lib.hideRadial()
-    if not isOpen then return end
+    if isOpen == 0 then return end
 
     SendNUIMessage({
         action = 'openRadialMenu',
@@ -59,32 +101,77 @@ function lib.hideRadial()
 
     SetNuiFocus(false, false)
 
-    isOpen = false
+    isOpen = 0
     currentRadial = nil
+    table.wipe(prevMenuHistory)
+    onGlobalMenu = false
+end
+
+---Returns the last sub menu for the global radial.
+---@return table, number
+local function getLastGlobalMenu()
+    local numberGlobalMenus = #globalMenus
+
+    if numberGlobalMenus == 0 then
+        globalMenus[1] = {}
+        return globalMenus[1], 1
+    end
+
+    local lastGlobalMenu = globalMenus[numberGlobalMenus] or {}
+    local lastMenuIndex = numberGlobalMenus
+    if #lastGlobalMenu == MAX_ITEMS then
+        local nextIndex = numberGlobalMenus + 1
+        local menuId = GLOBL_MENU_PREFIX..nextIndex
+        lastGlobalMenu[MAX_ITEMS + 1] = {
+            icon = 'fas fa-ellipsis-h',
+            label = 'More',
+            menu = menuId
+        }
+        globalMenus[nextIndex] = {}
+        menus[menuId] = {
+            id = menuId,
+            items = globalMenus[nextIndex]
+        }
+        lastGlobalMenu = globalMenus[nextIndex]
+        lastMenuIndex = nextIndex
+    end
+    return lastGlobalMenu, lastMenuIndex
+end
+
+local function removeMenuFromHistory(id)
+    for i = 1, #prevMenuHistory do
+        if prevMenuHistory[i] == id then
+            table.remove(prevMenuHistory, i)
+            break
+        end
+    end
 end
 
 ---Registers an item or array of items in the global radial menu.
 ---@param items RadialMenuItem | RadialMenuItem[]
 function lib.addRadialItem(items)
-    local menuSize = #menuItems
     local invokingResource = GetInvokingResource()
+    local updatedMenu = -1
 
     if table.type(items) == 'array' then
         for i = 1, #items do
             local item = items[i]
+            local lastMenu, lastMenuIndex = getLastGlobalMenu()
             item.resource = invokingResource
-            menuSize += 1
-            menuItems[menuSize] = item
+            lastMenu[#lastMenu + 1] = item
+            updatedMenu = lastMenuIndex
         end
     else
         items.resource = invokingResource
-        menuItems[menuSize + 1] = items
+        local lastMenu, lastMenuIndex = getLastGlobalMenu()
+        lastMenu[#lastMenu + 1] = items
+        updatedMenu = lastMenuIndex
     end
 
-    if isOpen then
+    if (isOpen == updatedMenu or isOpen == updatedMenu -1) and onGlobalMenu then
         SendNUIMessage({
             action = 'refreshItems',
-            data = menuItems
+            data = {items = globalMenus[isOpen]}
         })
     end
 end
@@ -92,28 +179,93 @@ end
 ---Removes an item from the global radial menu with the given id.
 ---@param id string
 function lib.removeRadialItem(id)
-    for i = 1, #menuItems do
-        local item = menuItems[i]
-        if item.id == id then
-            table.remove(menuItems, i)
-            break
+    local found = -1
+    for i = 1, #globalMenus do
+        local globalMenu = globalMenus[i]
+        for j = 1, #globalMenu do
+            local item = globalMenu[j]
+            if item.id == id then
+                local lastGlobalMenuIndex = #globalMenus
+                local lastGlobalMenu = globalMenus[lastGlobalMenuIndex]
+                local lastIndex = #lastGlobalMenu
+                local lastItem = lastGlobalMenu[lastIndex]
+                item.id = lastItem.id
+                item.icon = lastItem.icon
+                item.label = lastItem.label
+                item.menu = lastItem.menu
+                item.onSelect = lastItem.onSelect
+                item.resource = lastItem.resource
+                lastGlobalMenu[lastIndex] = nil
+                if lastIndex == 1 then
+                    globalMenus[lastGlobalMenuIndex] = nil
+                    if lastGlobalMenuIndex > 1 then
+                        globalMenus[lastGlobalMenuIndex - 1][MAX_ITEMS + 1] = nil
+                        if isOpen == lastGlobalMenuIndex - 1 and onGlobalMenu then
+                            SendNUIMessage({
+                                action = 'refreshItems',
+                                data = {items = globalMenus[isOpen]}
+                            })
+                        end
+                        menus[GLOBL_MENU_PREFIX..lastGlobalMenuIndex] = nil
+                        -- Find all nested menus after the menu we want to remove and remove them from the history
+                        local temp = {}
+                        for i = 1, #prevMenuHistory do
+                            if prevMenuHistory[i] ~= GLOBL_MENU_PREFIX..lastGlobalMenuIndex then
+                                temp[#temp + 1] = prevMenuHistory[i]
+                            else
+                                break
+                            end
+                        end
+                        table.wipe(prevMenuHistory)
+                        for i = 1, #temp do
+                            prevMenuHistory[i] = temp[i]
+                        end
+                    end
+                end
+                found = i
+                break
+            end
         end
+        if found ~= -1 then break end
     end
-    if isOpen then
+
+    if isOpen == found then
+        if not globalMenus[isOpen] then
+            if isOpen > 1 then
+                isOpen = isOpen - 1
+                removeMenuFromHistory(GLOBL_MENU_PREFIX..isOpen)
+            else
+                lib.hideRadial()
+                return
+            end
+        end
+
+        onGlobalMenu = true
+        currentRadial = nil
         SendNUIMessage({
             action = 'refreshItems',
-            data = menuItems
+            data = {
+                items = globalMenus[isOpen],
+                --sub = isOpen > 1
+            }
         })
     end
 end
 
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
-
-    local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
+    local currentMenu = currentRadial or globalMenus[isOpen]
+    local item = currentMenu.items and currentMenu.items[index + 1] or globalMenus[isOpen][index + 1]
 
     if item.menu then
-        showRadial(item.menu)
+        prevMenuHistory[#prevMenuHistory+1] = currentMenu.id
+        if find(item.menu, GLOBL_MENU_PREFIX) then
+            isOpen = isOpen + 1
+            onGlobalMenu = true
+        else
+            onGlobalMenu = false
+        end
+        showRadial(item.menu, true)
     else
         lib.hideRadial()
     end
@@ -123,8 +275,19 @@ end)
 
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
-    if currentRadial.menu then
-        return showRadial(currentRadial.menu)
+    if #prevMenuHistory > 0 then
+        local prevMenu = prevMenuHistory[#prevMenuHistory]
+        prevMenuHistory[#prevMenuHistory] = nil
+        if find(prevMenu, GLOBL_MENU_PREFIX) then
+            isOpen = isOpen - 1
+            onGlobalMenu = true
+        else
+            onGlobalMenu = false
+        end
+        return showRadial(prevMenu, false)
+    else
+        isOpen = 1
+        onGlobalMenu = true
     end
 
     currentRadial = nil
@@ -132,7 +295,7 @@ RegisterNUICallback('radialBack', function(_, cb)
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
-            items = menuItems
+            items = globalMenus[isOpen]
         }
     })
 end)
@@ -140,12 +303,14 @@ end)
 RegisterNUICallback('radialClose', function(_, cb)
     cb(1)
 
-    if not isOpen then return end
+    if isOpen == 0 then return end
 
     SetNuiFocus(false, false)
 
-    isOpen = false
+    isOpen = 0
     currentRadial = nil
+    table.wipe(prevMenuHistory)
+    onGlobalMenu = false
 end)
 
 lib.addKeybind({
@@ -153,25 +318,27 @@ lib.addKeybind({
     description = 'Open radial menu',
     defaultKey = 'z',
     onPressed = function()
-        if isOpen then
+        if isOpen > 0 then
             return lib.hideRadial()
         end
 
-        if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
+        if #globalMenus == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
-        isOpen = true
+        isOpen = 1
+        onGlobalMenu = true
 
         SendNUIMessage({
             action = 'openRadialMenu',
             data = {
-                items = menuItems
+                items = globalMenus[1]
             }
         })
+
         SetNuiFocus(true, true)
         SetNuiFocusKeepInput(true)
         SetCursorLocation(0.5, 0.5)
 
-        while isOpen do
+        while isOpen > 0 do
             DisablePlayerFiring(cache.playerId, true)
             DisableControlAction(0, 1, true)
             DisableControlAction(0, 2, true)
@@ -182,11 +349,19 @@ lib.addKeybind({
 })
 
 AddEventHandler('onClientResourceStop', function(resource)
-    for i = #menuItems, 1, -1 do
-        local item = menuItems[i]
+    local idsToRemove = {}
 
-        if item.resource == resource then
-            table.remove(menuItems, i)
+    for i = 1, #globalMenus do
+        local globalMenu = globalMenus[i]
+        for j = 1, #globalMenu do
+            local item = globalMenu[j]
+            if item.resource == resource then
+                idsToRemove[#idsToRemove + 1] = item.id
+            end
         end
+    end
+
+    for i = 1, #idsToRemove do
+        lib.removeRadialItem(idsToRemove[i])
     end
 end)
