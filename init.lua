@@ -78,7 +78,6 @@ end
 lib = setmetatable({
 	name = ox_lib,
 	context = context,
-	exports = {},
 	onCache = function(key, cb)
 		AddEventHandler(('ox_lib:cache:%s'):format(key), cb)
 	end
@@ -147,6 +146,7 @@ end
 -----------------------------------------------------------------------------------------------
 
 cache = { game = GetGameName(), resource = GetCurrentResourceName() }
+local notify = ('__ox_notify_%s'):format(cache.resource)
 
 if context == 'client' then
 	setmetatable(cache, {
@@ -159,7 +159,7 @@ if context == 'client' then
 		end,
 	})
 
-	RegisterNetEvent(('__ox_notify_%s'):format(cache.resource), function(data)
+	RegisterNetEvent(notify, function(data)
 		if locale then
 			if data.title then
 				data.title = locale(data.title) or data.title
@@ -176,9 +176,12 @@ if context == 'client' then
 	cache.playerId = PlayerId()
 	cache.serverId = GetPlayerServerId(cache.playerId)
 else
-	local notify = ('__ox_notify_%s'):format(cache.resource)
-
-	function lib.notify(source, data)
-		TriggerClientEvent(notify, source, data)
+    ---Trigger a notification on the target playerId from the server.\
+    ---If locales are loaded, the title and description will be formatted automatically.\
+    ---Note: No support for locale placeholders when using this function.
+    ---@param playerId number
+    ---@param data NotifyProps
+	function lib.notify(playerId, data)
+		TriggerClientEvent(notify, playerId, data)
 	end
 end
