@@ -34,6 +34,8 @@ const useStyles = createStyles((theme) => ({
   centerCircle: {
     fill: theme.fn.primaryColor(),
     color: '#fff',
+    stroke: theme.colors.dark[6],
+    strokeWidth: 4,
     '&:hover': {
       fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
       cursor: 'pointer',
@@ -131,7 +133,7 @@ const RadialMenu: React.FC = () => {
                 }
               }}
             >
-              <circle r={30} className={classes.centerCircle} />
+              <circle r={32} className={classes.centerCircle} />
             </g>
           </svg>
           <div className={classes.centerIconContainer}>
