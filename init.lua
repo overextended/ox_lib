@@ -23,7 +23,8 @@ if status ~= true then error(status, 2) end
 
 local LoadResourceFile = LoadResourceFile
 local context = IsDuplicityVersion() and 'server' or 'client'
-local function noop() end
+
+function noop() end
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
@@ -85,6 +86,9 @@ lib = setmetatable({
 	__index = call,
 	__call = call,
 })
+
+-- Override standard Lua require with our own.
+require = lib.require
 
 local intervals = {}
 --- Dream of a world where this PR gets accepted.
