@@ -11,8 +11,10 @@
 
 ---@type OxCommandProperties[]
 local registeredCommands = {}
+local shouldSendCommands = false
 
 SetTimeout(1000, function()
+    shouldSendCommands = true
     TriggerClientEvent('chat:addSuggestions', -1, registeredCommands)
 end)
 
@@ -132,6 +134,8 @@ function lib.addCommand(commandName, properties, cb, ...)
             if i ~= numCommands and numCommands ~= 1 then
                 properties = table.clone(properties)
             end
+
+            if shouldSendCommands then TriggerClientEvent('chat:addSuggestions', -1, properties) end
         end
     end
 end
