@@ -1,6 +1,12 @@
+---@class OxCommandParams
+---@field name string
+---@field help? string
+---@field type? 'number' | 'playerId' | 'string'
+---@field optional? boolean
+
 ---@class OxCommandProperties
 ---@field help string?
----@field params { name: string, type?: 'number' | 'playerId' | 'string', help?: string }[]
+---@field params OxCommandParams[]
 ---@field restricted boolean | string | string[]?
 
 ---@type OxCommandProperties[]
@@ -14,12 +20,12 @@ AddEventHandler('playerJoining', function(source)
     TriggerClientEvent('chat:addSuggestions', source, registeredCommands)
 end)
 
----@param commandName string
 ---@param source number
 ---@param args table
----@param params table
+---@param raw string
+---@param params OxCommandParams[]
 ---@return table?
-local function parseArguments(commandName, source, args, params)
+local function parseArguments(source, args, raw, params)
     if not params then return args end
 
     for i = 1, #params do
@@ -41,7 +47,7 @@ local function parseArguments(commandName, source, args, params)
         end
 
         if not value and (not param.optional or param.optional and arg) then
-            return Citizen.Trace(("^1command '%s' received an invalid %s for argument %s (%s), received '%s'^0"):format(commandName, param.type, i, param.name, arg))
+            return Citizen.Trace(("^1command '%s' received an invalid %s for argument %s (%s), received '%s'^0"):format(raw:match('/([^ ]+) '), param.type, i, param.name, arg))
         end
 
         arg = value
@@ -89,17 +95,19 @@ function lib.addCommand(commandName, properties, cb, ...)
     local numCommands = #commands
     local totalCommands = #registeredCommands
 
+    local function commandHandler(source, args, raw)
+        args = parseArguments(source, args, raw, params)
+
+        if not args then return end
+
+        cb(source, args, raw)
+    end
+
     for i = 1, numCommands do
         totalCommands += 1
         commandName = commands[i]
 
-        RegisterCommand(commandName, function(source, args, raw)
-            args = parseArguments(commandName, source, args, params)
-
-            if not args then return end
-
-            cb(source, args, raw)
-        end, restricted and true)
+        RegisterCommand(commandName, commandHandler, restricted and true)
 
         if restricted then
             local ace = ('command.%s'):format(commandName)
