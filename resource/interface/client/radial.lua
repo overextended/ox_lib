@@ -43,14 +43,14 @@ function lib.registerRadial(radial)
                 if index > numberItems then
                     break
                 end
-                table.insert(menu.items, radial.items[index])
+                menu.items[j] = radial.items[index]
             end
             if i < numberMenus then
-                table.insert(menu.items, {
+                menu.items[#menu.items + 1] = {
                     icon = 'fas fa-ellipsis-h',
                     label = "More",
                     menu = radial.id .. '_' .. (i + 1)
-                })
+                }
             end
             menus[menu.id] = menu
         end
