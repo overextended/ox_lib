@@ -91,7 +91,7 @@ local function showRadial(id, transition)
 end
 
 ---Closes the current radial menu if it is open.
-function lib.hideRadial()
+local function hideRadial()
     if isOpen == 0 then return end
 
     SendNUIMessage({
@@ -106,6 +106,7 @@ function lib.hideRadial()
     table.wipe(prevMenuHistory)
     onGlobalMenu = false
 end
+lib.hideRadial = hideRadial
 
 ---Returns the last sub menu for the global radial.
 ---@return table, number
@@ -168,7 +169,7 @@ function lib.addRadialItem(items)
         updatedMenu = lastMenuIndex
     end
 
-    if (isOpen == updatedMenu or isOpen == updatedMenu -1) and onGlobalMenu then
+    if (isOpen == updatedMenu or isOpen == updatedMenu - 1) and onGlobalMenu then
         SendNUIMessage({
             action = 'refreshItems',
             data = {items = globalMenus[isOpen]}
@@ -178,7 +179,7 @@ end
 
 ---Removes an item from the global radial menu with the given id.
 ---@param id string
-function lib.removeRadialItem(id)
+local function removeRadialItem(id)
     local found = -1
     for i = 1, #globalMenus do
         local globalMenu = globalMenus[i]
@@ -207,7 +208,7 @@ function lib.removeRadialItem(id)
                             })
                         end
                         menus[GLOBL_MENU_PREFIX..lastGlobalMenuIndex] = nil
-                        -- Find all nested menus after the menu we want to remove and remove them from the history
+                        
                         local temp = {}
                         for i = 1, #prevMenuHistory do
                             if prevMenuHistory[i] ~= GLOBL_MENU_PREFIX..lastGlobalMenuIndex then
@@ -235,7 +236,7 @@ function lib.removeRadialItem(id)
                 isOpen = isOpen - 1
                 removeMenuFromHistory(GLOBL_MENU_PREFIX..isOpen)
             else
-                lib.hideRadial()
+                hideRadial()
                 return
             end
         end
@@ -246,11 +247,13 @@ function lib.removeRadialItem(id)
             action = 'refreshItems',
             data = {
                 items = globalMenus[isOpen],
-                --sub = isOpen > 1
+                sub = isOpen > 1
             }
         })
     end
 end
+
+lib.removeRadialItem = removeRadialItem
 
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
@@ -267,7 +270,7 @@ RegisterNUICallback('radialClick', function(index, cb)
         end
         showRadial(item.menu, true)
     else
-        lib.hideRadial()
+        hideRadial()
     end
 
     if item.onSelect then item.onSelect() end
@@ -319,7 +322,7 @@ lib.addKeybind({
     defaultKey = 'z',
     onPressed = function()
         if isOpen > 0 then
-            return lib.hideRadial()
+            return hideRadial()
         end
 
         if #globalMenus == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
@@ -345,7 +348,7 @@ lib.addKeybind({
             Wait(0)
         end
     end,
-    -- onReleased = lib.hideRadial,
+    -- onReleased = hideRadial,
 })
 
 AddEventHandler('onClientResourceStop', function(resource)
@@ -362,6 +365,6 @@ AddEventHandler('onClientResourceStop', function(resource)
     end
 
     for i = 1, #idsToRemove do
-        lib.removeRadialItem(idsToRemove[i])
+        removeRadialItem(idsToRemove[i])
     end
 end)
