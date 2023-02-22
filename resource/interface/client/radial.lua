@@ -188,8 +188,10 @@ local function removeRadialItem(id)
             if item.id == id then
                 local lastGlobalMenuIndex = #globalMenus
                 local lastGlobalMenu = globalMenus[lastGlobalMenuIndex]
+
                 local lastIndex = #lastGlobalMenu
                 local lastItem = lastGlobalMenu[lastIndex]
+
                 item.id = lastItem.id
                 item.icon = lastItem.icon
                 item.label = lastItem.label
@@ -197,6 +199,7 @@ local function removeRadialItem(id)
                 item.onSelect = lastItem.onSelect
                 item.resource = lastItem.resource
                 lastGlobalMenu[lastIndex] = nil
+
                 if lastIndex == 1 then
                     globalMenus[lastGlobalMenuIndex] = nil
                     if lastGlobalMenuIndex > 1 then
@@ -208,14 +211,14 @@ local function removeRadialItem(id)
                             })
                         end
                         menus[GLOBL_MENU_PREFIX..lastGlobalMenuIndex] = nil
-                        
+
                         local temp = {}
                         for i = 1, #prevMenuHistory do
-                            if prevMenuHistory[i] ~= GLOBL_MENU_PREFIX..lastGlobalMenuIndex then
-                                temp[#temp + 1] = prevMenuHistory[i]
-                            else
+                            if prevMenuHistory[i] == GLOBL_MENU_PREFIX..lastGlobalMenuIndex then
                                 break
                             end
+
+                            temp[i] = prevMenuHistory[i]
                         end
                         table.wipe(prevMenuHistory)
                         for i = 1, #temp do
@@ -232,13 +235,13 @@ local function removeRadialItem(id)
 
     if isOpen == found then
         if not globalMenus[isOpen] then
-            if isOpen > 1 then
-                isOpen = isOpen - 1
-                removeMenuFromHistory(GLOBL_MENU_PREFIX..isOpen)
-            else
+            if isOpen <= 1 then
                 hideRadial()
                 return
             end
+
+            isOpen = isOpen - 1
+            removeMenuFromHistory(GLOBL_MENU_PREFIX..isOpen)
         end
 
         onGlobalMenu = true
@@ -278,21 +281,22 @@ end)
 
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
-    if #prevMenuHistory > 0 then
-        local prevMenu = prevMenuHistory[#prevMenuHistory]
-        prevMenuHistory[#prevMenuHistory] = nil
-        if find(prevMenu, GLOBL_MENU_PREFIX) then
+    local prevMenu = #prevMenuHistory
+    if prevMenu > 0 then
+        local menu = prevMenuHistory[prevMenu]
+        prevMenuHistory[prevMenu] = nil
+        if find(menu, GLOBL_MENU_PREFIX) then
             isOpen = isOpen - 1
             onGlobalMenu = true
         else
             onGlobalMenu = false
         end
-        return showRadial(prevMenu, false)
-    else
-        isOpen = 1
-        onGlobalMenu = true
+        return showRadial(menu, false)
     end
 
+
+    isOpen = 1
+    onGlobalMenu = true
     currentRadial = nil
 
     SendNUIMessage({
