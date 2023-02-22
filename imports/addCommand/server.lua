@@ -1,113 +1,143 @@
-local commands = {}
+---@class OxCommandParams
+---@field name string
+---@field help? string
+---@field type? 'number' | 'playerId' | 'string'
+---@field optional? boolean
+
+---@class OxCommandProperties
+---@field help string?
+---@field params OxCommandParams[]
+---@field restricted boolean | string | string[]?
+
+---@type OxCommandProperties[]
+local registeredCommands = {}
+local shouldSendCommands = false
 
 SetTimeout(1000, function()
-	TriggerClientEvent('chat:addSuggestions', -1, commands)
+    shouldSendCommands = true
+    TriggerClientEvent('chat:addSuggestions', -1, registeredCommands)
 end)
 
 AddEventHandler('playerJoining', function(source)
-	TriggerClientEvent('chat:addSuggestions', source, commands)
+    TriggerClientEvent('chat:addSuggestions', source, registeredCommands)
 end)
 
-local function chatSuggestion(name, parameters, help)
-	local params = {}
+---@param source number
+---@param args table
+---@param raw string
+---@param params OxCommandParams[]
+---@return table?
+local function parseArguments(source, args, raw, params)
+    if not params then return args end
 
-	if parameters then
-		for i = 1, #parameters do
-			local arg, argType = string.strsplit(':', parameters[i])
+    for i = 1, #params do
+        local arg, param = args[i], params[i]
+        local value
 
-			if argType and argType:sub(0, 1) == '?' then
-				argType = argType:sub(2, #argType)
-			end
+        if param.type == 'number' then
+            value = tonumber(arg)
+        elseif param.type == 'string' then
+            value = not tonumber(arg) and arg
+        elseif param.type == 'playerId' then
+            value = arg == 'me' and source or tonumber(arg)
 
-			params[i] = {
-				name = arg,
-				help = argType
-			}
-		end
-	end
+            if not value or not GetPlayerGuid(value--[[@as string]]) then
+                value = false
+            end
+        else
+            value = arg
+        end
 
-	commands[#commands + 1] = {
-		name = '/'..name,
-		help = help,
-		params = params
-	}
+        if not value and (not param.optional or param.optional and arg) then
+            return Citizen.Trace(("^1command '%s' received an invalid %s for argument %s (%s), received '%s'^0"):format(raw:match('/([^ ]+) '), param.type, i, param.name, arg))
+        end
+
+        arg = value
+
+        args[param.name] = arg
+        args[i] = nil
+    end
+
+    return args
 end
 
----@param group string | string[] | false
----@param name string | string[]
----@param callback function
----@param parameters table
-function lib.addCommand(group, name, callback, parameters, help)
-	if not group then group = 'builtin.everyone' end
+---@param commandName string | string[]
+---@param properties OxCommandProperties | false
+---@param cb fun(source: number, args: table, raw: string)
+---@param ... any
+function lib.addCommand(commandName, properties, cb, ...)
+    -- Try to handle backwards-compatibility with the old addCommand syntax (prior to v3.0)
+    local restricted, params
 
-	if type(name) == 'table' then
-		for i = 1, #name do
-			lib.addCommand(group, name[i], callback, parameters, help)
-		end
-	else
-		chatSuggestion(name, parameters, help)
+    if properties then
+        if ... or table.type(properties) ~= 'hash' then
+            local _commandName = type(properties) == 'table' and properties[1] or properties
+            local info = debug.getinfo(2, 'Sl')
 
-		RegisterCommand(name, function(source, args, raw)
-			source = tonumber(source) --[[@as number]]
+            warn(("command '%s' is using deprecated syntax for lib.addCommand\nupdate the command or use lib.__addCommand to ignore this warning\n> source ^0(^5%s^0:%d)"):format(_commandName, info.short_src, info.currentline))
+            ---@diagnostic disable-next-line: deprecated
+            return lib.__addCommand(commandName, properties, cb, ...)
+        end
 
-			if parameters then
-				for i = 1, #parameters do
-					local arg, argType = string.strsplit(':', parameters[i])
-					local value = args[i]
+        restricted = properties.restricted
+        params = properties.params
+    end
 
-					if arg == 'target' and value == 'me' then value = source end
+    if params then
+        for i = 1, #params do
+            local param = params[i]
 
-					if argType then
-						local optional
+            if param.type then
+                param.help = param.help and ('%s (type: %s)'):format(param.help, param.type) or ('(type: %s)'):format(param.type)
+            end
+        end
+    end
 
-						if argType:sub(0, 1) == '?' then
-							argType = argType:sub(2, #argType)
-							optional = true
-						end
+    local commands = type(commandName) ~= 'table' and { commandName } or commandName
+    local numCommands = #commands
+    local totalCommands = #registeredCommands
 
-						if argType == 'number' then
-							value = tonumber(value) or value
-						end
+    local function commandHandler(source, args, raw)
+        args = parseArguments(source, args, raw, params)
 
-						local type = type(value)
+        if not args then return end
 
-						if type ~= argType and (not optional or type ~= 'nil') then
-							local invalid = ('^1%s expected <%s> for argument %s (%s), received %s^0'):format(name, argType, i, arg, type)
-							if source < 1 then
-								return print(invalid)
-							else
-								return TriggerClientEvent('chat:addMessage', source, invalid)
-							end
-						end
-					end
+        cb(source, args, raw)
+    end
 
-					args[arg] = value
-					args[i] = nil
-				end
-			end
+    for i = 1, numCommands do
+        totalCommands += 1
+        commandName = commands[i]
 
-			callback(source, args, raw)
-		end, group and true)
+        RegisterCommand(commandName, commandHandler, restricted and true)
 
-		name = ('command.%s'):format(name)
-		if type(group) == 'table' then
-			for _, v in ipairs(group) do
-				if not IsPrincipalAceAllowed(v, name) then lib.addAce(v, name) end
-			end
-		else
-			if not IsPrincipalAceAllowed(group, name) then lib.addAce(group, name) end
-		end
-	end
+        if restricted then
+            local ace = ('command.%s'):format(commandName)
+            local restrictedType = type(restricted)
+
+            if restrictedType == 'string' and not IsPrincipalAceAllowed(restricted, ace) then
+                lib.addAce(restricted, ace)
+            elseif restrictedType == 'table' then
+                for j = 1, #restricted do
+                    if not IsPrincipalAceAllowed(restricted[j], ace) then
+                        lib.addAce(restricted[j], ace)
+                    end
+                end
+            end
+        end
+
+        if properties then
+            properties.name = ('/%s'):format(commandName)
+            properties.restricted = nil
+            registeredCommands[totalCommands] = properties
+
+            if i ~= numCommands and numCommands ~= 1 then
+                properties = table.clone(properties)
+            end
+
+            if shouldSendCommands then TriggerClientEvent('chat:addSuggestions', -1, properties) end
+        end
+    end
 end
 
 return lib.addCommand
-
---[[ Example
-	AddCommand('group.admin', {'additem', 'giveitem'}, function(source, args)
-		args.item = Items(args.item)
-		if args.item and args.count > 0 then
-			Inventory.AddItem(args.target, args.item.name, args.count, args.metatype)
-		end
-	end, {'target:number', 'item:string', 'count:number', 'metatype:?string'})
-	-- /additem 1 burger 1
-]]

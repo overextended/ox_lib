@@ -4,7 +4,7 @@
 --- ```
 local disableControls = {}
 
----@param ... number
+---@param ... number | table
 function disableControls:Add(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do
@@ -17,7 +17,7 @@ function disableControls:Add(...)
 	end
 end
 
----@param ... number
+---@param ... number | table
 function disableControls:Remove(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do
@@ -31,7 +31,7 @@ function disableControls:Remove(...)
 	end
 end
 
----@param ... number
+---@param ... number | table
 function disableControls:Clear(...)
 	local keys = type(...) == 'table' and ... or {...}
 	for i=1, #keys do

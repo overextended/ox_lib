@@ -1,4 +1,5 @@
 import { Vector3 } from '@nativewrappers/client';
+import { cache } from '../cache';
 
 let points: Point[] = [];
 let nearbyPoints: Point[] = [];
@@ -6,32 +7,35 @@ let nearbyCount: number = 0;
 let closestPoint: Point | undefined;
 let tick: number | undefined;
 
-interface LibPoint {
+interface LibPoint<T = unknown> {
   coords: number[];
   distance: number;
   onEnter?: () => void;
   onExit?: () => void;
   nearby?: () => void;
+  args?: T;
 }
 
-export class Point {
+export class Point<T = unknown> {
   id: number = 0;
   coords: Vector3;
   distance: number = 0;
   onEnter?: () => void;
   onExit?: () => void;
   nearby?: () => void;
+  args?: T;
   inside: boolean = false;
   currentDistance?: number;
   isClosest: boolean = false;
 
-  constructor(point: LibPoint) {
+  constructor(point: LibPoint<T>) {
     this.id = points.length + 1;
     this.coords = Vector3.fromArray(point.coords);
     this.distance = point.distance;
     this.onEnter = point.onEnter;
     this.onExit = point.onExit;
     this.nearby = point.nearby;
+    this.args = point.args;
     points.push(this);
   }
 
@@ -46,7 +50,7 @@ setInterval(() => {
     nearbyCount = 0;
   }
 
-  const coords = Vector3.fromArray(GetEntityCoords(PlayerPedId(), false));
+  const coords = Vector3.fromArray(GetEntityCoords(cache.ped, false));
 
   if (closestPoint && coords.distance(closestPoint.coords) > closestPoint.distance) {
     closestPoint = undefined;
