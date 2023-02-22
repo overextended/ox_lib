@@ -81,7 +81,7 @@ function lib.addRadialItem(items)
         menuItems[menuSize + 1] = items
     end
 
-    if isOpen then
+    if isOpen and not currentRadial then
         SendNUIMessage({
             action = 'refreshItems',
             data = menuItems
@@ -99,7 +99,7 @@ function lib.removeRadialItem(id)
             break
         end
     end
-    if isOpen then
+    if isOpen and not currentRadial then
         SendNUIMessage({
             action = 'refreshItems',
             data = menuItems
