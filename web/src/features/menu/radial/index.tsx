@@ -19,7 +19,6 @@ const useStyles = createStyles((theme) => ({
 
     '&:hover': {
       fill: theme.fn.primaryColor(),
-      cursor: 'pointer',
       '> g > text, > g > svg > path': {
         fill: '#fff',
       },
@@ -38,7 +37,6 @@ const useStyles = createStyles((theme) => ({
     strokeWidth: 4,
     '&:hover': {
       fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
-      cursor: 'pointer',
     },
   },
   centerIconContainer: {
