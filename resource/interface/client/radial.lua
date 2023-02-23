@@ -60,7 +60,7 @@ local function refreshRadial(menuId)
 
     if currentRadial and menuId then
         if menuId == currentRadial.id then
-            currentRadial = nil
+            return showRadial(menuId)
         else
             for i = 1, #menuHistory do
                 local subMenuId = menuHistory[i]
