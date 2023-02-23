@@ -1,8 +1,3 @@
-local isOpen = false
-local menus = {}
-local menuItems = {}
-local currentRadial = nil
-
 ---@class RadialMenuItem
 ---@field id string
 ---@field icon string
@@ -14,10 +9,28 @@ local currentRadial = nil
 ---@field id string
 ---@field items RadialMenuItem[]
 
+local isOpen = false
+
+---@type table<string, RadialMenuProps>
+local menus = {}
+
+---@type RadialMenuItem[]
+local menuItems = {}
+
+---@type string[]
+local menuHistory = {}
+
+---@type RadialMenuProps?
+local currentRadial = nil
+
 ---Registers a radial sub menu with predefined options.
 ---@param radial RadialMenuProps
 function lib.registerRadial(radial)
     menus[radial.id] = radial
+end
+
+function lib.getCurrentRadialId()
+    return currentRadial and currentRadial.id
 end
 
 ---Open a registered radial submenu with the given id.
@@ -58,6 +71,7 @@ function lib.hideRadial()
     })
 
     SetNuiFocus(false, false)
+    table.wipe(menuHistory)
 
     isOpen = false
     currentRadial = nil
@@ -110,9 +124,13 @@ end
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
 
-    local item = not currentRadial and menuItems[index + 1] or currentRadial.items[index + 1]
+    local item = (currentRadial and currentRadial.items or menuItems)[index + 1]
 
     if item.menu then
+        if currentRadial then
+            menuHistory[#menuHistory + 1] = currentRadial.id
+        end
+
         showRadial(item.menu)
     else
         lib.hideRadial()
@@ -123,8 +141,13 @@ end)
 
 RegisterNUICallback('radialBack', function(_, cb)
     cb(1)
-    if currentRadial.menu then
-        return showRadial(currentRadial.menu)
+
+    local numHistory = #menuHistory
+    local lastMenu = numHistory > 0 and menuHistory[numHistory]
+
+    if lastMenu then
+        menuHistory[numHistory] = nil
+        return showRadial(lastMenu)
     end
 
     currentRadial = nil
