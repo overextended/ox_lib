@@ -90,10 +90,10 @@ const RadialMenu: React.FC = () => {
               // Always draw full circle to avoid elipse circles with 2 or less items
               const pieAngle = 360 / (menu.items.length < 3 ? 3 : menu.items.length);
               const angle = degToRad(pieAngle / 2 + 90);
-              const gap = 0
+              const gap = 0;
               const radius = 175 * 0.65 - gap;
-              const sinAngle = Math.sin(angle)
-              const cosAngle = Math.cos(angle)
+              const sinAngle = Math.sin(angle);
+              const cosAngle = Math.cos(angle);
               const iconX = 175 + sinAngle * radius;
               const iconY = 175 + cosAngle * radius;
 
@@ -105,9 +105,9 @@ const RadialMenu: React.FC = () => {
                     onClick={() => fetchNui('radialClick', index)}
                   >
                     <path
-                      d={`M175.01,175.01 l${175 - gap},0 A175.01,175.01 0 0,0 ${175 + (175 - gap) * Math.cos(-degToRad(pieAngle))}, ${
-                        175 + (175 - gap) * Math.sin(-degToRad(pieAngle))
-                      } z`}
+                      d={`M175.01,175.01 l${175 - gap},0 A175.01,175.01 0 0,0 ${
+                        175 + (175 - gap) * Math.cos(-degToRad(pieAngle))
+                      }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                     />
                     <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
                       <FontAwesomeIcon
