@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Mégse",
     "close": "Bezárás",
-    "confirm": "Megerősít"
+    "confirm": "Megerősít",
+    "more": "More..."
   }
 }

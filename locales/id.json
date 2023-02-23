@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Batal",
     "close": "Tutup",
-    "confirm": "Konfirmasi"
+    "confirm": "Konfirmasi",
+    "more": "More..."
   }
 }

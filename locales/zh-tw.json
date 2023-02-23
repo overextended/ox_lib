@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "取消",
     "close": "關閉",
-    "confirm": "確認"
+    "confirm": "確認",
+    "more": "More..."
   }
 }

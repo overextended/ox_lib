@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Zrušit",
     "close": "Zavřít",
-    "confirm": "Potvrdit"
+    "confirm": "Potvrdit",
+    "more": "More..."
   }
 }

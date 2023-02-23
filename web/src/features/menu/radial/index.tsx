@@ -1,10 +1,11 @@
 import { Box, createStyles } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
 import type { RadialMenuItem } from '../../../typings';
+import { useLocales } from '../../../providers/LocaleProvider';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -51,23 +52,41 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+// PAGE_ITEMS + 1 = More... button
+const PAGE_ITEMS = 7;
+
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
 const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
+  const { locale } = useLocales();
   const [visible, setVisible] = useState(false);
-  const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean }>({
+  const [menuItems, setMenuItems] = useState<RadialMenuItem[]>([]);
+  const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean; page: number }>({
     items: [],
     sub: false,
+    page: 1,
   });
+
+  const changePage = async (increment?: boolean) => {
+    setVisible(false);
+    // May cause issues if user toggles off the menu while in transition?
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    setVisible(true);
+    setMenu({ ...menu, page: increment ? menu.page + 1 : menu.page - 1 });
+  };
+
+  useEffect(() => {
+    if (menu.items.length < PAGE_ITEMS) return setMenuItems(menu.items);
+    const items = menu.items.slice(PAGE_ITEMS * (menu.page - 1), PAGE_ITEMS * menu.page);
+    PAGE_ITEMS * menu.page < menu.items.length &&
+      items.push({ icon: 'ellipsis-h', label: locale.ui.more, isMore: true });
+    setMenuItems(items);
+  }, [menu.items, menu.page]);
 
   useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean } | false) => {
     if (!data) return setVisible(false);
-    // if (visible) {
-    //   setVisible(false);
-    //   await new Promise((resolve) => setTimeout(resolve, 100));
-    // }
-    setMenu(data);
+    setMenu({ ...data, page: 1 });
     setVisible(true);
   });
 
@@ -77,16 +96,22 @@ const RadialMenu: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.wrapper} onContextMenu={() => menu.sub && fetchNui('radialBack')}>
+      <Box
+        className={classes.wrapper}
+        onContextMenu={async () => {
+          if (menu.page > 1) await changePage();
+          else if (menu.sub) fetchNui('radialBack');
+        }}
+      >
         <ScaleFade visible={visible}>
           <svg width="350px" height="350px" transform="rotate(90)">
             {/*Fixed issues with background circle extending the circle when there's less than 3 items*/}
             <g transform="translate(175, 175)">
               <circle r={175} className={classes.backgroundCircle} />
             </g>
-            {menu.items.map((item, index) => {
+            {menuItems.map((item, index) => {
               // Always draw full circle to avoid elipse circles with 2 or less items
-              const pieAngle = 360 / (menu.items.length < 3 ? 3 : menu.items.length);
+              const pieAngle = 360 / (menuItems.length < 3 ? 3 : menuItems.length);
               const angle = degToRad(pieAngle / 2 + 90);
               const gap = 0;
               const radius = 175 * 0.65 - gap;
@@ -100,7 +125,13 @@ const RadialMenu: React.FC = () => {
                   <g
                     transform={`rotate(-${index * pieAngle} 175 175) translate(${sinAngle * gap}, ${cosAngle * gap})`}
                     className={classes.sector}
-                    onClick={() => fetchNui('radialClick', index)}
+                    onClick={async () => {
+                      const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) + index;
+                      if (!item.isMore) fetchNui('radialClick', clickIndex);
+                      else {
+                        await changePage(true);
+                      }
+                    }}
                   >
                     <path
                       d={`M175.01,175.01 l${175 - gap},0 A175.01,175.01 0 0,0 ${
@@ -126,11 +157,14 @@ const RadialMenu: React.FC = () => {
             })}
             <g
               transform={`translate(175, 175)`}
-              onClick={() => {
-                if (menu.sub) fetchNui('radialBack');
+              onClick={async () => {
+                if (menu.page > 1) await changePage();
                 else {
-                  setVisible(false);
-                  fetchNui('radialClose');
+                  if (menu.sub) fetchNui('radialBack');
+                  else {
+                    setVisible(false);
+                    fetchNui('radialClose');
+                  }
                 }
               }}
             >
@@ -139,7 +173,7 @@ const RadialMenu: React.FC = () => {
           </svg>
           <div className={classes.centerIconContainer}>
             <FontAwesomeIcon
-              icon={!menu.sub ? 'xmark' : 'arrow-rotate-left'}
+              icon={!menu.sub && menu.page < 2 ? 'xmark' : 'arrow-rotate-left'}
               fixedWidth
               className={classes.centerIcon}
               color="#fff"

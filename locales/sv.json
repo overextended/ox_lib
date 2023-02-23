@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Avbryt",
     "close": "Stäng",
-    "confirm": "Acceptera"
+    "confirm": "Acceptera",
+    "more": "More..."
   }
 }

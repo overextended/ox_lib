@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Odustani",
     "close": "Zatvori",
-    "confirm": "Potvrdi"
+    "confirm": "Potvrdi",
+    "more": "Više..."
   }
 }
