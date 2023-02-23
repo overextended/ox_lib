@@ -106,18 +106,54 @@ end
 ---Removes an item from the global radial menu with the given id.
 ---@param id string
 function lib.removeRadialItem(id)
+    local menuItem
+
     for i = 1, #menuItems do
-        local item = menuItems[i]
-        if item.id == id then
+        menuItem = menuItems[i]
+
+        if menuItem.id == id then
             table.remove(menuItems, i)
             break
         end
     end
-    if isOpen and not currentRadial then
-        SendNUIMessage({
-            action = 'refreshItems',
-            data = menuItems
-        })
+
+    if isOpen then
+        if currentRadial then
+            local refresh
+
+            -- Top level submenu
+            if menuItem.menu == currentRadial.id then
+                refresh = true
+            else
+                -- Nested submenu
+                for i = 1, #menuHistory do
+                    local subMenuId = menuHistory[i]
+
+                    if subMenuId == menuItem.menu then
+                        refresh = true
+                        break
+                    end
+                end
+            end
+
+            if refresh then
+                table.wipe(menuHistory)
+
+                currentRadial = nil
+
+                SendNUIMessage({
+                    action = 'openRadialMenu',
+                    data = {
+                        items = menuItems
+                    }
+                })
+            end
+        else
+            SendNUIMessage({
+                action = 'refreshItems',
+                data = menuItems
+            })
+        end
     end
 end
 
