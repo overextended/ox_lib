@@ -23,16 +23,6 @@ local menuHistory = {}
 ---@type RadialMenuProps?
 local currentRadial = nil
 
----Registers a radial sub menu with predefined options.
----@param radial RadialMenuProps
-function lib.registerRadial(radial)
-    menus[radial.id] = radial
-end
-
-function lib.getCurrentRadialId()
-    return currentRadial and currentRadial.id
-end
-
 ---Open a registered radial submenu with the given id.
 ---@param id string
 local function showRadial(id)
@@ -60,6 +50,36 @@ local function showRadial(id)
             sub = true
         }
     })
+end
+
+---Refresh the global menu items or current submenu.
+local function refreshRadial()
+    if not isOpen then return end
+
+    if currentRadial then
+        return showRadial(currentRadial.id)
+    end
+
+    SendNUIMessage({
+        action = 'refreshItems',
+        data = menuItems
+    })
+end
+
+---Registers a radial sub menu with predefined options.
+---@param radial RadialMenuProps
+function lib.registerRadial(radial)
+    menus[radial.id] = radial
+
+    if currentRadial and radial.id == currentRadial.id then
+        currentRadial = radial
+
+        refreshRadial()
+    end
+end
+
+function lib.getCurrentRadialId()
+    return currentRadial and currentRadial.id
 end
 
 function lib.hideRadial()
@@ -96,10 +116,7 @@ function lib.addRadialItem(items)
     end
 
     if isOpen and not currentRadial then
-        SendNUIMessage({
-            action = 'refreshItems',
-            data = menuItems
-        })
+        refreshRadial()
     end
 end
 
@@ -149,10 +166,7 @@ function lib.removeRadialItem(id)
                 })
             end
         else
-            SendNUIMessage({
-                action = 'refreshItems',
-                data = menuItems
-            })
+            refreshRadial()
         end
     end
 end
