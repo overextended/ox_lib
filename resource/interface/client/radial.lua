@@ -26,9 +26,11 @@ local currentRadial = nil
 ---Open a registered radial submenu with the given id.
 ---@param id string
 local function showRadial(id)
-    local radial = menus[id]
+    local radial = id and menus[id]
 
-    if not radial then return error('No radial menu with such id found.') end
+    if id and not radial then
+        return error('No radial menu with such id found.')
+    end
 
     currentRadial = radial
 
@@ -46,60 +48,40 @@ local function showRadial(id)
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
-            items = radial.items,
-            sub = true
+            items = radial?.items or menuItems,
+            sub = radial and true or nil
         }
     })
 end
 
----Refresh the global menu items or current submenu.
-local function refreshRadial()
+---Refresh the global menu items or return from a submenu to its parent.
+local function refreshRadial(menuId)
     if not isOpen then return end
 
-    if currentRadial then
-        return showRadial(currentRadial.id)
-    end
+    if currentRadial and menuId then
+        if menuId == currentRadial.id then
+            currentRadial = nil
+        else
+            for i = 1, #menuHistory do
+                local subMenuId = menuHistory[i]
 
-    table.wipe(menuHistory)
+                if subMenuId == menuId then
+                    currentRadial = menus[subMenuId]
 
-    -- Hide current menu and allow for transition
-    SendNUIMessage({
-        action = 'openRadialMenu',
-        data = false
-    })
+                    for j = #menuHistory, i, -1 do
+                        menuHistory[j] = nil
+                    end
 
-    Wait(100)
+                    return showRadial(currentRadial.id)
+                end
+            end
 
-    -- If menu was closed during transition, don't open the submenu
-    if not isOpen then return end
-
-    SendNUIMessage({
-        action = 'openRadialMenu',
-        data = {
-            items = menuItems
-        }
-    })
-end
-
----Check if the menuId is currently open or part of the menu history.
----@param menuId string
----@return boolean
-local function isMenuOrChildOpen(menuId)
-    if not currentRadial then return false end
-
-    if menuId == currentRadial.id then
-        return true
-    end
-
-    for i = 1, #menuHistory do
-        local subMenuId = menuHistory[i]
-
-        if subMenuId == menuId then
-            return true
+            return false
         end
     end
 
-    return false
+    table.wipe(menuHistory)
+    showRadial()
 end
 
 ---Registers a radial sub menu with predefined options.
@@ -108,10 +90,7 @@ function lib.registerRadial(radial)
     menus[radial.id] = radial
 
     if currentRadial then
-        if not isMenuOrChildOpen(radial.id) then return end
-
-        currentRadial = nil
-        refreshRadial()
+        refreshRadial(radial.id)
     end
 end
 
@@ -172,13 +151,7 @@ function lib.removeRadialItem(id)
     end
 
     if isOpen then
-        if currentRadial then
-            if not isMenuOrChildOpen(menuItem.menu) then return end
-
-            currentRadial = nil
-        end
-
-        refreshRadial()
+        refreshRadial(menuItem.menu)
     end
 end
 
