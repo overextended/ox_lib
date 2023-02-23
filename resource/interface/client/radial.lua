@@ -60,10 +60,46 @@ local function refreshRadial()
         return showRadial(currentRadial.id)
     end
 
+    table.wipe(menuHistory)
+
+    -- Hide current menu and allow for transition
     SendNUIMessage({
-        action = 'refreshItems',
-        data = menuItems
+        action = 'openRadialMenu',
+        data = false
     })
+
+    Wait(100)
+
+    -- If menu was closed during transition, don't open the submenu
+    if not isOpen then return end
+
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = {
+            items = menuItems
+        }
+    })
+end
+
+---Check if the menuId is currently open or part of the menu history.
+---@param menuId string
+---@return boolean
+local function isMenuOrChildOpen(menuId)
+    if not currentRadial then return false end
+
+    if menuId == currentRadial.id then
+        return true
+    end
+
+    for i = 1, #menuHistory do
+        local subMenuId = menuHistory[i]
+
+        if subMenuId == menuId then
+            return true
+        end
+    end
+
+    return false
 end
 
 ---Registers a radial sub menu with predefined options.
@@ -71,9 +107,10 @@ end
 function lib.registerRadial(radial)
     menus[radial.id] = radial
 
-    if currentRadial and radial.id == currentRadial.id then
-        currentRadial = radial
+    if currentRadial then
+        if not isMenuOrChildOpen(radial.id) then return end
 
+        currentRadial = nil
         refreshRadial()
     end
 end
@@ -136,38 +173,12 @@ function lib.removeRadialItem(id)
 
     if isOpen then
         if currentRadial then
-            local refresh
+            if not isMenuOrChildOpen(menuItem.menu) then return end
 
-            -- Top level submenu
-            if menuItem.menu == currentRadial.id then
-                refresh = true
-            else
-                -- Nested submenu
-                for i = 1, #menuHistory do
-                    local subMenuId = menuHistory[i]
-
-                    if subMenuId == menuItem.menu then
-                        refresh = true
-                        break
-                    end
-                end
-            end
-
-            if refresh then
-                table.wipe(menuHistory)
-
-                currentRadial = nil
-
-                SendNUIMessage({
-                    action = 'openRadialMenu',
-                    data = {
-                        items = menuItems
-                    }
-                })
-            end
-        else
-            refreshRadial()
+            currentRadial = nil
         end
+
+        refreshRadial()
     end
 end
 
