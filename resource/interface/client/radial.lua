@@ -54,7 +54,7 @@ local function showRadial(id)
     })
 end
 
----Refresh the global menu items or return from a submenu to its parent.
+---Refresh the current menu items or return from a submenu to its parent.
 local function refreshRadial(menuId)
     if not isOpen then return end
 
@@ -66,7 +66,16 @@ local function refreshRadial(menuId)
                 local subMenuId = menuHistory[i]
 
                 if subMenuId == menuId then
-                    currentRadial = menus[subMenuId]
+                    local parent = menus[subMenuId]
+
+                    for j = 1, #parent.items do
+                        -- If we still have a path to the current submenu, refresh instead of returning
+                        if parent.items[j].menu == currentRadial.id then
+                            return showRadial(currentRadial.id)
+                        end
+                    end
+
+                    currentRadial = parent
 
                     for j = #menuHistory, i, -1 do
                         menuHistory[j] = nil
