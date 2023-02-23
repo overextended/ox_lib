@@ -81,7 +81,6 @@ const InputDialog: React.FC = () => {
     setVisible(false);
     const values: any[] = [];
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
-    console.log(values);
     fetchNui('inputData', values);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
