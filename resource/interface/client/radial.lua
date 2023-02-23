@@ -152,6 +152,14 @@ RegisterNUICallback('radialBack', function(_, cb)
 
     currentRadial = nil
 
+    -- Hide current menu and allow for transition
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = false
+    })
+
+    Wait(100)
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
