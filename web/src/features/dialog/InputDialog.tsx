@@ -114,6 +114,7 @@ const InputDialog: React.FC = () => {
                       register={form.register(`test.${index}.value`, { required: row.required })}
                       row={row}
                       index={index}
+                      control={form.control}
                     />
                   )}
                   {row.type === 'checkbox' && (

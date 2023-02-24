@@ -1,5 +1,4 @@
 local input
-
 ---@class InputDialogRowProps
 ---@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea'
 ---@field label string
@@ -27,7 +26,8 @@ local input
 ---@param rows string[] | InputDialogRowProps[]
 ---@param options InputDialogOptionsProps[]
 ---@return string[] | number[] | boolean[] | nil
-function lib.inputDialog(heading, rows, options)
+local callback = function() return end
+function lib.inputDialog(heading, rows, options,fn)
     if input then return end
     input = promise.new()
 
@@ -37,7 +37,9 @@ function lib.inputDialog(heading, rows, options)
             rows[i] = { type = 'input', label = rows[i] --[[@as string]] }
         end
     end
-
+    if fn then
+        callback = fn
+    end
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'openDialog',
@@ -47,7 +49,7 @@ function lib.inputDialog(heading, rows, options)
             options = options
         }
     })
-
+    
     return Citizen.Await(input)
 end
 
@@ -59,6 +61,7 @@ function lib.closeInputDialog()
     SendNUIMessage({
         action = 'closeInputDialog'
     })
+    callback = function() return end
 end
 
 RegisterNUICallback('inputData', function(data, cb)
@@ -67,4 +70,10 @@ RegisterNUICallback('inputData', function(data, cb)
     local promise = input
     input = nil
     promise:resolve(data)
+    callback = function() return end
+end)
+
+RegisterNUICallback('inputCallback', function(data, cb)
+    cb(1)
+    callback(data)
 end)
