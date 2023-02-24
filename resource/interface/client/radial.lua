@@ -84,9 +84,9 @@ local function refreshRadial(menuId)
                     return showRadial(currentRadial.id)
                 end
             end
-
-            return false
         end
+
+        return
     end
 
     table.wipe(menuHistory)
@@ -159,9 +159,9 @@ function lib.removeRadialItem(id)
         end
     end
 
-    if isOpen then
-        refreshRadial(menuItem.menu)
-    end
+    if not isOpen then return end
+
+    refreshRadial(id)
 end
 
 RegisterNUICallback('radialClick', function(index, cb)
