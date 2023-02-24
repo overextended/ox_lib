@@ -71,7 +71,7 @@ local function refreshRadial(menuId)
                     for j = 1, #parent.items do
                         -- If we still have a path to the current submenu, refresh instead of returning
                         if parent.items[j].menu == currentRadial.id then
-                            return showRadial(currentRadial.id)
+                            return -- showRadial(currentRadial.id)
                         end
                     end
 
