@@ -70,8 +70,11 @@ const RadialMenu: React.FC = () => {
 
   const changePage = async (increment?: boolean) => {
     setVisible(false);
-    // May cause issues if user toggles off the menu while in transition?
-    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const didTransition: boolean = await fetchNui('radialTransition');
+
+    if (!didTransition) return;
+
     setVisible(true);
     setMenu({ ...menu, page: increment ? menu.page + 1 : menu.page - 1 });
   };

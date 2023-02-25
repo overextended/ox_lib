@@ -207,6 +207,9 @@ RegisterNUICallback('radialBack', function(_, cb)
 
     Wait(100)
 
+    -- If menu was closed during transition, don't open the submenu
+    if not isOpen then return end
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
@@ -226,6 +229,15 @@ RegisterNUICallback('radialClose', function(_, cb)
     currentRadial = nil
 end)
 
+RegisterNUICallback('radialTransition', function(_, cb)
+    Wait(100)
+
+    -- If menu was closed during transition, don't open the submenu
+    if not isOpen then return cb(false) end
+
+    cb(true)
+end)
+
 lib.addKeybind({
     name = 'ox_lib-radial',
     description = 'Open radial menu',
@@ -235,7 +247,7 @@ lib.addKeybind({
             menuPage = 1
             return lib.hideRadial()
         end
-        
+
         menuPage = nil
 
         if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
