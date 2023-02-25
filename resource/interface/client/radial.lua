@@ -3,7 +3,7 @@
 ---@field icon string
 ---@field label string
 ---@field menu? string
----@field onSelect? function
+---@field onSelect? fun(currentMenu: string | nil, itemIndex: number)
 ---@field [string] any
 
 ---@class RadialMenuProps
@@ -168,7 +168,15 @@ end
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
 
-    local item = (currentRadial and currentRadial.items or menuItems)[index + 1]
+    local itemIndex = index + 1
+    local item, currentMenu
+
+    if currentRadial then
+        item = currentRadial.items[itemIndex]
+        currentMenu = currentRadial.id
+    else
+        item = menuItems[itemIndex]
+    end
 
     if item.menu then
         if currentRadial then
@@ -180,7 +188,7 @@ RegisterNUICallback('radialClick', function(index, cb)
         lib.hideRadial()
     end
 
-    if item.onSelect then item.onSelect() end
+    if item.onSelect then item.onSelect(currentMenu, itemIndex) end
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)

@@ -4,7 +4,7 @@ type RadialItem = {
   id: string;
   label: string;
   icon: IconName | [IconPrefix, IconName];
-  onSelect?: () => void;
+  onSelect?: (currentMenu: string | null, itemIndex: number) => void;
   menu?: string;
 };
 
