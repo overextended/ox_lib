@@ -84,11 +84,19 @@ const RadialMenu: React.FC = () => {
     setMenuItems(items);
   }, [menu.items, menu.page]);
 
-  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean } | false) => {
-    if (!data) return setVisible(false);
-    setMenu({ ...data, page: 1 });
-    setVisible(true);
-  });
+  useNuiEvent(
+    'openRadialMenu',
+    async (data: { items: RadialMenuItem[]; sub?: boolean; page?: number } | false | number) => {
+      if (!data || typeof data === 'number') {
+        setVisible(false);
+        if (typeof data === 'number') setMenu((ps) => ({ ...ps, page: data }));
+        return;
+      }
+      // data.page currently unused but might need later?
+      setMenu((state) => ({ ...data, page: data.page || state.page }));
+      setVisible(true);
+    }
+  );
 
   useNuiEvent('refreshItems', (data: RadialMenuItem[]) => {
     setMenu({ ...menu, items: data });
@@ -99,8 +107,8 @@ const RadialMenu: React.FC = () => {
       <Box
         className={classes.wrapper}
         onContextMenu={async () => {
-          if (menu.page > 1) await changePage();
-          else if (menu.sub) fetchNui('radialBack');
+          if (menu.sub) fetchNui('radialBack');
+          else if (menu.page > 1) await changePage();
         }}
       >
         <ScaleFade visible={visible}>
@@ -158,13 +166,11 @@ const RadialMenu: React.FC = () => {
             <g
               transform={`translate(175, 175)`}
               onClick={async () => {
-                if (menu.page > 1) await changePage();
+                if (menu.sub) fetchNui('radialBack');
+                else if (menu.page > 1) await changePage();
                 else {
-                  if (menu.sub) fetchNui('radialBack');
-                  else {
-                    setVisible(false);
-                    fetchNui('radialClose');
-                  }
+                  setVisible(false);
+                  fetchNui('radialClose');
                 }
               }}
             >
