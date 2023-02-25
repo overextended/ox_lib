@@ -4,6 +4,7 @@
 ---@field label string
 ---@field menu? string
 ---@field onSelect? function
+---@field [string] any
 
 ---@class RadialMenuProps
 ---@field id string
@@ -23,8 +24,8 @@ local menuHistory = {}
 ---@type RadialMenuProps?
 local currentRadial = nil
 
----Open a registered radial submenu with the given id.
----@param id string
+---Open a the global radial menu or a registered radial submenu with the given id.
+---@param id string?
 local function showRadial(id)
     local radial = id and menus[id]
 
@@ -48,7 +49,7 @@ local function showRadial(id)
     SendNUIMessage({
         action = 'openRadialMenu',
         data = {
-            items = radial?.items or menuItems,
+            items = radial and radial.items or menuItems,
             sub = radial and true or nil
         }
     })

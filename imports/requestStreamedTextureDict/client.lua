@@ -9,7 +9,7 @@ function lib.requestStreamedTextureDict(textureDict, timeout)
         error(("expected textureDict to have type 'string' (received %s)"):format(type(textureDict)))
     end
 
-    RequestStreamedTextureDict(textureDict)
+    RequestStreamedTextureDict(textureDict, false)
 
     if coroutine.running() then
         timeout = tonumber(timeout) or 500

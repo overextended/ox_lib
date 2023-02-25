@@ -60,6 +60,7 @@ local function closeCreator(cancel)
 			points[#points + 1] = vec(xCoord, yCoord)
 		end
 
+        ---@type string[]
 		local input = lib.inputDialog(('Name your %s Zone'):format(firstToUpper(zoneType)), {
             { type = 'input', label = 'Name', placeholder = 'none' },
             { type = 'select', label = 'Format', default = format, options = {
@@ -229,7 +230,7 @@ local function startCreator(arg, useLast)
         end
 
         if controlsActive then
-            DisableAllControlActions()
+            DisableAllControlActions(0)
             EnableControlAction(0, controls['INPUT_LOOK_LR'], true)
             EnableControlAction(0, controls['INPUT_LOOK_UD'], true)
             EnableControlAction(0, controls['INPUT_MP_TEXT_CHAT_ALL'], true)

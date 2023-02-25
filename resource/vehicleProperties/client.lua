@@ -371,7 +371,7 @@ function lib.setVehicleProperties(vehicle, props)
             if state == 1 then
                 SetVehicleTyreBurst(vehicle, tyre, false, 1000.0)
             else
-                SetVehicleTyreBurst(vehicle, tyre, true)
+                SetVehicleTyreBurst(vehicle, tyre, true, 1000.0)
             end
         end
     end

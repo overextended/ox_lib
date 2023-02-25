@@ -25,7 +25,7 @@ local input
 
 ---@param heading string
 ---@param rows string[] | InputDialogRowProps[]
----@param options InputDialogOptionsProps[]
+---@param options InputDialogOptionsProps[]?
 ---@return string[] | number[] | boolean[] | nil
 function lib.inputDialog(heading, rows, options)
     if input then return end
