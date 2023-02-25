@@ -24,9 +24,6 @@ local menuHistory = {}
 ---@type RadialMenuProps?
 local currentRadial = nil
 
----@type number | nil
-local menuPage = nil
-
 ---Open a the global radial menu or a registered radial submenu with the given id.
 ---@param id string?
 local function showRadial(id)
@@ -116,7 +113,7 @@ function lib.hideRadial()
 
     SendNUIMessage({
         action = 'openRadialMenu',
-        data = menuPage or false
+        data = false
     })
 
     SetNuiFocus(false, false)
@@ -244,11 +241,8 @@ lib.addKeybind({
     defaultKey = 'z',
     onPressed = function()
         if isOpen then
-            menuPage = 1
             return lib.hideRadial()
         end
-
-        menuPage = nil
 
         if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
