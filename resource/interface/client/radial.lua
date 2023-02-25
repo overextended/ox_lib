@@ -3,12 +3,13 @@
 ---@field icon string
 ---@field label string
 ---@field menu? string
----@field onSelect? fun(currentMenu: string | nil, itemIndex: number)
+---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
 ---@field [string] any
 
 ---@class RadialMenuProps
 ---@field id string
 ---@field items RadialMenuItem[]
+---@field [string] any
 
 local isOpen = false
 
@@ -98,6 +99,7 @@ end
 ---@param radial RadialMenuProps
 function lib.registerRadial(radial)
     menus[radial.id] = radial
+    radial.resource = GetInvokingResource()
 
     if currentRadial then
         refreshRadial(radial.id)
@@ -188,7 +190,15 @@ RegisterNUICallback('radialClick', function(index, cb)
         lib.hideRadial()
     end
 
-    if item.onSelect then item.onSelect(currentMenu, itemIndex) end
+    local onSelect = item.onSelect
+
+    if onSelect then
+        if type(onSelect) == 'string' then
+            return exports[currentRadial and currentRadial.resource or item.resource][onSelect](0, currentMenu, itemIndex)
+        end
+
+        onSelect(currentMenu, itemIndex)
+    end
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)
