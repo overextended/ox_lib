@@ -71,20 +71,20 @@ const InputDialog: React.FC = () => {
 
   const handleClose = async () => {
     setVisible(false);
-    fetchNui('inputData');
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
     fieldForm.remove();
+    fetchNui('inputData');
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
     setVisible(false);
     const values: any[] = [];
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
-    fetchNui('inputData', values);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
     fieldForm.remove();
+    fetchNui('inputData', values);
   });
 
   return (
