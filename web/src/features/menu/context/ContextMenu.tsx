@@ -1,5 +1,5 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { Box, Stack, Text, Flex } from '@mantine/core';
+import { Box, Stack, Text, Flex, createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ContextMenuProps } from '../../../typings';
 import ContextButton from './components/ContextButton';
@@ -12,7 +12,41 @@ const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
 };
 
+const useStyles = createStyles((theme) => ({
+  container: {
+    position: 'absolute',
+    top: '15%',
+    right: '25%',
+    width: 320,
+    height: 580,
+  },
+  header: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 6,
+  },
+  titleContainer: {
+    borderRadius: 4,
+    flex: '1 85%',
+    backgroundColor: theme.colors.dark[6],
+  },
+  titleText: {
+    color: theme.colors.dark[0],
+    padding: 6,
+    textAlign: 'center',
+  },
+  buttonsContainer: {
+    height: 560,
+    overflowY: 'scroll',
+  },
+  buttonsFlexWrapper: {
+    gap: 3,
+  },
+}));
+
 const ContextMenu: React.FC = () => {
+  const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
     title: '',
@@ -50,21 +84,21 @@ const ContextMenu: React.FC = () => {
   });
 
   return (
-    <Box sx={{ position: 'absolute', top: '15%', right: '25%' }} w={320} h={580}>
+    <Box className={classes.container}>
       <ScaleFade visible={visible}>
-        <Flex justify="center" align="center" mb={10} gap={6}>
+        <Flex className={classes.header}>
           {contextMenu.menu && (
             <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
           )}
-          <Box sx={{ borderRadius: 4, flex: '1 85%' }} bg="dark.6">
-            <Text color="dark.0" p={6} align="center">
+          <Box className={classes.titleContainer}>
+            <Text className={classes.titleText}>
               <ReactMarkdown>{contextMenu.title}</ReactMarkdown>
             </Text>
           </Box>
           <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
         </Flex>
-        <Box sx={{ height: 560, overflowY: 'scroll' }}>
-          <Stack spacing={3}>
+        <Box className={classes.buttonsContainer}>
+          <Stack className={classes.buttonsFlexWrapper}>
             {Object.entries(contextMenu.options).map((option, index) => (
               <ContextButton option={option} key={`context-item-${index}`} />
             ))}
