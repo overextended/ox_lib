@@ -3,6 +3,7 @@
 ---@field icon string
 ---@field label string
 ---@field menu? string
+---@field shouldClose? boolean
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
 ---@field [string] any
 
@@ -179,6 +180,10 @@ RegisterNUICallback('radialClick', function(index, cb)
     else
         item = menuItems[itemIndex]
     end
+        
+    if item.shouldClose == nil then
+        item.shouldClose = true
+    end
 
     if item.menu then
         if currentRadial then
@@ -186,7 +191,7 @@ RegisterNUICallback('radialClick', function(index, cb)
         end
 
         showRadial(item.menu)
-    else
+    elseif item.shouldClose then
         lib.hideRadial()
     end
 
