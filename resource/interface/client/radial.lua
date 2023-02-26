@@ -19,7 +19,7 @@ local menus = {}
 ---@type RadialMenuItem[]
 local menuItems = {}
 
----@type table<{id: string, label: string}>
+---@type table<{id: string, option: string}>
 local menuHistory = {}
 
 ---@type RadialMenuProps?
@@ -27,8 +27,8 @@ local currentRadial = nil
 
 ---Open a the global radial menu or a registered radial submenu with the given id.
 ---@param id string?
----@param label number?
-local function showRadial(id, label)
+---@param option number?
+local function showRadial(id, option)
     local radial = id and menus[id]
 
     if id and not radial then
@@ -53,7 +53,7 @@ local function showRadial(id, label)
         data = {
             items = radial and radial.items or menuItems,
             sub = radial and true or nil,
-            label = label
+            option = option
         }
     })
 end
@@ -183,7 +183,7 @@ RegisterNUICallback('radialClick', function(index, cb)
     end
 
     if item.menu then
-        menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, label = item.label }
+        menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
         showRadial(item.menu)
     else
         lib.hideRadial()
@@ -211,7 +211,7 @@ RegisterNUICallback('radialBack', function(_, cb)
     menuHistory[numHistory] = nil
 
     if lastMenu.id then
-        return showRadial(lastMenu.id, lastMenu.label)
+        return showRadial(lastMenu.id, lastMenu.option)
     end
 
     currentRadial = nil
@@ -231,7 +231,7 @@ RegisterNUICallback('radialBack', function(_, cb)
         action = 'openRadialMenu',
         data = {
             items = menuItems,
-            label = lastMenu.label
+            option = lastMenu.option
         }
     })
 end)
