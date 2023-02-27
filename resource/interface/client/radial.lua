@@ -131,16 +131,28 @@ function lib.addRadialItem(items)
     local menuSize = #menuItems
     local invokingResource = GetInvokingResource()
 
-    if table.type(items) == 'array' then
-        for i = 1, #items do
-            local item = items[i]
-            item.resource = invokingResource
+    items = table.type(items) == 'array' and items or { items }
+
+    for i = 1, #items do
+        local item = items[i]
+        item.resource = invokingResource
+
+        if menuSize == 0 then
             menuSize += 1
             menuItems[menuSize] = item
+        else
+            for j = 1, menuSize do
+                if menuItems[j].id == item.id then
+                    menuItems[j] = item
+                    break
+                end
+    
+                if j == menuSize then
+                    menuSize += 1
+                    menuItems[menuSize] = item
+                end
+            end
         end
-    else
-        items.resource = invokingResource
-        menuItems[menuSize + 1] = items
     end
 
     if isOpen and not currentRadial then
