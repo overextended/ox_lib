@@ -87,9 +87,13 @@ const RadialMenu: React.FC = () => {
     setMenuItems(items);
   }, [menu.items, menu.page]);
 
-  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean } | false) => {
+  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean, option?: string } | false) => {
     if (!data) return setVisible(false);
-    setMenu({ ...data, page: 1 });
+    let initialPage = 1;
+    if (data.option) {
+      data.items.findIndex((item, index) => item.menu == data.option && (initialPage = Math.floor(index / PAGE_ITEMS) + 1));
+    }
+    setMenu({ ...data, page: initialPage });
     setVisible(true);
   });
 

@@ -4,4 +4,5 @@ export interface RadialMenuItem {
   icon: IconProp;
   label: string;
   isMore?: boolean;
+  menu?: string;
 }
