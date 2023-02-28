@@ -121,6 +121,7 @@ function lib.hideRadial()
     })
 
     SetNuiFocus(false, false)
+    SetNuiFocusKeepInput(false)
     table.wipe(menuHistory)
 
     isOpen = false
