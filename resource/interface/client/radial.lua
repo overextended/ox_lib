@@ -194,6 +194,8 @@ RegisterNUICallback('radialClick', function(index, cb)
         item = menuItems[itemIndex]
     end
 
+    local menuResource = currentRadial and currentRadial.resource or item.resource
+
     if item.menu then
         menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
         showRadial(item.menu)
@@ -205,7 +207,7 @@ RegisterNUICallback('radialClick', function(index, cb)
 
     if onSelect then
         if type(onSelect) == 'string' then
-            return exports[currentRadial and currentRadial.resource or item.resource][onSelect](0, currentMenu, itemIndex)
+            return exports[menuResource][onSelect](0, currentMenu, itemIndex)
         end
 
         onSelect(currentMenu, itemIndex)
