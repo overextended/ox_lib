@@ -149,7 +149,7 @@ function lib.addRadialItem(items)
                     menuItems[j] = item
                     break
                 end
-    
+
                 if j == menuSize then
                     menuSize += 1
                     menuItems[menuSize] = item
@@ -222,7 +222,7 @@ RegisterNUICallback('radialBack', function(_, cb)
     local lastMenu = numHistory > 0 and menuHistory[numHistory]
 
     if not lastMenu then return end
-    
+
     menuHistory[numHistory] = nil
 
     if lastMenu.id then
@@ -271,11 +271,25 @@ RegisterNUICallback('radialTransition', function(_, cb)
     cb(true)
 end)
 
+local isDisabled = false
+
+---Disallow players from opening the radial menu.
+---@param state boolean
+function lib.disableRadial(state)
+    isDisabled = state
+
+    if isOpen and state then
+        return lib.hideRadial()
+    end
+end
+
 lib.addKeybind({
     name = 'ox_lib-radial',
     description = 'Open radial menu',
     defaultKey = 'z',
     onPressed = function()
+        if isDisabled then return end
+
         if isOpen then
             return lib.hideRadial()
         end
