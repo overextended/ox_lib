@@ -2,7 +2,6 @@
 local registeredMenus = {}
 ---@type MenuProps | nil
 local openMenu
-local keepInput = IsNuiFocusKeepingInput()
 
 ---@alias MenuPosition 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 ---@alias MenuChangeFunction fun(selected: number, scrollIndex?: number, args?: any, checked?: boolean)
@@ -65,13 +64,9 @@ function lib.showMenu(id, startIndex)
     end
 
     openMenu = menu
-    keepInput = IsNuiFocusKeepingInput()
 
-    if not menu.disableInput then
-        SetNuiFocusKeepInput(true)
-    end
+    lib.setNuiFocus(not menu.disableInput, false)
 
-    SetNuiFocus(true, false)
     SendNUIMessage({
         action = 'setMenu',
         data = {
@@ -84,24 +79,19 @@ function lib.showMenu(id, startIndex)
     })
 end
 
-local function resetFocus()
-    SetNuiFocus(false, false)
-    SetNuiFocusKeepInput(keepInput)
-end
-
 ---@param onExit boolean?
 function lib.hideMenu(onExit)
     local menu = openMenu
+    openMenu = nil
 
     if not menu then return end
 
-    openMenu = nil
+    lib.resetNuiFocus()
 
     if onExit and menu.onClose then
         menu.onClose()
     end
 
-    resetFocus()
     SendNUIMessage({
         action = 'closeMenu'
     })
@@ -135,7 +125,7 @@ RegisterNUICallback('confirmSelected', function(data, cb)
     if not menu then return end
 
     if menu.options[data[1]].close ~= false then
-        resetFocus()
+        lib.resetNuiFocus()
         openMenu = nil
     end
 
@@ -191,7 +181,7 @@ end)
 
 RegisterNUICallback('closeMenu', function(data, cb)
     cb(1)
-    resetFocus()
+    lib.resetNuiFocus()
 
     local menu = openMenu
 

@@ -1,6 +1,5 @@
 local contextMenus = {}
 local openContextMenu = nil
-local keepInput = IsNuiFocusKeepingInput()
 
 ---@class ContextMenuItem
 ---@field title? string
@@ -28,16 +27,12 @@ local keepInput = IsNuiFocusKeepingInput()
 ---@field canClose? boolean
 ---@field options { [string]: ContextMenuItem } | ContextMenuArrayItem[]
 
-local function resetFocus()
-    SetNuiFocus(false, false)
-    SetNuiFocusKeepInput(keepInput)
-end
-
 local function closeContext(_, cb, onExit)
     if cb then cb(1) end
-    if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
 
-    resetFocus()
+    lib.resetNuiFocus()
+
+    if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
 
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
 
@@ -47,12 +42,11 @@ end
 ---@param id string
 function lib.showContext(id)
     if not contextMenus[id] then error('No context menu of such id found.') end
+
     local data = contextMenus[id]
     openContextMenu = id
-    keepInput = IsNuiFocusKeepingInput()
 
-    SetNuiFocus(true, true)
-    SetNuiFocusKeepInput(false)
+    lib.setNuiFocus(false)
 
     SendNuiMessage(json.encode({
         action = 'showContext',
@@ -104,7 +98,7 @@ RegisterNUICallback('clickContext', function(id, cb)
 
     openContextMenu = nil
 
-    resetFocus()
+    lib.resetNuiFocus()
 
     if data.onSelect then data.onSelect(data.args) end
     if data.event then TriggerEvent(data.event, data.args) end
