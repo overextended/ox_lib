@@ -9,7 +9,7 @@
 ---@field position? NotificationPosition
 ---@field type? NotificationType
 ---@field style? { [string]: any }
----@field icon? string;
+---@field icon? string | table<string, string>;
 ---@field iconColor? string;
 
 ---@param data NotifyProps

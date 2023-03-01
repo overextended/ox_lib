@@ -4,7 +4,7 @@ local openContextMenu = nil
 ---@class ContextMenuItem
 ---@field title? string
 ---@field menu? string
----@field icon? string
+---@field icon? string | table<string, string>
 ---@field iconColor? string
 ---@field onSelect? fun(args: any)
 ---@field arrow? boolean

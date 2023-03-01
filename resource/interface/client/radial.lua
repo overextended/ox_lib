@@ -1,6 +1,6 @@
 ---@class RadialMenuItem
 ---@field id string
----@field icon string
+---@field icon string | table<string, string>
 ---@field label string
 ---@field menu? string
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string

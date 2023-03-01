@@ -1,6 +1,6 @@
 ---@class TextUIOptions
 ---@field position? 'right-center' | 'left-center' | 'top-center';
----@field icon? string;
+---@field icon? string | table<string, string>;
 ---@field iconColor? string;
 ---@field style? string;
 
