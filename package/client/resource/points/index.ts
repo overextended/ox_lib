@@ -40,6 +40,9 @@ export class Point<T = unknown> {
   }
 
   remove = () => {
+    const coords = Vector3.fromArray(GetEntityCoords(cache.ped, false));
+    const distance = coords.distance(this.coords);
+    if (distance < this.distance && this.onExit) this.onExit();
     points = points.filter((point) => point.id !== this.id);
   };
 }
