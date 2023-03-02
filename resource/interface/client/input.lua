@@ -5,7 +5,7 @@ local input
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
 ---@field password? boolean
----@field icon? string | table<string, string>
+---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string
 ---@field placeholder? string
 ---@field default? string | number
