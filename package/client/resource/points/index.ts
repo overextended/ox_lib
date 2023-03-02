@@ -43,7 +43,6 @@ export class Point<T = unknown> {
     const coords = Vector3.fromArray(GetEntityCoords(cache.ped, false));
     const distance = coords.distance(this.coords);
     if (distance < this.distance) {
-      this.onExit && this.onExit();
       nearbyCount -= 1;
       nearbyPoints = nearbyPoints.filter((point) => point.id !== this.id);
       if (nearbyCount === 0 && tick) {
