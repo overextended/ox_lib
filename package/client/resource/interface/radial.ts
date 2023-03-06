@@ -16,3 +16,5 @@ export const registerRadial = (radial: { id: string; items: Omit<RadialItem, 'id
   exports.ox_lib.registerRadial(radial);
 
 export const hideRadial = () => exports.ox_lib.hideRadial();
+
+export const disableRadial = () => exports.ox_lib.disableRadial();
