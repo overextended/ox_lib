@@ -8,7 +8,7 @@ local openMenu
 
 ---@class MenuOptions
 ---@field label string
----@field icon? string
+---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field checked? boolean
 ---@field values? table<string | { label: string, description: string }>
 ---@field description? string
