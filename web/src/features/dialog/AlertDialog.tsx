@@ -49,7 +49,14 @@ const AlertDialog: React.FC = () => {
         title={<ReactMarkdown>{dialogData.header}</ReactMarkdown>}
       >
         <Stack>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{dialogData.content}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              img: ({ ...props }) => <img style={{ maxWidth: '100%', maxHeight: '100%' }} {...props} />,
+            }}
+          >
+            {dialogData.content}
+          </ReactMarkdown>
           <Group position="right" spacing={10}>
             {dialogData.cancel && (
               <Button uppercase variant="default" onClick={() => closeAlert('cancel')} mr={3}>
