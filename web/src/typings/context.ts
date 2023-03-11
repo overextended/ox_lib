@@ -12,6 +12,7 @@ export interface Option {
   colorScheme?: string;
   metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
   disabled?: boolean;
+  hidden?: boolean;
   event?: string;
   serverEvent?: string;
   args?: any;
