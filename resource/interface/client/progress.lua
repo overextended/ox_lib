@@ -18,6 +18,8 @@ local playerState = LocalPlayer.state
 ---@field allowCuffed? boolean
 ---@field allowFalling? boolean
 ---@field canCancel? boolean
+---@field icon? string
+---@field iconColor? string
 ---@field anim? { dict?: string, clip: string, flag?: number, blendIn?: number, blendOut?: number, duration?: number, playbackRate?: number, lockX?: boolean, lockY?: boolean, lockZ?: boolean, scenario?: string, playEnter?: boolean }
 ---@field prop? ProgressPropProps | ProgressPropProps[]
 ---@field disable? { move?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
@@ -187,7 +189,9 @@ function lib.progressCircle(data)
             data = {
                 duration = data.duration,
                 position = data.position,
-                label = data.label
+                label = data.label,
+                icon = data.icon,
+                iconColor = data.iconColor
             }
         })
 

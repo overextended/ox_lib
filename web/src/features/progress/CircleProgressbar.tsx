@@ -1,14 +1,17 @@
 import React from 'react';
-import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles } from '@mantine/core';
+import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles, Center, Image, MantineProvider } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
 import type { CircleProgressbarProps } from '../../typings';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isIconUrl } from '../../utils/isIconUrl';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 // 33.5 is the r of the circle
 const progressCircle = keyframes({
-  '0%': { strokeDasharray: `0, ${33.5 * 2 * Math.PI}` },
-  '100%': { strokeDasharray: `${33.5 * 2 * Math.PI}, 0` },
+  '0%': { strokeDasharray: `0, ${31.5 * 2 * Math.PI}` },
+  '100%': { strokeDasharray: `${31.5 * 2 * Math.PI}, 0` },
 });
 
 const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; duration: number }) => ({
@@ -55,6 +58,8 @@ const CircleProgressbar: React.FC = () => {
   const [position, setPosition] = React.useState<'middle' | 'bottom'>('middle');
   const [value, setValue] = React.useState(0);
   const [label, setLabel] = React.useState('');
+  const [icon, setIcon] = React.useState('');
+  const [iconColor, setIconColor] = React.useState('');
   const theme = useMantineTheme();
   const { classes } = useStyles({ position, duration: progressDuration });
 
@@ -68,6 +73,8 @@ const CircleProgressbar: React.FC = () => {
     setVisible(true);
     setValue(0);
     setLabel(data.label || '');
+    setIcon(data.icon || '');
+    setIconColor(data.iconColor || '');
     setProgressDuration(data.duration);
     setPosition(data.position || 'middle');
     const onePercent = data.duration * 0.01;
@@ -87,11 +94,24 @@ const CircleProgressbar: React.FC = () => {
           <Stack spacing={0} align="center" className={classes.wrapper}>
             <RingProgress
               size={90}
-              thickness={7}
+              thickness={9}
               sections={[{ value: 0, color: theme.primaryColor }]}
               onAnimationEnd={() => setVisible(false)}
               className={classes.progress}
-              label={<Text className={classes.value}>{value}%</Text>}
+              label={
+                <Center>
+                  {typeof icon === 'string' && isIconUrl(icon) ? (
+                    <Image maw={40} mx="auto" src={icon} alt="Missing img" />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={icon as IconProp}
+                      fixedWidth
+                      size="lg"
+                      style={{ color: iconColor }}
+                    />
+                  )}
+                </Center>
+              }
             />
             {label && <Text className={classes.label}>{label}</Text>}
           </Stack>

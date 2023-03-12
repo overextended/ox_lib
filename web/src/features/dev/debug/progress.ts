@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { ProgressbarProps } from '../../../typings';
+import { CircleProgressbarProps, ProgressbarProps } from '../../../typings';
 
 export const debugProgressbar = () => {
   debugData<ProgressbarProps>([
@@ -14,12 +14,14 @@ export const debugProgressbar = () => {
 };
 
 export const debugCircleProgressbar = () => {
-  debugData([
+  debugData<CircleProgressbarProps>([
     {
       action: 'circleProgress',
       data: {
+        position: 'bottom',
         duration: 8000,
         label: 'Using Armour',
+        icon: 'https://cdn.discordapp.com/attachments/927291680380567614/1084275435828957194/100mllsd.png',
       },
     },
   ]);
