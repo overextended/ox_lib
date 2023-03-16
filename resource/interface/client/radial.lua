@@ -182,6 +182,16 @@ function lib.removeRadialItem(id)
     refreshRadial(id)
 end
 
+---Removes all items from the global radial menu.
+function lib.clearRadialItems()
+    table.wipe(menuItems)
+
+    if isOpen then
+        refreshRadial()
+    end
+    
+end
+
 RegisterNUICallback('radialClick', function(index, cb)
     cb(1)
 
