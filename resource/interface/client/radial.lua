@@ -120,8 +120,7 @@ function lib.hideRadial()
         data = false
     })
 
-    SetNuiFocus(false, false)
-    SetNuiFocusKeepInput(false)
+    lib.setNuiFocus(true)
     table.wipe(menuHistory)
 
     isOpen = false
@@ -266,7 +265,7 @@ RegisterNUICallback('radialClose', function(_, cb)
 
     if not isOpen then return end
 
-    SetNuiFocus(false, false)
+    lib.resetNuiFocus()
 
     isOpen = false
     currentRadial = nil
@@ -314,8 +313,8 @@ lib.addKeybind({
                 items = menuItems
             }
         })
-        SetNuiFocus(true, true)
-        SetNuiFocusKeepInput(true)
+
+        lib.setNuiFocus(false)
         SetCursorLocation(0.5, 0.5)
 
         while isOpen do
