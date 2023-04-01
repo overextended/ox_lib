@@ -49,7 +49,7 @@ local function parseArguments(source, args, raw, params)
         end
 
         if not value and (not param.optional or param.optional and arg) then
-            return Citizen.Trace(("^1command '%s' received an invalid %s for argument %s (%s), received '%s'^0"):format(raw:match('/([^ ]+) '), param.type, i, param.name, arg))
+            return Citizen.Trace(("^1command '%s' received an invalid %s for argument %s (%s), received '%s'^0\n"):format(string.strsplit(' ', raw) or raw, param.type, i, param.name, arg))
         end
 
         arg = value
