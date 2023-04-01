@@ -120,7 +120,7 @@ function lib.hideRadial()
         data = false
     })
 
-    lib.setNuiFocus(true)
+    lib.resetNuiFocus()
     table.wipe(menuHistory)
 
     isOpen = false
