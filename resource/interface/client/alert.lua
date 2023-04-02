@@ -15,9 +15,8 @@ function lib.alertDialog(data)
     if alert then return end
 
     alert = promise.new()
+
     lib.setNuiFocus(false)
-    SetNuiFocus(true, true)
-    SetNuiFocusKeepInput(false)
     SendNUIMessage({
         action = 'sendAlert',
         data = data
@@ -33,8 +32,8 @@ function lib.closeAlertDialog()
     SendNUIMessage({
         action = 'closeAlertDialog'
     })
-    alert:resolve(nil)
 
+    alert:resolve(nil)
     alert = nil
 end
 

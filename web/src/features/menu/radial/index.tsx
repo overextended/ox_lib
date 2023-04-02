@@ -52,8 +52,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// PAGE_ITEMS + 1 = More... button
-const PAGE_ITEMS = 7;
+// includes More... button
+const PAGE_ITEMS = 8;
 
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
@@ -80,10 +80,11 @@ const RadialMenu: React.FC = () => {
   };
 
   useEffect(() => {
-    if (menu.items.length < PAGE_ITEMS) return setMenuItems(menu.items);
-    const items = menu.items.slice(PAGE_ITEMS * (menu.page - 1), PAGE_ITEMS * menu.page);
-    PAGE_ITEMS * menu.page < menu.items.length &&
-      items.push({ icon: 'ellipsis-h', label: locale.ui.more, isMore: true });
+    if (menu.items.length <= PAGE_ITEMS) return setMenuItems(menu.items);
+    const items = menu.items.slice(PAGE_ITEMS * (menu.page - 1) - (menu.page - 1), PAGE_ITEMS * menu.page - menu.page + 1);
+    if (PAGE_ITEMS * menu.page - menu.page + 1 < menu.items.length) {
+      items[items.length - 1] = { icon: 'ellipsis-h', label: locale.ui.more, isMore: true };
+    }
     setMenuItems(items);
   }, [menu.items, menu.page]);
 
@@ -133,7 +134,7 @@ const RadialMenu: React.FC = () => {
                     transform={`rotate(-${index * pieAngle} 175 175) translate(${sinAngle * gap}, ${cosAngle * gap})`}
                     className={classes.sector}
                     onClick={async () => {
-                      const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) + index;
+                      const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
                       if (!item.isMore) fetchNui('radialClick', clickIndex);
                       else {
                         await changePage(true);

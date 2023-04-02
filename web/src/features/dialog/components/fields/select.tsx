@@ -1,5 +1,5 @@
 import { MultiSelect, Select } from '@mantine/core';
-import { ISelect } from '../../../../typings/dialog';
+import { ISelect } from '../../../../typings';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +14,6 @@ const SelectField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
     control: props.control,
-    defaultValue: props.row.default || props.row.type !== 'multi-select' ? props.row.options[0].value : undefined,
     rules: { required: props.row.required },
   });
 

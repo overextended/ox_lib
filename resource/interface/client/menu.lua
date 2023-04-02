@@ -8,7 +8,7 @@ local openMenu
 
 ---@class MenuOptions
 ---@field label string
----@field icon? string
+---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field checked? boolean
 ---@field values? table<string | { label: string, description: string }>
 ---@field description? string
@@ -65,7 +65,7 @@ function lib.showMenu(id, startIndex)
 
     openMenu = menu
 
-    lib.setNuiFocus(not menu.disableInput, false)
+    lib.setNuiFocus(not menu.disableInput, true)
 
     SendNUIMessage({
         action = 'setMenu',

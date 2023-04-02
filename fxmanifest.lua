@@ -8,7 +8,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 --[[ Resource Information ]]--
 name         'ox_lib'
 author       'Overextended'
-version      '3.1.0'
+version      '3.1.4'
 license      'LGPL-3.0-or-later'
 repository   'https://github.com/overextended/ox_lib'
 description  'A library of shared functions to utilise in other resources.'
@@ -34,7 +34,7 @@ shared_script 'resource/init.lua'
 
 shared_scripts {
     'resource/**/shared.lua',
-    'resource/**/shared/*.lua'
+    -- 'resource/**/shared/*.lua'
 }
 
 client_scripts {
@@ -49,6 +49,6 @@ client_scripts {
 server_scripts {
 	'imports/callback/server.lua',
     'resource/**/server.lua',
-    'resource/**/server/*.lua'
+    -- 'resource/**/server/*.lua'
 }
 

@@ -5,7 +5,7 @@ local input
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
 ---@field password? boolean
----@field icon? string
+---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string
 ---@field placeholder? string
 ---@field default? string | number
@@ -38,7 +38,7 @@ function lib.inputDialog(heading, rows, options)
         end
     end
 
-    SetNuiFocus(true, true)
+    lib.setNuiFocus(false)
     SendNUIMessage({
         action = 'openDialog',
         data = {
@@ -53,18 +53,22 @@ end
 
 function lib.closeInputDialog()
     if not input then return end
-    input:resolve(nil)
-    input = nil
-    SetNuiFocus(false, false)
+
+    lib.resetNuiFocus()
     SendNUIMessage({
         action = 'closeInputDialog'
     })
+
+    input:resolve(nil)
+    input = nil
 end
 
 RegisterNUICallback('inputData', function(data, cb)
     cb(1)
-    SetNuiFocus(false, false)
+    lib.resetNuiFocus()
+
     local promise = input
     input = nil
+
     promise:resolve(data)
 end)

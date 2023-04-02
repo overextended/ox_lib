@@ -1,6 +1,6 @@
 ---@class RadialMenuItem
 ---@field id string
----@field icon string
+---@field icon string | {[1]: IconProp, [2]: string};
 ---@field label string
 ---@field menu? string
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
@@ -120,8 +120,7 @@ function lib.hideRadial()
         data = false
     })
 
-    SetNuiFocus(false, false)
-    SetNuiFocusKeepInput(false)
+    lib.resetNuiFocus()
     table.wipe(menuHistory)
 
     isOpen = false
@@ -180,6 +179,16 @@ function lib.removeRadialItem(id)
     if not isOpen then return end
 
     refreshRadial(id)
+end
+
+---Removes all items from the global radial menu.
+function lib.clearRadialItems()
+    table.wipe(menuItems)
+
+    if isOpen then
+        refreshRadial()
+    end
+    
 end
 
 RegisterNUICallback('radialClick', function(index, cb)
@@ -256,7 +265,7 @@ RegisterNUICallback('radialClose', function(_, cb)
 
     if not isOpen then return end
 
-    SetNuiFocus(false, false)
+    lib.resetNuiFocus()
 
     isOpen = false
     currentRadial = nil
@@ -304,8 +313,8 @@ lib.addKeybind({
                 items = menuItems
             }
         })
-        SetNuiFocus(true, true)
-        SetNuiFocusKeepInput(true)
+
+        lib.setNuiFocus(false)
         SetCursorLocation(0.5, 0.5)
 
         while isOpen do
