@@ -3,12 +3,13 @@ function streamingRequest(
   hasLoaded: Function,
   assetType: string,
   asset: any,
-  timeout?: number
+  timeout?: number,
+  ...args: any
 ): Promise<any> {
   return new Promise((resolve, reject) => {
     if (hasLoaded(asset)) resolve(asset);
 
-    request(asset);
+    request(asset, ...args);
 
     if (typeof timeout !== 'number') timeout = 500;
 
@@ -46,5 +47,9 @@ export const requestStreamedTextureDict = (textureDict: string, timeout?: number
 export const requestNamedPtfxAsset = (ptFxName: string, timeout?: number): Promise<string> =>
   streamingRequest(RequestNamedPtfxAsset, HasNamedPtfxAssetLoaded, 'ptFxName', ptFxName, timeout);
 
-export const requestWeaponAsset = (weaponHash: string | number, timeout?: number): Promise<string | number> =>
-  streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout);
+export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, p1?: number, p2?: number): Promise<string | number> => {
+  p1 = p1 || 31;
+  p2 = p2 || 0;
+
+  return streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, p1, p2);
+}
