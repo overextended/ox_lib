@@ -306,7 +306,7 @@ lib.zones = {
                 end
             end
 
-            if averageTo > 1 then
+            if averageTo and averageTo > 1 then
                 for i = 2, averageTo do
                     zCoord += coordsArray[i].coord
                 end
