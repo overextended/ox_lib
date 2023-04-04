@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Cancel",
     "close": "Zapri",
-    "confirm": "Potrdi"
+    "confirm": "Potrdi",
+    "more": "More..."
   }
 }

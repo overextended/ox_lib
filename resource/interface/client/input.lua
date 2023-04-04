@@ -1,11 +1,11 @@
 local input
 
 ---@class InputDialogRowProps
----@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider'
+---@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea'
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
 ---@field password? boolean
----@field icon? string
+---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string
 ---@field placeholder? string
 ---@field default? string | number
@@ -14,12 +14,20 @@ local input
 ---@field min? number
 ---@field max? number
 ---@field step? number
+---@field autosize? boolean
+---@field required? boolean
+---@field format? string
+---@field clearable? string
 ---@field description? string
+
+---@class InputDialogOptionsProps
+---@field allowCancel? boolean
 
 ---@param heading string
 ---@param rows string[] | InputDialogRowProps[]
+---@param options InputDialogOptionsProps[]?
 ---@return string[] | number[] | boolean[] | nil
-function lib.inputDialog(heading, rows)
+function lib.inputDialog(heading, rows, options)
     if input then return end
     input = promise.new()
 
@@ -30,12 +38,13 @@ function lib.inputDialog(heading, rows)
         end
     end
 
-    SetNuiFocus(true, true)
+    lib.setNuiFocus(false)
     SendNUIMessage({
         action = 'openDialog',
         data = {
             heading = heading,
-            rows = rows
+            rows = rows,
+            options = options
         }
     })
 
@@ -44,18 +53,22 @@ end
 
 function lib.closeInputDialog()
     if not input then return end
-    input:resolve(nil)
-    input = nil
-    SetNuiFocus(false, false)
+
+    lib.resetNuiFocus()
     SendNUIMessage({
         action = 'closeInputDialog'
     })
+
+    input:resolve(nil)
+    input = nil
 end
 
 RegisterNUICallback('inputData', function(data, cb)
     cb(1)
-    SetNuiFocus(false, false)
+    lib.resetNuiFocus()
+
     local promise = input
     input = nil
+
     promise:resolve(data)
 end)

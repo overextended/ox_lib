@@ -11,7 +11,7 @@ end)
 ---@param playerId number
 ---@param cb function|false
 ---@param ... any
----@return unknown?
+---@return ...
 local function triggerClientCallback(_, event, playerId, cb, ...)
 	local key
 

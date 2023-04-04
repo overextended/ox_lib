@@ -3,6 +3,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
+@import url("https://use.typekit.net/wxh5ury.css");
+@import url("https://use.typekit.net/qgr5ebd.css");
 
 html {
   color-scheme: normal !important;
@@ -20,21 +22,16 @@ body {
   overflow: hidden !important;
 }
 
+p {
+  margin: 0;
+}
+
 #root {
   height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-@keyframes progress {
-  0% {
-    stroke-dasharray: 0, 264;
-  }
-  100% {
-    stroke-dasharray: 264, 0;
-  }
 }
 
 @keyframes progress-bar {

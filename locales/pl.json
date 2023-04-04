@@ -3,6 +3,7 @@
   "ui": {
     "cancel": "Anuluj",
     "close": "Zamknij",
-    "confirm": "Potwierdź"
+    "confirm": "Potwierdź",
+    "more": "More..."
   }
 }

@@ -1,8 +1,11 @@
-import { Box, Flex, Stack, Text, Progress } from '@chakra-ui/react';
+import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
-import type { MenuItem } from './index';
+import type { MenuItem } from '../../../typings';
+import { createStyles } from '@mantine/core';
+import { isIconUrl } from '../../../utils/isIconUrl';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface Props {
   item: MenuItem;
@@ -11,35 +14,89 @@ interface Props {
   checked: boolean;
 }
 
+const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
+  buttonContainer: {
+    backgroundColor: theme.colors.dark[6],
+    borderRadius: theme.radius.md,
+    padding: 2,
+    height: 60,
+    scrollMargin: 8,
+    '&:focus': {
+      backgroundColor: theme.colors.dark[4],
+      outline: 'none',
+    },
+  },
+  iconImage: {
+    maxWidth: 32,
+  },
+  buttonWrapper: {
+    paddingLeft: 5,
+    paddingRight: 12,
+    height: '100%',
+  },
+  iconContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: 32,
+    height: 32,
+  },
+  icon: {
+    fontSize: 24,
+    color: params.iconColor || theme.colors.dark[2],
+  },
+  label: {
+    color: theme.colors.dark[2],
+    textTransform: 'uppercase',
+    fontSize: 12,
+    verticalAlign: 'middle',
+  },
+  chevronIcon: {
+    fontSize: 14,
+    color: theme.colors.dark[2],
+  },
+  scrollIndexValue: {
+    color: theme.colors.dark[2],
+    textTransform: 'uppercase',
+    fontSize: 14,
+  },
+  progressStack: {
+    width: '100%',
+    marginRight: 5,
+  },
+  progressLabel: {
+    verticalAlign: 'middle',
+    marginBottom: 3,
+  },
+}));
+
 const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex, checked }, ref) => {
+  const { classes } = useStyles({ iconColor: item.iconColor });
+
   return (
     <Box
-      bg="#25262B"
-      borderRadius="md"
       tabIndex={index}
-      scrollMargin={2}
-      p={2}
-      height="60px"
+      className={classes.buttonContainer}
       key={`item-${index}`}
-      _focus={{ bg: '#373A40', outline: 'none' }}
-      ref={(element) => {
+      ref={(element: HTMLDivElement) => {
         if (ref)
           // @ts-ignore i cba
           return (ref.current = [...ref.current, element]);
       }}
     >
-      <Flex alignItems="center" height="100%" gap="15px">
+      <Group spacing={15} noWrap className={classes.buttonWrapper}>
         {item.icon && (
-          <Box display="flex" alignItems="center">
-            <FontAwesomeIcon icon={item.icon} fontSize={24} color={item.iconColor || '#909296'} fixedWidth />
+          <Box className={classes.iconContainer}>
+            {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
+              <img src={item.icon} alt="Missing image" className={classes.iconImage} />
+            ) : (
+              <FontAwesomeIcon icon={item.icon as IconProp} className={classes.icon} fixedWidth />
+            )}
           </Box>
         )}
         {Array.isArray(item.values) ? (
-          <Flex alignItems="center" justifyContent="space-between" w="100%">
-            <Stack spacing={1} justifyContent="space-between">
-              <Text color="#909296" textTransform="uppercase" fontSize={12} verticalAlign="middle">
-                {item.label}
-              </Text>
+          <Group position="apart" w="100%">
+            <Stack spacing={0} justify="space-between">
+              <Text className={classes.label}>{item.label}</Text>
               <Text>
                 {typeof item.values[scrollIndex] === 'object'
                   ? // @ts-ignore for some reason even checking the type TS still thinks it's a string
@@ -47,30 +104,32 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
                   : item.values[scrollIndex]}
               </Text>
             </Stack>
-            <Stack direction="row" spacing="sm" pr={3} justifyContent="center" alignItems="center">
-              <FontAwesomeIcon icon="chevron-left" fontSize={16} color="#909296" />
-              <Text color="#909296" textTransform="uppercase" fontSize={14}>
+            <Group spacing={1} position="center">
+              <FontAwesomeIcon icon="chevron-left" className={classes.chevronIcon} />
+              <Text className={classes.scrollIndexValue}>
                 {scrollIndex + 1}/{item.values.length}
               </Text>
-              <FontAwesomeIcon icon="chevron-right" fontSize={16} color="#909296" />
-            </Stack>
-          </Flex>
+              <FontAwesomeIcon icon="chevron-right" className={classes.chevronIcon} />
+            </Group>
+          </Group>
         ) : item.checked !== undefined ? (
-          <Flex alignItems="center" justifyContent="space-between" w="100%">
+          <Group position="apart" w="100%">
             <Text>{item.label}</Text>
             <CustomCheckbox checked={checked}></CustomCheckbox>
-          </Flex>
+          </Group>
         ) : item.progress !== undefined ? (
-          <Flex flexDirection="column" w="100%" marginRight="5px">
-            <Text verticalAlign="middle" marginBottom="3px">
-              {item.label}
-            </Text>
-            <Progress value={item.progress} size="sm" colorScheme={item.colorScheme || 'gray'} borderRadius="md" />
-          </Flex>
+          <Stack className={classes.progressStack} spacing={0}>
+            <Text className={classes.progressLabel}>{item.label}</Text>
+            <Progress
+              value={item.progress}
+              color={item.colorScheme || 'dark.0'}
+              styles={(theme) => ({ root: { backgroundColor: theme.colors.dark[3] } })}
+            />
+          </Stack>
         ) : (
           <Text>{item.label}</Text>
         )}
-      </Flex>
+      </Group>
     </Box>
   );
 });

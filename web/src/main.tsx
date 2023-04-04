@@ -2,16 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { VisibilityProvider } from './providers/VisibilityProvider';
-import { ChakraProvider } from '@chakra-ui/react';
-import { theme } from './theme';
-import { debugData } from './utils/debugData';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { isEnvBrowser } from './utils/misc';
 import LocaleProvider from './providers/LocaleProvider';
+import ConfigProvider from './providers/ConfigProvider';
 
 library.add(fas, far, fab);
 
@@ -25,22 +22,13 @@ if (isEnvBrowser()) {
   root!.style.backgroundPosition = 'center';
 }
 
-debugData([
-  {
-    action: 'setVisible',
-    data: true,
-  },
-]);
-
 const root = document.getElementById('root');
 ReactDOM.createRoot(root!).render(
   <React.StrictMode>
     <LocaleProvider>
-      <VisibilityProvider>
-        <ChakraProvider theme={theme}>
-          <App />
-        </ChakraProvider>
-      </VisibilityProvider>
+      <ConfigProvider>
+        <App />
+      </ConfigProvider>
     </LocaleProvider>
   </React.StrictMode>
 );

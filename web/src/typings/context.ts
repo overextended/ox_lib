@@ -6,11 +6,11 @@ export interface Option {
   description?: string;
   arrow?: boolean;
   image?: string;
-  icon?: IconProp;
+  icon?: IconProp | string;
   iconColor?: string;
   progress?: number;
   colorScheme?: string;
-  metadata?: string[] | { [key: string]: any } | { label: string; value: any }[];
+  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
   disabled?: boolean;
   event?: string;
   serverEvent?: string;

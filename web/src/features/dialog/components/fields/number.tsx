@@ -1,52 +1,39 @@
-import {
-  Box,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  InputLeftElement,
-  InputGroup,
-} from '@chakra-ui/react';
-import { useEffect } from 'react';
-import { INumber } from '../../../../interfaces/dialog';
+import { NumberInput } from '@mantine/core';
+import { INumber } from '../../../../typings/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Label from '../Label';
+import { Control, useController } from 'react-hook-form';
+import { FormValues } from '../../InputDialog';
 
 interface Props {
   row: INumber;
   index: number;
-  handleChange: (value: number, index: number) => void;
+  control: Control<FormValues>;
 }
 
 const NumberField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default) props.handleChange(props.row.default, props.index);
-  }, []);
+  const controller = useController({
+    name: `test.${props.index}.value`,
+    control: props.control,
+    defaultValue: props.row.default,
+    rules: { required: props.row.required },
+  });
 
   return (
-    <Box mb={3}>
-      <Label label={props.row.label} description={props.row.description} />
-      <InputGroup>
-        <NumberInput
-          onChange={(val: string) => props.handleChange(+val, props.index)}
-          defaultValue={props.row.default}
-          min={props.row.min}
-          max={props.row.max}
-          isDisabled={props.row.disabled}
-          w="100%"
-        >
-          {props.row.icon && (
-            <InputLeftElement pointerEvents="none" children={<FontAwesomeIcon icon={props.row.icon} fixedWidth />} />
-          )}
-          <NumberInputField placeholder={props.row.placeholder} pl={props.row.icon ? '40px' : undefined} />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </InputGroup>
-    </Box>
+    <NumberInput
+      value={controller.field.value}
+      name={controller.field.name}
+      ref={controller.field.ref}
+      onBlur={controller.field.onBlur}
+      onChange={controller.field.onChange}
+      label={props.row.label}
+      description={props.row.description}
+      defaultValue={props.row.default}
+      min={props.row.min}
+      max={props.row.max}
+      disabled={props.row.disabled}
+      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      withAsterisk={props.row.required}
+    />
   );
 };
 

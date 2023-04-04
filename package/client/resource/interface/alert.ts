@@ -2,6 +2,8 @@ interface AlertDialogProps {
   header: string;
   content: string;
   centered?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  overflow?: boolean;
   cancel?: boolean;
   labels?: {
     cancel?: string;

@@ -1,14 +1,53 @@
 import React from 'react';
-import { CircularProgress, CircularProgressLabel, Flex, Text } from '@chakra-ui/react';
+import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
+import ScaleFade from '../../transitions/ScaleFade';
+import type { CircleProgressbarProps } from '../../typings';
 
-export interface CircleProgressbarProps {
-  label?: string;
-  duration: number;
-  position?: 'middle' | 'bottom';
-  percent?: boolean;
-}
+// 33.5 is the r of the circle
+const progressCircle = keyframes({
+  '0%': { strokeDasharray: `0, ${33.5 * 2 * Math.PI}` },
+  '100%': { strokeDasharray: `${33.5 * 2 * Math.PI}, 0` },
+});
+
+const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; duration: number }) => ({
+  container: {
+    width: '100%',
+    height: params.position === 'middle' ? '100%' : '20%',
+    bottom: 0,
+    position: 'absolute',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progress: {
+    '> svg > circle:nth-child(1)': {
+      stroke: theme.colors.dark[5],
+    },
+    // Scuffed way of grabbing the first section and animating it
+    '> svg > circle:nth-child(2)': {
+      transition: 'none',
+      animation: `${progressCircle} linear forwards`,
+      animationDuration: `${params.duration}ms`,
+    },
+  },
+  value: {
+    textAlign: 'center',
+    fontFamily: 'roboto-mono',
+    textShadow: theme.shadows.sm,
+    color: theme.colors.gray[3],
+  },
+  label: {
+    textAlign: 'center',
+    textShadow: theme.shadows.sm,
+    color: theme.colors.gray[3],
+    height: 25,
+  },
+  wrapper: {
+    marginTop: params.position === 'middle' ? 25 : undefined,
+  },
+}));
 
 const CircleProgressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -16,24 +55,16 @@ const CircleProgressbar: React.FC = () => {
   const [position, setPosition] = React.useState<'middle' | 'bottom'>('middle');
   const [value, setValue] = React.useState(0);
   const [label, setLabel] = React.useState('');
-  const [cancelled, setCancelled] = React.useState(false);
+  const theme = useMantineTheme();
+  const { classes } = useStyles({ position, duration: progressDuration });
 
-  const progressComplete = () => {
+  useNuiEvent('progressCancel', () => {
+    setValue(99);
     setVisible(false);
-    fetchNui('progressComplete');
-  };
-
-  const progressCancel = () => {
-    setCancelled(true);
-    setValue(99); // Sets the final value to 100% kek
-    setVisible(false);
-  };
-
-  useNuiEvent('progressCancel', progressCancel);
+  });
 
   useNuiEvent<CircleProgressbarProps>('circleProgress', (data) => {
     if (visible) return;
-    setCancelled(false);
     setVisible(true);
     setValue(0);
     setLabel(data.label || '');
@@ -50,50 +81,23 @@ const CircleProgressbar: React.FC = () => {
   });
 
   return (
-    <Flex
-      h={position === 'middle' ? '100%' : '20%'}
-      w="100%"
-      position="absolute"
-      bottom="0"
-      justifyContent="center"
-      alignItems="center"
-    >
-      {visible && (
-        <Flex alignItems="center" flexDirection="column">
-          <CircularProgress
-            value={value}
-            size="5rem"
-            trackColor="rgba(0, 0, 0, 0.6)"
-            onAnimationEnd={progressComplete}
-            thickness={6}
-            color={cancelled ? 'rgb(198, 40, 40)' : 'white'}
-            sx={
-              !cancelled
-                ? {
-                    '.chakra-progress__indicator': {
-                      transition: 'none !important',
-                      animation: 'progress linear forwards !important',
-                      animationDuration: `${progressDuration}ms !important`,
-                      opacity: '1 !important',
-                    },
-                  }
-                : {
-                    // Currently unused
-                    '.chakra-progress__indicator': {
-                      transition: 'none !important',
-                      strokeDasharray: '264, 0 !important', // sets circle to full
-                    },
-                  }
-            }
-          >
-            <CircularProgressLabel fontFamily="Fira Mono">{value}%</CircularProgressLabel>
-          </CircularProgress>
-          <Text fontFamily="Inter" fontSize={18} fontWeight="light">
-            {label}
-          </Text>
-        </Flex>
-      )}
-    </Flex>
+    <>
+      <Stack spacing={0} className={classes.container}>
+        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
+          <Stack spacing={0} align="center" className={classes.wrapper}>
+            <RingProgress
+              size={90}
+              thickness={7}
+              sections={[{ value: 0, color: theme.primaryColor }]}
+              onAnimationEnd={() => setVisible(false)}
+              className={classes.progress}
+              label={<Text className={classes.value}>{value}%</Text>}
+            />
+            {label && <Text className={classes.label}>{label}</Text>}
+          </Stack>
+        </ScaleFade>
+      </Stack>
+    </>
   );
 };
 

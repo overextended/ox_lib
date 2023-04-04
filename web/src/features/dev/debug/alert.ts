@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { AlertProps } from '../../dialog/AlertDialog';
+import { AlertProps } from '../../../typings';
 
 export const debugAlert = () => {
   debugData<AlertProps>([
@@ -9,11 +9,13 @@ export const debugAlert = () => {
         header: 'Hello there',
         content: 'General kenobi  \n Markdown works',
         centered: true,
+        size: 'lg',
+        overflow: true,
         cancel: true,
-        labels: {
-          confirm: 'Ok',
-          cancel: 'Not ok',
-        },
+        // labels: {
+        //   confirm: 'Ok',
+        //   cancel: 'Not ok',
+        // },
       },
     },
   ]);

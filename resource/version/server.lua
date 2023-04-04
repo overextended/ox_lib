@@ -4,7 +4,7 @@ function lib.versionCheck(repository)
 	local currentVersion = GetResourceMetadata(resource, 'version', 0)
 
 	if currentVersion then
-		currentVersion = currentVersion:match('%d%.%d+%.%d+')
+		currentVersion = currentVersion:match('%d+%.%d+%.%d+')
 	end
 
 	if not currentVersion then return print(("^1Unable to determine current resource version for '%s' ^0"):format(resource)) end
@@ -16,7 +16,7 @@ function lib.versionCheck(repository)
 			response = json.decode(response)
 			if response.prerelease then return end
 
-			local latestVersion = response.tag_name:match('%d%.%d+%.%d+')
+			local latestVersion = response.tag_name:match('%d+%.%d+%.%d+')
 			if not latestVersion or latestVersion == currentVersion then return end
 
             local cv = { string.strsplit('.', currentVersion) }

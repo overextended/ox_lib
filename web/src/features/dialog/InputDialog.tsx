@@ -1,103 +1,164 @@
-import { Modal, ModalOverlay, ModalContent, ModalFooter, ModalHeader, ModalBody, Button } from '@chakra-ui/react';
+import { Group, Modal, Button, Stack } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import { IInput, ICheckbox, ISelect, INumber, ISlider } from '../../interfaces/dialog';
+import { OptionValue } from '../../typings';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
 import SelectField from './components/fields/select';
 import NumberField from './components/fields/number';
 import SliderField from './components/fields/slider';
+import { useFieldArray, useForm } from 'react-hook-form';
+import ColorField from './components/fields/color';
+import DateField from './components/fields/date';
+import TextareaField from './components/fields/textarea';
+import TimeField from './components/fields/time';
+import type { InputProps } from '../../typings';
 
-export interface InputProps {
-  heading: string;
-  rows: Array<IInput | ICheckbox | ISelect | INumber | ISlider>;
-}
+export type FormValues = {
+  test: {
+    value: any;
+  }[];
+};
 
 const InputDialog: React.FC = () => {
   const [fields, setFields] = React.useState<InputProps>({
     heading: '',
     rows: [{ type: 'input', label: '' }],
   });
-  const [inputData, setInputData] = React.useState<Array<string | number | boolean>>([]);
-  const [passwordStates, setPasswordStates] = React.useState<boolean[]>([]);
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
 
-  const handlePasswordStates = (index: number) => {
-    setPasswordStates({
-      ...passwordStates,
-      [index]: !passwordStates[index],
-    });
-  };
+  const form = useForm<{ test: { value: any }[] }>({});
+  const fieldForm = useFieldArray({
+    control: form.control,
+    name: 'test',
+  });
 
   useNuiEvent<InputProps>('openDialog', (data) => {
-    setPasswordStates([]);
     setFields(data);
-    setInputData([]);
     setVisible(true);
+    data.rows.forEach((row, index) => {
+      fieldForm.insert(
+        index,
+        {
+          value:
+            row.type !== 'checkbox'
+              ? row.type === 'date' || row.type === 'date-range' || row.type === 'time'
+                ? // Set date to current one if default is set to true
+                  row.default === true
+                  ? new Date().getTime()
+                  : Array.isArray(row.default)
+                  ? row.default.map((date) => new Date(date).getTime())
+                  : row.default && new Date(row.default).getTime()
+                : row.default
+              : row.checked,
+        } || { value: null }
+      );
+      // Backwards compat with new Select data type
+      if (row.type === 'select' || row.type === 'multi-select') {
+        row.options = row.options.map((option) =>
+          !option.label ? { ...option, label: option.value } : option
+        ) as Array<OptionValue>;
+      }
+    });
   });
 
   useNuiEvent('closeInputDialog', () => {
     setVisible(false);
   });
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setVisible(false);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    form.reset();
+    fieldForm.remove();
     fetchNui('inputData');
   };
 
-  const handleChange = (value: string | number | boolean, index: number) => {
-    setInputData((previousData) => {
-      previousData[index] = value;
-      return previousData;
-    });
-  };
-
-  const handleConfirm = () => {
+  const onSubmit = form.handleSubmit(async (data) => {
     setVisible(false);
-    fetchNui('inputData', inputData);
-  };
+    const values: any[] = [];
+    Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    form.reset();
+    fieldForm.remove();
+    fetchNui('inputData', values);
+  });
 
   return (
     <>
-      <Modal isOpen={visible} onClose={handleClose} isCentered closeOnEsc closeOnOverlayClick={false} size="xs">
-        <ModalOverlay />
-        <ModalContent
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && visible) return handleConfirm();
-          }}
-        >
-          <ModalHeader textAlign="center">{fields.heading}</ModalHeader>
-          <ModalBody fontFamily="Poppins" textAlign="left">
-            {fields.rows.map((row: IInput | ICheckbox | ISelect | INumber | ISlider, index) => (
-              <React.Fragment key={`row-${index}-${row.type}-${row.label}`}>
-                {row.type === 'input' && (
-                  <InputField
-                    row={row}
-                    index={index}
-                    handleChange={handleChange}
-                    passwordStates={passwordStates}
-                    handlePasswordStates={handlePasswordStates}
-                  />
-                )}
-                {row.type === 'checkbox' && <CheckboxField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'select' && <SelectField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'number' && <NumberField row={row} index={index} handleChange={handleChange} />}
-                {row.type === 'slider' && <SliderField row={row} index={index} handleChange={handleChange} />}
-              </React.Fragment>
-            ))}
-          </ModalBody>
-          <ModalFooter>
-            <Button mr={3} onClick={handleClose}>
-              {locale.ui.close}
-            </Button>
-            <Button colorScheme="blue" onClick={handleConfirm}>
-              {locale.ui.confirm}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal
+        opened={visible}
+        onClose={handleClose}
+        centered
+        closeOnEscape={fields.options?.allowCancel !== false}
+        closeOnClickOutside={false}
+        size="xs"
+        styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
+        title={fields.heading}
+        withCloseButton={false}
+        overlayOpacity={0.5}
+        transition="fade"
+        exitTransitionDuration={150}
+      >
+        <form onSubmit={onSubmit}>
+          <Stack>
+            {fieldForm.fields.map((item, index) => {
+              const row = fields.rows[index];
+              return (
+                <React.Fragment key={item.id}>
+                  {row.type === 'input' && (
+                    <InputField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
+                  )}
+                  {row.type === 'checkbox' && (
+                    <CheckboxField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
+                  )}
+                  {(row.type === 'select' || row.type === 'multi-select') && (
+                    <SelectField row={row} index={index} control={form.control} />
+                  )}
+                  {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
+                  {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
+                  {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
+                  {row.type === 'time' && <TimeField control={form.control} row={row} index={index} />}
+                  {row.type === 'date' || row.type === 'date-range' ? (
+                    <DateField control={form.control} row={row} index={index} />
+                  ) : null}
+                  {row.type === 'textarea' && (
+                    <TextareaField
+                      register={form.register(`test.${index}.value`, { required: row.required })}
+                      row={row}
+                      index={index}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
+            <Group position="right" spacing={10}>
+              <Button
+                uppercase
+                variant="default"
+                onClick={handleClose}
+                mr={3}
+                disabled={fields.options?.allowCancel === false}
+              >
+                {locale.ui.cancel}
+              </Button>
+              <Button uppercase variant="light" type="submit">
+                {locale.ui.confirm}
+              </Button>
+            </Group>
+          </Stack>
+        </form>
       </Modal>
     </>
   );

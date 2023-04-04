@@ -1,5 +1,5 @@
 function lib.checkDependency(resource, minimumVersion, printMessage)
-	local currentVersion = GetResourceMetadata(resource, 'version', 0):match('%d%.%d+%.%d+')
+	local currentVersion = GetResourceMetadata(resource, 'version', 0):match('%d+%.%d+%.%d+')
 
 	if currentVersion ~= minimumVersion then
 		local cv = { string.strsplit('.', currentVersion) }

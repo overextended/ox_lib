@@ -23,7 +23,8 @@ if status ~= true then error(status, 2) end
 
 local LoadResourceFile = LoadResourceFile
 local context = IsDuplicityVersion() and 'server' or 'client'
-local function noop() end
+
+function noop() end
 
 local function loadModule(self, module)
 	local dir = ('imports/%s'):format(module)
@@ -76,10 +77,7 @@ end
 
 lib = setmetatable({
 	name = ox_lib,
-    ---@deprecated
-	service = context,
 	context = context,
-	exports = {},
 	onCache = function(key, cb)
 		AddEventHandler(('ox_lib:cache:%s'):format(key), cb)
 	end
@@ -87,6 +85,9 @@ lib = setmetatable({
 	__index = call,
 	__call = call,
 })
+
+-- Override standard Lua require with our own.
+require = lib.require
 
 local intervals = {}
 --- Dream of a world where this PR gets accepted.
@@ -145,6 +146,7 @@ end
 -----------------------------------------------------------------------------------------------
 
 cache = { game = GetGameName(), resource = GetCurrentResourceName() }
+local notify = ('__ox_notify_%s'):format(cache.resource)
 
 if context == 'client' then
 	setmetatable(cache, {
@@ -157,7 +159,7 @@ if context == 'client' then
 		end,
 	})
 
-	RegisterNetEvent(('%s:notify'):format(cache.resource), function(data)
+	RegisterNetEvent(notify, function(data)
 		if locale then
 			if data.title then
 				data.title = locale(data.title) or data.title
@@ -174,9 +176,12 @@ if context == 'client' then
 	cache.playerId = PlayerId()
 	cache.serverId = GetPlayerServerId(cache.playerId)
 else
-	local notify = ('%s:notify'):format(cache.resource)
-
-	function lib.notify(source, data)
-		TriggerClientEvent(notify, source, data)
+    ---Trigger a notification on the target playerId from the server.\
+    ---If locales are loaded, the title and description will be formatted automatically.\
+    ---Note: No support for locale placeholders when using this function.
+    ---@param playerId number
+    ---@param data NotifyProps
+	function lib.notify(playerId, data)
+		TriggerClientEvent(notify, playerId, data)
 	end
 end

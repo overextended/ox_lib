@@ -1,5 +1,5 @@
 import { debugData } from '../../../utils/debugData';
-import { InputProps } from '../../dialog/InputDialog';
+import type { InputProps } from '../../../typings';
 
 export const debugInput = () => {
   debugData<InputProps>([
@@ -12,6 +12,12 @@ export const debugInput = () => {
             type: 'input',
             label: 'Locker number',
             placeholder: '420',
+            description: 'Description that tells you what this input field does',
+          },
+          {
+            type: 'time',
+            format: '12',
+            label: 'Locker Time',
             description: 'Description that tells you what this input field does',
           },
           { type: 'checkbox', label: 'Some checkbox' },

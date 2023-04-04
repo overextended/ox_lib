@@ -28,7 +28,7 @@ end
 ---@param delay number | false
 ---@param cb function|false
 ---@param ... any
----@return unknown?
+---@return ...
 local function triggerServerCallback(_, event, delay, cb, ...)
 	if not eventTimer(event, delay) then return end
 

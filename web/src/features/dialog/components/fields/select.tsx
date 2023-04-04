@@ -1,45 +1,59 @@
-import { Box, Select } from '@chakra-ui/react';
-import { useEffect } from 'react';
-import { ISelect } from '../../../../interfaces/dialog';
+import { MultiSelect, Select } from '@mantine/core';
+import { ISelect } from '../../../../typings';
+import { Control, useController } from 'react-hook-form';
+import { FormValues } from '../../InputDialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
   row: ISelect;
   index: number;
-  handleChange: (value: string, index: number) => void;
+  control: Control<FormValues>;
 }
 
 const SelectField: React.FC<Props> = (props) => {
-  useEffect(() => {
-    if (props.row.default) {
-      props.row.options?.map((option) => {
-        if (props.row.default === option.value) {
-          props.handleChange(option.value, props.index);
-        }
-      });
-    }
-  }, []);
+  const controller = useController({
+    name: `test.${props.index}.value`,
+    control: props.control,
+    rules: { required: props.row.required },
+  });
 
   return (
     <>
-      <Box mb={3}>
+      {props.row.type === 'select' ? (
         <Select
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.handleChange(e.target.value, props.index)}
-          defaultValue={props.row.default || ''}
-          isDisabled={props.row.disabled}
-        >
-          {/* Hacky workaround for selectable placeholder issue */}
-          {!props.row.default && (
-            <option value="" hidden disabled>
-              {props.row.label}
-            </option>
+          data={props.row.options}
+          value={controller.field.value}
+          name={controller.field.name}
+          ref={controller.field.ref}
+          onBlur={controller.field.onBlur}
+          onChange={controller.field.onChange}
+          disabled={props.row.disabled}
+          label={props.row.label}
+          description={props.row.description}
+          withAsterisk={props.row.required}
+          clearable={props.row.clearable}
+          icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+        />
+      ) : (
+        <>
+          {props.row.type === 'multi-select' && (
+            <MultiSelect
+              data={props.row.options}
+              value={controller.field.value}
+              name={controller.field.name}
+              ref={controller.field.ref}
+              onBlur={controller.field.onBlur}
+              onChange={controller.field.onChange}
+              disabled={props.row.disabled}
+              label={props.row.label}
+              description={props.row.description}
+              withAsterisk={props.row.required}
+              clearable={props.row.clearable}
+              icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+            />
           )}
-          {props.row.options?.map((option, index) => (
-            <option key={`option-${index}`} value={option.value}>
-              {option.label || option.value}
-            </option>
-          ))}
-        </Select>
-      </Box>
+        </>
+      )}
     </>
   );
 };
