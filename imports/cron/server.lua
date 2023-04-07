@@ -71,7 +71,7 @@ function OxTask:scheduleTask()
     if self.isActive then
         self:cb(currentDate)
 
-        Wait(60000)
+        Wait(30000)
 
         return true
     end
