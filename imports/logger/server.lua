@@ -90,7 +90,8 @@ end
 if service == 'loki' then
     local lokiUser = GetConvar('loki:user', '')
     local lokiKey = GetConvar('loki:key', '')
-    local endpoint = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, GetConvar('loki:endpoint', ''))
+    local lokiProtocol = GetConvar('loki:protocol', 'https')
+    local endpoint = ('%s://%s:%s@%s/loki/api/v1/push'):format(lokiProtocol, lokiUser, lokiKey, GetConvar('loki:endpoint', ''))
 
     -- Converts a string of comma seperated kvp string to a table of kvps
     -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
