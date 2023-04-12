@@ -12,7 +12,7 @@ local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 ---| 7 GLASS | SEE_THROUGH | NO_COLLISION
 
 ---@param flags number? Line of sight flags, defaults to 511 (see: https://docs.fivem.net/natives/?_0x377906D8A31E5586).
----@param ignore ShapetestIgnore Defaults to 4.
+---@param ignore ShapetestIgnore? Defaults to 4.
 ---@param distance number? Defaults to 10.
 ---@return boolean hit
 ---@return number entityHit
