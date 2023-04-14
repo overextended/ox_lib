@@ -118,7 +118,7 @@ const Notifications: React.FC = () => {
         break;
     }
     if (!data.icon) {
-      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : data.type === 'warning' ? 'exclamation' : 'info';
+      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : data.type === 'warning' ? 'circle-exclamation' : 'info';
     }
 
     toast.custom(
