@@ -1,5 +1,5 @@
 ---@alias NotificationPosition 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left' | 'center-right' | 'center-left'
----@alias NotificationType 'infor' | 'warning' | 'success' | 'error'
+---@alias NotificationType 'info' | 'warning' | 'success' | 'error'
 
 ---@class NotifyProps
 ---@field id? string
