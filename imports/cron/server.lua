@@ -178,15 +178,44 @@ end
 local function parseCron(value, unit)
     if not value or value == '*' then return end
 
+    local num = tonumber(value)
+
+    if num then return num end
+
+    if unit == 'wday' then
+        if value == 'sun' then return 1 end
+        if value == 'mon' then return 2 end
+        if value == 'tue' then return 3 end
+        if value == 'wed' then return 4 end
+        if value == 'thu' then return 5 end
+        if value == 'fri' then return 6 end
+        if value == 'sat' then return 7 end
+    end
+
+    if unit == 'month' then
+        if value == 'jan' then return 1 end
+        if value == 'feb' then return 2 end
+        if value == 'mar' then return 3 end
+        if value == 'apr' then return 4 end
+        if value == 'may' then return 5 end
+        if value == 'jun' then return 6 end
+        if value == 'jul' then return 7 end
+        if value == 'aug' then return 8 end
+        if value == 'sep' then return 9 end
+        if value == 'oct' then return 10 end
+        if value == 'nov' then return 11 end
+        if value == 'dec' then return 12 end
+    end
+
     if getTimeUnit(value, unit) then return value end
 
-    return tonumber(value) or error(("syntax '%s' is not supported (only numbers and * are currently supported)"):format(value))
+    error(("^1invalid cron expression. '%s' is not supported for %s^0"):format(value, unit), 3)
 end
 
 ---@param expression string
 ---@param cb fun(task: OxTask, date: osdate)
 function lib.cron.new(expression, cb)
-    local minute, hour, day, month, weekday = string.strsplit(' ', expression)
+    local minute, hour, day, month, weekday = string.strsplit(' ', string.lower(expression))
 
     ---@type OxTask
     local task = setmetatable({
@@ -201,6 +230,8 @@ function lib.cron.new(expression, cb)
     tasks[task.id] = task
 
     task:run()
+
+    return task
 end
 
 -- update the currentDate every minute
