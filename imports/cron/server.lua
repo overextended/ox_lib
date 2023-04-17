@@ -3,15 +3,16 @@ local currentDate = os.date('*t') --[[@as osdate]]
 currentDate.sec = 0
 
 ---@class OxTaskProperties
----@field minute number?
----@field hour number?
----@field day number?
----@field month number?
----@field weekday number?
----@field cb fun(task: OxTask, date: osdate)
+---@field minute? number | string
+---@field hour? number | string
+---@field day? number | string
+---@field month? number | string
+---@field weekday? number | string
+---@field job fun(task: OxTask, date: osdate)
 ---@field isActive boolean
 ---@field id number
 ---@field getNextTime function
+---@field debug? boolean
 
 ---@class OxTask : OxTaskProperties
 local OxTask = {}
@@ -37,9 +38,9 @@ local function getTimeUnit(value, unit)
 
         if stepValue then
             for i = currentTime + 1, unitMax do
-                -- return the minute if it is divisible by the stepvalue
-                -- i.e. */25 * * * * succeeds on :0, :25, :50
-                -- could use improvements and tweaks to match cron more closely
+                -- return the current minute if it is divisible by the stepvalue
+                -- i.e. */10 * * * * is equal to a list of 0,10,20,30,40,50
+                -- best suited to numbers evenly divided by unitMax
                 if i % stepValue == 0 then
                     return i
                 end
@@ -145,12 +146,14 @@ function OxTask:scheduleTask()
         end
     end
 
-    print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60, sleep / 60 / 60))
+    if self.debug then
+        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60, sleep / 60 / 60))
+    end
 
     if sleep > 0 then Wait(sleep * 1000) end
 
     if self.isActive then
-        self:cb(currentDate)
+        self:job(currentDate)
 
         Wait(30000)
 
@@ -170,6 +173,7 @@ function OxTask:run()
 end
 
 function OxTask:stop()
+    print(('stopping task %s'):format(self.id))
     self.isActive = false
 end
 
@@ -212,23 +216,27 @@ local function parseCron(value, unit)
     error(("^1invalid cron expression. '%s' is not supported for %s^0"):format(value, unit), 3)
 end
 
----@param expression string
----@param cb fun(task: OxTask, date: osdate)
-function lib.cron.new(expression, cb)
+---@param expression string A cron expression such as `* * * * *` representing minute, hour, day, month, and day of the week.
+---@param job fun(task: OxTask, date: osdate)
+---@param options? { debug?: boolean }
+---Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.  
+---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.  
+---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
+function lib.cron.new(expression, job, options)
+    if not job or type(job) ~= 'function' then return end
+
     local minute, hour, day, month, weekday = string.strsplit(' ', string.lower(expression))
-
     ---@type OxTask
-    local task = setmetatable({
-        minute = parseCron(minute, 'min'),
-        hour = parseCron(hour, 'hour'),
-        day = parseCron(day, 'day'),
-        month = parseCron(month, 'month'),
-        weekday = parseCron(weekday, 'wday'),
-        cb = cb,
-        id = #tasks + 1
-    }, OxTask)
-    tasks[task.id] = task
+    local task = setmetatable(options or {}, OxTask)
 
+    task.minute = parseCron(minute, 'min')
+    task.hour = parseCron(hour, 'hour')
+    task.day = parseCron(day, 'day')
+    task.month = parseCron(month, 'month')
+    task.weekday = parseCron(weekday, 'wday')
+    task.id = #tasks + 1
+    task.job = job
+    tasks[task.id] = task
     task:run()
 
     return task
