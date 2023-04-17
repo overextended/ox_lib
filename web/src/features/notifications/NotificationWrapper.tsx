@@ -118,9 +118,21 @@ const Notifications: React.FC = () => {
         break;
     }
     if (!data.icon) {
-      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : data.type === 'warning' ? 'circle-exclamation' : 'info';
-    }
-
+      switch (data.type) {
+        case 'error':
+          data.icon = 'circle-xmark';
+          break;
+        case 'success':
+          data.icon = 'circle-check';
+          break;
+        case 'warning':
+          data.icon = 'circle-exclamation';
+          break;
+        default:           
+          data.icon = 'circle-info';
+          break;
+      }
+    } 
     toast.custom(
       (t) => (
         <Box
