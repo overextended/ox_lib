@@ -47,9 +47,6 @@ export const requestStreamedTextureDict = (textureDict: string, timeout?: number
 export const requestNamedPtfxAsset = (ptFxName: string, timeout?: number): Promise<string> =>
   streamingRequest(RequestNamedPtfxAsset, HasNamedPtfxAssetLoaded, 'ptFxName', ptFxName, timeout);
 
-export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, p1?: number, p2?: number): Promise<string | number> => {
-  p1 = p1 || 31;
-  p2 = p2 || 0;
-
-  return streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, p1, p2);
+export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, weaponResourceFlags: number = 31, extraWeaponComponentFlags: number = 0): Promise<string | number> => {
+  return streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, weaponResourceFlags, extraWeaponComponentFlags);
 }

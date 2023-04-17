@@ -1,45 +1,60 @@
+---@alias WeaponResourceFlags
+---| 1 WRF_REQUEST_BASE_ANIMS
+---| 2 WRF_REQUEST_COVER_ANIMS
+---| 4 WRF_REQUEST_MELEE_ANIMS
+---| 8 WRF_REQUEST_MOTION_ANIMS
+---| 16 WRF_REQUEST_STEALTH_ANIMS
+---| 32 WRF_REQUEST_ALL_MOVEMENT_VARIATION_ANIMS
+---| 31 WRF_REQUEST_ALL_ANIMS
+
+---@alias ExtraWeaponComponentFlags
+---| 0 WEAPON_COMPONENT_NONE
+---| 1 WEAPON_COMPONENT_FLASH
+---| 2 WEAPON_COMPONENT_SCOPE
+---| 4 WEAPON_COMPONENT_SUPP
+---| 8 WEAPON_COMPONENT_SCLIP2
+---| 16 WEAPON_COMPONENT_GRIP
+
 ---Load a weapon asset. When called from a thread, it will yield until it has loaded.
----@param weaponHash string | number
+---@param weaponType string | number
 ---@param timeout number? Number of ticks to wait for the asset to load. Default is 500.
----@param p1 number? Unknown. Default is 31.
----@param p2 number? Unknown. Default is 0.
----@return string | number? weaponHash
-function lib.requestWeaponAsset(weaponHash, timeout, p1, p2)
-    if HasWeaponAssetLoaded(weaponHash) then return weaponHash end
+---@param weaponResourceFlags WeaponResourceFlags? Default is 31.
+---@param extraWeaponComponentFlags ExtraWeaponComponentFlags? Default is 0.
+---@return string | number? weaponType
+function lib.requestWeaponAsset(weaponType, timeout, weaponResourceFlags, extraWeaponComponentFlags)
+    if HasWeaponAssetLoaded(weaponType) then return weaponType end
 
-    local weaponHashType = type(weaponHash)
-    if weaponHashType ~= 'string' and weaponHashType ~= "number" then
-        error(("expected weaponHash to have type 'string' or 'number' (received %s)"):format(weaponHashType))
+    local weaponTypeType = type(weaponType) --kekw
+
+    if weaponTypeType ~= 'string' and weaponTypeType ~= 'number' then
+        error(("expected weaponType to have type 'string' or 'number' (received %s)"):format(weaponTypeType))
     end
 
-    p1 = p1 or 31
-    p2 = p2 or 0
-
-    if type(p1) ~= 'number' then
-        error(("expected p1 to have type 'number' (received %s)"):format(type(p1)))
+    if weaponResourceFlags and type(weaponResourceFlags) ~= 'number' then
+        error(("expected weaponResourceFlags to have type 'number' (received %s)"):format(type(weaponResourceFlags)))
     end
 
-    if type(p2) ~= 'number' then
-        error(("expected p2 to have type 'number' (received %s)"):format(type(p2)))
+    if extraWeaponComponentFlags and type(extraWeaponComponentFlags) ~= 'number' then
+        error(("expected extraWeaponComponentFlags to have type 'number' (received %s)"):format(type(extraWeaponComponentFlags)))
     end
 
-    RequestWeaponAsset(weaponHash, p1, p2)
+    RequestWeaponAsset(weaponType, weaponResourceFlags or 31, extraWeaponComponentFlags or 0)
 
     if coroutine.running() then
         timeout = tonumber(timeout) or 500
 
         for _ = 1, timeout do
-            if HasWeaponAssetLoaded(weaponHash) then
-                return weaponHash
+            if HasWeaponAssetLoaded(weaponType) then
+                return weaponType
             end
 
             Wait(0)
         end
 
-        print(("failed to load weaponHash '%s' after %s ticks"):format(weaponHash, timeout))
+        print(("failed to load weaponType '%s' after %s ticks"):format(weaponType, timeout))
     end
 
-    return weaponHash
+    return weaponType
 end
 
 return lib.requestWeaponAsset
