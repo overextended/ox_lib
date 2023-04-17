@@ -314,7 +314,7 @@ lib.addKeybind({
             }
         })
 
-        lib.setNuiFocus(false)
+        lib.setNuiFocus(true)
         SetCursorLocation(0.5, 0.5)
 
         while isOpen do
