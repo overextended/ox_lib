@@ -3,6 +3,32 @@ local hostname = GetConvar('sv_projectName', 'fxserver')
 local buffer
 local bufferSize = 0
 
+local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+local function base64encode(data)
+    return ((data:gsub(".", function(x)
+        local r, b = "", x:byte()
+        for i = 8, 1, -1 do
+            r = r .. (b % 2 ^ i - b % 2 ^ (i - 1) > 0 and "1" or "0")
+        end
+        return r;
+    end) .. "0000"):gsub("%d%d%d?%d?%d?%d?", function(x)
+        if (#x < 6) then
+            return ""
+        end
+        local c = 0
+        for i = 1, 6 do
+            c = c + (x:sub(i, i) == "1" and 2 ^ (6 - i) or 0)
+        end
+        return b:sub(c + 1, c + 1)
+    end) .. ({"", "==", "="})[#data % 3 + 1])
+end
+
+local function getAuthorizationHeader(user, password)
+    return "Basic " .. base64encode(user .. ":" .. password)
+end
+
+
 local function badResponse(endpoint, status, response)
     warn(('unable to submit logs to %s (status: %s)\n%s'):format(endpoint, status, json.encode(response, { indent = true })))
 end
@@ -89,8 +115,22 @@ end
 
 if service == 'loki' then
     local lokiUser = GetConvar('loki:user', '')
-    local lokiKey = GetConvar('loki:key', '')
-    local endpoint = ('https://%s:%s@%s/loki/api/v1/push'):format(lokiUser, lokiKey, GetConvar('loki:endpoint', ''))
+    local lokiPassword = GetConvar('loki:password', '')
+    local lokiEndpoint = GetConvar('loki:endpoint', '')
+    local startingPattern = '^http[s]?://'
+    local headers = {
+        ['Content-Type'] = 'application/json'
+    }
+
+    if lokiUser ~= '' then
+        headers['Authorization'] = getAuthorizationHeader(lokiUser, lokiPassword)
+    end
+
+    if not lokiEndpoint:find(startingPattern) then
+        lokiEndpoint = 'https://' .. lokiEndpoint
+    end
+
+    local endpoint = ('%s/loki/api/v1/push'):format(lokiEndpoint)
 
     -- Converts a string of comma seperated kvp string to a table of kvps
     -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
@@ -126,9 +166,7 @@ if service == 'loki' then
                     if status ~= 204 then
                         badResponse(endpoint, status, ("%s"):format(status, postBody))
                     end
-                end, 'POST', postBody, {
-                    ['Content-Type'] = 'application/json',
-                })
+                end, 'POST', postBody, headers)
 
                 buffer = nil
             end)
