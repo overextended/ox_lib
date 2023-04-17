@@ -5,6 +5,7 @@
 ---@field menu? string
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
 ---@field [string] any
+---@field keepOpen? boolean
 
 ---@class RadialMenuProps
 ---@field id string
@@ -209,7 +210,7 @@ RegisterNUICallback('radialClick', function(index, cb)
     if item.menu then
         menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
         showRadial(item.menu)
-    else
+    elseif not item.keepOpen then
         lib.hideRadial()
     end
 
