@@ -119,7 +119,7 @@ if service == 'loki' then
     local lokiEndpoint = GetConvar('loki:endpoint', '')
     local startingPattern = '^http[s]?://'
     local headers = {
-        ['Content-Type'] = 'application/json',
+        ['Content-Type'] = 'application/json'
     }
 
     if lokiUser ~= '' then
