@@ -57,7 +57,7 @@ end
 local function closeCreator(cancel)
 	if not cancel then
 		if zoneType == 'poly' then
-			points[#points + 1] = vec(xCoord, yCoord)
+			points[#points + 1] = vec(xCoord, yCoord, zCoord)
 		end
 
         ---@type string[]
