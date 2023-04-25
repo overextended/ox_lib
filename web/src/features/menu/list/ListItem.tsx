@@ -12,6 +12,7 @@ interface Props {
   index: number;
   scrollIndex: number;
   checked: boolean;
+  ref: React.Ref<HTMLDivElement>; // Change the type to React.Ref<HTMLDivElement>
 }
 
 const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
@@ -69,7 +70,7 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   },
 }));
 
-const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex, checked }, ref) => {
+const ListItem = forwardRef<HTMLDivElement, Props>(({ item, index, scrollIndex, checked }, ref) => {
   const { classes } = useStyles({ iconColor: item.iconColor });
 
   return (
@@ -77,11 +78,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       tabIndex={index}
       className={classes.buttonContainer}
       key={`item-${index}`}
-      ref={(element: HTMLDivElement) => {
-        if (ref)
-          // @ts-ignore i cba
-          return (ref.current = [...ref.current, element]);
-      }}
+      ref={ref} // Update the ref assignment
     >
       <Group spacing={15} noWrap className={classes.buttonWrapper}>
         {item.icon && (
@@ -100,7 +97,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               <Text>
                 {typeof item.values[scrollIndex] === 'object'
                   ? // @ts-ignore for some reason even checking the type TS still thinks it's a string
-                    item.values[scrollIndex].label
+                  item.values[scrollIndex].label
                   : item.values[scrollIndex]}
               </Text>
             </Stack>

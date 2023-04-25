@@ -135,11 +135,13 @@ const ListMenu: React.FC = () => {
 
   useEffect(() => {
     if (!menu.items[selected]) return;
-    listRefs.current[selected]?.scrollIntoView({
-      block: 'nearest',
-      inline: 'start',
-    });
-    listRefs.current[selected]?.focus({ preventScroll: true });
+    if (listRefs && listRefs.current && listRefs.current[selected]) {
+      listRefs.current[selected]?.scrollIntoView({
+        block: 'nearest',
+        inline: 'start',
+      });
+      listRefs.current[selected]?.focus({ preventScroll: true });
+    }
     // debounces the callback to avoid spam
     const timer = setTimeout(() => {
       fetchNui('changeSelected', [
@@ -147,8 +149,8 @@ const ListMenu: React.FC = () => {
         menu.items[selected].values
           ? indexStates[selected]
           : menu.items[selected].checked
-          ? checkedStates[selected]
-          : null,
+            ? checkedStates[selected]
+            : null,
         menu.items[selected].values ? 'isScroll' : menu.items[selected].checked ? 'isCheck' : null,
       ]).catch();
     }, 100);
@@ -182,7 +184,8 @@ const ListMenu: React.FC = () => {
     else if (data.startItemIndex >= data.items.length) data.startItemIndex = data.items.length - 1;
     setSelected(data.startItemIndex);
     if (!data.position) data.position = 'top-left';
-    listRefs.current = [];
+    // listRefs.current = [];
+    listRefs.current = listRefs.current.slice(0, data.items.length);
     setMenu(data);
     setVisible(true);
     const arrayIndexes: { [key: number]: number } = {};
@@ -203,13 +206,13 @@ const ListMenu: React.FC = () => {
           label={
             isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
-                menu.items[selected].values[indexStates[selected]].description
+              menu.items[selected].values[indexStates[selected]].description
               : menu.items[selected].description
           }
           opened={
             isValuesObject(menu.items[selected].values)
               ? // @ts-ignore
-                !!menu.items[selected].values[indexStates[selected]].description
+              !!menu.items[selected].values[indexStates[selected]].description
               : !!menu.items[selected].description
           }
           transitionDuration={0}
@@ -228,7 +231,7 @@ const ListMenu: React.FC = () => {
                           item={item}
                           scrollIndex={indexStates[index]}
                           checked={checkedStates[index]}
-                          ref={listRefs}
+                          ref={(el) => (listRefs.current[index] = el)}
                         />
                       )}
                     </React.Fragment>
