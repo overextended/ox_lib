@@ -101,6 +101,7 @@ RegisterNUICallback('clickContext', function(id, cb)
     openContextMenu = nil
 
     SendNUIMessage({ action = 'hideContext' })
+    lib.resetNuiFocus()
 
     if data.onSelect then data.onSelect(data.args) end
     if data.event then TriggerEvent(data.event, data.args) end
