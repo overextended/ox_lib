@@ -126,6 +126,7 @@ function lib.hideRadial()
 
     isOpen = false
     currentRadial = nil
+    TriggerEvent('ox_lib:radial:closed')
 end
 
 ---Registers an item or array of items in the global radial menu.
@@ -307,6 +308,8 @@ lib.addKeybind({
         if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
         isOpen = true
+            
+        TriggerEvent('ox_lib:radial:opened')
 
         SendNUIMessage({
             action = 'openRadialMenu',
