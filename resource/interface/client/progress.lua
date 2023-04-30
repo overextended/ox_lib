@@ -147,13 +147,13 @@ local function startProgress(data)
     end
 
     playerState.invBusy = false
+    local cancel = progress == false
+    progress = nil
 
-    if progress == false then
+    if cancel then
         SendNUIMessage({ action = 'progressCancel' })
         return false
     end
-    
-    progress = nil
 
     return true
 end
