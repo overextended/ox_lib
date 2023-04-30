@@ -136,7 +136,7 @@ if service == 'loki' then
     -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
     local function convertDDTagsToKVP(tags)
         if not tags or type(tags) ~= 'string' then
-            return {}    
+            return {}
         end
         local tempTable = { string.strsplit(',', tags) } -- outputs a number index table wth k:v strings as values
         local bTable = table.create(0, #tempTable) -- buffer table
@@ -191,8 +191,9 @@ if service == 'loki' then
         -- initialise stream payload
         local payload = {
             stream = {
-                hostname = cache.resource,
-                service = event
+                server = hostname,
+                resource = cache.resource,
+                event = event
             },
             values = {
                 {

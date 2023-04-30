@@ -15,6 +15,7 @@ currentDate.sec = 0
 ---@field debug? boolean
 
 ---@class OxTask : OxTaskProperties
+---@field private scheduleTask fun(self: OxTask)
 local OxTask = {}
 OxTask.__index = OxTask
 
@@ -173,7 +174,10 @@ function OxTask:run()
 end
 
 function OxTask:stop()
-    print(('stopping task %s'):format(self.id))
+    if self.debug then
+        print(('stopping task %s'):format(self.id))
+    end
+
     self.isActive = false
 end
 
