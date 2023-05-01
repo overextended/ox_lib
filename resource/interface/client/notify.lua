@@ -1,5 +1,5 @@
 ---@alias NotificationPosition 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left' | 'center-right' | 'center-left'
----@alias NotificationType 'inform' | 'error' | 'success'
+---@alias NotificationType 'info' | 'warning' | 'success' | 'error'
 
 ---@class NotifyProps
 ---@field id? string
@@ -32,7 +32,7 @@ end
 function lib.defaultNotify(data)
     -- Backwards compat for v3 
     data.type = data.status
-    if data.type == 'info' or data.type == 'warning' then data.type = 'inform' end
+    if data.type == 'inform' then data.type = 'info' end
     return lib.notify(data)
 end
 
