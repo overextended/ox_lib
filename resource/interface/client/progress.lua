@@ -150,12 +150,9 @@ local function startProgress(data)
 
     if progress == false then
         SendNUIMessage({ action = 'progressCancel' })
-        return false
     end
 
-    progress = nil
-
-    return true
+    return progress == true
 end
 
 ---@param data ProgressProps
