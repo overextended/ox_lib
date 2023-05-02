@@ -118,9 +118,21 @@ const Notifications: React.FC = () => {
         break;
     }
     if (!data.icon) {
-      data.icon = data.type === 'error' ? 'xmark' : data.type === 'success' ? 'check' : 'info';
-    }
-
+      switch (data.type) {
+        case 'error':
+          data.icon = 'circle-xmark';
+          break;
+        case 'success':
+          data.icon = 'circle-check';
+          break;
+        case 'warning':
+          data.icon = 'circle-exclamation';
+          break;
+        default:           
+          data.icon = 'circle-info';
+          break;
+      }
+    } 
     toast.custom(
       (t) => (
         <Box
@@ -147,7 +159,7 @@ const Notifications: React.FC = () => {
               <>
                 {!data.iconColor ? (
                   <Avatar
-                    color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : 'blue'}
+                    color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : data.type === 'warning' ? 'yellow' : 'blue'}
                     radius="xl"
                     size={32}
                   >
