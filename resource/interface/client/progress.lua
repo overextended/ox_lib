@@ -159,7 +159,7 @@ end
 ---@param data ProgressProps
 ---@return boolean?
 function lib.progressBar(data)
-    while progress ~= nil do Wait(100) end
+    while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
         SendNUIMessage({
@@ -177,7 +177,7 @@ end
 ---@param data ProgressProps
 ---@return boolean?
 function lib.progressCircle(data)
-    while progress ~= nil do Wait(100) end
+    while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
         SendNUIMessage({
