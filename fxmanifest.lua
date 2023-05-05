@@ -51,6 +51,5 @@ server_scripts {
     'resource/**/server.lua',
     -- 'resource/**/server/*.lua',
     'resource/**/server/overrides/*.lua',
-    -- 'resource/**/server/*.lua'
 }
 
