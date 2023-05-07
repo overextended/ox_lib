@@ -117,10 +117,10 @@ function lib.getVehicleProperties(vehicle)
             end
         end
 
-        local modLivery = GetVehicleLivery(vehicle)
+        local modLivery = GetVehicleMod(vehicle, 48)
 
         if modLivery == -1 then
-            modLivery = GetVehicleMod(vehicle, 48)
+            modLivery = GetVehicleLivery(vehicle)
         end
 
         local damage = {
