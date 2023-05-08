@@ -1,56 +1,62 @@
-lockfileVersion: 5.4
-
-specifiers:
-  '@citizenfx/client': 2.0.5885-1
-  '@citizenfx/server': 2.0.5885-1
-  '@fortawesome/fontawesome-common-types': 6.1.1
-  '@nativewrappers/client': ^1.7.33
-  '@types/node': 16.9.1
-  '@types/react': ^18.0.26
-  prettier: ^2.8.1
-  typescript: ^4.9.4
+lockfileVersion: '6.0'
 
 dependencies:
-  '@citizenfx/client': 2.0.5885-1
-  '@citizenfx/server': 2.0.5885-1
-  '@fortawesome/fontawesome-common-types': 6.1.1
-  '@nativewrappers/client': 1.7.33
-  '@types/node': 16.9.1
-  '@types/react': 18.0.26
-  typescript: 4.9.4
+  '@citizenfx/client':
+    specifier: 2.0.5885-1
+    version: 2.0.5885-1
+  '@citizenfx/server':
+    specifier: 2.0.5885-1
+    version: 2.0.5885-1
+  '@fortawesome/fontawesome-common-types':
+    specifier: 6.1.1
+    version: 6.1.1
+  '@nativewrappers/client':
+    specifier: ^1.7.33
+    version: 1.7.33
+  '@types/node':
+    specifier: 16.9.1
+    version: 16.9.1
+  '@types/react':
+    specifier: ^18.0.26
+    version: 18.0.26
+  typescript:
+    specifier: ^4.9.4
+    version: 4.9.4
 
 devDependencies:
-  prettier: 2.8.1
+  prettier:
+    specifier: ^2.8.1
+    version: 2.8.1
 
 packages:
 
-  /@citizenfx/client/2.0.5885-1:
+  /@citizenfx/client@2.0.5885-1:
     resolution: {integrity: sha512-Ba5YYfxhZ82PcOY+2rjqDElTzPt7NrN6/o2U+wYPKK2VU/wRdCsMonpMsr7dYob2ToN5Qe96w5VNI3m5OrouJQ==}
     dev: false
 
-  /@citizenfx/server/2.0.5885-1:
+  /@citizenfx/server@2.0.5885-1:
     resolution: {integrity: sha512-q8KRecfjJ3RjCfBT/3CSHNTr2efUs9uq8pIoPF4TGkn5X7jgTBprrp3VMayaee3Xekay3RTufpzsOaeHUntQeA==}
     dev: false
 
-  /@fortawesome/fontawesome-common-types/6.1.1:
+  /@fortawesome/fontawesome-common-types@6.1.1:
     resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: false
 
-  /@nativewrappers/client/1.7.33:
+  /@nativewrappers/client@1.7.33:
     resolution: {integrity: sha512-phuBBGdDPxZiZyw5CaFs1XWfvllnEtwATMdLaNucwMofVg/O/FjlP1bTUq4SOm4qhSZ4Zdo351ijHzBSIbZs6g==}
     dev: false
 
-  /@types/node/16.9.1:
+  /@types/node@16.9.1:
     resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
     dev: false
 
-  /@types/prop-types/15.7.5:
+  /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: false
 
-  /@types/react/18.0.26:
+  /@types/react@18.0.26:
     resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
     dependencies:
       '@types/prop-types': 15.7.5
@@ -58,21 +64,21 @@ packages:
       csstype: 3.1.1
     dev: false
 
-  /@types/scheduler/0.16.2:
+  /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: false
 
-  /csstype/3.1.1:
+  /csstype@3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: false
 
-  /prettier/2.8.1:
+  /prettier@2.8.1:
     resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
 
-  /typescript/4.9.4:
+  /typescript@4.9.4:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
