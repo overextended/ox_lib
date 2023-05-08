@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "prepublish": "pnpm compile"
+    "prepare": "npm run compile"
   },
   "keywords": [
     "fivem",
