@@ -5,5 +5,10 @@
     "close": "Fechar",
     "confirm": "Confirmar",
     "more": "Mais..."
-  }
+  },
+  "txadmin_override_announcement": "Server announcement by %s",
+  "txadmin_override_dm": "Direct Message from %s",
+  "txadmin_override_warn": "You have been warned by %s",
+  "txadmin_override_warn_content": "%s  \nAction ID: %s",
+  "txadmin_override_scheduledrestart": "Scheduled Restart"
 }

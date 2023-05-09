@@ -33,6 +33,7 @@ files {
 shared_script 'resource/init.lua'
 
 shared_scripts {
+	'imports/locale/shared.lua',
     'resource/**/shared.lua',
     -- 'resource/**/shared/*.lua'
 }

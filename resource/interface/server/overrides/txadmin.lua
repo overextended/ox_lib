@@ -3,8 +3,8 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
         AddEventHandler('txAdmin:events:announcement', function(eventData)
             local tx = eventData
             TriggerClientEvent('ox_lib:notify', -1, {
-                id = 'txAdmin:playerDirectMessage',
-                title = ('Server announcement by %s'):format(tx.author),
+                id = 'txAdmin:announcement',
+                title = locale('txadmin_override_announcement', tx.author),
                 description = tx.message,
                 duration = 5000
             })
@@ -16,7 +16,7 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
             local tx = eventData
             TriggerClientEvent('ox_lib:notify', tx.target, {
                 id = 'txAdmin:playerDirectMessage',
-                title = ('Direct Message from %s'):format(tx.author),
+                title = locale('txadmin_override_dm', tx.author),
                 description = tx.message,
                 duration = 5000
             })
@@ -27,8 +27,8 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
         AddEventHandler('txAdmin:events:playerWarned', function(eventData)
             local tx = eventData
             TriggerClientEvent('ox_lib:alertDialog', tx.target, {
-                header = ('You have been warned by %s'):format(tx.author),
-                content = ('%s  \nAction ID: %s'):format(tx.reason, tx.actionId),
+                header = locale('txadmin_override_warn', tx.author),
+                content = locale('txadmin_override_warn_content', tx.reason, tx.actionId),
                 centered = true
             })
         end)
@@ -39,7 +39,7 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
             local tx = eventData
             TriggerClientEvent('ox_lib:notify', -1, {
                 id = 'txAdmin:scheduledRestart',
-                title = 'Scheduled Restart',
+                title = locale('txadmin_override_scheduledrestart'),
                 description = tx.translatedMessage,
                 duration = 5000
             })
