@@ -29,6 +29,8 @@ const InputField: React.FC<Props> = (props) => {
           description={props.row.description}
           icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
+          minLength={props.row.min}
+          maxLength={props.row.max}
           disabled={props.row.disabled}
           withAsterisk={props.row.required}
         />
@@ -40,6 +42,8 @@ const InputField: React.FC<Props> = (props) => {
           description={props.row.description}
           icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
+          minLength={props.row.min}
+          maxLength={props.row.max}
           disabled={props.row.disabled}
           withAsterisk={props.row.required}
           visibilityToggleIcon={({ reveal, size }) => (

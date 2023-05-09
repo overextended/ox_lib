@@ -1,10 +1,13 @@
-----------------------------------------------------------
---- Add additional functions to the standard table library
-----------------------------------------------------------
+-- Add additional functions to the standard table library
 
-local table = table
+---@class oxtable : tablelib
+lib.table = table
 local pairs = pairs
 
+---@param tbl table
+---@param value any
+---@return boolean
+---Checks if tbl contains the given values. Only intended for simple values and unnested tables.
 local function contains(tbl, value)
 	if type(value) ~= 'table' then
 		for _, v in pairs(tbl) do
@@ -22,12 +25,17 @@ local function contains(tbl, value)
 		end
 		if matched_values == values then return true end
 	end
+
 	return false
 end
-table.contains = contains
 
+---@param t1 any
+---@param t2 any
+---@return boolean
+---Compares if two values are equal, iterating over tables and matching both keys and values.
 local function table_matches(t1, t2)
 	local type1, type2 = type(t1), type(t2)
+
 	if type1 ~= type2 then return false end
 	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
 
@@ -40,21 +48,30 @@ local function table_matches(t1, t2)
 	   local v1 = t1[k2]
 	   if v1 == nil or not table_matches(v1,v2) then return false end
 	end
+
 	return true
 end
-table.matches = table_matches
 
+---@generic T
+---@param tbl T
+---@return T
+---Recursively clones a table to ensure no table references.
 local function table_deepclone(tbl)
 	tbl = table.clone(tbl)
+
 	for k, v in pairs(tbl) do
 		if type(v) == 'table' then
 			tbl[k] = table_deepclone(v)
 		end
 	end
+
 	return tbl
 end
-table.deepclone = table_deepclone
 
+---@param t1 table
+---@param t2 table
+---@return table
+---Merges two tables together. Duplicate keys will be added together if they are numbers, or otherwise overwritten.
 local function table_merge(t1, t2)
     for k, v in pairs(t2) do
         local type1 = type(t1[k])
@@ -68,10 +85,15 @@ local function table_merge(t1, t2)
 			t1[k] = v
         end
     end
+
     return t1
 end
-table.merge = table_merge
 
-lib.table = table
+lib.table.contains = contains
+lib.table.matches = table_matches
+lib.table.deepclone = table_deepclone
+lib.table.merge = table_merge
 
-return table
+table = lib.table
+
+return lib.table

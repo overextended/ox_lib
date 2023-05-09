@@ -32,6 +32,8 @@ local function closeContext(_, cb, onExit)
 
     lib.resetNuiFocus()
 
+    if not openContextMenu then return end
+
     if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
 
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
@@ -98,15 +100,12 @@ RegisterNUICallback('clickContext', function(id, cb)
 
     openContextMenu = nil
 
+    SendNUIMessage({ action = 'hideContext' })
     lib.resetNuiFocus()
 
     if data.onSelect then data.onSelect(data.args) end
     if data.event then TriggerEvent(data.event, data.args) end
     if data.serverEvent then TriggerServerEvent(data.serverEvent, data.args) end
-
-    SendNUIMessage({
-        action = 'hideContext'
-    })
 end)
 
 RegisterNUICallback('closeContext', closeContext)

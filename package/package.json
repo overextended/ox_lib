@@ -6,7 +6,8 @@
   "types": "./client/index.d.ts",
   "main": "index.js",
   "scripts": {
-    "prepublish": "tsc"
+    "compile": "tsc",
+    "prepare": "npm run compile"
   },
   "keywords": [
     "fivem",
