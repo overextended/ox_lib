@@ -6,9 +6,9 @@
     "confirm": "Conferma",
     "more": "Altro..."
   },
-  "txadmin_override_announcement": "Annuncio server da %s",
-  "txadmin_override_dm": "Messaggio diretto da %s",
-  "txadmin_override_warn": "Sei stato richiamato da %s",
-  "txadmin_override_warn_content": "%s  \nAction ID: %s",
-  "txadmin_override_scheduledrestart": "Riavvio Programmato"
+  "txadmin_announcement": "Annuncio server da %s",
+  "txadmin_dm": "Messaggio diretto da %s",
+  "txadmin_warn": "Sei stato richiamato da %s",
+  "txadmin_warn_content": "%s  \nAction ID: %s",
+  "txadmin_scheduledrestart": "Riavvio Programmato"
 }

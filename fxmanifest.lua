@@ -50,7 +50,6 @@ client_scripts {
 server_scripts {
 	'imports/callback/server.lua',
     'resource/**/server.lua',
-    -- 'resource/**/server/*.lua',
-    'resource/**/server/overrides/*.lua',
+    'resource/**/server/*.lua',
 }
 

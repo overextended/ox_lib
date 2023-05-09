@@ -1,11 +1,10 @@
-if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
+if GetConvarInt('ox:txAdminNotifications', false) then
     if GetConvar('txAdmin-hideDefaultAnnouncement', 'false') == 'true' then
         AddEventHandler('txAdmin:events:announcement', function(eventData)
-            local tx = eventData
             TriggerClientEvent('ox_lib:notify', -1, {
                 id = 'txAdmin:announcement',
-                title = locale('txadmin_override_announcement', tx.author),
-                description = tx.message,
+                title = locale('txadmin_announcement', eventData.author),
+                description = eventData.message,
                 duration = 5000
             })
         end)
@@ -13,11 +12,10 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
 
     if GetConvar('txAdmin-hideDefaultDirectMessage', 'false') == 'true' then
         AddEventHandler('txAdmin:events:playerDirectMessage', function(eventData)
-            local tx = eventData
-            TriggerClientEvent('ox_lib:notify', tx.target, {
+            TriggerClientEvent('ox_lib:notify', eventData.target, {
                 id = 'txAdmin:playerDirectMessage',
-                title = locale('txadmin_override_dm', tx.author),
-                description = tx.message,
+                title = locale('txadmin_dm', eventData.author),
+                description = eventData.message,
                 duration = 5000
             })
         end)
@@ -25,10 +23,9 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
 
     if GetConvar('txAdmin-hideDefaultWarning', 'false') == 'true' then
         AddEventHandler('txAdmin:events:playerWarned', function(eventData)
-            local tx = eventData
-            TriggerClientEvent('ox_lib:alertDialog', tx.target, {
-                header = locale('txadmin_override_warn', tx.author),
-                content = locale('txadmin_override_warn_content', tx.reason, tx.actionId),
+            TriggerClientEvent('ox_lib:alertDialog', eventData.target, {
+                header = locale('txadmin_warn', eventData.author),
+                content = locale('txadmin_warn_content', eventData.reason, eventData.actionId),
                 centered = true
             })
         end)
@@ -36,11 +33,10 @@ if GetConvar('ox:txAdminOverrides', 'false') == 'true' then
 
     if GetConvar('txAdmin-hideDefaultScheduledRestartWarning', 'false') == 'true' then
         AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
-            local tx = eventData
             TriggerClientEvent('ox_lib:notify', -1, {
                 id = 'txAdmin:scheduledRestart',
-                title = locale('txadmin_override_scheduledrestart'),
-                description = tx.translatedMessage,
+                title = locale('txadmin_scheduledrestart'),
+                description = eventData.translatedMessage,
                 duration = 5000
             })
         end)
