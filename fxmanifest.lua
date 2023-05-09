@@ -33,6 +33,7 @@ files {
 shared_script 'resource/init.lua'
 
 shared_scripts {
+	'imports/locale/shared.lua',
     'resource/**/shared.lua',
     -- 'resource/**/shared/*.lua'
 }
@@ -49,6 +50,6 @@ client_scripts {
 server_scripts {
 	'imports/callback/server.lua',
     'resource/**/server.lua',
-    -- 'resource/**/server/*.lua'
+    'resource/**/server/*.lua',
 }
 
