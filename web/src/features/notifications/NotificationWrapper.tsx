@@ -2,7 +2,7 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, createStyles, Group, Stack, Box, Text, keyframes } from '@mantine/core';
+import { Avatar, createStyles, Group, Stack, Box, Text, keyframes, Sx } from '@mantine/core';
 import React from 'react';
 import type { NotificationProps } from '../../typings';
 
@@ -128,11 +128,11 @@ const Notifications: React.FC = () => {
         case 'warning':
           data.icon = 'circle-exclamation';
           break;
-        default:           
+        default:
           data.icon = 'circle-info';
           break;
       }
-    } 
+    }
     toast.custom(
       (t) => (
         <Box
@@ -150,8 +150,8 @@ const Notifications: React.FC = () => {
                     ? exitAnimationBottom
                     : exitAnimationRight
                 } 0.4s ease-in forwards`,
+            ...data.style,
           }}
-          style={data.style}
           className={`${classes.container}`}
         >
           <Group noWrap spacing={12}>
@@ -159,7 +159,15 @@ const Notifications: React.FC = () => {
               <>
                 {!data.iconColor ? (
                   <Avatar
-                    color={data.type === 'error' ? 'red' : data.type === 'success' ? 'teal' : data.type === 'warning' ? 'yellow' : 'blue'}
+                    color={
+                      data.type === 'error'
+                        ? 'red'
+                        : data.type === 'success'
+                        ? 'teal'
+                        : data.type === 'warning'
+                        ? 'yellow'
+                        : 'blue'
+                    }
                     radius="xl"
                     size={32}
                   >
@@ -173,7 +181,7 @@ const Notifications: React.FC = () => {
             <Stack spacing={0}>
               {data.title && <Text className={classes.title}>{data.title}</Text>}
               {data.description && (
-                <ReactMarkdown className={!data.title ? classes.descriptionOnly : classes.description}>
+                <ReactMarkdown className={`${!data.title ? classes.descriptionOnly : classes.description} description`}>
                   {data.description}
                 </ReactMarkdown>
               )}
