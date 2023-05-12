@@ -1,4 +1,4 @@
-if GetConvarInt('ox:txAdminNotifications', false) then
+if GetConvarInt('ox:txAdminNotifications', false) == 1 then
     if GetConvar('txAdmin-hideDefaultAnnouncement', 'false') == 'true' then
         AddEventHandler('txAdmin:events:announcement', function(eventData)
             TriggerClientEvent('ox_lib:notify', -1, {
