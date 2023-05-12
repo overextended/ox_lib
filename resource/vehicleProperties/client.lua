@@ -240,6 +240,7 @@ function lib.getVehicleProperties(vehicle)
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
+            bulletProofTyres = GetVehicleTyresCanBurst(vehicle) == 1,
             -- no setters?
             -- leftHeadlight = GetIsLeftVehicleHeadlightDamaged(vehicle),
             -- rightHeadlight = GetIsRightVehicleHeadlightDamaged(vehicle),
@@ -591,6 +592,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.modLightbar then
         SetVehicleMod(vehicle, 49, props.modLightbar, false)
+    end
+    
+    if props.bulletProofTyres then
+        SetVehicleTyresCanBurst(cache.vehicle, props.bulletProofTyres)
     end
 
     return true
