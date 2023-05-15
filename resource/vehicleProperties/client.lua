@@ -595,7 +595,7 @@ function lib.setVehicleProperties(vehicle, props)
     end
     
     if props.bulletProofTyres then
-        SetVehicleTyresCanBurst(cache.vehicle, props.bulletProofTyres)
+        SetVehicleTyresCanBurst(vehicle, not props.bulletProofTyres)
     end
 
     return true
