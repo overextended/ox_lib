@@ -4,11 +4,11 @@
     "cancel": "Anuluj",
     "close": "Zamknij",
     "confirm": "Potwierdź",
-    "more": "More..."
+    "more": "Więcej..."
   },
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "txadmin_announcement": "Ogłoszenie serwerowe od %s",
+  "txadmin_dm": "Prywatna wiadomość od %s",
+  "txadmin_warn": "Dostałeś ostrzeżenie od %s",
+  "txadmin_warn_content": "%s  \nID Akcji: %s",
+  "txadmin_scheduledrestart": "Zaplanowany Restart"
 }
