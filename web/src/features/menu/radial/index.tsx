@@ -88,6 +88,20 @@ const RadialMenu: React.FC = () => {
     setMenuItems(items);
   }, [menu.items, menu.page]);
 
+  useEffect(() => {
+    if (!visible) return;
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (['Escape'].includes(e.code)) 
+      fetchNui('radialClose') 
+      setVisible(false);
+    };
+
+    window.addEventListener('keydown', keyHandler);
+
+    return () => window.removeEventListener('keydown', keyHandler);
+  }, [visible]);
+
   useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean, option?: string } | false) => {
     if (!data) return setVisible(false);
     let initialPage = 1;
