@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 jobs:
   create-release:
@@ -27,8 +27,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-          cache: "pnpm"
-          cache-dependency-path: "web/pnpm-lock.yaml"
+          cache: 'pnpm'
+          cache-dependency-path: 'web/pnpm-lock.yaml'
 
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
@@ -36,7 +36,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: web
-        
+
+      - name: Install package dependencies
+        run: pnpm install
+        working-directory: package
+
       - name: Bump package version
         run: pnpm version ${{ github.ref_name }}
         working-directory: package
@@ -59,7 +63,7 @@ jobs:
           push: true
           author_name: Manifest Bumper
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: "chore: bump manifest version to ${{ github.ref_name }}"
+          message: 'chore: bump manifest version to ${{ github.ref_name }}'
 
       - name: Update tag ref
         uses: EndBug/latest-tag@latest
@@ -76,10 +80,10 @@ jobs:
           cd ./temp && zip -r ../ox_lib.zip ./ox_lib
 
       - name: Create Release
-        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        uses: 'marvinpinto/action-automatic-releases@v1.2.1'
         id: auto_release
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
           title: ${{ env.RELEASE_VERSION }}
           prerelease: false
           files: ox_lib.zip
