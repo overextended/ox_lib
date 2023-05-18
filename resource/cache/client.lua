@@ -16,6 +16,7 @@ local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
 local GetMount = GetMount
 local IsPedOnMount = IsPedOnMount
 local GetCurrentPedWeapon = GetCurrentPedWeapon
+local IsPlayerDead = IsPlayerDead
 
 CreateThread(function()
 	while true do
@@ -49,8 +50,10 @@ CreateThread(function()
 		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
 
 		cache:set('weapon', hasWeapon and currentWeapon or false)
-
-		Wait(100)
+        
+        cache:set('dead', IsPlayerDead(cache.playerId))
+		
+        Wait(100)
 	end
 end)
 
