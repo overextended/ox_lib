@@ -25,4 +25,4 @@ function lib.getClosestPed(coords, maxDistance)
 	return closestPed, closestCoords
 end
 
-return lib.getClosestObject
+return lib.getClosestPed
