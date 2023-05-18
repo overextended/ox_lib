@@ -10,8 +10,8 @@ function lib.getNearbyPeds(coords, maxDistance)
     for i = 1, #peds do
         local ped = peds[i]
 
-        if not NetworkGetPlayerIndexFromPed(ped) then
-            local pedCoords = GetEntityCoords(playerPed)
+        if not IsPedAPlayer(ped) then
+            local pedCoords = GetEntityCoords(ped)
             local distance = #(coords - pedCoords)
 
             if distance < maxDistance then
