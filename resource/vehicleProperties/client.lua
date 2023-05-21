@@ -349,8 +349,8 @@ function lib.setVehicleProperties(vehicle, props)
     end
 
     if props.extras then
-        for id, state in pairs(props.extras) do
-            SetVehicleExtra(vehicle, id, state)
+        for id, disable in pairs(props.extras) do
+            SetVehicleExtra(vehicle, id, disable == 1)
         end
     end
 
