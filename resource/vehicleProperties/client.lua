@@ -23,7 +23,7 @@ if cache.game == 'redm' then return end
 ---@field xenonColor? number
 ---@field neonEnabled? boolean[]
 ---@field neonColor? number | number[]
----@field extras? boolean[]
+---@field extras? table<number | string, 0 | 1>
 ---@field tyreSmokeColor? number | number[]
 ---@field modKit number
 ---@field modSpoilers? number
@@ -81,7 +81,7 @@ if cache.game == 'redm' then return end
 ---@field modLightbar? number
 ---@field windows? number[]
 ---@field doors? number[]
----@field tyres? number[]
+---@field tyres? table<number | string, 1 | 2>
 ---@field bulletProofTyres? boolean
 
 RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
@@ -355,7 +355,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.extras then
         for id, disable in pairs(props.extras) do
-            SetVehicleExtra(vehicle, id, disable == 1)
+            SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
         end
     end
 
@@ -373,7 +373,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.tyres then
         for tyre, state in pairs(props.tyres) do
-            SetVehicleTyreBurst(vehicle, tyre, state == 2, 1000.0)
+            SetVehicleTyreBurst(vehicle, tonumber(tyre) --[[@as number]], state == 2, 1000.0)
         end
     end
 
