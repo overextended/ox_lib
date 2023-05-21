@@ -25,6 +25,7 @@ if cache.game == 'redm' then return end
 ---@field neonColor? number | number[]
 ---@field extras? boolean[]
 ---@field tyreSmokeColor? number | number[]
+---@field modKit number
 ---@field modSpoilers? number
 ---@field modFrontBumper? number
 ---@field modRearBumper? number
@@ -81,6 +82,7 @@ if cache.game == 'redm' then return end
 ---@field windows? number[]
 ---@field doors? number[]
 ---@field tyres? number[]
+---@field bulletProofTyres? boolean
 
 RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
     local timeout = 100
@@ -160,6 +162,7 @@ function lib.getVehicleProperties(vehicle)
         end
 
         return {
+            modKit = GetVehicleModKit(vehicle),
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
             plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
@@ -240,6 +243,7 @@ function lib.getVehicleProperties(vehicle)
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
+            bulletProofTyres = GetVehicleTyresCanBurst(vehicle),
             -- no setters?
             -- leftHeadlight = GetIsLeftVehicleHeadlightDamaged(vehicle),
             -- rightHeadlight = GetIsRightVehicleHeadlightDamaged(vehicle),
@@ -256,6 +260,7 @@ function lib.setVehicleProperties(vehicle, props)
     if not DoesEntityExist(vehicle) then error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
             format(vehicle))
     end
+
     if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then error((
             "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
     end
@@ -263,7 +268,7 @@ function lib.setVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 
-    SetVehicleModKit(vehicle, 0)
+    SetVehicleModKit(vehicle, props.modKit or 0)
     SetVehicleAutoRepairDisabled(vehicle, true)
 
     if props.plate then
@@ -368,11 +373,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.tyres then
         for tyre, state in pairs(props.tyres) do
-            if state == 1 then
-                SetVehicleTyreBurst(vehicle, tyre, false, 1000.0)
-            else
-                SetVehicleTyreBurst(vehicle, tyre, true, 1000.0)
-            end
+            SetVehicleTyreBurst(vehicle, tyre, state == 2, 1000.0)
         end
     end
 
@@ -591,6 +592,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.modLightbar then
         SetVehicleMod(vehicle, 49, props.modLightbar, false)
+    end
+
+    if props.bulletProofTyres ~= nil then
+        SetVehicleTyresCanBurst(vehicle, props.bulletProofTyres)
     end
 
     return true

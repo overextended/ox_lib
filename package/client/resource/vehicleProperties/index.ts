@@ -23,6 +23,7 @@ interface VehicleProperties {
   neonColor: [number, number, number];
   extras: boolean[];
   tyreSmokeColor: [number, number, number];
+  modKit: number;
   modSpoilers: number;
   modFrontBumper: number;
   modRearBumper: number;
@@ -83,6 +84,7 @@ interface VehicleProperties {
   rightHeadlight: boolean;
   frontBumper: boolean;
   rearBumper: boolean;
+  bulletProofTyres: boolean;
 }
 
 export const getVehicleProperties = (vehicle: number): VehicleProperties =>
