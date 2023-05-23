@@ -90,22 +90,18 @@ function math.tohex(n, upper)
     return upper and n:upper() or n
 end
 
----Converts input number into grouped digits with optional divider and currency char
+---Converts input number into grouped digits with optional divider
 ---@param number number
----@param currencyChar? string
 ---@param divider? string
----@param infront? boolean
 ---@return string
-function math.groupdigits(number, currencyChar, divider, infront)
+function math.groupdigits(number, divider)
     if not number or type(number) ~= 'number' then
         error(('Failed to group digits (received %s)'):format(number), 3)
         return false 
     end
 
     local divider = divider or ','
-    local currencyChar = currencyChar or ''
-    local formattedNum = tostring(math.floor(number)):reverse():gsub("(%d%d%d)","%1"..divider):gsub(",(%-?)$","%1"):reverse()
-    return infront and ('%s%s'):format(currencyChar, formattedNum) or ('%s%s'):format(formattedNum, currencyChar)
+    return tostring(math.floor(number)):reverse():gsub("(%d%d%d)","%1"..divider):gsub(",(%-?)$","%1"):reverse()
 end
 
 return lib.math
