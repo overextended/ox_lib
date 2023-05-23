@@ -90,9 +90,6 @@ function math.tohex(n, upper)
     return upper and n:upper() or n
 end
 
-return lib.math
-
-
 ---Converts input number into grouped digits with optional divider and currency char
 ---@param number number
 ---@param currencyChar? string
@@ -110,3 +107,5 @@ function math.groupdigits(number, currencyChar, divider, infront)
     local formattedNum = tostring(math.floor(number)):reverse():gsub("(%d%d%d)","%1"..divider):gsub(",(%-?)$","%1"):reverse()
     return infront and ('%s%s'):format(currencyChar, formattedNum) or ('%s%s'):format(formattedNum, currencyChar)
 end
+
+return lib.math
