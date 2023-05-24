@@ -90,18 +90,14 @@ function math.tohex(n, upper)
     return upper and n:upper() or n
 end
 
----Converts input number into grouped digits with optional divider
+---Converts input number into grouped digits
 ---@param number number
----@param divider? string
+---@param useDot? boolean
 ---@return string
-function math.groupdigits(number, divider)
-    if not number or type(number) ~= 'number' then
-        error(('Failed to group digits (received %s)'):format(number), 3)
-        return false 
-    end
-
-    local divider = divider or ','
-    return tostring(math.floor(number)):reverse():gsub("(%d%d%d)","%1"..divider):gsub(",(%-?)$","%1"):reverse()
+function math.groupdigits(number, useDot) -- credit http://richard.warburton.it
+    local divider = useDot and '.' or ','
+    local left,num,right = string.match(number,'^([^%d]*%d)(%d*)(.-)$')
+    return left..(num:reverse():gsub('(%d%d%d)','%1' .. divider):reverse())..right
 end
 
 return lib.math
