@@ -92,12 +92,11 @@ end
 
 ---Converts input number into grouped digits
 ---@param number number
----@param useDot? boolean
+---@param seperator? string
 ---@return string
-function math.groupdigits(number, useDot) -- credit http://richard.warburton.it
-    local divider = useDot and '.' or ','
+function math.groupdigits(number, seperator) -- credit http://richard.warburton.it
     local left,num,right = string.match(number,'^([^%d]*%d)(%d*)(.-)$')
-    return left..(num:reverse():gsub('(%d%d%d)','%1' .. divider):reverse())..right
+    return left..(num:reverse():gsub('(%d%d%d)','%1' .. (seperator or ',')):reverse())..right
 end
 
 return lib.math
