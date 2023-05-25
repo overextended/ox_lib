@@ -42,11 +42,11 @@ export function triggerServerCallback<T = unknown>(
 }
 
 export function onServerCallback(eventName: string, cb: (...args) => any) {
-  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args) => {
+  onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args) => {
     let response: any;
 
     try {
-      response = cb(...args);
+      response = await cb(...args);
     } catch (e: any) {
       console.error(`an error occurred while handling callback event ${eventName}`);
       console.log(`^3${e.stack}^0`);
