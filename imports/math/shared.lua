@@ -90,4 +90,13 @@ function math.tohex(n, upper)
     return upper and n:upper() or n
 end
 
+---Converts input number into grouped digits
+---@param number number
+---@param seperator? string
+---@return string
+function math.groupdigits(number, seperator) -- credit http://richard.warburton.it
+    local left,num,right = string.match(number,'^([^%d]*%d)(%d*)(.-)$')
+    return left..(num:reverse():gsub('(%d%d%d)','%1' .. (seperator or ',')):reverse())..right
+end
+
 return lib.math
