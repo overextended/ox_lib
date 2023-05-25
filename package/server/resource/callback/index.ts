@@ -26,12 +26,12 @@ export function triggerClientCallback<T = unknown>(
 }
 
 export function onClientCallback(eventName: string, cb: (playerId: number, ...args) => any) {
-  onNet(`__ox_cb_${eventName}`, (resource: string, key: string, ...args) => {
+  onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args) => {
     const src = source;
     let response: any;
 
     try {
-      response = cb(src, ...args);
+      response = await cb(src, ...args);
     } catch (e: any) {
       console.error(`an error occurred while handling callback event ${eventName}`);
       console.log(`^3${e.stack}^0`);
