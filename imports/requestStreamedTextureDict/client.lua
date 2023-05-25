@@ -11,7 +11,7 @@ function lib.requestStreamedTextureDict(textureDict, timeout)
 
     RequestStreamedTextureDict(textureDict, false)
 
-    if coroutine.running() then
+    if coroutine.isyieldable() then
         timeout = tonumber(timeout) or 500
 
         for _ = 1, timeout do
