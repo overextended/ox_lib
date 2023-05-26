@@ -224,4 +224,101 @@ if service == 'loki' then
 	end
 end
 
+if service == 'splunk' then
+    local splunkToken = GetConvar('splunk:token', '')
+    local splunkEndpoint = GetConvar('splunk:endpoint', '')
+    local startingPattern = '^http[s]?://'
+    local headers = {
+        ['Authorization'] = 'Splunk ' .. splunkToken
+    }
+
+    if not endpoint:find(startingPattern) then
+        splunkEndpoint = 'https://' .. splunkEndpoint
+    end
+
+    local endpoint = ("%s/services/collector"):format(splunkEndpoint)
+
+    -- Converts a string of comma seperated kvp string to a table of kvps
+    -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
+    local function convertDDTagsToKVP(tags)
+        if not tags or type(tags) ~= 'string' then
+            return {}
+        end
+        local tempTable = { string.strsplit(',', tags) } -- outputs a number index table wth k:v strings as values
+        local bTable = table.create(0, #tempTable) -- buffer table
+
+        -- Loop through table and grab only values
+        for _, v in pairs(tempTable) do
+            local key, value = string.strsplit(':', v) -- splits string on ':' character
+            if key == 'source' then key = 'fivem_src' end
+            bTable[key] = value
+        end
+
+        return bTable -- Return the new table of kvps
+    end
+
+    function lib.logger(source, category, message, ...)
+        if not buffer then
+            buffer = {}
+
+            SetTimeout(500, function()
+                -- Strip string keys from buffer
+                local tempBuffer = ""
+                for _,v in pairs(buffer) do
+                   tempBuffer = tempBuffer .. v
+                end
+
+                local postBody = tempBuffer
+                PerformHttpRequest(endpoint, function(status, _, _, _)
+                    if status ~= 204 and status ~= 202 and status ~= 200 then
+                        badResponse(endpoint, status, ("%s : %s : %s"):format(status, postBody, json.encode(headers)))
+                    else
+                        buffer = nil -- only reset buffer if server successflly sends the events
+                    end
+                end, 'POST', postBody, headers)
+                -- print(endpoint, postBody, headers)
+            end)
+        end
+
+        -- Generates a nanosecond unix timestamp
+        ---@diagnostic disable-next-line: param-type-mismatch
+        -- local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
+        local timestamp = os.time()
+
+        -- Initializes event table with the message
+        local event = {message = message, category = category}
+
+        -- Format the args into strings
+        local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
+        local tagsTable = convertDDTagsToKVP(tags)
+
+        -- Concatenates tags kvp table to the event table
+        for k,v in pairs(tagsTable) do
+            event[k] = v -- Store the tags in the event table ready for logging
+        end
+
+        local payload = {
+            sourcetype = "_json",
+            event = json.encode(event),
+            host = GetConvar('splunk:hostname', 'fivem-server'),
+            time = timestamp
+        }
+        -- initialise stream payload
+        payload = json.encode(payload)
+
+        -- Safety check incase it throws index issue
+        if not buffer then
+            buffer = {}
+        end
+
+        -- Checks if the event exists in the buffer and adds to the values if found
+        -- else initialises the stream
+        if not buffer then
+            buffer = payload
+        else
+            buffer[#buffer + 1] = payload
+        end
+	end
+end
+
 return lib.logger
