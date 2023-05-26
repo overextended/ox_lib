@@ -232,7 +232,7 @@ if service == 'splunk' then
         ['Authorization'] = 'Splunk ' .. splunkToken
     }
 
-    if not endpoint:find(startingPattern) then
+    if not splunkEndpoint:find(startingPattern) then
         splunkEndpoint = 'https://' .. splunkEndpoint
     end
 
