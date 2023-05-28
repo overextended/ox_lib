@@ -116,6 +116,44 @@ function OxTask:getNextTime()
     })
 end
 
+-- Get timestamp for next time to run task at any day.
+---@return number
+function OxTask:getAbsoluteNextTime()
+    local minute = getTimeUnit(self.minute, 'min')
+
+    local hour = getTimeUnit(self.hour, 'hour')
+
+    local day = getTimeUnit(self.day, 'day')
+
+    -- To avoid modifying getTimeUnit function, the day is adjusted here if needed.
+    if self.day then
+        if currentDate.hour < hour or (currentDate.hour == hour and currentDate.min < minute) then
+            day = day - 1
+        end 
+    else
+        if currentDate.hour > hour or (currentDate.hour == hour and currentDate.min >= minute) then
+            day = day + 1
+        end
+    end
+    
+    local month = getTimeUnit(self.month, 'month')
+
+    local year = getTimeUnit(self.year, 'year')
+
+    -- Check if time will be in next year.
+    if os.time({year=year, month=month, day=day, hour=hour, min=minute}) < os.time() then
+        year = year and year + 1 or currentDate.year + 1
+    end
+
+    return os.time({
+        min = minute < 60 and minute or 0,
+        hour = hour < 24 and hour or 0,
+        day = day or currentDate.day,
+        month = month or currentDate.month,
+        year = year or currentDate.year,
+    })
+end
+
 ---@type OxTask[]
 local tasks = {}
 
