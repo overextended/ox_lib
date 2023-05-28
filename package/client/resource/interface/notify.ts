@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { Sx } from '@mantine/core';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type NotificationPosition =
@@ -19,7 +19,7 @@ interface NotifyProps {
   duration?: number;
   position?: NotificationPosition;
   type?: NotificationType;
-  style?: CSSProperties;
+  style?: Sx;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
 }

@@ -4,6 +4,11 @@
     "cancel": "Avbryt",
     "close": "Stäng",
     "confirm": "Acceptera",
-    "more": "More..."
-  }
+    "more": "Mer..."
+  },
+  "txadmin_announcement": "Server announcement by %s",
+  "txadmin_dm": "Direct Message from %s",
+  "txadmin_warn": "You have been warned by %s",
+  "txadmin_warn_content": "%s  \nAction ID: %s",
+  "txadmin_scheduledrestart": "Scheduled Restart"
 }

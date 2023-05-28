@@ -5,5 +5,10 @@
     "close": "Sulge",
     "confirm": "Kinnita",
     "more": "Rohkem..."
-  }
+  },
+  "txadmin_announcement": "Serveri teadaanne kasutajalt %s",
+  "txadmin_dm": "Sulle saadeti sõnum kasutajalt %s",
+  "txadmin_warn": "Sind hoiatati kasutaja %s poolt",
+  "txadmin_warn_content": "%s  \nTegevuse ID: %s",
+  "txadmin_scheduledrestart": "Planeeritud taaskäivitus"
 }

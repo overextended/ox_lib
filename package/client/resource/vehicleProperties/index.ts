@@ -21,7 +21,7 @@ interface VehicleProperties {
   xenonColor: number;
   neonEnabled: boolean[];
   neonColor: [number, number, number];
-  extras: boolean[];
+  extras: Record<number | string, 0 | 1>;
   tyreSmokeColor: [number, number, number];
   modSpoilers: number;
   modFrontBumper: number;
@@ -78,11 +78,12 @@ interface VehicleProperties {
   modLightbar: number;
   windows: number[];
   doors: number[];
-  tyres: number[];
+  tyres: Record<number | string, 1 | 2>
   leftHeadlight: boolean;
   rightHeadlight: boolean;
   frontBumper: boolean;
   rearBumper: boolean;
+  bulletProofTyres: boolean;
 }
 
 export const getVehicleProperties = (vehicle: number): VehicleProperties =>

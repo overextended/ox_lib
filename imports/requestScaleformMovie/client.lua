@@ -11,7 +11,7 @@ function lib.requestScaleformMovie(scaleformName, timeout)
 
     if HasScaleformMovieLoaded(scaleform) then return scaleform end
 
-    if coroutine.running() then
+    if coroutine.isyieldable() then
         timeout = tonumber(timeout) or 500
 
         for _ = 1, timeout do

@@ -4,6 +4,11 @@
     "cancel": "Anuluj",
     "close": "Zamknij",
     "confirm": "Potwierdź",
-    "more": "More..."
-  }
+    "more": "Więcej..."
+  },
+  "txadmin_announcement": "Ogłoszenie serwerowe od %s",
+  "txadmin_dm": "Prywatna wiadomość od %s",
+  "txadmin_warn": "Otrzymano ostrzeżenie od %s",
+  "txadmin_warn_content": "%s  \nId akcji: %s",
+  "txadmin_scheduledrestart": "Zaplanowany restart"
 }

@@ -11,8 +11,6 @@ currentDate.sec = 0
 ---@field job fun(task: OxTask, date: osdate)
 ---@field isActive boolean
 ---@field id number
----@field getNextTime function
----@field getAbsoluteNextTime function
 ---@field debug? boolean
 
 ---@class OxTask : OxTaskProperties
