@@ -25,7 +25,6 @@ if cache.game == 'redm' then return end
 ---@field neonColor? number | number[]
 ---@field extras? table<number | string, 0 | 1>
 ---@field tyreSmokeColor? number | number[]
----@field modKit number
 ---@field modSpoilers? number
 ---@field modFrontBumper? number
 ---@field modRearBumper? number
@@ -162,7 +161,6 @@ function lib.getVehicleProperties(vehicle)
         end
 
         return {
-            modKit = GetVehicleModKit(vehicle),
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
             plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
@@ -268,7 +266,7 @@ function lib.setVehicleProperties(vehicle, props)
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 
-    SetVehicleModKit(vehicle, props.modKit or 0)
+    SetVehicleModKit(vehicle, 0)
     SetVehicleAutoRepairDisabled(vehicle, true)
 
     if props.plate then

@@ -23,7 +23,6 @@ interface VehicleProperties {
   neonColor: [number, number, number];
   extras: Record<number | string, 0 | 1>;
   tyreSmokeColor: [number, number, number];
-  modKit: number;
   modSpoilers: number;
   modFrontBumper: number;
   modRearBumper: number;
