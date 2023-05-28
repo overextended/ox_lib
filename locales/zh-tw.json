@@ -4,11 +4,11 @@
     "cancel": "取消",
     "close": "關閉",
     "confirm": "確認",
-    "more": "More..."
+    "more": "更多..."
   },
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "txadmin_announcement": "來自 %s 的伺服器通告",
+  "txadmin_dm": "來自 %s 的訊息",
+  "txadmin_warn": "您被 %s 警告了",
+  "txadmin_warn_content": "%s  \n操作 ID: %s",
+  "txadmin_scheduledrestart": "計劃內重啟"
 }
