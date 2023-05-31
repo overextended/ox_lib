@@ -100,6 +100,12 @@ function OxTask:getNextTime()
     if not self.isActive then return end
 
     local day = getTimeUnit(self.day, 'day')
+    
+    -- If current day is the last day of the month, and the task is scheduled for the last day of the month, then the task should run.
+    if day == 0 then
+        -- Should probably be used month from getTimeUnit, but don't want to reorder this code.
+        day = getMaxDaysInMonth(currentDate.month)
+    end
 
     if day ~= currentDate.day then return end
 
