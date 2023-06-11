@@ -21,6 +21,7 @@ if cache.game == 'redm' then return end
 ---@field wheels? number
 ---@field windowTint? number
 ---@field xenonColor? number
+---@field customXenonColor? number[]
 ---@field neonEnabled? boolean[]
 ---@field neonColor? number | number[]
 ---@field extras? boolean[]
@@ -159,6 +160,9 @@ function lib.getVehicleProperties(vehicle)
             neons[i + 1] = IsVehicleNeonLightEnabled(vehicle, i)
         end
 
+        local hasCustomXenonColor, xenonColorR, xenonColorG, xenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
+        local customXenonColor = hasCustomXenonColor and {xenonColorR, xenonColorG, xenonColorB} or nil
+
         return {
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
@@ -180,6 +184,7 @@ function lib.getVehicleProperties(vehicle)
             wheels = GetVehicleWheelType(vehicle),
             windowTint = GetVehicleWindowTint(vehicle),
             xenonColor = GetVehicleXenonLightsColor(vehicle),
+            customXenonColor = customXenonColor,
             neonEnabled = neons,
             neonColor = { GetVehicleNeonLightsColour(vehicle) },
             extras = extras,
@@ -356,7 +361,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.windows then
         for i = 1, #props.windows do
-            SmashVehicleWindow(vehicle, props.windows[i])
+            RemoveVehicleWindow(vehicle, props.windows[i])
         end
     end
 
@@ -478,6 +483,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.xenonColor then
         SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+    end
+
+    if props.customXenonColor then
+        SetVehicleXenonLightsCustomColor(vehicle, props.customXenonColor[1], props.customXenonColor[2], props.customXenonColor[3])
     end
 
     if props.modFrontWheels then
