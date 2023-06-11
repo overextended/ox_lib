@@ -18,6 +18,7 @@ interface VehicleProperties {
   wheelSize: number;
   wheels: number;
   windowTint: number;
+  customXenonColor: [number, number, number];
   xenonColor: number;
   neonEnabled: boolean[];
   neonColor: [number, number, number];
