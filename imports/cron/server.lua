@@ -26,6 +26,18 @@ local maxUnits = {
     month = 12,
 }
 
+--- Gets the amount of days in certain month
+---@param month number
+---@param year? number
+---@return number
+local function getMaxDaysInMonth(month, year)
+    year = year or currentDate.year
+    local nextMonth = month + 1
+    local nextMonthFirstDay = os.time{year=year, month=nextMonth, day=1}
+    local lastDayOfCurrentMonth = os.date("%d", nextMonthFirstDay - 86400)
+    return tonumber(lastDayOfCurrentMonth)
+end
+
 ---@param value string | number | nil
 ---@param unit string
 ---@return string | number | false | nil
@@ -88,6 +100,12 @@ function OxTask:getNextTime()
     if not self.isActive then return end
 
     local day = getTimeUnit(self.day, 'day')
+    
+    -- If current day is the last day of the month, and the task is scheduled for the last day of the month, then the task should run.
+    if day == 0 then
+        -- Should probably be used month from getTimeUnit, but don't want to reorder this code.
+        day = getMaxDaysInMonth(currentDate.month)
+    end
 
     if day ~= currentDate.day then return end
 
@@ -124,21 +142,27 @@ function OxTask:getAbsoluteNextTime()
     local hour = getTimeUnit(self.hour, 'hour')
 
     local day = getTimeUnit(self.day, 'day')
+    
+    local month = getTimeUnit(self.month, 'month')
+
+    local year = getTimeUnit(self.year, 'year')
 
     -- To avoid modifying getTimeUnit function, the day is adjusted here if needed.
     if self.day then
         if currentDate.hour < hour or (currentDate.hour == hour and currentDate.min < minute) then
             day = day - 1
+            if day < 1 then
+                day = getMaxDaysInMonth(currentDate.month)
+            end
         end 
-    else
         if currentDate.hour > hour or (currentDate.hour == hour and currentDate.min >= minute) then
             day = day + 1
+            if day > getMaxDaysInMonth(currentDate.month) or day == 1 then
+                day = 1
+                month = month + 1
+            end
         end
     end
-    
-    local month = getTimeUnit(self.month, 'month')
-
-    local year = getTimeUnit(self.year, 'year')
 
     -- Check if time will be in next year.
     if os.time({year=year, month=month, day=day, hour=hour, min=minute}) < os.time() then
