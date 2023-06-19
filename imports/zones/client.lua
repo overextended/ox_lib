@@ -85,6 +85,8 @@ local function getTriangles(polygon)
 
             return triangles
         end
+
+        Wait(0)
     end
 
     return triangles
@@ -330,8 +332,12 @@ lib.zones = {
         data.contains = contains
 
         if data.debug then
-            data.triangles = getTriangles(data.polygon)
-            data.debug = debugPoly
+            data.debug = nil
+
+            CreateThread(function()
+                data.triangles = getTriangles(data.polygon)
+                data.debug = debugPoly
+            end)
         end
 
         Zones[data.id] = data
