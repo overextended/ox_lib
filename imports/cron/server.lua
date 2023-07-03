@@ -100,7 +100,7 @@ function OxTask:getNextTime()
     if not self.isActive then return end
 
     local day = getTimeUnit(self.day, 'day')
-    
+
     -- If current day is the last day of the month, and the task is scheduled for the last day of the month, then the task should run.
     if day == 0 then
         -- Should probably be used month from getTimeUnit, but don't want to reorder this code.
@@ -142,7 +142,7 @@ function OxTask:getAbsoluteNextTime()
     local hour = getTimeUnit(self.hour, 'hour')
 
     local day = getTimeUnit(self.day, 'day')
-    
+
     local month = getTimeUnit(self.month, 'month')
 
     local year = getTimeUnit(self.year, 'year')
@@ -154,7 +154,7 @@ function OxTask:getAbsoluteNextTime()
             if day < 1 then
                 day = getMaxDaysInMonth(currentDate.month)
             end
-        end 
+        end
         if currentDate.hour > hour or (currentDate.hour == hour and currentDate.min >= minute) then
             day = day + 1
             if day > getMaxDaysInMonth(currentDate.month) or day == 1 then
@@ -284,8 +284,8 @@ end
 ---@param expression string A cron expression such as `* * * * *` representing minute, hour, day, month, and day of the week.
 ---@param job fun(task: OxTask, date: osdate)
 ---@param options? { debug?: boolean }
----Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.  
----Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.  
+---Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.
+---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
 ---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
 function lib.cron.new(expression, job, options)
     if not job or type(job) ~= 'function' then return end

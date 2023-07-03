@@ -136,5 +136,4 @@ function table.isfrozen(tbl)
     return getmetatable(tbl) == 'readonly'
 end
 
-
 return lib.table

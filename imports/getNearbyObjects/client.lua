@@ -21,7 +21,7 @@ function lib.getNearbyObjects(coords, maxDistance)
             }
         end
 	end
-    
+
 	return nearby
 end
 
