@@ -29,6 +29,7 @@ function lib.cancelSkillCheck()
 
     skillcheck:resolve(false)
     skillcheck = nil
+    SendNUIMessage({action = 'skillCheckCancel'})
 end
 
 ---@return boolean

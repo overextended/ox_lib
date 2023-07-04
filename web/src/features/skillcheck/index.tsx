@@ -80,6 +80,10 @@ const SkillCheck: React.FC = () => {
     setVisible(true);
   });
 
+  useNuiEvent('skillCheckCancel', () => {
+    setVisible(false);
+  });
+
   const handleComplete = (success: boolean) => {
     if (!dataRef.current) return;
     if (!success || !Array.isArray(dataRef.current.difficulty)) {
