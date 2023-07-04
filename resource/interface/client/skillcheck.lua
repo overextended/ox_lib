@@ -22,6 +22,20 @@ function lib.skillCheck(difficulty, inputs)
     return Citizen.Await(skillcheck)
 end
 
+function lib.cancelSkillCheck()
+    if not skillcheck then
+        error('No skillCheck is active')
+    end
+
+    skillcheck:resolve(false)
+    skillcheck = nil
+end
+
+---@return boolean
+function lib.skillCheckActive()
+    return (skillcheck and true) or false
+end
+
 RegisterNUICallback('skillCheckOver', function(success, cb)
     cb(1)
 
