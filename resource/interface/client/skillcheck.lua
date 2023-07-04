@@ -34,7 +34,7 @@ end
 
 ---@return boolean
 function lib.skillCheckActive()
-    return (skillcheck and true) or false
+    return skillcheck ~= nil
 end
 
 RegisterNUICallback('skillCheckOver', function(success, cb)
