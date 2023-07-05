@@ -27,8 +27,6 @@ function lib.cancelSkillCheck()
         error('No skillCheck is active')
     end
 
-    skillcheck:resolve(false)
-    skillcheck = nil
     SendNUIMessage({action = 'skillCheckCancel'})
 end
 

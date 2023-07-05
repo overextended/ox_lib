@@ -82,6 +82,7 @@ const SkillCheck: React.FC = () => {
 
   useNuiEvent('skillCheckCancel', () => {
     setVisible(false);
+    fetchNui('skillCheckOver', false);
   });
 
   const handleComplete = (success: boolean) => {
