@@ -78,8 +78,8 @@ local function getTimeUnit(value, unit)
             for listValue in string.gmatch(value, '%d+') --[[@as number]] do
                 listValue = tonumber(listValue)
 
-                -- if current minute is less than in the expression 0,10,20,45 * * * *
-                if listValue > currentTime then
+                -- e.g. if current time is less than in the expression 0,10,20,45 * * * *
+                if listValue >= currentTime then
                     return listValue
                 end
             end
