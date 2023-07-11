@@ -46,6 +46,7 @@ lib.zones = {
 
         data.polygon = glm.polygon.new(points)
         data.coords = data.polygon:centroid()
+        data.type = 'poly'
         data.remove = removeZone
         data.contains = contains
         data.debug = nil
@@ -71,6 +72,7 @@ lib.zones = {
             vec3(-data.size.x, -data.size.y, 0),
             vec3(data.size.x, -data.size.y, 0),
         }) + data.coords)
+        data.type = 'box'
         data.remove = removeZone
         data.contains = contains
         data.debug = nil
@@ -88,6 +90,7 @@ lib.zones = {
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)
         data.radius = (data.radius or 2) + 0.0
+        data.type = 'sphere'
         data.remove = removeZone
         data.contains = insideSphere
         data.debug = nil
