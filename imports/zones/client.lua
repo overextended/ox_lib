@@ -259,12 +259,16 @@ local function convertToVector(coords)
 end
 
 local function setDebug(self, bool, colour)
+    if not bool and insideZones[self.id] then
+        insideZones[self.id] = nil
+    end
+
     self.debugColour = bool and vec4(colour?.r or self.debugColour?.r or 255, colour?.g or self.debugColour?.g or 42, colour?.b or self.debugColour?.b or 24, colour?.a or self.debugColour?.a or 100) or nil
     Zones[self.id].debugColour = self.debugColour
 
     if bool and self.debug or not bool and not self.debug then return end
 
-    self.triangles = self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.triangles = bool and (self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) }) or nil
     self.debug = bool and (self.type == 'sphere' and debugSphere or debugPoly) or nil
     Zones[self.id].debug = self.debug
 end
