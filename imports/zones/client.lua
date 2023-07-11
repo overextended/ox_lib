@@ -4,6 +4,7 @@ local glm = require 'glm'
 ---@field id number
 ---@field coords vector3
 ---@field distance number
+---@field type string
 ---@field remove fun()
 ---@field contains fun(self: CZone, coords?: vector3): boolean
 ---@field onEnter fun(self: CZone)?
@@ -257,6 +258,13 @@ local function convertToVector(coords)
     return coords
 end
 
+local function setDebug(self, bool)
+    self.debugColour = bool and vec4(self.debugColour?.r or 255, self.debugColour?.b or 42, self.debugColour?.g or 24, self.debugColour?.a or 100) or nil
+    self.triangles = self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.debug = bool and (self.type == 'sphere' and debugSphere or debugPoly) or nil
+    Zones[self.id].debug = self.debug
+end
+
 lib.zones = {
     ---@return CZone
     poly = function(data)
@@ -324,8 +332,10 @@ lib.zones = {
         end
 
         data.coords = data.polygon:centroid()
+        data.type = 'poly'
         data.remove = removeZone
         data.contains = contains
+        data.setDebug = setDebug
 
         if data.debug then
             data.debug = nil
@@ -354,8 +364,10 @@ lib.zones = {
             vec3(-data.size.x, -data.size.y, 0),
             vec3(data.size.x, -data.size.y, 0),
         }) + data.coords)
+        data.type = 'box'
         data.remove = removeZone
         data.contains = contains
+        data.setDebug = setDebug
 
         if data.debug then
             data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
@@ -372,8 +384,10 @@ lib.zones = {
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)
         data.radius = (data.radius or 2) + 0.0
+        data.type = 'sphere'
         data.remove = removeZone
         data.contains = insideSphere
+        data.setDebug = setDebug
 
         if data.debug then
             data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
