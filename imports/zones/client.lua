@@ -211,12 +211,8 @@ local DrawPoly = DrawPoly
 local function debugPoly(self)
     for i = 1, #self.triangles do
         local triangle = self.triangles[i]
-        DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x
-            ,
-            triangle[3].y, triangle[3].z, 255, 42, 24, 100)
-        DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x
-            ,
-            triangle[3].y, triangle[3].z, 255, 42, 24, 100)
+        DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
     end
     for i = 1, #self.polygon do
         local thickness = vec(0, 0, self.thickness / 2)
@@ -224,19 +220,19 @@ local function debugPoly(self)
         local b = self.polygon[i] - thickness
         local c = (self.polygon[i + 1] or self.polygon[1]) + thickness
         local d = (self.polygon[i + 1] or self.polygon[1]) - thickness
-        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, 255, 42, 24, 225)
-        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, 255, 42, 24, 225)
-        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, 255, 42, 24, 225)
-        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, 255, 42, 24, 100)
-        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, 255, 42, 24, 100)
-        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, 255, 42, 24, 100)
-        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, 255, 42, 24, 100)
+        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
+        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
+        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
+        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
     end
 end
 
 local function debugSphere(self)
     ---@diagnostic disable-next-line: param-type-mismatch
-    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, 255, 42, 24, 100, false, false, 0, false, false, false, false)
+    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a, false, false, 0, false, false, false, false)
 end
 
 local function contains(self, coords)
@@ -335,6 +331,7 @@ lib.zones = {
             data.debug = nil
 
             CreateThread(function()
+                data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
                 data.triangles = getTriangles(data.polygon)
                 data.debug = debugPoly
             end)
@@ -361,6 +358,7 @@ lib.zones = {
         data.contains = contains
 
         if data.debug then
+            data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
             data.triangles = { mat(data.polygon[1], data.polygon[2], data.polygon[3]), mat(data.polygon[1], data.polygon[3], data.polygon[4]) }
             data.debug = debugPoly
         end
@@ -378,6 +376,7 @@ lib.zones = {
         data.contains = insideSphere
 
         if data.debug then
+            data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
             data.debug = debugSphere
         end
 
@@ -389,6 +388,5 @@ lib.zones = {
 
     getCurrentZones = function() return insideZones end,
 }
-
 
 return lib.zones
