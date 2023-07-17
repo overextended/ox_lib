@@ -4,11 +4,11 @@
     "cancel": "Mégse",
     "close": "Bezárás",
     "confirm": "Megerősít",
-    "more": "More..."
+    "more": "Tovább..."
   },
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "txadmin_announcement": "Szerver bejelentés által %s",
+  "txadmin_dm": "Közvetlen üzenet a %s",
+  "txadmin_warn": "Figyelmeztetett %s",
+  "txadmin_warn_content": "%s  \nMűvelet ID: %s",
+  "txadmin_scheduledrestart": "Ütemezett újraindítás"
 }
