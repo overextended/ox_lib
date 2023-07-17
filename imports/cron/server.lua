@@ -67,7 +67,7 @@ local function getTimeUnit(value, unit)
 
             if currentTime >= min and currentTime <= max then return currentTime end
 
-            return min
+            return min + unitMax
         end
 
         local list = string.match(value, '%d+,%d+')
@@ -83,13 +83,17 @@ local function getTimeUnit(value, unit)
             end
 
             -- if iterator failed, return the first value in the list
-            return tonumber(string.match(value, '%d+'))
+            return tonumber(string.match(value, '%d+')) + unitMax
         end
 
         return false
     end
 
-    return value or currentTime
+    if value then
+        return value < currentTime and value + unitMax or value
+    end
+
+    return currentTime
 end
 
 ---Get a timestamp for the next time to run the task today.
@@ -124,8 +128,8 @@ function OxTask:getNextTime()
     if not hour then return end
 
     return os.time({
-        min = minute < 60 and minute or 0,
-        hour = hour < 24 and hour or 0,
+        min = minute,
+        hour = hour,
         day = day or currentDate.day,
         month = month or currentDate.month,
         year = currentDate.year,
@@ -192,23 +196,20 @@ function OxTask:scheduleTask()
             return self:stop()
         end
 
-        if self.hour then
-            sleep += 86400
-        elseif self.minute then
-            sleep += 3600
-        end
-
-        if sleep < 0 then
-            sleep += 60
-            runAt += 60
-        end
+        sleep += 60
     end
 
     if self.debug then
-        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60, sleep / 60 / 60))
+        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60,
+            sleep / 60 / 60))
     end
 
-    if sleep > 0 then Wait(sleep * 1000) end
+    if sleep > 0 then
+        Wait(sleep * 1000)
+    else -- will this even happen?
+        Wait(1000)
+        return true
+    end
 
     if self.isActive then
         self:job(currentDate)
