@@ -65,9 +65,15 @@ local function getTimeUnit(value, unit)
             local min, max = string.strsplit('-', range)
             min, max = tonumber(min, 10), tonumber(max, 10)
 
-            if currentTime >= min and currentTime <= max then return currentTime end
+            if unit == 'min' then
+                if currentTime >= max then
+                    return min + unitMax
+                end
+            elseif currentTime > max then
+                return min + unitMax
+            end
 
-            return min + unitMax
+            return currentTime < min and min or currentTime
         end
 
         local list = string.match(value, '%d+,%d+')
@@ -77,7 +83,11 @@ local function getTimeUnit(value, unit)
                 listValue = tonumber(listValue)
 
                 -- e.g. if current time is less than in the expression 0,10,20,45 * * * *
-                if listValue >= currentTime then
+                if unit == 'min' then
+                    if currentTime < listValue then
+                        return listValue
+                    end
+                elseif currentTime <= listValue then
                     return listValue
                 end
             end
@@ -90,6 +100,10 @@ local function getTimeUnit(value, unit)
     end
 
     if value then
+        if unit == 'min' then
+            return value <= currentTime and value + unitMax or value
+        end
+
         return value < currentTime and value + unitMax or value
     end
 
