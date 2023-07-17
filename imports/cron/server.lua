@@ -141,6 +141,13 @@ function OxTask:getNextTime()
 
     if not hour then return end
 
+    if minute >= 60 then
+        minute = 0
+        hour += 1
+    end
+
+    if hour >= 24 and day then return end
+
     return os.time({
         min = minute,
         hour = hour,
