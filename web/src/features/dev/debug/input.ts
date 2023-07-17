@@ -47,7 +47,7 @@ export const debugInput = () => {
             min: 0,
             max: 10,
             step: 0.5,
-            icon: 'price-tag',
+            icon: 'receipt',
           },
           {
             type: 'slider',
