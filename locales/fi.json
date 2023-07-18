@@ -1,0 +1,14 @@
+{
+  "language": "Suomi",
+  "ui": {
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "confirm": "Vahvista",
+    "more": "Lisää..."
+  },
+  "txadmin_announcement": "Ilmoitus palvelimen ylläpitäjältä %s",
+  "txadmin_dm": "Sait viestin henkilöltä %s",
+  "txadmin_warn": "Sinua on varoitettu henkilön %s toimesta",
+  "txadmin_warn_content": "%s  \nTunniste: %s",
+  "txadmin_scheduledrestart": "Ajoitettu uudelleenkäynnistyminen"
+}
