@@ -40,7 +40,7 @@ function lib.requestWeaponAsset(weaponType, timeout, weaponResourceFlags, extraW
 
     RequestWeaponAsset(weaponType, weaponResourceFlags or 31, extraWeaponComponentFlags or 0)
 
-    if coroutine.running() then
+    if coroutine.isyieldable() then
         timeout = tonumber(timeout) or 500
 
         for _ = 1, timeout do

@@ -13,7 +13,7 @@ function lib.requestModel(model, timeout)
 
     RequestModel(model)
 
-    if coroutine.running() then
+    if coroutine.isyieldable() then
         timeout = tonumber(timeout) or 500
 
         for _ = 1, timeout do

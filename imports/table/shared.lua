@@ -89,11 +89,52 @@ local function table_merge(t1, t2)
     return t1
 end
 
-lib.table.contains = contains
-lib.table.matches = table_matches
-lib.table.deepclone = table_deepclone
-lib.table.merge = table_merge
+table.contains = contains
+table.matches = table_matches
+table.deepclone = table_deepclone
+table.merge = table_merge
 
-table = lib.table
+local frozenNewIndex = function(self) error(('cannot set values on a frozen table (%s)'):format(self), 2) end
+local _rawset = rawset
+
+---@param tbl table
+---@param index any
+---@param value any
+---@return table
+function rawset(tbl, index, value)
+    if table.isfrozen(tbl) then
+        frozenNewIndex(tbl)
+    end
+
+    return _rawset(tbl, index, value)
+end
+
+---Makes a table read-only, preventing further modification. Unfrozen tables stored within `tbl` are still mutable.
+---@generic T : table
+---@param tbl T
+---@return T
+function table.freeze(tbl)
+    local copy = table.clone(tbl)
+    local metatbl = getmetatable(tbl)
+
+    table.wipe(tbl)
+    setmetatable(tbl, {
+        __index = metatbl and setmetatable(copy, metatbl) or copy,
+        __metatable = 'readonly',
+        __newindex = frozenNewIndex,
+        __len = function() return #copy end,
+        __pairs = function() return next, copy end,
+    })
+
+    return tbl
+end
+
+---Return true if `tbl` is set as read-only.
+---@param tbl table
+---@return boolean
+function table.isfrozen(tbl)
+    return getmetatable(tbl) == 'readonly'
+end
+
 
 return lib.table

@@ -16,7 +16,7 @@ function lib.getClosestPed(coords, maxDistance)
 
             if distance < maxDistance then
                 maxDistance = distance
-                closestObject = ped
+                closestPed = ped
                 closestCoords = pedCoords
             end
         end

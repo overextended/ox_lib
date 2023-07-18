@@ -1,5 +1,6 @@
 lib.cron = {}
-local currentDate = os.date('*t') --[[@as osdate]]
+
+local currentDate = os.date('*t') --[[@as { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }]]
 currentDate.sec = 0
 
 ---@class OxTaskProperties
@@ -7,6 +8,7 @@ currentDate.sec = 0
 ---@field hour? number | string
 ---@field day? number | string
 ---@field month? number | string
+---@field year? number | string
 ---@field weekday? number | string
 ---@field job fun(task: OxTask, date: osdate)
 ---@field isActive boolean
@@ -26,14 +28,22 @@ local maxUnits = {
     month = 12,
 }
 
+--- Gets the amount of days in certain month
+---@param month number
+---@param year? number
+---@return number
+local function getMaxDaysInMonth(month, year)
+    return os.date('*t', os.time({ year = year or currentDate.year, month = month + 1, day = -1 })).day --[[@as number]]
+end
+
 ---@param value string | number | nil
 ---@param unit string
 ---@return string | number | false | nil
 local function getTimeUnit(value, unit)
     local currentTime = currentDate[unit]
+    local unitMax = maxUnits[unit]
 
     if type(value) == 'string' then
-        local unitMax = maxUnits[unit]
         local stepValue = string.match(value, '*/(%d+)')
 
         if stepValue then
@@ -55,9 +65,15 @@ local function getTimeUnit(value, unit)
             local min, max = string.strsplit('-', range)
             min, max = tonumber(min, 10), tonumber(max, 10)
 
-            if currentTime >= min and currentTime <= max then return currentTime end
+            if unit == 'min' then
+                if currentTime >= max then
+                    return min + unitMax
+                end
+            elseif currentTime > max then
+                return min + unitMax
+            end
 
-            return min
+            return currentTime < min and min or currentTime
         end
 
         local list = string.match(value, '%d+,%d+')
@@ -66,20 +82,32 @@ local function getTimeUnit(value, unit)
             for listValue in string.gmatch(value, '%d+') --[[@as number]] do
                 listValue = tonumber(listValue)
 
-                -- if current minute is less than in the expression 0,10,20,45 * * * *
-                if listValue > currentTime then
+                -- e.g. if current time is less than in the expression 0,10,20,45 * * * *
+                if unit == 'min' then
+                    if currentTime < listValue then
+                        return listValue
+                    end
+                elseif currentTime <= listValue then
                     return listValue
                 end
             end
 
             -- if iterator failed, return the first value in the list
-            return tonumber(string.match(value, '%d+'))
+            return tonumber(string.match(value, '%d+')) + unitMax
         end
 
         return false
     end
 
-    return value or currentTime
+    if value then
+        if unit == 'min' then
+            return value <= currentTime and value + unitMax or value
+        end
+
+        return value < currentTime and value + unitMax or value
+    end
+
+    return currentTime
 end
 
 ---Get a timestamp for the next time to run the task today.
@@ -88,6 +116,12 @@ function OxTask:getNextTime()
     if not self.isActive then return end
 
     local day = getTimeUnit(self.day, 'day')
+
+    -- If current day is the last day of the month, and the task is scheduled for the last day of the month, then the task should run.
+    if day == 0 then
+        -- Should probably be used month from getTimeUnit, but don't want to reorder this code.
+        day = getMaxDaysInMonth(currentDate.month)
+    end
 
     if day ~= currentDate.day then return end
 
@@ -107,12 +141,61 @@ function OxTask:getNextTime()
 
     if not hour then return end
 
+    if minute >= 60 then
+        minute = 0
+        hour += 1
+    end
+
+    if hour >= 24 and day then return end
+
+    return os.time({
+        min = minute,
+        hour = hour,
+        day = day or currentDate.day,
+        month = month or currentDate.month,
+        year = currentDate.year,
+    })
+end
+
+-- Get timestamp for next time to run task at any day.
+---@return number
+function OxTask:getAbsoluteNextTime()
+    local minute = getTimeUnit(self.minute, 'min')
+    local hour = getTimeUnit(self.hour, 'hour')
+    local day = getTimeUnit(self.day, 'day')
+    local month = getTimeUnit(self.month, 'month')
+    local year = getTimeUnit(self.year, 'year')
+
+    -- To avoid modifying getTimeUnit function, the day is adjusted here if needed.
+    if self.day then
+        if currentDate.hour < hour or (currentDate.hour == hour and currentDate.min < minute) then
+            day = day - 1
+            if day < 1 then
+                day = getMaxDaysInMonth(currentDate.month)
+            end
+        end
+
+        if currentDate.hour > hour or (currentDate.hour == hour and currentDate.min >= minute) then
+            day = day + 1
+            if day > getMaxDaysInMonth(currentDate.month) or day == 1 then
+                day = 1
+                month = month + 1
+            end
+        end
+    end
+
+    -- Check if time will be in next year.
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    if os.time({ year = year, month = month, day = day, hour = hour, min = minute }) < os.time() then
+        year = year and year + 1 or currentDate.year + 1
+    end
+
     return os.time({
         min = minute < 60 and minute or 0,
         hour = hour < 24 and hour or 0,
         day = day or currentDate.day,
         month = month or currentDate.month,
-        year = currentDate.year,
+        year = year or currentDate.year,
     })
 end
 
@@ -134,26 +217,27 @@ function OxTask:scheduleTask()
             return self:stop()
         end
 
-        if self.hour then
-            sleep += 86400
-        elseif self.minute then
-            sleep += 3600
-        end
-
-        if sleep < 0 then
-            sleep += 60
-            runAt += 60
-        end
+        sleep += 60
     end
 
     if self.debug then
-        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60, sleep / 60 / 60))
+        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60,
+            sleep / 60 / 60))
     end
 
-    if sleep > 0 then Wait(sleep * 1000) end
+    if sleep > 0 then
+        Wait(sleep * 1000)
+    else -- will this even happen?
+        Wait(1000)
+        return true
+    end
 
     if self.isActive then
         self:job(currentDate)
+
+        if self.debug then
+            print(('(%s/%s/%s %s:%s) ran task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
+        end
 
         Wait(30000)
 
@@ -222,8 +306,8 @@ end
 ---@param expression string A cron expression such as `* * * * *` representing minute, hour, day, month, and day of the week.
 ---@param job fun(task: OxTask, date: osdate)
 ---@param options? { debug?: boolean }
----Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.  
----Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.  
+---Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.
+---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
 ---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
 function lib.cron.new(expression, job, options)
     if not job or type(job) ~= 'function' then return end
