@@ -41,12 +41,14 @@ export const requestModel = (model: string | number, timeout?: number): Promise<
   return streamingRequest(RequestModel, HasModelLoaded, 'model', model, timeout);
 };
 
-export const requestStreamedTextureDict = (textureDict: string, timeout?: number): Promise<string> =>
-  streamingRequest(RequestStreamedTextureDict, HasStreamedTextureDictLoaded, 'textureDict', textureDict, timeout);
-
 export const requestNamedPtfxAsset = (ptFxName: string, timeout?: number): Promise<string> =>
   streamingRequest(RequestNamedPtfxAsset, HasNamedPtfxAssetLoaded, 'ptFxName', ptFxName, timeout);
 
-export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, weaponResourceFlags: number = 31, extraWeaponComponentFlags: number = 0): Promise<string | number> => {
-  return streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, weaponResourceFlags, extraWeaponComponentFlags);
-}
+export const requestScaleformMovie = (scaleformName: string, timeout?: number): Promise<string> =>
+  streamingRequest(RequestScaleformMovie, HasScaleformMovieLoaded, 'scaleformMovie', scaleformName, timeout);
+
+export const requestStreamedTextureDict = (textureDict: string, timeout?: number): Promise<string> =>
+  streamingRequest(RequestStreamedTextureDict, HasStreamedTextureDictLoaded, 'textureDict', textureDict, timeout);
+
+export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, weaponResourceFlags: number = 31, extraWeaponComponentFlags: number = 0): Promise<string | number> =>
+  streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, weaponResourceFlags, extraWeaponComponentFlags);

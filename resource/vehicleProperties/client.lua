@@ -1,7 +1,7 @@
 if cache.game == 'redm' then return end
 
 ---@class VehicleProperties
----@field model? string
+---@field model? number
 ---@field plate? string
 ---@field plateIndex? number
 ---@field bodyHealth? number
