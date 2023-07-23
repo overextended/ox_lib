@@ -4,7 +4,9 @@ local glm = require 'glm'
 ---@field id number
 ---@field coords vector3
 ---@field distance number
----@field type string
+---@field type 'poly' | 'sphere' | 'box'
+---@field debugColour vector4?
+---@field setDebug fun(self: CZone)
 ---@field remove fun()
 ---@field contains fun(self: CZone, coords?: vector3): boolean
 ---@field onEnter fun(self: CZone)?
@@ -118,7 +120,7 @@ CreateThread(function()
 
         for _, zone in pairs(Zones) do
             zone.distance = #(zone.coords - coords)
-            local radius, contains = zone.radius
+            local radius, contains = zone.radius, nil
 
             if radius then
                 contains = zone.distance < radius
@@ -264,13 +266,11 @@ local function setDebug(self, bool, colour)
     end
 
     self.debugColour = bool and vec4(colour?.r or self.debugColour?.r or 255, colour?.g or self.debugColour?.g or 42, colour?.b or self.debugColour?.b or 24, colour?.a or self.debugColour?.a or 100) or nil
-    Zones[self.id].debugColour = self.debugColour
 
     if bool and self.debug or not bool and not self.debug then return end
 
     self.triangles = bool and (self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) }) or nil
     self.debug = bool and (self.type == 'sphere' and debugSphere or debugPoly) or nil
-    Zones[self.id].debug = self.debug
 end
 
 lib.zones = {
@@ -349,9 +349,7 @@ lib.zones = {
             data.debug = nil
 
             CreateThread(function()
-                data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
-                data.triangles = getTriangles(data.polygon)
-                data.debug = debugPoly
+                data:setDebug(true, data.debugColour)
             end)
         end
 
@@ -378,9 +376,7 @@ lib.zones = {
         data.setDebug = setDebug
 
         if data.debug then
-            data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
-            data.triangles = { mat(data.polygon[1], data.polygon[2], data.polygon[3]), mat(data.polygon[1], data.polygon[3], data.polygon[4]) }
-            data.debug = debugPoly
+            data:setDebug(true, data.debugColour)
         end
 
         Zones[data.id] = data
@@ -398,8 +394,7 @@ lib.zones = {
         data.setDebug = setDebug
 
         if data.debug then
-            data.debugColour = vec4(data.debugColour?.r or 255, data.debugColour?.b or 42, data.debugColour?.g or 24, data.debugColour?.a or 100)
-            data.debug = debugSphere
+            data:setDebug(true, data.debugColour)
         end
 
         Zones[data.id] = data
