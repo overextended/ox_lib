@@ -118,9 +118,10 @@ function lib.getVehicleProperties(vehicle)
             end
         end
 
+        local modLiveryCount = GetVehicleLiveryCount(vehicle)
         local modLivery = GetVehicleLivery(vehicle)
 
-        if modLivery == -1 then
+        if modLiveryCount == -1 or modLivery == -1 then
             modLivery = GetVehicleMod(vehicle, 48)
         end
 
