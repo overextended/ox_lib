@@ -46,7 +46,6 @@ export const debugInput = () => {
             default: 6.5,
             min: 0,
             max: 10,
-            step: 0.5,
             icon: 'receipt',
           },
           {
