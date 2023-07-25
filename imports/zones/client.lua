@@ -4,7 +4,7 @@ local glm = require 'glm'
 ---@field id number
 ---@field coords vector3
 ---@field distance number
----@field type 'poly' | 'sphere' | 'box'
+---@field type 'poly' | 'sphere' | 'box' | 'interior'
 ---@field debugColour vector4?
 ---@field setDebug fun(self: CZone)
 ---@field remove fun()
@@ -119,13 +119,19 @@ CreateThread(function()
         cache.coords = coords
 
         for _, zone in pairs(Zones) do
-            zone.distance = #(zone.coords - coords)
-            local radius, contains = zone.radius, nil
+            local contains = nil
 
-            if radius then
-                contains = zone.distance < radius
+            if zone.type == 'interior' then
+                contains = GetInteriorFromEntity(cache.ped) == zone.interiorId
             else
-                contains = glm_polygon_contains(zone.polygon, coords, zone.thickness / 4)
+                zone.distance = #(zone.coords - coords)
+                local radius = zone.radius
+    
+                if radius then
+                    contains = zone.distance < radius
+                else
+                    contains = glm_polygon_contains(zone.polygon, coords, zone.thickness / 4)
+                end
             end
 
             if contains then
@@ -244,6 +250,10 @@ end
 
 local function insideSphere(self, coords)
     return #(self.coords - coords) < self.radius
+end
+
+local function insideInterior(self, coords)
+    return GetInteriorAtCoords(coords.x, coords.y, coords.z) == self.interiorId
 end
 
 local function convertToVector(coords)
@@ -400,6 +410,17 @@ lib.zones = {
         if data.debug then
             data:setDebug(true, data.debugColour)
         end
+
+        Zones[data.id] = data
+        return data
+    end,
+
+    ---@return CZone
+    interior = function(data)
+        data.id = #Zones + 1
+        data.type = 'interior'
+        data.remove = removeZone
+        data.contains = insideInterior
 
         Zones[data.id] = data
         return data

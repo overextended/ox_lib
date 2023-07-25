@@ -103,6 +103,21 @@ lib.zones = {
         return data
     end,
 
+    ---@return CZone
+    interior = function(data)
+        data.id = #Zones + 1
+        data.type = 'interior'
+        data.remove = removeZone
+        data.debug = nil
+        data.debugColour = nil
+        data.inside = nil
+        data.onEnter = nil
+        data.onExit = nil
+
+        Zones[data.id] = data
+        return data
+    end,
+
     getAllZones = function() return Zones end,
 }
 
