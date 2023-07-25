@@ -41,7 +41,6 @@ export interface ISelect extends BaseField<'select' | 'multi-select', string | s
 
 export interface INumber extends BaseField<'number', number> {
   precision?: number;
-  step?: number;
   min?: number;
   max?: number;
 }
