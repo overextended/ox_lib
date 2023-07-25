@@ -376,7 +376,11 @@ lib.zones = {
         data.setDebug = setDebug
 
         if data.debug then
-            data:setDebug(true, data.debugColour)
+            data.debug = nil
+
+            CreateThread(function()
+                data:setDebug(true, data.debugColour)
+            end)
         end
 
         Zones[data.id] = data
