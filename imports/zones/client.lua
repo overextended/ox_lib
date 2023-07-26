@@ -6,7 +6,7 @@ local glm = require 'glm'
 ---@field distance number
 ---@field type 'poly' | 'sphere' | 'box'
 ---@field debugColour vector4?
----@field setDebug fun(self: CZone)
+---@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
 ---@field remove fun()
 ---@field contains fun(self: CZone, coords?: vector3): boolean
 ---@field onEnter fun(self: CZone)?
@@ -267,10 +267,16 @@ local function setDebug(self, bool, colour)
 
     self.debugColour = bool and vec4(colour?.r or self.debugColour?.r or 255, colour?.g or self.debugColour?.g or 42, colour?.b or self.debugColour?.b or 24, colour?.a or self.debugColour?.a or 100) or nil
 
-    if bool and self.debug or not bool and not self.debug then return end
+    if not bool and self.debug then
+        self.triangles = nil
+        self.debug = nil
+        return
+    end
 
-    self.triangles = bool and (self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) }) or nil
-    self.debug = bool and (self.type == 'sphere' and debugSphere or debugPoly) or nil
+    if bool and self.debug and self.debug ~= true then return end
+
+    self.triangles = self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.debug = self.type == 'sphere' and debugSphere or debugPoly or nil
 end
 
 lib.zones = {
