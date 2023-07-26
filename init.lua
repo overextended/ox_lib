@@ -17,6 +17,9 @@ local status = export.hasLoaded()
 
 if status ~= true then error(status, 2) end
 
+-- Ignore invalid types during msgpack.pack (e.g. userdata)
+msgpack.setoption('ignore_invalid', true)
+
 -----------------------------------------------------------------------------------------------
 -- Module
 -----------------------------------------------------------------------------------------------
