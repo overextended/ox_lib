@@ -275,8 +275,8 @@ local function setDebug(self, bool, colour)
 
     if bool and self.debug and self.debug ~= true then return end
 
-    self.triangles = self.type == 'poly' and getTriangles(self.polygon) or self.type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
-    self.debug = self.type == 'sphere' and debugSphere or debugPoly or nil
+    self.triangles = self.__type == 'poly' and getTriangles(self.polygon) or self.__type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.debug = self.__type == 'sphere' and debugSphere or debugPoly or nil
 end
 
 lib.zones = {
@@ -346,7 +346,7 @@ lib.zones = {
         end
 
         data.coords = data.polygon:centroid()
-        data.type = 'poly'
+        data.__type = 'poly'
         data.remove = removeZone
         data.contains = contains
         data.setDebug = setDebug
@@ -376,7 +376,7 @@ lib.zones = {
             vec3(-data.size.x, -data.size.y, 0),
             vec3(data.size.x, -data.size.y, 0),
         }) + data.coords)
-        data.type = 'box'
+        data.__type = 'box'
         data.remove = removeZone
         data.contains = contains
         data.setDebug = setDebug
@@ -398,7 +398,7 @@ lib.zones = {
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)
         data.radius = (data.radius or 2) + 0.0
-        data.type = 'sphere'
+        data.__type = 'sphere'
         data.remove = removeZone
         data.contains = insideSphere
         data.setDebug = setDebug
