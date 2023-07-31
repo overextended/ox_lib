@@ -82,7 +82,10 @@ if cache.game == 'redm' then return end
 ---@field doors? number[]
 ---@field tyres? table<number | string, 1 | 2>
 ---@field bulletProofTyres? boolean
+---@field driftTyres? boolean
 
+---@deprecated
+---Not recommended. Entity owners can change rapidly and sporadically.
 RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
     local timeout = 100
     while not NetworkDoesEntityExistWithNetworkId(netid) and timeout > 0 do
@@ -93,6 +96,18 @@ RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
         lib.setVehicleProperties(NetToVeh(netid), data)
     end
 end)
+
+--[[ Alternative to NetEvent - disabled (at least for now?)
+AddStateBagChangeHandler('setVehicleProperties', '', function(bagName, _, value)
+    if not value or not GetEntityFromStateBagName then return end
+    local entity = GetEntityFromStateBagName(bagName)
+    local networked = not bagName:find('localEntity')
+    if networked and NetworkGetEntityOwner(entity) ~= cache.playerId then return end
+    if lib.setVehicleProperties(entity, value) then
+        Entity(entity).state:set('setVehicleProperties', nil, true)
+    end
+end)
+]]
 
 ---@param vehicle number
 ---@return VehicleProperties?
@@ -134,6 +149,8 @@ function lib.getVehicleProperties(vehicle)
         local windows = 0
 
         for i = 0, 7 do
+            RollUpWindow(vehicle, i)
+
             if not IsVehicleWindowIntact(vehicle, i) then
                 windows += 1
                 damage.windows[windows] = i
@@ -243,6 +260,7 @@ function lib.getVehicleProperties(vehicle)
             doors = damage.doors,
             tyres = damage.tyres,
             bulletProofTyres = GetVehicleTyresCanBurst(vehicle),
+            driftTyres = GetDriftTyresEnabled(vehicle),
             modColor1 = GetVehicleModColor_1(vehicle),
             modColor2 = GetVehicleModColor_2(vehicle),
             -- no setters?
@@ -376,7 +394,7 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.windows then
         for i = 1, #props.windows do
-            SmashVehicleWindow(vehicle, props.windows[i])
+            RemoveVehicleWindow(vehicle, props.windows[i])
         end
     end
 
@@ -611,6 +629,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.bulletProofTyres ~= nil then
         SetVehicleTyresCanBurst(vehicle, props.bulletProofTyres)
+    end
+
+    if props.driftTyres then
+        SetDriftTyresEnabled(vehicle, true)
     end
 
     return true
