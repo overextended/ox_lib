@@ -33,16 +33,11 @@ files {
 shared_script 'resource/init.lua'
 
 shared_scripts {
-	'imports/locale/shared.lua',
     'resource/**/shared.lua',
     -- 'resource/**/shared/*.lua'
 }
 
 client_scripts {
-	'imports/callback/client.lua',
-	'imports/requestModel/client.lua',
-	'imports/requestAnimDict/client.lua',
-	'imports/addKeybind/client.lua',
     'resource/**/client.lua',
     'resource/**/client/*.lua'
 }
