@@ -11,21 +11,11 @@ function lib.requestAnimSet(animSet, timeout)
 
     RequestAnimSet(animSet)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return animSet end
 
-        for _ = 1, timeout do
-            if HasAnimSetLoaded(animSet) then
-                return animSet
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load animSet '%s' after %s ticks"):format(animSet, timeout))
-    end
-
-    return animSet
+    return lib.waitFor(function()
+        if HasAnimSetLoaded(animSet) then return animSet end
+    end, ("failed to load animSet '%s'"):format(animSet), timeout or 500)
 end
 
 return lib.requestAnimSet
