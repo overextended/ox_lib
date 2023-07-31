@@ -1,5 +1,4 @@
----@class RadialMenuItem
----@field id string
+---@class RadialItem
 ---@field icon string | {[1]: IconProp, [2]: string};
 ---@field label string
 ---@field menu? string
@@ -7,9 +6,12 @@
 ---@field [string] any
 ---@field keepOpen? boolean
 
+---@class RadialMenuItem: RadialItem
+---@field id string
+
 ---@class RadialMenuProps
 ---@field id string
----@field items RadialMenuItem[]
+---@field items RadialItem[]
 ---@field [string] any
 
 local isOpen = false
