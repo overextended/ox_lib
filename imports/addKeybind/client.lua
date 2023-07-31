@@ -49,6 +49,7 @@ end
 ---@param data KeybindProps
 ---@return CKeybind
 function lib.addKeybind(data)
+    ---@cast data CKeybind
     if not data.defaultKey then data.defaultKey = '' end
     if not data.defaultMapper then data.defaultMapper = 'keyboard' end
 
@@ -74,7 +75,7 @@ function lib.addKeybind(data)
     data.disable = disableKeybind
     keybinds[data.name] = setmetatable(data, keybind_mt)
 
-    return data --[[@as CKeybind]]
+    return data
 end
 
 return lib.addKeybind

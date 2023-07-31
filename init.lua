@@ -179,11 +179,14 @@ if context == 'client' then
 	cache.playerId = PlayerId()
 	cache.serverId = GetPlayerServerId(cache.playerId)
 else
+    ---`server`\
     ---Trigger a notification on the target playerId from the server.\
     ---If locales are loaded, the title and description will be formatted automatically.\
     ---Note: No support for locale placeholders when using this function.
     ---@param playerId number
     ---@param data NotifyProps
+    ---@deprecated
+    ---@diagnostic disable-next-line: duplicate-set-field
 	function lib.notify(playerId, data)
 		TriggerClientEvent(notify, playerId, data)
 	end
