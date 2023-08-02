@@ -4,7 +4,7 @@ local glm = require 'glm'
 ---@field id number
 ---@field coords vector3
 ---@field distance number
----@field type 'poly' | 'sphere' | 'box'
+---@field __type 'poly' | 'sphere' | 'box'
 ---@field debugColour vector4?
 ---@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
 ---@field remove fun()
