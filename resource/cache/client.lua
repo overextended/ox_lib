@@ -4,8 +4,9 @@ cache.serverId = GetPlayerServerId(cache.playerId)
 
 function cache:set(key, value)
 	if value ~= self[key] then
+		TriggerEvent(('ox_lib:cache:%s'):format(key), value, self[key])
 		self[key] = value
-		TriggerEvent(('ox_lib:cache:%s'):format(key), value)
+
 		return true
 	end
 end
