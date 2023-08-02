@@ -7,7 +7,7 @@ local ttlCache = {}
 ---@return any
 function lib.cache.ttl(key, func, maxStalenessMs)
 	local gameTime = GetGameTimer()
-	if ttlCache[key].gameTime + maxStalenessMs < gameTime then
+	if not ttlCache[key] or ttlCache[key].gameTime + maxStalenessMs < gameTime then
 		ttlCache[key].gameTime = gameTime
 		ttlCache[key].value = func()
 	end
