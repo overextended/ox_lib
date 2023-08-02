@@ -29,6 +29,7 @@ local function updateText()
 		text[#text + 1] = ('Cycle display mode [G]: %s  \n'):format(firstToUpper(displayModes[displayMode]))
         text[#text + 1] = ('Toggle Axis mode [C]: %s  \n'):format(alignMovementWithCamera and 'Camera' or 'Grid')
 		text[#text + 1] = 'Create new point - [Space]  \n'
+        text[#text + 1] = 'Edit last point - [Backspace]  \n'
 	elseif zoneType == 'box' then
 		text[#text + 1] = ('Heading [Q/E]: %s&deg;  \n'):format(heading)
 		text[#text + 1] = ('Height [Shift + Scroll]: %s  \n'):format(height)
@@ -440,6 +441,15 @@ local function startCreator(arg, useLast)
                 yCoord = round(coords.y)
             elseif IsDisabledControlJustReleased(0, 201) then -- enter
                 closeCreator()
+            elseif IsDisabledControlJustReleased(0, 194) then -- backspace
+                change = true
+
+                if zoneType == 'poly' and #points > 0 then
+                    xCoord = points[#points].x
+                    yCoord = points[#points].y
+
+                    points[#points] = nil
+                end
             elseif IsDisabledControlJustReleased(0, 200) then -- esc
                 SetPauseMenuActive(false)
                 closeCreator(true)
