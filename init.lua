@@ -149,7 +149,7 @@ end
     lua language server doesn't support generics when using @overload
     see https://github.com/LuaLS/lua-language-server/issues/723
     this function stub allows the following to work
-    
+
     local key = cache('key', function() return 'abc' end) -- fff: 'abc'
     local game = cache.game -- game: string
 ]]
@@ -216,5 +216,15 @@ else
     ---@diagnostic disable-next-line: duplicate-set-field
     function lib.notify(playerId, data)
         TriggerClientEvent(notifyEvent, playerId, data)
+    end
+end
+
+for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
+    local name = GetResourceMetadata(cache.resource, 'ox_lib', i - 1)
+
+    if not rawget(lib, name) then
+        local module = loadModule(lib, name)
+
+        if type(module) == 'function' then pcall(module) end
     end
 end
