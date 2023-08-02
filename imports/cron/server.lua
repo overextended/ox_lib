@@ -222,11 +222,7 @@ function OxTask:scheduleTask()
     local sleep = runAt - currentTime
 
     if sleep < 0 then
-        if self.day or self.weekday then
-            return self:stop()
-        end
-
-        sleep += 60
+        return self:stop()
     end
 
     if self.debug then
