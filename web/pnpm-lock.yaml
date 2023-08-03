@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -39,7 +39,7 @@ dependencies:
     version: 5.10.3(react@18.2.0)
   '@vitejs/plugin-react':
     specifier: ^3.0.1
-    version: 3.1.0(vite@4.1.1)
+    version: 3.1.0(vite@4.1.5)
   dayjs:
     specifier: ^1.11.7
     version: 1.11.7
@@ -74,8 +74,8 @@ dependencies:
     specifier: ^4.6.3
     version: 4.9.5
   vite:
-    specifier: ^4.0.4
-    version: 4.1.1(@types/node@16.18.12)
+    specifier: ^4.1.5
+    version: 4.1.5(@types/node@16.18.12)
   web-vitals:
     specifier: ^2.1.4
     version: 2.1.4
@@ -1072,7 +1072,7 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
-  /@vitejs/plugin-react@3.1.0(vite@4.1.1):
+  /@vitejs/plugin-react@3.1.0(vite@4.1.5):
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -1083,7 +1083,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.20.12)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.1.1(@types/node@16.18.12)
+      vite: 4.1.5(@types/node@16.18.12)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2398,8 +2398,8 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /vite@4.1.1(@types/node@16.18.12):
-    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
+  /vite@4.1.5(@types/node@16.18.12):
+    resolution: {integrity: sha512-zJ0RiVkf61kpd7O+VtU6r766xgnTaIknP/lR6sJTZq3HtVJ3HGnTo5DaJhTUtYoTyS/CQwZ6yEVdc/lrmQT7dQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
