@@ -16,6 +16,7 @@ const CheckboxField: React.FC<Props> = (props) => {
       required={props.row.required}
       label={props.row.label}
       defaultChecked={props.row.checked}
+      disabled={props.row.disabled}
     />
   );
 };

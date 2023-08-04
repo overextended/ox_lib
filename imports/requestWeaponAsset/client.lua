@@ -40,21 +40,11 @@ function lib.requestWeaponAsset(weaponType, timeout, weaponResourceFlags, extraW
 
     RequestWeaponAsset(weaponType, weaponResourceFlags or 31, extraWeaponComponentFlags or 0)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return weaponType end
 
-        for _ = 1, timeout do
-            if HasWeaponAssetLoaded(weaponType) then
-                return weaponType
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load weaponType '%s' after %s ticks"):format(weaponType, timeout))
-    end
-
-    return weaponType
+    return lib.waitFor(function()
+        if HasWeaponAssetLoaded(weaponType) then return weaponType end
+    end, ("failed to load weaponType '%s'"):format(weaponType), timeout or 500)
 end
 
 return lib.requestWeaponAsset

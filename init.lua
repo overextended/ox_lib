@@ -1,21 +1,25 @@
--- ox_lib <https://github.com/overextended/ox_lib>
--- Copyright (C) 2021 Linden <https://github.com/thelindat>
--- LGPL-3.0-or-later <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+---@meta
+---ox_lib <https://github.com/overextended/ox_lib>
+---Copyright (C) 2021 Linden <https://github.com/thelindat>
+---LGPL-3.0-or-later <https://www.gnu.org/licenses/lgpl-3.0.en.html>
 
 if not _VERSION:find('5.4') then
-	error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
+    error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
 end
 
 local ox_lib = 'ox_lib'
 local export = exports[ox_lib]
 
 if not GetResourceState(ox_lib):find('start') then
-	error('^1ox_lib should be started before this resource.^0', 2)
+    error('^1ox_lib should be started before this resource.^0', 2)
 end
 
 local status = export.hasLoaded()
 
 if status ~= true then error(status, 2) end
+
+-- Ignore invalid types during msgpack.pack (e.g. userdata)
+msgpack.setoption('ignore_invalid', true)
 
 -----------------------------------------------------------------------------------------------
 -- Module
@@ -27,25 +31,25 @@ local context = IsDuplicityVersion() and 'server' or 'client'
 function noop() end
 
 local function loadModule(self, module)
-	local dir = ('imports/%s'):format(module)
-	local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, context))
-	local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
+    local dir = ('imports/%s'):format(module)
+    local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, context))
+    local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
 
-	if shared then
-		chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
-	end
+    if shared then
+        chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
+    end
 
-	if chunk then
-		local fn, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, context))
+    if chunk then
+        local fn, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, context))
 
-		if not fn or err then
-			return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
+        if not fn or err then
+            return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
         end
 
         local result = fn()
         self[module] = result or noop
         return self[module]
-	end
+    end
 end
 
 -----------------------------------------------------------------------------------------------
@@ -53,37 +57,37 @@ end
 -----------------------------------------------------------------------------------------------
 
 local function call(self, index, ...)
-	local module = rawget(self, index)
+    local module = rawget(self, index)
 
-	if not module then
+    if not module then
         self[index] = noop
-		module = loadModule(self, index)
+        module = loadModule(self, index)
 
-		if not module then
-			local function method(...)
-				return export[index](nil, ...)
-			end
+        if not module then
+            local function method(...)
+                return export[index](nil, ...)
+            end
 
-			if not ... then
-				self[index] = method
-			end
+            if not ... then
+                self[index] = method
+            end
 
-			return method
-		end
-	end
+            return method
+        end
+    end
 
-	return module
+    return module
 end
 
 lib = setmetatable({
-	name = ox_lib,
-	context = context,
-	onCache = function(key, cb)
-		AddEventHandler(('ox_lib:cache:%s'):format(key), cb)
-	end
+    name = ox_lib,
+    context = context,
+    onCache = function(key, cb)
+        AddEventHandler(('ox_lib:cache:%s'):format(key), cb)
+    end
 }, {
-	__index = call,
-	__call = call,
+    __index = call,
+    __call = call,
 })
 
 -- Override standard Lua require with our own.
@@ -95,93 +99,132 @@ local intervals = {}
 ---@param interval? number
 ---@param ... any
 function SetInterval(callback, interval, ...)
-	interval = interval or 0
+    interval = interval or 0
 
     if type(interval) ~= 'number' then
         return error(('Interval must be a number. Received %s'):format(json.encode(interval --[[@as unknown]])))
     end
 
-	local cbType = type(callback)
+    local cbType = type(callback)
 
-	if cbType == 'number' and intervals[callback] then
-		intervals[callback] = interval or 0
-		return
-	end
+    if cbType == 'number' and intervals[callback] then
+        intervals[callback] = interval or 0
+        return
+    end
 
     if cbType ~= 'function' then
         return error(('Callback must be a function. Received %s'):format(cbType))
     end
 
-	local args, id = { ... }
+    local args, id = { ... }
 
-	Citizen.CreateThreadNow(function(ref)
-		id = ref
-		intervals[id] = interval or 0
-		repeat
-			interval = intervals[id]
-			Wait(interval)
-			callback(table.unpack(args))
-		until interval < 0
-		intervals[id] = nil
-	end)
+    Citizen.CreateThreadNow(function(ref)
+        id = ref
+        intervals[id] = interval or 0
+        repeat
+            interval = intervals[id]
+            Wait(interval)
+            callback(table.unpack(args))
+        until interval < 0
+        intervals[id] = nil
+    end)
 
-	return id
+    return id
 end
 
 ---@param id number
 function ClearInterval(id)
     if type(id) ~= 'number' then
         return error(('Interval id must be a number. Received %s'):format(json.encode(id --[[@as unknown]])))
-	end
+    end
 
     if not intervals[id] then
         return error(('No interval exists with id %s'):format(id))
-	end
+    end
 
-	intervals[id] = -1
+    intervals[id] = -1
 end
 
------------------------------------------------------------------------------------------------
--- Cache
------------------------------------------------------------------------------------------------
+--[[
+    lua language server doesn't support generics when using @overload
+    see https://github.com/LuaLS/lua-language-server/issues/723
+    this function stub allows the following to work
 
-cache = { game = GetGameName(), resource = GetCurrentResourceName() }
-local notify = ('__ox_notify_%s'):format(cache.resource)
+    local key = cache('key', function() return 'abc' end) -- fff: 'abc'
+    local game = cache.game -- game: string
+]]
+
+---@generic T
+---@param key string
+---@param func fun(...: any): T
+---@param timeout? number
+---@return T
+---Caches the result of a function, optionally clearing it after timeout ms.
+function cache(key, func, timeout) end
+
+cache = setmetatable({ game = GetGameName(), resource = GetCurrentResourceName() }, {
+    __index = context == 'client' and function(self, key)
+        AddEventHandler(('ox_lib:cache:%s'):format(key), function(value)
+            self[key] = value
+        end)
+
+        return rawset(self, key, export.cache(nil, key) or false)[key]
+    end or nil,
+
+    __call = function(self, key, func, timeout)
+        local value = rawget(self, key)
+
+        if not value then
+            value = func()
+
+            rawset(self, key, value)
+
+            if timeout then SetTimeout(timeout, function() self[key] = nil end) end
+        end
+
+        return value
+    end,
+})
+
+local notifyEvent = ('__ox_notify_%s'):format(cache.resource)
 
 if context == 'client' then
-	setmetatable(cache, {
-		__index = function(self, key)
-			AddEventHandler(('ox_lib:cache:%s'):format(key), function(value)
-				self[key] = value
-			end)
+    RegisterNetEvent(notifyEvent, function(data)
+        if locale then
+            if data.title then
+                data.title = locale(data.title) or data.title
+            end
 
-			return rawset(self, key, export.cache(nil, key) or false)[key]
-		end,
-	})
+            if data.description then
+                data.description = locale(data.description) or data.description
+            end
+        end
 
-	RegisterNetEvent(notify, function(data)
-		if locale then
-			if data.title then
-				data.title = locale(data.title) or data.title
-			end
+        return export:notify(data)
+    end)
 
-			if data.description then
-				data.description = locale(data.description) or data.description
-			end
-		end
-
-		return export:notify(data)
-	end)
-
-	cache.playerId = PlayerId()
-	cache.serverId = GetPlayerServerId(cache.playerId)
+    cache.playerId = PlayerId()
+    cache.serverId = GetPlayerServerId(cache.playerId)
 else
+    ---`server`\
     ---Trigger a notification on the target playerId from the server.\
     ---If locales are loaded, the title and description will be formatted automatically.\
     ---Note: No support for locale placeholders when using this function.
     ---@param playerId number
     ---@param data NotifyProps
-	function lib.notify(playerId, data)
-		TriggerClientEvent(notify, playerId, data)
-	end
+    ---@deprecated
+    ---@diagnostic disable-next-line: duplicate-set-field
+    function lib.notify(playerId, data)
+        TriggerClientEvent(notifyEvent, playerId, data)
+    end
+end
+
+for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
+    local name = GetResourceMetadata(cache.resource, 'ox_lib', i - 1)
+
+    if not rawget(lib, name) then
+        local module = loadModule(lib, name)
+
+        if type(module) == 'function' then pcall(module) end
+    end
 end

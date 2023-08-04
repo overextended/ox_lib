@@ -1,7 +1,21 @@
 local service = GetConvar('ox:logger', 'datadog')
-local hostname = GetConvar('sv_projectName', 'fxserver')
 local buffer
 local bufferSize = 0
+
+local function removeColorCodes(str)
+    -- replace ^[0-9] with nothing
+    str = string.gsub(str, "%^%d", "")
+
+    -- replace ^#[0-9A-F]{3,6} with nothing
+    str = string.gsub(str, "%^#[%dA-Fa-f]+", "")
+
+    -- replace ~[a-z]~ with nothing
+    str = string.gsub(str, "~[%a]~", "")
+
+    return str
+end
+
+local hostname = removeColorCodes(GetConvar('ox:logger:hostname', GetConvar('sv_projectName', 'fxserver')))
 
 local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 

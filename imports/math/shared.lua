@@ -86,8 +86,8 @@ end
 ---@param upper? boolean
 ---@return string
 function math.tohex(n, upper)
-    n = ('0x%x'):format(n)
-    return upper and n:upper() or n
+    local formatString = ('0x%s'):format(upper and '%X' or '%x')
+    return formatString:format(n)
 end
 
 ---Converts input number into grouped digits

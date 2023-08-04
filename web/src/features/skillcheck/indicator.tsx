@@ -14,7 +14,7 @@ interface Props {
 
 const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete, skillCheck, className }) => {
   const [indicatorAngle, setIndicatorAngle] = useState(-90);
-  const [keyPressed, setKeyPressed] = useState(false);
+  const [keyPressed, setKeyPressed] = useState<false | string>(false);
   const interval = useInterval(
     () =>
       setIndicatorAngle((prevState) => {
@@ -25,8 +25,7 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
 
   const keyHandler = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== skillCheck.key.toLowerCase()) return;
-      setKeyPressed(true);
+      setKeyPressed(e.key.toLowerCase());
     },
     [skillCheck]
   );
@@ -49,11 +48,13 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
 
     interval.stop();
 
-    setKeyPressed(false);
     window.removeEventListener('keydown', keyHandler);
 
-    if (indicatorAngle < angle || indicatorAngle > angle + offset) handleComplete(false);
+    if (keyPressed !== skillCheck.key.toLowerCase() || indicatorAngle < angle || indicatorAngle > angle + offset)
+      handleComplete(false);
     else handleComplete(true);
+
+    setKeyPressed(false);
   }, [keyPressed]);
 
   return (
