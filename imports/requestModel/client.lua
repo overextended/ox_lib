@@ -13,21 +13,11 @@ function lib.requestModel(model, timeout)
 
     RequestModel(model)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return model end
 
-        for _ = 1, timeout do
-            if HasModelLoaded(model) then
-                return model
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load model '%s' after %s ticks"):format(model, timeout))
-    end
-
-    return model
+    return lib.waitFor(function()
+        if HasModelLoaded(model) then return model end
+    end, ("failed to load model '%s'"):format(model), timeout or 500)
 end
 
 return lib.requestModel

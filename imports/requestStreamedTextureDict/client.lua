@@ -11,21 +11,11 @@ function lib.requestStreamedTextureDict(textureDict, timeout)
 
     RequestStreamedTextureDict(textureDict, false)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return textureDict end
 
-        for _ = 1, timeout do
-            if HasStreamedTextureDictLoaded(textureDict) then
-                return textureDict
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load textureDict '%s' after %s ticks"):format(textureDict, timeout))
-    end
-
-    return textureDict
+    return lib.waitFor(function()
+        if HasStreamedTextureDictLoaded(textureDict) then return textureDict end
+    end, ("failed to load textureDict '%s'"):format(textureDict), timeout or 500)
 end
 
 return lib.requestStreamedTextureDict

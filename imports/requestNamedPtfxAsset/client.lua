@@ -11,21 +11,11 @@ function lib.requestNamedPtfxAsset(ptFxName, timeout)
 
     RequestNamedPtfxAsset(ptFxName)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return ptFxName end
 
-        for _ = 1, timeout do
-            if HasNamedPtfxAssetLoaded(ptFxName) then
-                return ptFxName
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load ptFxName '%s' after %s ticks"):format(ptFxName, timeout))
-    end
-
-    return ptFxName
+    return lib.waitFor(function()
+        if HasNamedPtfxAssetLoaded(ptFxName) then return ptFxName end
+    end, ("failed to load ptFxName '%s'"):format(ptFxName), timeout or 500)
 end
 
 return lib.requestNamedPtfxAsset

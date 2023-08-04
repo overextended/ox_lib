@@ -30,6 +30,7 @@ const NumberField: React.FC<Props> = (props) => {
       defaultValue={props.row.default}
       min={props.row.min}
       max={props.row.max}
+      precision={props.row.precision}
       disabled={props.row.disabled}
       icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
       withAsterisk={props.row.required}

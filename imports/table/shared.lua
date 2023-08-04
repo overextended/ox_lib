@@ -123,6 +123,7 @@ function table.freeze(tbl)
         __metatable = 'readonly',
         __newindex = frozenNewIndex,
         __len = function() return #copy end,
+        ---@diagnostic disable-next-line: redundant-return-value
         __pairs = function() return next, copy end,
     })
 
@@ -135,6 +136,5 @@ end
 function table.isfrozen(tbl)
     return getmetatable(tbl) == 'readonly'
 end
-
 
 return lib.table

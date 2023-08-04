@@ -6,7 +6,7 @@
 
 ---@class OxCommandProperties
 ---@field help string?
----@field params OxCommandParams[]
+---@field params OxCommandParams[]?
 ---@field restricted boolean | string | string[]?
 
 ---@type OxCommandProperties[]
@@ -25,7 +25,7 @@ end)
 ---@param source number
 ---@param args table
 ---@param raw string
----@param params OxCommandParams[]
+---@param params OxCommandParams[]?
 ---@return table?
 local function parseArguments(source, args, raw, params)
     if not params then return args end

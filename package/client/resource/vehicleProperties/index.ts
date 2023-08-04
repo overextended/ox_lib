@@ -84,6 +84,7 @@ interface VehicleProperties {
   frontBumper: boolean;
   rearBumper: boolean;
   bulletProofTyres: boolean;
+  driftTyres: boolean;
 }
 
 export const getVehicleProperties = (vehicle: number): VehicleProperties =>

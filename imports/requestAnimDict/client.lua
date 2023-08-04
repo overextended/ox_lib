@@ -15,21 +15,11 @@ function lib.requestAnimDict(animDict, timeout)
 
     RequestAnimDict(animDict)
 
-    if coroutine.isyieldable() then
-        timeout = tonumber(timeout) or 500
+    if not coroutine.isyieldable() then return animDict end
 
-        for _ = 1, timeout do
-            if HasAnimDictLoaded(animDict) then
-                return animDict
-            end
-
-            Wait(0)
-        end
-
-        print(("failed to load animDict '%s' after %s ticks"):format(animDict, timeout))
-    end
-
-    return animDict
+    return lib.waitFor(function()
+        if HasAnimDictLoaded(animDict) then return animDict end
+    end, ("failed to load animDict '%s'"):format(animDict), timeout or 500)
 end
 
 return lib.requestAnimDict

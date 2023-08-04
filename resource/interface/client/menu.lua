@@ -8,9 +8,12 @@ local openMenu
 
 ---@class MenuOptions
 ---@field label string
+---@field progress? number
+---@field colorScheme? string
 ---@field icon? string | {[1]: IconProp, [2]: string};
----@field checked? boolean
+---@field iconColor? string
 ---@field values? table<string | { label: string, description: string }>
+---@field checked? boolean
 ---@field description? string
 ---@field defaultIndex? number
 ---@field args? {[any]: any}
