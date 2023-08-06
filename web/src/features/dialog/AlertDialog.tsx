@@ -6,6 +6,7 @@ import { fetchNui } from '../../utils/fetchNui';
 import { useLocales } from '../../providers/LocaleProvider';
 import remarkGfm from 'remark-gfm';
 import type { AlertProps } from '../../typings';
+import { markdownComponents } from '../../config/markdowncomponents';
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
@@ -46,12 +47,13 @@ const AlertDialog: React.FC = () => {
         overlayOpacity={0.5}
         exitTransitionDuration={150}
         transition="fade"
-        title={<ReactMarkdown>{dialogData.header}</ReactMarkdown>}
+        title={<ReactMarkdown components={markdownComponents}>{dialogData.header}</ReactMarkdown>}
       >
         <Stack>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
+              ...markdownComponents,
               img: ({ ...props }) => <img style={{ maxWidth: '100%', maxHeight: '100%' }} {...props} />,
             }}
           >
