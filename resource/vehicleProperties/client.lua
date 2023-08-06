@@ -277,11 +277,13 @@ end
 ---@param props VehicleProperties
 ---@return boolean?
 function lib.setVehicleProperties(vehicle, props)
-    if not DoesEntityExist(vehicle) then error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
-            format(vehicle))
+    if not DoesEntityExist(vehicle) then
+        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
+        format(vehicle))
     end
 
-    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then error((
+    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then
+        error((
             "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
     end
 
@@ -290,6 +292,13 @@ function lib.setVehicleProperties(vehicle, props)
 
     SetVehicleModKit(vehicle, 0)
     SetVehicleAutoRepairDisabled(vehicle, true)
+
+    if props.extras then
+        for id, disable in pairs(props.extras) do
+            SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
+        end
+        SetVehicleFixed(vehicle)
+    end
 
     if props.plate then
         SetVehicleNumberPlateText(vehicle, props.plate)
@@ -372,12 +381,6 @@ function lib.setVehicleProperties(vehicle, props)
     if props.neonEnabled then
         for i = 1, #props.neonEnabled do
             SetVehicleNeonLightEnabled(vehicle, i - 1, props.neonEnabled[i])
-        end
-    end
-
-    if props.extras then
-        for id, disable in pairs(props.extras) do
-            SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
         end
     end
 
