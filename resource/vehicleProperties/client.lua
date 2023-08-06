@@ -275,8 +275,9 @@ end
 
 ---@param vehicle number
 ---@param props VehicleProperties
+---@param fixVehicle? boolean
 ---@return boolean?
-function lib.setVehicleProperties(vehicle, props)
+function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if not DoesEntityExist(vehicle) then
         error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
         format(vehicle))
@@ -297,7 +298,6 @@ function lib.setVehicleProperties(vehicle, props)
         for id, disable in pairs(props.extras) do
             SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
         end
-        SetVehicleFixed(vehicle)
     end
 
     if props.plate then
@@ -625,6 +625,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.driftTyres then
         SetDriftTyresEnabled(vehicle, true)
+    end
+
+    if fixVehicle then
+        SetVehicleFixed(vehicle)
     end
 
     return true
