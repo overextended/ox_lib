@@ -244,7 +244,7 @@ function OxTask:scheduleTask()
             print(('(%s/%s/%s %s:%s) ran task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
         end
 
-        Wait(1000)
+        Wait(30000)
 
         return true
     end
