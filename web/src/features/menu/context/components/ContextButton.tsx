@@ -5,6 +5,7 @@ import { Option, ContextMenuProps } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import MarkdownComponents from '../../../../config/MarkdownComponents';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -108,12 +109,12 @@ const ContextButton: React.FC<{
                     </Stack>
                   )}
                   <Text className={classes.buttonTitleText}>
-                    <ReactMarkdown>{button.title || buttonKey}</ReactMarkdown>
+                    <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
                   </Text>
                 </Group>
                 {button.description && (
                   <Text className={classes.description}>
-                    <ReactMarkdown>{button.description}</ReactMarkdown>
+                    <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
                   </Text>
                 )}
                 {button.progress !== undefined && (
