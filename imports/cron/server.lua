@@ -216,14 +216,14 @@ function OxTask:scheduleTask()
     local runAt = self:getNextTime()
 
     if not runAt then
-        return self:stop()
+        return self:stop('getNextTime returned no value')
     end
 
     local currentTime = os.time()
     local sleep = runAt - currentTime
 
     if sleep < 0 then
-        return self:stop()
+        return self:stop(self.debug and ('scheduled time expired %s seconds ago'):format(-sleep))
     end
 
     if self.debug then
@@ -262,12 +262,16 @@ function OxTask:run()
     end)
 end
 
-function OxTask:stop()
+function OxTask:stop(msg)
+    self.isActive = false
+
     if self.debug then
+        if msg then
+            return print(('stopping task %s (%s)'):format(self.id, msg))
+        end
+
         print(('stopping task %s'):format(self.id))
     end
-
-    self.isActive = false
 end
 
 ---@param value string
