@@ -41,6 +41,11 @@ end
 ---@return string | number | false | nil
 local function getTimeUnit(value, unit)
     local currentTime = currentDate[unit]
+
+    if not value then
+        return unit == 'min' and currentTime + 1 or currentTime
+    end
+
     local unitMax = maxUnits[unit]
 
     if type(value) == 'string' then
@@ -99,15 +104,11 @@ local function getTimeUnit(value, unit)
         return false
     end
 
-    if value then
-        if unit == 'min' then
-            return value <= currentTime and value + unitMax or value
-        end
-
-        return value < currentTime and value + unitMax or value
+    if unit == 'min' then
+        return value <= currentTime and value + unitMax or value
     end
 
-    return currentTime
+    return value < currentTime and value + unitMax or value
 end
 
 ---Get a timestamp for the next time to run the task today.
