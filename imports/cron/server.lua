@@ -52,16 +52,15 @@ local function getTimeUnit(value, unit)
         local stepValue = string.match(value, '*/(%d+)')
 
         if stepValue then
+            -- */10 * * * * is equal to a list of 0,10,20,30,40,50
+            -- best suited to factors of unitMax (excluding the highest and lowest numbers)
+            -- i.e. for minutes - 2, 3, 4, 5, 6, 10, 12, 15, 20, 30
             for i = currentTime + 1, unitMax do
-                -- return the current minute if it is divisible by the stepvalue
-                -- i.e. */10 * * * * is equal to a list of 0,10,20,30,40,50
-                -- best suited to numbers evenly divided by unitMax
-                if i % stepValue == 0 then
-                    return i
-                end
+                -- if i is divisible by stepValue
+                if i % stepValue == 0 then return i end
             end
 
-            return 0
+            return stepValue + unitMax
         end
 
         local range = string.match(value, '%d+-%d+')
