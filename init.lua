@@ -40,7 +40,7 @@ local function loadModule(self, module)
     end
 
     if chunk then
-        local fn, err = load(chunk, ('@@ox_lib/%s/%s.lua'):format(module, context))
+        local fn, err = load(chunk, ('@@ox_lib/imports/%s/%s.lua'):format(module, context))
 
         if not fn or err then
             return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
