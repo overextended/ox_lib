@@ -10,8 +10,8 @@ end
 local ox_lib = 'ox_lib'
 local export = exports[ox_lib]
 
-if not GetResourceState(ox_lib):find('start') then
-    error('^1ox_lib should be started before this resource.^0', 2)
+if GetResourceState(ox_lib) ~= 'started' then
+    error('^1ox_lib must be started before this resource.^0', 0)
 end
 
 local status = export.hasLoaded()
