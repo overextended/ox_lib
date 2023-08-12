@@ -55,7 +55,7 @@ function lib.require(modname)
             end
         end
 
-        return error(("module '%s' not found"):format(modname), 2)
+        return error(result, 2)
     end
 
     return module
