@@ -265,7 +265,7 @@ local function setDebug(self, bool, colour)
         insideZones[self.id] = nil
     end
 
-    self.debugColour = bool and { r = colour?.r or self.debugColour?.r or 255, g = colour?.g or self.debugColour?.g or 42, b = colour?.b or self.debugColour?.b or 24, a = colour?.a or self.debugColour?.a or 100 } or nil
+    self.debugColour = bool and { r = glm.tointeger(colour?.r or self.debugColour?.r or 255), g = glm.tointeger(colour?.g or self.debugColour?.g or 42), b = glm.tointeger(colour?.b or self.debugColour?.b or 24), a = glm.tointeger(colour?.a or self.debugColour?.a or 100) } or nil
 
     if not bool and self.debug then
         self.triangles = nil
