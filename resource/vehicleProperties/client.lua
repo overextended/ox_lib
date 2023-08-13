@@ -122,8 +122,8 @@ function lib.getVehicleProperties(vehicle)
         local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
         local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 
-        local paint1, p1_color, p1_pearlescentColor = GetVehicleModColor_1(vehicle)
-        local paint2, p1_color2 = GetVehicleModColor_2(vehicle)
+        local modColor1 = { GetVehicleModColor_1(vehicle) }
+        local modColor2 = { GetVehicleModColor_2(vehicle) }
 
         if GetIsVehiclePrimaryColourCustom(vehicle) then
             colorPrimary = { GetVehicleCustomPrimaryColour(vehicle) }
@@ -196,8 +196,8 @@ function lib.getVehicleProperties(vehicle)
             fuelLevel = math.floor(GetVehicleFuelLevel(vehicle) + 0.5),
             oilLevel = math.floor(GetVehicleOilLevel(vehicle) + 0.5),
             dirtLevel = math.floor(GetVehicleDirtLevel(vehicle) + 0.5),
-            paint1 = paint1,
-            paint2 = paint2,
+            paint1 = modColor1[1],
+            paint2 = modColor2[1],
             color1 = colorPrimary,
             color2 = colorSecondary,
             pearlescentColor = pearlescentColor,
@@ -335,7 +335,7 @@ function lib.setVehicleProperties(vehicle, props)
             ClearVehicleCustomPrimaryColour(vehicle)
             SetVehicleColours(vehicle, props.color1 --[[@as number]], colorSecondary --[[@as number]])
         else
-            if type(props.paint1) == 'number' then SetVehicleModColor_1(vehicle, props.paint1, colorPrimary, pearlescentColor) end
+            if props.paint1 then SetVehicleModColor_1(vehicle, props.paint[1], colorPrimary, pearlescentColor) end
             SetVehicleCustomPrimaryColour(vehicle, props.color1[1], props.color1[2], props.color1[3])
         end
     end
@@ -345,7 +345,7 @@ function lib.setVehicleProperties(vehicle, props)
             ClearVehicleCustomSecondaryColour(vehicle)
             SetVehicleColours(vehicle, props.color1 or colorPrimary --[[@as number]], props.color2 --[[@as number]])
         else
-            if type(props.paint2) == 'number' then SetVehicleModColor_2(vehicle, props.paint2, colorSecondary) end
+            if props.paint2 then SetVehicleModColor_2(vehicle, props.paint2, colorSecondary) end
             SetVehicleCustomSecondaryColour(vehicle, props.color2[1], props.color2[2], props.color2[3])
         end
     end
