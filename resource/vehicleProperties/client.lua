@@ -275,7 +275,7 @@ end
 
 ---@param vehicle number
 ---@param props VehicleProperties
----@param fixVehicle? boolean
+---@param fixVehicle? boolean Fix the vehicle after props have been set. Usually required when adding extras.
 ---@return boolean?
 function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if not DoesEntityExist(vehicle) then
