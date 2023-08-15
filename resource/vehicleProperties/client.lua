@@ -281,13 +281,16 @@ end
 
 ---@param vehicle number
 ---@param props VehicleProperties
+---@param fixVehicle? boolean Fix the vehicle after props have been set. Usually required when adding extras.
 ---@return boolean?
-function lib.setVehicleProperties(vehicle, props)
-    if not DoesEntityExist(vehicle) then error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
-            format(vehicle))
+function lib.setVehicleProperties(vehicle, props, fixVehicle)
+    if not DoesEntityExist(vehicle) then
+        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
+        format(vehicle))
     end
 
-    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then error((
+    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then
+        error((
             "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
     end
 
@@ -296,6 +299,12 @@ function lib.setVehicleProperties(vehicle, props)
 
     SetVehicleModKit(vehicle, 0)
     SetVehicleAutoRepairDisabled(vehicle, true)
+
+    if props.extras then
+        for id, disable in pairs(props.extras) do
+            SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
+        end
+    end
 
     if props.plate then
         SetVehicleNumberPlateText(vehicle, props.plate)
@@ -382,12 +391,6 @@ function lib.setVehicleProperties(vehicle, props)
     if props.neonEnabled then
         for i = 1, #props.neonEnabled do
             SetVehicleNeonLightEnabled(vehicle, i - 1, props.neonEnabled[i])
-        end
-    end
-
-    if props.extras then
-        for id, disable in pairs(props.extras) do
-            SetVehicleExtra(vehicle, tonumber(id) --[[@as number]], disable == 1)
         end
     end
 
@@ -632,6 +635,10 @@ function lib.setVehicleProperties(vehicle, props)
 
     if props.driftTyres then
         SetDriftTyresEnabled(vehicle, true)
+    end
+
+    if fixVehicle then
+        SetVehicleFixed(vehicle)
     end
 
     return true
