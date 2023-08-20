@@ -7,7 +7,12 @@ if not _VERSION:find('5.4') then
     error('^1Lua 5.4 must be enabled in the resource manifest!^0', 2)
 end
 
+local resourceName = GetCurrentResourceName()
 local ox_lib = 'ox_lib'
+
+-- Some people have decided to load this file as part of ox_lib's fxmanifest?
+if resourceName == ox_lib then return end
+
 local export = exports[ox_lib]
 
 if GetResourceState(ox_lib) ~= 'started' then
@@ -162,7 +167,7 @@ end
 ---Caches the result of a function, optionally clearing it after timeout ms.
 function cache(key, func, timeout) end
 
-cache = setmetatable({ game = GetGameName(), resource = GetCurrentResourceName() }, {
+cache = setmetatable({ game = GetGameName(), resource = resourceName }, {
     __index = context == 'client' and function(self, key)
         AddEventHandler(('ox_lib:cache:%s'):format(key), function(value)
             self[key] = value
