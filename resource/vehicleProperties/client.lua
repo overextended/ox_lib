@@ -306,6 +306,10 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         end
     end
 
+    if fixVehicle then
+        SetVehicleFixed(vehicle)
+    end
+
     if props.plate then
         SetVehicleNumberPlateText(vehicle, props.plate)
     end
@@ -635,10 +639,6 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
 
     if props.driftTyres then
         SetDriftTyresEnabled(vehicle, true)
-    end
-
-    if fixVehicle then
-        SetVehicleFixed(vehicle)
     end
 
     return true
