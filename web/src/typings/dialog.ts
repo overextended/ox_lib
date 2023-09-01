@@ -43,6 +43,7 @@ export interface INumber extends BaseField<'number', number> {
   precision?: number;
   min?: number;
   max?: number;
+  step?: number;
 }
 
 export interface ISlider extends Omit<BaseField<'slider', number>, 'description' | 'placeholder'> {
