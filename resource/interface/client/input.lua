@@ -1,7 +1,7 @@
 local input
 
 ---@class InputDialogRowProps
----@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea'
+---@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea' | 'color'
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
 ---@field password? boolean
