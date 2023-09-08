@@ -29,6 +29,7 @@ interface InputDialogRowProps {
   step?: number;
   required?: boolean;
   format?: string;
+  useFormat?: boolean;
   description?: string;
 }
 
