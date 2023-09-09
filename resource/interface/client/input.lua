@@ -17,7 +17,7 @@ local input
 ---@field autosize? boolean
 ---@field required? boolean
 ---@field format? string
----@field useFormat? boolean
+---@field returnString? boolean
 ---@field clearable? string
 ---@field description? string
 
