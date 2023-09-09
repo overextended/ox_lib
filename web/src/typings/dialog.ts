@@ -59,7 +59,7 @@ export interface IColorInput extends BaseField<'color', string> {
 export interface IDateInput
   extends Omit<BaseField<'date' | 'date-range', string | [string, string] | true>, 'placeholder'> {
   format?: string;
-  useFormat?: boolean;
+  returnString?: boolean;
   clearable?: boolean;
   min?: string;
   max?: string;
