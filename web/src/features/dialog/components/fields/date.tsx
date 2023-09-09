@@ -10,17 +10,6 @@ interface Props {
   control: Control<FormValues>;
 }
 
-const convertDateToString = (date: Date, format: string): string => {
-  format.replace('DD', date.getDate().toString());
-  format.replace('MM', date.getMonth().toString());
-  format.replace('YYYY', date.getFullYear().toString());
-  return format;
-}
-
-const handleDateChange = (date: Date | null, props: Props): string | number | null => {
-  return date ? (props.row.useFormat && props.row.format ? convertDateToString(date, props.row.format) : date.getTime()) : null;
-}
-
 const DateField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
@@ -37,7 +26,7 @@ const DateField: React.FC<Props> = (props) => {
           ref={controller.field.ref}
           onBlur={controller.field.onBlur}
           // Workaround to use timestamp instead of Date object in values
-          onChange={(date) => controller.field.onChange(handleDateChange(date, props))}
+          onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
           label={props.row.label}
           description={props.row.description}
           placeholder={props.row.format}
@@ -62,7 +51,7 @@ const DateField: React.FC<Props> = (props) => {
           name={controller.field.name}
           ref={controller.field.ref}
           onBlur={controller.field.onBlur}
-          onChange={(dates) => controller.field.onChange(dates.map((date: Date | null) => handleDateChange(date, props)))}
+          onChange={(dates) => controller.field.onChange(dates.map((date: Date | null) => date ? date.getTime() : null))}
           label={props.row.label}
           description={props.row.description}
           placeholder={props.row.format}
