@@ -28,7 +28,6 @@ const InputDialog: React.FC = () => {
     heading: '',
     rows: [{ type: 'input', label: '' }],
   });
-  const [dateIndexes, setDateIndexes] = React.useState<number[]>([]);
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
 
@@ -64,10 +63,6 @@ const InputDialog: React.FC = () => {
           !option.label ? { ...option, label: option.value } : option
         ) as Array<OptionValue>;
       }
-      if (row.type === 'date' || row.type === 'date-range') {
-        dateIndexes.push(index);
-        setDateIndexes(dateIndexes);
-      }
     });
   });
 
@@ -86,10 +81,12 @@ const InputDialog: React.FC = () => {
   const onSubmit = form.handleSubmit(async (data) => {
     setVisible(false);
     const values: any[] = [];
-    for (let i = 0; i < dateIndexes.length; i++) {
-      const row = fields.rows[i] as IDateInput;
-      if (row.returnString && data.test[i]) {
-        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY').toString();
+    for (let i = 0; i < fields.rows.length; i++) {
+      const row = fields.rows[i];
+
+      if ((row.type === 'date' || row.type === 'date-range') && row.returnString) {
+        if (!data.test[i]) continue;
+        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
       }
     }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
