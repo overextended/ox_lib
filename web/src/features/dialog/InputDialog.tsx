@@ -14,7 +14,8 @@ import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
 import TimeField from './components/fields/time';
-import type { InputProps } from '../../typings';
+import type { IDateInput, InputProps } from '../../typings';
+import dayjs from 'dayjs';
 
 export type FormValues = {
   test: {
@@ -80,6 +81,14 @@ const InputDialog: React.FC = () => {
   const onSubmit = form.handleSubmit(async (data) => {
     setVisible(false);
     const values: any[] = [];
+    for (let i = 0; i < fields.rows.length; i++) {
+      const row = fields.rows[i];
+
+      if ((row.type === 'date' || row.type === 'date-range') && row.returnString) {
+        if (!data.test[i]) continue;
+        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
+      }
+    }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
