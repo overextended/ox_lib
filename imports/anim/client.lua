@@ -1,13 +1,59 @@
----@class AnimProperties
+---@class AnimOptions
+---@field wait boolean
+---@field speed number
+---@field speedMultiplier number
+---@field duration number
+---@field flag number
+---@field playbackRate number
+---@field lockx boolean
+---@field locky boolean
+---@field lockz boolean
+
+---@class AnimInstance
 ---@field ped number
 ---@field dict string
 ---@field anim string
----@field options table
-
----@class AnimInstance : AnimProperties
----@field stop fun()
+---@field options AnimOptions
+---@field play fun(self: AnimInstance)
+---@field stop fun(self: AnimInstance)
+---@field delete fun(self: AnimInstance)
+---@field isPlaying fun(self: AnimInstance)
 
 local animInstances = {}
+
+local function playAnimation(self)
+    if self.dict then
+        local function handleAnimation()
+            if lib.requestAnimDict(self.dict) then
+                local speed = self.options.speed or 1.0
+                local speedMultiplier = self.options.speedMultiplier or 1.0
+                local duration = self.options.duration or 1.0
+                local flag = self.options.flag or 0
+                local playbackRate = self.options.playbackRate or 0
+                local lockx = self.options.lockx or false
+                local locky = self.options.locky or false
+                local lockz = self.options.lockz or false
+
+                TaskPlayAnim(self.ped, self.dict, self.anim, speed, speedMultiplier, duration, flag, playbackRate, lockx, locky, lockz)
+            end
+        end
+
+        local wait = self.options.wait or false
+
+        if wait and duration > 1 then
+            handleAnimation()
+            Wait(duration)
+        else
+            CreateThread(handleAnimation)
+        end
+    else
+        TaskStartScenarioInPlace(self.ped, self.anim, 0, true)
+    end
+end
+
+local function checkIfPlayingAnim(self)
+    return (self.dict and IsEntityPlayingAnim(self.ped, self.dict, self.anim, 3)) or IsPedUsingScenario(self.ped, self.anim)
+end
 
 local function stopAnimation(self)
     if self.dict then
@@ -18,49 +64,45 @@ local function stopAnimation(self)
     end
 end
 
-local function startAnimation(ped, dict, anim, options)
-    local self = setmetatable({}, { __index = AnimProperties })
+local function deleteAnimation(self)
+    if self.isPlaying() then
+        self.stop()
+    end
+    animInstances[self] = nil
+end
+
+---@param ped number
+---@param dict string
+---@param anim string
+---@param options AnimOptions
+---@return AnimInstance | nil
+local function newAnimInstance(ped, dict, anim, options)
+    if not self.anim or not self.ped or not DoesEntityExist(self.ped) then return end
+
+    local self = {}
 
     self.ped = ped
     self.dict = dict
     self.anim = anim
     self.options = options or {}
 
-    if dict then
-        CreateThread(function()
-            lib.requestAnimDict(dict)
-
-            local speed = self.options.speed or 1.0
-            local speedMultiplier = self.options.speedMultiplier or 1.0
-            local duration = self.options.duration or 1.0
-            local flag = self.options.flag or 0
-            local playbackRate = self.options.playbackRate or 0
-            local lockx = self.options.lockx or false
-            local locky = self.options.locky or false
-            local lockz = self.options.lockz or false
-
-            TaskPlayAnim(self.ped, dict, anim, speed, speedMultiplier, duration, flag, playbackRate, lockx, locky, lockz)
-        end)
-    else
-        TaskStartScenarioInPlace(self.ped, anim, 0, true)
-    end
-
+    self.play = playAnimation
     self.stop = stopAnimation
+    self.delete = deleteAnimation
+    self.isPlaying = checkIfPlayingAnim
 
-    table.insert(animInstances, self)
+    animInstances[self] = self
 
     return self
 end
 
 lib.anim = {
-    new = startAnimation,
+    new = newAnimInstance,
     stopAll = function()
-        for _, instance in ipairs(animInstances) do
+        for _, instance in pairs(animInstances) do
             instance:stop()
         end
-    end,
-    getAllInstances = function()
-        return animInstances
+        animInstances = {}
     end
 }
 
