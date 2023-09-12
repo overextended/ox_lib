@@ -34,7 +34,8 @@ local function playAnimation(self)
                 local locky = self.options.locky or false
                 local lockz = self.options.lockz or false
 
-                TaskPlayAnim(self.ped, self.dict, self.anim, speed, speedMultiplier, duration, flag, playbackRate, lockx, locky, lockz)
+                TaskPlayAnim(self.ped, self.dict, self.anim, speed, speedMultiplier, duration, flag, playbackRate, lockx,
+                    locky, lockz)
             end
         end
 
@@ -52,7 +53,8 @@ local function playAnimation(self)
 end
 
 local function checkIfPlayingAnim(self)
-    return (self.dict and IsEntityPlayingAnim(self.ped, self.dict, self.anim, 3)) or IsPedUsingScenario(self.ped, self.anim)
+    return (self.dict and IsEntityPlayingAnim(self.ped, self.dict, self.anim, 3)) or
+    IsPedUsingScenario(self.ped, self.anim)
 end
 
 local function stopAnimation(self)
@@ -76,8 +78,8 @@ end
 ---@param anim string
 ---@param options AnimOptions
 ---@return AnimInstance | nil
-local function newAnimInstance(ped, dict, anim, options)
-    if not self.anim or not self.ped or not DoesEntityExist(self.ped) then return end
+local function newAnimInstance(_, ped, dict, anim, options)
+    if not ped or not anim or not DoesEntityExist(ped) then return end
 
     local self = {}
 
@@ -96,14 +98,15 @@ local function newAnimInstance(ped, dict, anim, options)
     return self
 end
 
-lib.anim = {
-    new = newAnimInstance,
-    stopAll = function()
-        for _, instance in pairs(animInstances) do
-            instance:stop()
-        end
-        animInstances = {}
+lib.anim = setmetatable({}, {
+	__call = newAnimInstance
+})
+
+function lib.anim.stopAll()
+    for _, instance in pairs(animInstances) do
+        instance:stop()
     end
-}
+    animInstances = {}
+end
 
 return lib.anim
