@@ -298,7 +298,7 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
     local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 
     SetVehicleModKit(vehicle, 0)
-    SetVehicleAutoRepairDisabled(vehicle, true)
+    -- SetVehicleAutoRepairDisabled(vehicle, true)
 
     if props.extras then
         for id, disable in pairs(props.extras) do
