@@ -1,6 +1,6 @@
 import { cache } from '../cache';
 
-const activeEvents: Record<string, (...args) => void> = {};
+const activeEvents: Record<string, (...args: any[]) => void> = {};
 
 onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
   const resolve = activeEvents[key];
@@ -25,8 +25,8 @@ export function triggerClientCallback<T = unknown>(
   });
 }
 
-export function onClientCallback(eventName: string, cb: (playerId: number, ...args) => any) {
-  onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args) => {
+export function onClientCallback(eventName: string, cb: (playerId: number, ...args: any[]) => any) {
+  onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args: any[]) => {
     const src = source;
     let response: any;
 
