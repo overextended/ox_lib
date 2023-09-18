@@ -1,6 +1,6 @@
 function lib.checkDependency(resource, minimumVersion, printMessage)
 	local currentVersion = GetResourceMetadata(resource, 'version', 0)
-    if not minimumVersion and currentVersion then return true end
+    if not minimumVersion then return currentVersion ~= nil end
     currentVersion = currentVersion and currentVersion:match('%d+%.%d+%.%d+') or 'unknown'
 
 	if currentVersion ~= minimumVersion then
