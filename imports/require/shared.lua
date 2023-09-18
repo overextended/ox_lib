@@ -18,6 +18,17 @@ function lib.require(modname)
     if type(modname) ~= 'string' then return end
 
     local modpath = modname:gsub('%.', '/')
+    local module = loaded[modname]
+
+    if module then return module end
+
+    local success, result = pcall(_require, modname)
+
+    if success then
+        loaded[modname] = result
+        return result
+    end
+
     local resourceSrc
 
     if not modpath:find('^@') then
@@ -27,7 +38,7 @@ function lib.require(modname)
             local di = debug.getinfo(idx, 'S')
 
             if di then
-                if not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^citizen') then
+                if not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^%[C%]') and not di.short_src:find('^citizen') then
                     resourceSrc = di.short_src:gsub('^@(.-)/.+', '%1')
                     break
                 end
@@ -44,18 +55,9 @@ function lib.require(modname)
         end
     end
 
-    local module = loaded[modname]
-
     if not module then
         if module == false then
             error(("^1circular-dependency occurred when loading module '%s'^0"):format(modname), 2)
-        end
-
-        local success, result = pcall(_require, modname)
-
-        if success then
-            loaded[modname] = result
-            return result
         end
 
         if not resourceSrc then
