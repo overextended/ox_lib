@@ -17,6 +17,33 @@ local _require = require
 function lib.require(modname)
     if type(modname) ~= 'string' then return end
 
+    local modpath = modname:gsub('%.', '/')
+    local resourceSrc
+
+    if not modpath:find('^@') then
+        local idx = 1
+
+        while true do
+            local di = debug.getinfo(idx, 'S')
+
+            if di then
+                if not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^citizen') then
+                    resourceSrc = di.short_src:gsub('^@(.-)/.+', '%1')
+                    break
+                end
+            else
+                resourceSrc = cache.resource
+                break
+            end
+
+            idx += 1
+        end
+
+        if resourceSrc ~= cache.resource then
+            modname = ('@%s.%s'):format(resourceSrc, modname)
+        end
+    end
+
     local module = loaded[modname]
 
     if not module then
@@ -31,31 +58,14 @@ function lib.require(modname)
             return result
         end
 
-        local idx, resourceSrc = 1
-
-        while true do
-            local di = debug.getinfo(idx, 'S')
-
-            if not di or di.short_src:find('^@' .. cache.resource) then
-                resourceSrc = cache.resource
-                break
-            elseif di.short_src:find('^citizen') then
-                resourceSrc = idx == 2 and cache.resource or debug.getinfo(idx - 1, 'S').short_src:gsub('^@(.-)/.+', '%1')
-                break
-            end
-
-            idx += 1
+        if not resourceSrc then
+            resourceSrc = modpath:gsub('^@(.-)/.+', '%1')
+            modpath = modpath:sub(#resourceSrc + 3)
         end
-
-        local modpath = modname:gsub('%.', '/')
 
         for path in package.path:gmatch('[^;]+') do
             local scriptPath = path:gsub('?', modpath):gsub('%.+%/+', '')
             local resourceFile = LoadResourceFile(resourceSrc, scriptPath)
-
-            if resourceSrc ~= cache.resource then
-                modname = ('@%s.%s'):format(resourceSrc, modname)
-            end
 
             if resourceFile then
                 loaded[modname] = false
