@@ -23,15 +23,22 @@ local PrintLevel = {
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
 ---@param level 'debug' | 'info' | 'warn' | 'error'
 ---@param message any
-function lib.print(level, message)
+function Print(level, message)
+    message = type(message) == "string" and message or json.encode(message)
     local printLevel = PrintLevel[level]
     if printLevel.level < PrintLevel[printLevelConvar].level then return end
-    message = type(message) == "string" and message or json.encode(message)
 
     -- server prints are forwarded to the client from the chat resource, so this lets clients see the original resource.
-    local resourceName = IsDuplicityVersion() and '^5[' .. cache.resource .. '] ' or '' 
 
+    local resourceName = IsDuplicityVersion() and '^5[' .. cache.resource .. '] ' or ''
     print(string.format('^5%s%s%s^1', resourceName, printLevel.prefix, message))
 end
+
+lib.print = {
+    debug = function(message) Print('debug', message) end,
+    info = function(message) Print('info', message) end,
+    warn = function(message) Print('warn', message) end,
+    error = function(message) Print('error', message) end,
+}
 
 return lib.print
