@@ -1,35 +1,37 @@
-local printLevelConvar = GetConvar('ox:printlevel', 'info')
-
-local printLevels = {
-    debug = {
-        level = 1,
-        prefix = '^6[DEBUG]',
-    },
-    info = {
-        level = 2,
-        prefix = '^7[INFO]',
-    },
-    warn = {
-        level = 3,
-        prefix = '^3[WARN]',
-    },
-    error = {
-        level = 4,
-        prefix = '^1[ERROR]',
-    },
+---@enum PrintLevel
+local printLevel = {
+    debug = 1,
+    info = 2,
+    warn = 3,
+    error = 4,
 }
 
-local template = ('^5[%s] %s %s^1')
+local levelPrefixes = {
+    [1] = '^6[DEBUG]',
+    [2] = '^7[INFO]',
+    [3] = '^3[WARN]',
+    [4] = '^1[ERROR]',
+}
+
+---@alias PrintLevelLabel 'debug' | 'info' | 'warn' | 'error'
+
+---@type PrintLevelLabel
+local globalPrintLevel = GetConvar('ox:printlevel', 'info')
+
+---@type PrintLevelLabel
+local resourcePrintLevelConvar = GetConvar('ox:printlevel:' .. cache.resource, globalPrintLevel)
+local resourcePrintLevel = printLevel[resourcePrintLevelConvar]
+
+local template = ('^5[%s] %s %s^1'):format(cache.resource)
 local jsonOptions = {sort_keys = true, indent = true}
 
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
----@param level 'debug' | 'info' | 'warn' | 'error'
+---@param level PrintLevel
 ---@param pattern string
 ---@param ... any
 local function libPrint(level, pattern, ...)
-    local printLevel = printLevels[level]
-    if printLevel.level < printLevels[printLevelConvar].level then return end
+    if level < resourcePrintLevel then return end
 
     local formattedArgs = {}
     for i = 1,select('#', ...) do
@@ -39,14 +41,14 @@ local function libPrint(level, pattern, ...)
     end
 
     local message = pattern:format(table.unpack(formattedArgs))
-    print(template:format(cache.resource, printLevel.prefix, message))
+    print(template:format(levelPrefixes[level], message))
 end
 
 lib.print = {
-    debug = function(pattern, ...) libPrint('debug', pattern, ...) end,
-    info = function(pattern, ...) libPrint('info', pattern, ...) end,
-    warn = function(pattern, ...) libPrint('warn', pattern, ...) end,
-    error = function(pattern, ...) libPrint('error', pattern, ...) end,
+    debug = function(pattern, ...) libPrint(printLevel.debug, pattern, ...) end,
+    info = function(pattern, ...) libPrint(printLevel.info, pattern, ...) end,
+    warn = function(pattern, ...) libPrint(printLevel.warn, pattern, ...) end,
+    error = function(pattern, ...) libPrint(printLevel.error, pattern, ...) end,
 }
 
 return lib.print
