@@ -11,6 +11,7 @@ interface ContextMenuItem {
   progress?: number;
   colorScheme?: string;
   onSelect?: (args: any) => void;
+  readOnly?: boolean;
   metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
   disabled?: boolean;
   event?: string;
