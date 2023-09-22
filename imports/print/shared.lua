@@ -1,29 +1,23 @@
 ---@enum PrintLevel
 local printLevel = {
-    debug = 1,
-    info = 2,
-    warn = 3,
-    error = 4,
+    error = 1,
+    warn = 2,
+    info = 3,
+    verbose = 4,
+    debug = 5,
 }
 
 local levelPrefixes = {
-    [1] = '^6[DEBUG]',
-    [2] = '^7[INFO]',
-    [3] = '^3[WARN]',
-    [4] = '^1[ERROR]',
+    '^1[ERROR]',
+    '^3[WARN]',
+    '^7[INFO]',
+    '^4[VERBOSE]',
+    '^6[DEBUG]',
 }
 
----@alias PrintLevelLabel 'debug' | 'info' | 'warn' | 'error'
-
----@type PrintLevelLabel
-local globalPrintLevel = GetConvar('ox:printlevel', 'info')
-
----@type PrintLevelLabel
-local resourcePrintLevelConvar = GetConvar('ox:printlevel:' .. cache.resource, globalPrintLevel)
-local resourcePrintLevel = printLevel[resourcePrintLevelConvar]
-
-local template = ('^5[%s] %s %s^1'):format(cache.resource)
-local jsonOptions = {sort_keys = true, indent = true}
+local resourcePrintLevel = printLevel[GetConvar('ox:printlevel:' .. cache.resource, GetConvar('ox:printlevel', 'info'))]
+local template = ('^5[%s] %s %s^7'):format(cache.resource)
+local jsonOptions = { sort_keys = true, indent = true }
 
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
