@@ -46,11 +46,13 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
   useEffect(() => {
     if (!keyPressed) return;
 
+    if (skillCheck.keys && !skillCheck.keys?.includes(keyPressed)) return;
+
     interval.stop();
 
     window.removeEventListener('keydown', keyHandler);
 
-    if (keyPressed !== skillCheck.key.toLowerCase() || indicatorAngle < angle || indicatorAngle > angle + offset)
+    if (keyPressed !== skillCheck.key || indicatorAngle < angle || indicatorAngle > angle + offset)
       handleComplete(false);
     else handleComplete(true);
 
