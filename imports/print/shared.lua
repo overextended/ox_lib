@@ -16,7 +16,7 @@ local levelPrefixes = {
 }
 
 local resourcePrintLevel = printLevel[GetConvar('ox:printlevel:' .. cache.resource, GetConvar('ox:printlevel', 'info'))]
-local template = ('^5[%s] %s %s^7'):format(cache.resource)
+local template = ('^5[%s] %%s %%s^7'):format(cache.resource)
 local jsonOptions = { sort_keys = true, indent = true }
 
 ---Prints to console conditionally based on what ox:printlevel is.
@@ -25,7 +25,7 @@ local jsonOptions = { sort_keys = true, indent = true }
 ---@param pattern string
 ---@param ... any
 local function libPrint(level, pattern, ...)
-    if level < resourcePrintLevel then return end
+    if level > resourcePrintLevel then return end
 
     local formattedArgs = {}
     for i = 1,select('#', ...) do
