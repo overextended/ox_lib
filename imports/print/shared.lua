@@ -22,27 +22,26 @@ local jsonOptions = { sort_keys = true, indent = true }
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
 ---@param level PrintLevel
----@param pattern string
 ---@param ... any
-local function libPrint(level, pattern, ...)
+local function libPrint(level, ...)
     if level > resourcePrintLevel then return end
 
-    local formattedArgs = {}
-    for i = 1,select('#', ...) do
-        local arg = select(i, ...)
-        arg = type(arg) == 'table' and json.encode(arg, jsonOptions) or tostring(arg)
-        formattedArgs[#formattedArgs+1] = arg
+    local args = { ... }
+
+    for i = 1, #args do
+        local arg = args[i]
+        args[i] = type(arg) == 'table' and json.encode(arg, jsonOptions) or tostring(arg)
     end
 
-    local message = pattern:format(table.unpack(formattedArgs))
-    print(template:format(levelPrefixes[level], message))
+    print(template:format(levelPrefixes[level], table.concat(args, '\t')))
 end
 
 lib.print = {
-    debug = function(pattern, ...) libPrint(printLevel.debug, pattern, ...) end,
-    info = function(pattern, ...) libPrint(printLevel.info, pattern, ...) end,
-    warn = function(pattern, ...) libPrint(printLevel.warn, pattern, ...) end,
-    error = function(pattern, ...) libPrint(printLevel.error, pattern, ...) end,
+    error = function(...) libPrint(printLevel.error, ...) end,
+    warn = function(...) libPrint(printLevel.warn, ...) end,
+    info = function(...) libPrint(printLevel.info, ...) end,
+    verbose = function(...) libPrint(printLevel.verbose, ...) end,
+    debug = function(...) libPrint(printLevel.debug, ...) end,
 }
 
 return lib.print
