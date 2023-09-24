@@ -1,7 +1,7 @@
 import { IDateInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
-import { DatePicker, DateRangePicker, TimeInput } from '@mantine/dates';
+import { DatePicker, DateRangePicker } from '@mantine/dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Props {
@@ -51,9 +51,7 @@ const DateField: React.FC<Props> = (props) => {
           name={controller.field.name}
           ref={controller.field.ref}
           onBlur={controller.field.onBlur}
-          onChange={(dates) =>
-            controller.field.onChange(dates.map((date: Date | null) => (date ? date.getTime() : null)))
-          }
+          onChange={(dates) => controller.field.onChange(dates.map((date: Date | null) => date ? date.getTime() : null))}
           label={props.row.label}
           description={props.row.description}
           placeholder={props.row.format}

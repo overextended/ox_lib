@@ -9,14 +9,12 @@
     "target": "ESNext",
     "allowJs": false,
     "lib": ["ESNext"],
-    "noEmitOnError": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "noEmit": false
+    "noImplicitAny": true
   },
   "include": ["client", "server", "shared"],
   "exclude": ["**/node_modules"]
