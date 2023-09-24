@@ -3,7 +3,7 @@ export const cache: Record<string, any> = new Proxy(
     resource: GetCurrentResourceName(),
   },
   {
-    get(target, key: string) {
+    get(target: any, key: string) {
       const result = key ? target[key] : target;
       if (result !== undefined) return result;
 

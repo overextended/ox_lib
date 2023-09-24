@@ -1,4 +1,4 @@
-import { Modal, Button, Stack, Group, useMantineTheme } from '@mantine/core';
+import { Modal, Button, Stack, Group, useMantineTheme, createStyles } from '@mantine/core';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
@@ -8,8 +8,15 @@ import remarkGfm from 'remark-gfm';
 import type { AlertProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 
+const useStyles = createStyles((theme) => ({
+  contentStack: {
+    color: theme.colors.dark[2],
+  },
+}));
+
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
+  const { classes } = useStyles();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [dialogData, setDialogData] = useState<AlertProps>({
@@ -49,7 +56,7 @@ const AlertDialog: React.FC = () => {
         transition="fade"
         title={<ReactMarkdown components={MarkdownComponents}>{dialogData.header}</ReactMarkdown>}
       >
-        <Stack>
+        <Stack className={classes.contentStack}>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{

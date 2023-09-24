@@ -3,12 +3,12 @@
   "ui": {
     "cancel": "Annuleren",
     "close": "Sluiten",
-    "confirm": "Bevestig",
-    "more": "More..."
+    "confirm": "Bevestigen",
+    "more": "Meer..."
   },
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "txadmin_announcement": "Server mededeling door %s",
+  "txadmin_dm": "Bericht van %s",
+  "txadmin_warn": "Je hebt een waarschuwing gekregen van %s",
+  "txadmin_warn_content": "%s  \nActie ID: %s",
+  "txadmin_scheduledrestart": "Geplande Server Restart"
 }

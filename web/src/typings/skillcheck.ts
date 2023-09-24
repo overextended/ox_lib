@@ -9,5 +9,6 @@ export interface SkillCheckProps {
   angle: number;
   difficultyOffset: number;
   difficulty: GameDifficulty;
+  keys?: string[];
   key: string;
 }
