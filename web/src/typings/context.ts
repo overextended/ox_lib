@@ -25,6 +25,7 @@ export interface Options {
 export interface ContextMenuProps {
   title: string;
   menu?: string;
+  filter?: boolean;
   canClose?: boolean;
   options: Options | Option[];
 }
