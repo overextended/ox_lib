@@ -66,6 +66,11 @@ const ContextMenu: React.FC = () => {
     fetchNui('closeContext');
   };
 
+    // resets the filter when a new menu is loaded
+    useEffect(() => {
+      setCurrentFilter('')
+    }, [contextMenu]);
+
   // Hides the context menu on ESC
   useEffect(() => {
     if (!visible) return;
