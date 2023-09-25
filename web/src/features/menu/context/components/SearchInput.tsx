@@ -6,6 +6,7 @@ import { ChangeEvent } from 'react';
 interface Props {
   icon: IconProp;
   handleChange: (data: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
@@ -26,12 +27,13 @@ const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
   },
 }));
 
-const SearchInput: React.FC<Props> = ({ icon, handleChange }) => {
+const SearchInput: React.FC<Props> = ({ icon, handleChange, value }) => {
   return (
     <TextInput
-      icon={<FontAwesomeIcon icon={icon} fontSize={16} fixedWidth/>}
+      value={value}
+      icon={<FontAwesomeIcon icon={icon} fontSize={16} fixedWidth />}
       onChange={handleChange}
-      placeholder='Filter'
+      placeholder="Filter"
     />
   );
 };

@@ -101,6 +101,7 @@ const ContextMenu: React.FC = () => {
         {contextMenu.filter && (
           <Box className={classes.filterContainer}>
             <SearchInput
+            value={currentFilter}
               icon="magnifying-glass"
               handleChange={(data) => {
                 setCurrentFilter(data.target.value);
