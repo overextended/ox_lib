@@ -3,7 +3,7 @@
 ---@param fn function
 function lib.registerNetEvent(event, fn)
     RegisterNetEvent(event, function(...)
-        if GetInvokingResource() then return end
+        if source == '' then return end
         fn(...)
     end)
 end
