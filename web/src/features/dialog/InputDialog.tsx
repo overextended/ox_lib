@@ -155,7 +155,7 @@ const InputDialog: React.FC = () => {
               <Button
                 uppercase
                 variant="default"
-                onClick={handleClose}
+                onClick={() => handleClose()}
                 mr={3}
                 disabled={fields.options?.allowCancel === false}
               >
