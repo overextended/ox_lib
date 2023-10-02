@@ -66,15 +66,14 @@ const InputDialog: React.FC = () => {
     });
   });
 
-  useNuiEvent('closeInputDialog', () => {
-    setVisible(false);
-  });
+  useNuiEvent('closeInputDialog', async () => await handleClose(true));
 
-  const handleClose = async () => {
+  const handleClose = async (dontPost?: boolean) => {
     setVisible(false);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
     fieldForm.remove();
+    if (dontPost) return;
     fetchNui('inputData');
   };
 
@@ -156,7 +155,7 @@ const InputDialog: React.FC = () => {
               <Button
                 uppercase
                 variant="default"
-                onClick={handleClose}
+                onClick={() => handleClose()}
                 mr={3}
                 disabled={fields.options?.allowCancel === false}
               >
