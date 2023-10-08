@@ -391,8 +391,8 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
     end
 
     if props.neonEnabled then
-        for i = 1, #props.neonEnabled do
-            SetVehicleNeonLightEnabled(vehicle, i - 1, props.neonEnabled[i])
+        for k,v in pairs(props.neonEnabled) do
+            SetVehicleNeonLightEnabled(vehicle, v, true)
         end
     end
 
