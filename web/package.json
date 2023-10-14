@@ -41,7 +41,7 @@
     "autoprefixer": "^10.0.2",
     "cross-env": "^7.0.3",
     "csstype": "^3.0.10",
-    "postcss": "^8.1.0",
+    "postcss": "^8.4.31",
     "prop-types": "^15.8.1",
     "rimraf": "^3.0.2",
     "@types/node": "^16.11.26",
