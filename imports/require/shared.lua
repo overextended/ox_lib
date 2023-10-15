@@ -63,6 +63,8 @@ function lib.require(modname)
         if not resourceSrc then
             resourceSrc = modpath:gsub('^@(.-)/.+', '%1')
             modpath = modpath:sub(#resourceSrc + 3)
+        elseif resourceSrc == '?' then
+            resourceSrc = cache.resource
         end
 
         for path in package.path:gmatch('[^;]+') do
