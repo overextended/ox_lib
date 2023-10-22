@@ -52,12 +52,15 @@ function lib.showMenu(id, startIndex)
     end
 
     if not openMenu then
+
         local control = cache.game == 'fivem' and 140 or 0xE30CD707
         CreateThread(function()
             while openMenu do
                 if openMenu.disableInput == nil or openMenu.disableInput then
                     DisablePlayerFiring(cache.playerId, true)
-                    HudWeaponWheelIgnoreSelection()
+                    if cache.game == 'fivem' then      
+                    HudWeaponWheelIgnoreSelection() -- Not a REDM native
+                        end
                     DisableControlAction(0, control, true)
                 end
 
