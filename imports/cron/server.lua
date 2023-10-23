@@ -16,6 +16,7 @@ currentDate.sec = 0
 ---@field debug? boolean
 
 ---@class OxTask : OxTaskProperties
+---@field expression string
 ---@field private scheduleTask fun(self: OxTask): boolean?
 local OxTask = {}
 OxTask.__index = OxTask
@@ -208,6 +209,10 @@ function OxTask:getAbsoluteNextTime()
     })
 end
 
+function OxTask:getTimeAsString(timestamp)
+    return os.date('%A %H:%M, %d %B %Y', timestamp or self:getAbsoluteNextTime())
+end
+
 ---@type OxTask[]
 local tasks = {}
 
@@ -225,8 +230,10 @@ function OxTask:scheduleTask()
         return self:stop(self.debug and ('scheduled time expired %s seconds ago'):format(-sleep))
     end
 
+    local timeAsString = self:getTimeAsString(runAt)
+
     if self.debug then
-        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60,
+        print(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep, sleep / 60,
             sleep / 60 / 60))
     end
 
@@ -239,7 +246,7 @@ function OxTask:scheduleTask()
 
     if self.isActive then
         if self.debug then
-            print(('(%s/%s/%s %s:%s) running task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
+            print(('(%s) running task %s'):format(timeAsString, self.id))
         end
 
         Citizen.CreateThreadNow(function()
@@ -321,12 +328,15 @@ end
 ---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
 ---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
 function lib.cron.new(expression, job, options)
-    if not job or type(job) ~= 'function' then return end
+    if not job or type(job) ~= 'function' then
+        error(("expected job to have type 'function' (received %s)"):format(type(job)))
+    end
 
     local minute, hour, day, month, weekday = string.strsplit(' ', string.lower(expression))
     ---@type OxTask
     local task = setmetatable(options or {}, OxTask)
 
+    task.expression = expression
     task.minute = parseCron(minute, 'min')
     task.hour = parseCron(hour, 'hour')
     task.day = parseCron(day, 'day')
