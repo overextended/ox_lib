@@ -238,11 +238,13 @@ function OxTask:scheduleTask()
     end
 
     if self.isActive then
-        self:job(currentDate)
-
         if self.debug then
-            print(('(%s/%s/%s %s:%s) ran task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
+            print(('(%s/%s/%s %s:%s) running task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
         end
+
+        Citizen.CreateThreadNow(function()
+            self:job(currentDate)
+        end)
 
         Wait(30000)
 
