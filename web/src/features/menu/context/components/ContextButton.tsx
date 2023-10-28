@@ -145,14 +145,21 @@ const ContextButton: React.FC<{
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
             button.metadata.map(
-              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+              (
+                metadata: string | { label: string; value?: any; progress?: number; colorScheme?: string },
+                index: number
+              ) => (
                 <>
                   <Text key={`context-metadata-${index}`}>
                     {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
                   </Text>
 
                   {typeof metadata === 'object' && metadata.progress !== undefined && (
-                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
+                    <Progress
+                      value={metadata.progress}
+                      size="sm"
+                      color={metadata.colorScheme || button.colorScheme || 'dark.3'}
+                    />
                   )}
                 </>
               )

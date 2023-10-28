@@ -11,7 +11,10 @@ export interface Option {
   progress?: number;
   colorScheme?: string;
   readOnly?: boolean;
-  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
+  metadata?:
+    | string[]
+    | { [key: string]: any }
+    | { label: string; value: any; progress?: number; colorScheme?: string }[];
   disabled?: boolean;
   event?: string;
   serverEvent?: string;
