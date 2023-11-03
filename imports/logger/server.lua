@@ -207,7 +207,8 @@ if service == 'loki' then
             stream = {
                 server = hostname,
                 resource = cache.resource,
-                event = event
+                event = event,
+                player = source
             },
             values = {
                 {
