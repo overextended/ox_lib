@@ -46,28 +46,27 @@ end
 ---@param startIndex? number
 function lib.showMenu(id, startIndex)
     local menu = registeredMenus[id]
-
     if not menu then
         error(('No menu with id %s was found'):format(id))
     end
-
     if not openMenu then
         local control = cache.game == 'fivem' and 140 or 0xE30CD707
+
         CreateThread(function()
             while openMenu do
                 if openMenu.disableInput == nil or openMenu.disableInput then
                     DisablePlayerFiring(cache.playerId, true)
-                    HudWeaponWheelIgnoreSelection()
+                    if cache.game == 'fivem' then
+                        HudWeaponWheelIgnoreSelection()  -- Not a REDM native
+                    end
                     DisableControlAction(0, control, true)
                 end
-
                 Wait(0)
             end
         end)
     end
 
     openMenu = menu
-
     lib.setNuiFocus(not menu.disableInput, true)
 
     SendNUIMessage({
@@ -81,7 +80,6 @@ function lib.showMenu(id, startIndex)
         }
     })
 end
-
 ---@param onExit boolean?
 function lib.hideMenu(onExit)
     local menu = openMenu
