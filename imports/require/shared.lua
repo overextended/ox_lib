@@ -38,7 +38,7 @@ function lib.require(modname)
             local di = debug.getinfo(idx, 'S')
 
             if di then
-                if not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^%[C%]') and not di.short_src:find('^citizen') then
+                if not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^%[C%]') and not di.short_src:find('^citizen') and di.short_src ~= '?' then
                     resourceSrc = di.short_src:gsub('^@(.-)/.+', '%1')
                     break
                 end
