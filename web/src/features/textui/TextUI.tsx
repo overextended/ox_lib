@@ -52,7 +52,17 @@ const TextUI: React.FC = () => {
         <ScaleFade visible={visible}>
           <Box style={data.style} className={classes.container}>
             <Group spacing={12}>
-              {data.icon && <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" style={{ color: data.iconColor }} />}
+              {data.icon && (
+                <FontAwesomeIcon
+                  icon={data.icon}
+                  fixedWidth
+                  size="lg"
+                  style={{
+                    color: data.iconColor,
+                    alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
+                  }}
+                />
+              )}
               <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
                 {data.text}
               </ReactMarkdown>

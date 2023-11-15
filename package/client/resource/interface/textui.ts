@@ -6,7 +6,9 @@ interface OptionsProps {
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
   style?: CSSProperties;
+  alignIcon?: 'top' | 'center';
 }
+
 export const showTextUI = (text: string, options?: OptionsProps): void => exports.ox_lib.showTextUI(text, options);
 
 export const hideTextUI = (): void => exports.ox_lib.hideTextUI();

@@ -22,6 +22,7 @@ interface NotifyProps {
   style?: Sx;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
+  alignIcon?: 'top' | 'center';
 }
 
 export const notify = (data: NotifyProps): void => exports.ox_lib.notify(data);

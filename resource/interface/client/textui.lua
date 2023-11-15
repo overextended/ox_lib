@@ -3,6 +3,7 @@
 ---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string;
 ---@field style? string | table;
+---@field alignIcon? 'top' | 'center';
 
 local isOpen = false
 local currentText

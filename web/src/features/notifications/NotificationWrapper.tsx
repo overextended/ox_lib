@@ -169,13 +169,22 @@ const Notifications: React.FC = () => {
                         ? 'yellow'
                         : 'blue'
                     }
+                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                     radius="xl"
                     size={32}
                   >
                     <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
                   </Avatar>
                 ) : (
-                  <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
+                  <FontAwesomeIcon
+                    icon={data.icon}
+                    style={{
+                      color: data.iconColor,
+                      alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
+                    }}
+                    fixedWidth
+                    size="lg"
+                  />
                 )}
               </>
             )}

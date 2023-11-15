@@ -9,4 +9,5 @@ export interface TextUiProps {
   icon?: IconProp;
   iconColor?: string;
   style?: React.CSSProperties;
+  alignIcon?: 'top' | 'center';
 }

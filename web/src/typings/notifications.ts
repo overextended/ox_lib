@@ -12,4 +12,5 @@ export interface NotificationProps {
   position?: ToastPosition | 'top' | 'bottom';
   id?: number | string;
   type?: string;
+  alignIcon?: 'top' | 'center';
 }
