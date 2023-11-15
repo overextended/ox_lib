@@ -12,11 +12,23 @@
 ---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string;
 ---@field alignIcon? 'top' | 'center';
+---@field sound? {bank?: string, set: string, name: string}
 
 ---`client`
 ---@param data NotifyProps
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.notify(data)
+    if data.sound then
+        if data.sound?.bank then
+            lib.requestAudioBank(data.sound.bank)
+        end
+        local soundId = GetSoundId()
+        PlaySoundFrontend(soundId, data.sound.name, data.sound.set, true)
+        ReleaseSoundId(soundId)
+        if data.sound?.bank then
+            ReleaseNamedScriptAudioBank(data.sound.bank)            
+        end
+    end
     SendNUIMessage({
         action = 'notify',
         data = data
