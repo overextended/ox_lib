@@ -1,5 +1,4 @@
-import { ActionIcon, Tooltip, Drawer, Stack, Divider, Button } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ActionIcon, Button, Divider, Drawer, Stack, Tooltip } from '@mantine/core';
 import { debugAlert } from './debug/alert';
 import { debugContext } from './debug/context';
 import { debugInput } from './debug/input';

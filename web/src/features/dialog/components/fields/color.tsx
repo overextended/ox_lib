@@ -2,7 +2,6 @@ import { IColorInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { ColorInput } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LibIcon from '../../../../components/LibIcon';
 
 interface Props {

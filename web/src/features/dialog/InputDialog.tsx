@@ -1,8 +1,9 @@
-import { Group, Modal, Button, Stack } from '@mantine/core';
+import { Button, Group, Modal, Stack } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
+import type { InputProps } from '../../typings';
 import { OptionValue } from '../../typings';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
@@ -14,7 +15,6 @@ import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
 import TimeField from './components/fields/time';
-import type { IDateInput, InputProps } from '../../typings';
 import dayjs from 'dayjs';
 
 export type FormValues = {

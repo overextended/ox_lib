@@ -1,6 +1,6 @@
-import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
+import { Button, createStyles, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
-import { Option, ContextMenuProps } from '../../../../typings';
+import { ContextMenuProps, Option } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';

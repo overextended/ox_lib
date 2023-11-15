@@ -1,11 +1,10 @@
 import { Box, createStyles, Stack, Tooltip } from '@mantine/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
 import FocusTrap from 'focus-trap-react';
 import { fetchNui } from '../../../utils/fetchNui';
-import React from 'react';
 import type { MenuPosition, MenuSettings } from '../../../typings';
 import LibIcon from '../../../components/LibIcon';
 

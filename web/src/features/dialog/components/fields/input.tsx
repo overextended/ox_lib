@@ -1,5 +1,4 @@
 import { createStyles, PasswordInput, TextInput } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { IInput } from '../../../../typings/dialog';
 import { UseFormRegisterReturn } from 'react-hook-form';

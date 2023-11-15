@@ -2,10 +2,9 @@ import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { Box, createStyles, Group } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ScaleFade from '../../transitions/ScaleFade';
 import remarkGfm from 'remark-gfm';
-import type { TextUiProps, TextUiPosition } from '../../typings';
+import type { TextUiPosition, TextUiProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
 

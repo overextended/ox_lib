@@ -1,8 +1,7 @@
-import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
+import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
-import { createStyles } from '@mantine/core';
 import { isIconUrl } from '../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import LibIcon from '../../../components/LibIcon';
