@@ -40,39 +40,58 @@ local function clearEntityDraw(entity)
     if DoesEntityExist(entity) then SetEntityDrawOutline(entity, false) end
 end
 
-local function enableGizmo(entity)
+local function enableGizmo(entity, onLeaveCallback)
     if not gizmoEnabled then
         return LeaveCursorMode()
     end
 
     EnterCursorMode()
-    SetEntityDrawOutline(entity, true)
+    if IsEntityAPed(entity) then SetEntityAlpha(entity, 200) else SetEntityDrawOutline(entity, true) end
     
     CreateThread(function()
         while gizmoEnabled and DoesEntityExist(entity) do
             Wait(0)
+            
             DisableControlAction(0, 24, true) -- lmb
             DisableControlAction(0, 25, true) -- rmb
             DisableControlAction(0, 140, true) -- r
             DisablePlayerFiring(cache.playerId, true)
+    
             local matrixBuffer = makeEntityMatrix(entity)
             local changed = Citizen.InvokeNative(0xEB2EDCA2, matrixBuffer:Buffer(), 'Editor1', Citizen.ReturnResultAnyway())
+    
             if changed then
                 applyEntityMatrix(entity, matrixBuffer)
             end
         end
-        clearEntityDraw(entity)
-        LeaveCursorMode()
+
+        if onLeaveCallback then onLeaveCallback() end
     end)
+
+    clearEntityDraw(entity)
+    LeaveCursorMode()
 end
 
 function lib.gizmo(entity)
-    if not entity then
-        gizmoEnabled = false
-        return
-    end
+    local gizmo = {}
+    
     gizmoEnabled = true
-    enableGizmo(entity)
+    enableGizmo(entity, function()
+        gizmoEnabled = false
+        if gizmo.onLeaveCallback then
+            gizmo.onLeaveCallback()
+        end
+    end)
+
+    gizmo.onLeave = function(callback)
+        gizmo.onLeaveCallback = callback
+    end
+
+    gizmo.close = function()
+        gizmoEnabled = false
+    end
+
+    return gizmo
 end
 
 RegisterKeyMapping('+gizmoSelect', 'Selects the currently highlighted gizmo', 'MOUSE_BUTTON', 'MOUSE_LEFT')
