@@ -109,7 +109,7 @@ API:
 @LICENSE
     See Copyright Notice in lua.h
 --]]
-DataView = setmetatable({
+local DataView = setmetatable({
     EndBig = ">",
     EndLittle = "<",
     Types = {
@@ -261,3 +261,5 @@ for label,datatype in pairs(DataView.FixedTypes) do
         return self
     end
 end
+
+return DataView

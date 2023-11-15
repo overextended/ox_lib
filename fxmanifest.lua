@@ -23,6 +23,7 @@ ui_page 'web/build/index.html'
 
 files {
     'init.lua',
+    'imports/gizmo/dataview.lua',
     'imports/**/client.lua',
     'imports/**/shared.lua',
     'web/build/index.html',
