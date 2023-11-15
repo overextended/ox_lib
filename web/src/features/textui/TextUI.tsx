@@ -7,6 +7,7 @@ import ScaleFade from '../../transitions/ScaleFade';
 import remarkGfm from 'remark-gfm';
 import type { TextUiProps, TextUiPosition } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
+import LibIcon from '../../components/LibIcon';
 
 const useStyles = createStyles((theme, params: { position?: TextUiPosition }) => ({
   wrapper: {
@@ -53,10 +54,11 @@ const TextUI: React.FC = () => {
           <Box style={data.style} className={classes.container}>
             <Group spacing={12}>
               {data.icon && (
-                <FontAwesomeIcon
+                <LibIcon
                   icon={data.icon}
                   fixedWidth
                   size="lg"
+                  animation={data.iconAnimation}
                   style={{
                     color: data.iconColor,
                     alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',

@@ -6,6 +6,7 @@ import { Avatar, createStyles, Group, Stack, Box, Text, keyframes, Sx } from '@m
 import React from 'react';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
+import LibIcon from '../../components/LibIcon';
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -173,11 +174,12 @@ const Notifications: React.FC = () => {
                     radius="xl"
                     size={32}
                   >
-                    <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
+                    <LibIcon icon={data.icon} fixedWidth size="lg" />
                   </Avatar>
                 ) : (
-                  <FontAwesomeIcon
+                  <LibIcon
                     icon={data.icon}
+                    animation={data.iconAnimation}
                     style={{
                       color: data.iconColor,
                       alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',

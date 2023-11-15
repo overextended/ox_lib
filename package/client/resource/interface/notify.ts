@@ -11,6 +11,7 @@ type NotificationPosition =
   | 'center-right'
   | 'center-left';
 type NotificationType = 'inform' | 'error' | 'success';
+type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 
 interface NotifyProps {
   id?: string | number;
@@ -22,6 +23,7 @@ interface NotifyProps {
   style?: Sx;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
+  iconAnimation?: IconAnimation;
   alignIcon?: 'top' | 'center';
 }
 

@@ -10,6 +10,7 @@ import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
 import { useState } from 'react';
 import { debugRadial } from './debug/radial';
+import LibIcon from '../../components/LibIcon';
 
 const Dev: React.FC = () => {
   const [opened, setOpened] = useState(false);
@@ -27,7 +28,7 @@ const Dev: React.FC = () => {
           mr={50}
           mb={50}
         >
-          <FontAwesomeIcon icon="wrench" fontSize={24} />
+          <LibIcon icon="wrench" fontSize={24} />
         </ActionIcon>
       </Tooltip>
 

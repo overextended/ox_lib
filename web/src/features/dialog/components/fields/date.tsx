@@ -3,6 +3,7 @@ import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { DatePicker, DateRangePicker } from '@mantine/dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   row: IDateInput;
@@ -34,7 +35,7 @@ const DateField: React.FC<Props> = (props) => {
           inputFormat={props.row.format}
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
-          icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
+          icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
           minDate={props.row.min ? new Date(props.row.min) : undefined}
           maxDate={props.row.max ? new Date(props.row.max) : undefined}
         />
@@ -51,7 +52,9 @@ const DateField: React.FC<Props> = (props) => {
           name={controller.field.name}
           ref={controller.field.ref}
           onBlur={controller.field.onBlur}
-          onChange={(dates) => controller.field.onChange(dates.map((date: Date | null) => date ? date.getTime() : null))}
+          onChange={(dates) =>
+            controller.field.onChange(dates.map((date: Date | null) => (date ? date.getTime() : null)))
+          }
           label={props.row.label}
           description={props.row.description}
           placeholder={props.row.format}
@@ -59,7 +62,7 @@ const DateField: React.FC<Props> = (props) => {
           inputFormat={props.row.format}
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
-          icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
+          icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
           minDate={props.row.min ? new Date(props.row.min) : undefined}
           maxDate={props.row.max ? new Date(props.row.max) : undefined}
         />

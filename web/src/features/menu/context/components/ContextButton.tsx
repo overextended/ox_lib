@@ -1,11 +1,11 @@
 import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
 import { Option, ContextMenuProps } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import MarkdownComponents from '../../../../config/MarkdownComponents';
+import LibIcon from '../../../../components/LibIcon';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -112,11 +112,12 @@ const ContextButton: React.FC<{
                         {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
                           <img src={button.icon} className={classes.iconImage} alt="Missing img" />
                         ) : (
-                          <FontAwesomeIcon
+                          <LibIcon
                             icon={button.icon as IconProp}
                             fixedWidth
                             size="lg"
                             style={{ color: button.iconColor }}
+                            animation={button.iconAnimation}
                           />
                         )}
                       </Stack>
@@ -137,7 +138,7 @@ const ContextButton: React.FC<{
               </Stack>
               {(button.menu || button.arrow) && button.arrow !== false && (
                 <Stack className={classes.buttonArrowContainer}>
-                  <FontAwesomeIcon icon="chevron-right" fixedWidth />
+                  <LibIcon icon="chevron-right" fixedWidth />
                 </Stack>
               )}
             </Group>

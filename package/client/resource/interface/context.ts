@@ -1,5 +1,7 @@
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
+type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
+
 interface ContextMenuItem {
   menu?: string;
   title?: string;
@@ -8,6 +10,7 @@ interface ContextMenuItem {
   image?: string;
   icon?: IconName | [IconPrefix, IconName] | string;
   iconColor?: string;
+  iconAnimation?: IconAnimation;
   progress?: number;
   colorScheme?: string;
   onSelect?: (args: any) => void;
