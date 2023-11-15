@@ -1,65 +1,65 @@
 -- Credit: https://github.com/citizenfx/lua/blob/luaglm-dev/cfx/libs/scripts/examples/dataview.lua
 
 --[[
-    A DataView implementation based on GRIT_POWER_BLOB
+    A dataView implementation based on GRIT_POWER_BLOB
 
 API:
     -- Creates a new ArrayBuffer object.
-    DataView.ArrayBuffer(byteCount)
+    dataView.ArrayBuffer(byteCount)
 
     -- Returns a value according to <Type>. An optional 'offset' marks where
-    -- to start reading within the DataView buffer. Note, all offsets are zero
+    -- to start reading within the dataView buffer. Note, all offsets are zero
     -- based.
     --
     -- Available Functions:
-    --  DataView.GetInt8  DataView.GetUint8
-    --  DataView.GetInt16 DataView.GetUint16
-    --  DataView.GetInt32 DataView.GetUint32
-    --  DataView.GetInt64 DataView.GetUint64
-    --  DataView.GetFloat32 DataView.GetFloat64
-    --  DataView.GetString
-    --  DataView.GetLuaInt -- Extension: A lua_Integer
-    --  DataView.GetUluaInt -- Extension: A lua_Unsigned
-    --  DataView.GetLuaNum -- Extension: lua_Number
-    DataView.Get<Type>(self, offset [, bigEndian])
+    --  dataView.GetInt8  dataView.GetUint8
+    --  dataView.GetInt16 dataView.GetUint16
+    --  dataView.GetInt32 dataView.GetUint32
+    --  dataView.GetInt64 dataView.GetUint64
+    --  dataView.GetFloat32 dataView.GetFloat64
+    --  dataView.GetString
+    --  dataView.GetLuaInt -- Extension: A lua_Integer
+    --  dataView.GetUluaInt -- Extension: A lua_Unsigned
+    --  dataView.GetLuaNum -- Extension: lua_Number
+    dataView.Get<Type>(self, offset [, bigEndian])
 
     -- Serialize in binary form (string.pack) a 'value' according to <Type>
     --
     -- Available Functions:
-    --  DataView.SetInt8 DataView.SetUint8
-    --  DataView.SetInt16 DataView.SetUint16
-    --  DataView.SetInt32 DataView.SetUint32
-    --  DataView.SetInt64 DataView.SetUint64
-    --  DataView.SetFloat32 DataView.SetFloat64
-    --  DataView.SetString
-    --  DataView.SetLuaInt -- Extension: A lua_Integer
-    --  DataView.SetUluaInt -- Extension: A lua_Unsigned
-    --  DataView.SetLuaNum -- Extension: lua_Number
-    DataView.Set<Type>(self, offset, value [, bigEndian])
+    --  dataView.SetInt8 dataView.SetUint8
+    --  dataView.SetInt16 dataView.SetUint16
+    --  dataView.SetInt32 dataView.SetUint32
+    --  dataView.SetInt64 dataView.SetUint64
+    --  dataView.SetFloat32 dataView.SetFloat64
+    --  dataView.SetString
+    --  dataView.SetLuaInt -- Extension: A lua_Integer
+    --  dataView.SetUluaInt -- Extension: A lua_Unsigned
+    --  dataView.SetLuaNum -- Extension: lua_Number
+    dataView.Set<Type>(self, offset, value [, bigEndian])
 
     -- Return a value according to <Type> and a dynamic type-length.
     --
     -- Available Functions:
-    --  DataView.GetFixedInt
-    --  DataView.GetFixedUint
-    --  DataView.GetFixedString
-    DataView.GetFixed<Type>(self, offset, type_length [, bigEndian])
+    --  dataView.GetFixedInt
+    --  dataView.GetFixedUint
+    --  dataView.GetFixedString
+    dataView.GetFixed<Type>(self, offset, type_length [, bigEndian])
 
     -- Serialize in binary form a 'value' according to <Type> and a dynamic
     -- type-length.
     --
     -- Available Functions:
-    --  DataView.SetFixedInt
-    --  DataView.SetFixedUint
-    --  DataView.SetFixedString
-    DataView.SetFixed<Type>(self, offset, type_length, value [, bigEndian])
+    --  dataView.SetFixedInt
+    --  dataView.SetFixedUint
+    --  dataView.SetFixedString
+    dataView.SetFixed<Type>(self, offset, type_length, value [, bigEndian])
 
 @NOTES:
       (1) Endianness changed from JS API: defaults to little endian.
 
 @EXAMPLES:
     -- GET_DLC_WEAPON_DATA
-    local view = DataView.ArrayBuffer(512)
+    local view = dataView.ArrayBuffer(512)
     if Citizen.InvokeNative(0x79923CD21BECE14E, 1, view:Buffer(), Citizen.ReturnResultAnyway()) then
         local dlc = {
             validCheck = view:GetInt64(0),
@@ -109,7 +109,7 @@ API:
 @LICENSE
     See Copyright Notice in lua.h
 --]]
-local DataView = setmetatable({
+local dataView = setmetatable({
     EndBig = ">",
     EndLittle = "<",
     Types = {
@@ -137,46 +137,46 @@ local DataView = setmetatable({
     },
 }, {
     __call = function(_, length)
-        return DataView.ArrayBuffer(length)
+        return dataView.ArrayBuffer(length)
     end
 })
-DataView.__index = DataView
+dataView.__index = dataView
 
 --[[ Create an ArrayBuffer with a size in bytes --]]
-function DataView.ArrayBuffer(length)
+function dataView.ArrayBuffer(length)
     return setmetatable({
         blob = string.blob(length),
         length = length,
         offset = 1,
         cangrow = true,
-    }, DataView)
+    }, dataView)
 end
 
 --[[ Wrap a non-internalized string --]]
-function DataView.Wrap(blob)
+function dataView.Wrap(blob)
     return setmetatable({
         blob = blob,
         length = blob:len(),
         offset = 1,
         cangrow = true,
-    }, DataView)
+    }, dataView)
 end
 
 --[[ Return the underlying bytebuffer --]]
-function DataView:Buffer() return self.blob end
-function DataView:ByteLength() return self.length end
-function DataView:ByteOffset() return self.offset end
-function DataView:SubView(offset, length)
+function dataView:Buffer() return self.blob end
+function dataView:ByteLength() return self.length end
+function dataView:ByteOffset() return self.offset end
+function dataView:SubView(offset, length)
     return setmetatable({
         blob = self.blob,
         length = length or self.length,
         offset = 1 + offset,
         cangrow = false,
-    }, DataView)
+    }, dataView)
 end
 
 --[[ Return the Endianness format character --]]
-local function ef(big) return (big and DataView.EndBig) or DataView.EndLittle end
+local function ef(big) return (big and dataView.EndBig) or dataView.EndLittle end
 
 --[[ Helper function for setting fixed datatypes within a buffer --]]
 local function packblob(self, offset, value, code)
@@ -194,9 +194,9 @@ local function packblob(self, offset, value, code)
 end
 
 --[[
-    Create the API by using DataView.Types
+    Create the API by using dataView.Types
 --]]
-for label,datatype in pairs(DataView.Types) do
+for label,datatype in pairs(dataView.Types) do
     if not datatype.size then  -- cache fixed encoding size
         datatype.size = string.packsize(datatype.code)
     elseif datatype.size >= 0 and string.packsize(datatype.code) ~= datatype.size then
@@ -205,7 +205,7 @@ for label,datatype in pairs(DataView.Types) do
         return nil
     end
 
-    DataView["Get" .. label] = function(self, offset, endian)
+    dataView["Get" .. label] = function(self, offset, endian)
         offset = offset or 0
         if offset >= 0 then
             local o = self.offset + offset
@@ -215,7 +215,7 @@ for label,datatype in pairs(DataView.Types) do
         return nil
     end
 
-    DataView["Set" .. label] = function(self, offset, value, endian)
+    dataView["Set" .. label] = function(self, offset, value, endian)
         if offset >= 0 and value then
             local o = self.offset + offset
             local v_size = (datatype.size < 0 and value:len()) or datatype.size
@@ -231,10 +231,10 @@ for label,datatype in pairs(DataView.Types) do
     end
 end
 
-for label,datatype in pairs(DataView.FixedTypes) do
+for label,datatype in pairs(dataView.FixedTypes) do
     datatype.size = -1 -- Ensure cached encoding size is invalidated
 
-    DataView["GetFixed" .. label] = function(self, offset, typelen, endian)
+    dataView["GetFixed" .. label] = function(self, offset, typelen, endian)
         if offset >= 0 then
             local o = self.offset + offset
             if (o + (typelen - 1)) <= self.length then
@@ -246,7 +246,7 @@ for label,datatype in pairs(DataView.FixedTypes) do
         return nil -- Out of bounds
     end
 
-    DataView["SetFixed" .. label] = function(self, offset, typelen, value, endian)
+    dataView["SetFixed" .. label] = function(self, offset, typelen, value, endian)
         if offset >= 0 and value then
             local o = self.offset + offset
             if self.cangrow or ((o + (typelen - 1)) <= self.length) then
@@ -262,4 +262,6 @@ for label,datatype in pairs(DataView.FixedTypes) do
     end
 end
 
-return DataView
+lib.dataView = dataView
+
+return dataView

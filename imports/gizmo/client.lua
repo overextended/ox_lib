@@ -1,11 +1,10 @@
 if cache.game == 'redm' then return end
 
-local DataView = require 'imports.gizmo.dataview' or {}
 local gizmoEnabled = false
 
 local function makeEntityMatrix(entity)
     local f, r, u, a = GetEntityMatrix(entity)
-    local view = DataView.ArrayBuffer(60)
+    local view = lib.dataView.ArrayBuffer(60)
 
     view:SetFloat32(0, r[1])
         :SetFloat32(4, r[2])
