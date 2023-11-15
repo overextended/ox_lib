@@ -173,7 +173,7 @@ const Notifications: React.FC = () => {
                     radius="xl"
                     size={32}
                   >
-                    <LibIcon icon={data.icon} fixedWidth size="lg" />
+                    <LibIcon icon={data.icon} fixedWidth size="lg" animation={data.iconAnimation} />
                   </Avatar>
                 ) : (
                   <LibIcon
