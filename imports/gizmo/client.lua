@@ -1,6 +1,6 @@
 if cache.game == 'redm' then return end
 
-local DataView = require 'dataview' or {}
+local DataView = require 'imports.gizmo.dataview' or {}
 local gizmoEnabled = false
 
 local function makeEntityMatrix(entity)
