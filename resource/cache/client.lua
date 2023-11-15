@@ -17,6 +17,7 @@ local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
 local GetMount = GetMount
 local IsPedOnMount = IsPedOnMount
 local GetCurrentPedWeapon = GetCurrentPedWeapon
+local GetEntityCoords = GetEntityCoords
 
 CreateThread(function()
 	while true do
@@ -50,6 +51,8 @@ CreateThread(function()
 		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
 
 		cache:set('weapon', hasWeapon and currentWeapon or false)
+
+		cache:set('coords', GetEntityCoords(ped))
 
 		Wait(100)
 	end
