@@ -45,8 +45,15 @@ local function enableGizmo(entity, onLeaveCallback)
         return LeaveCursorMode()
     end
 
+    local resetPedAlpha = false
     EnterCursorMode()
-    if IsEntityAPed(entity) then SetEntityAlpha(entity, 200) else SetEntityDrawOutline(entity, true) end
+
+    if IsEntityAPed(entity) then
+        resetPedAlpha = true
+        SetEntityAlpha(entity, 200)
+    else
+        SetEntityDrawOutline(entity, true)
+    end
     
     CreateThread(function()
         while gizmoEnabled and DoesEntityExist(entity) do
@@ -65,11 +72,11 @@ local function enableGizmo(entity, onLeaveCallback)
             end
         end
 
+        LeaveCursorMode()
+        clearEntityDraw(entity)
+        if resetPedAlpha and DoesEntityExist(entity) then SetEntityAlpha(entity, 255) end
         if onLeaveCallback then onLeaveCallback() end
     end)
-
-    clearEntityDraw(entity)
-    LeaveCursorMode()
 end
 
 function lib.gizmo(entity)
