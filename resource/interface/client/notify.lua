@@ -14,6 +14,8 @@
 ---@field alignIcon? 'top' | 'center';
 ---@field sound? {bank?: string, set: string, name: string}
 
+local enableSound = GetConvar('ox:enableSound', 'true') == 'true'
+
 ---`client`
 ---@param data NotifyProps
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -22,7 +24,7 @@ function lib.notify(data)
         action = 'notify',
         data = data
     })
-    if GetConvar('ox:enableSound', "false") == "true" then return end
+    if not enableSound then return end
     if data.sound then
         if data.sound?.bank then
             lib.requestAudioBank(data.sound.bank)
