@@ -1,5 +1,7 @@
 lib.marker = {}
 
+local defaultRotation = { x = 0, y = 0, z = z }
+local defaultDirection = { x = 0, y = 0, z = z }
 local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
 local defaultSize = { width = 2, height = 1 }
 
@@ -56,6 +58,8 @@ MarkerTypes = {
 ---@field location { x: number, y: number, z: number }
 ---@field size? { width: number, height: number }
 ---@field color? { r: number, g: number, b: number, a: number }
+---@field rotation? { x: number, y: number, z: number }
+---@field direction? { x: number, y: number, z: number }
 
 ---@param self MarkerProps
 local function drawMarker(self)
@@ -63,9 +67,10 @@ local function drawMarker(self)
 
   ---@cast type number
   DrawMarker(
-    type, self.location.x, self.location.y, self.location.z - 1,
-    0.0, 0.0, 0.0,
-    0.0, 0.0, 0.0,
+    type,
+    self.location.x, self.location.y, self.location.z,
+    self.direction.x, self.direction.y, self.direction.z,
+    self.rotation.x, self.rotation.y, self.rotation.z,
     self.size.width, self.size.width, self.size.height,
     self.color.r, self.color.g, self.color.b, self.color.a,
     ---@diagnostic disable-next-line: param-type-mismatch
@@ -84,6 +89,8 @@ function lib.marker.create(options)
   self.location = options.location
   self.color = options.color or defaultColor
   self.size = options.size or defaultSize
+  self.rotation = options.rotation or defaultRotation
+  self.direction = options.direction or defaultDirection
   self.draw = drawMarker
 
   -- Somehow the marker doesn't work if you pass a round number
