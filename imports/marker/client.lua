@@ -63,11 +63,8 @@ MarkerTypes = {
 
 ---@param self MarkerProps
 local function drawMarker(self)
-  local type = self.type
-
-  ---@cast type number
   DrawMarker(
-    type,
+    self.type,
     self.location.x, self.location.y, self.location.z,
     self.direction.x, self.direction.y, self.direction.z,
     self.rotation.x, self.rotation.y, self.rotation.z,
@@ -93,9 +90,8 @@ function lib.marker.create(options)
   self.direction = options.direction or defaultDirection
   self.draw = drawMarker
 
-  -- Somehow the marker doesn't work if you pass a round number
-  self.size.width += 0.0000000001
-  self.size.height += 0.0000000001
+  self.size.width += 0.0
+  self.size.height += 0.0
 
   return self
 end
