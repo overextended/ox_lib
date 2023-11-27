@@ -79,9 +79,9 @@ end
 
 ---@param options MarkerProps
 function lib.marker.create(options)
-  local markerType = options.type
-  if type(markerType) ~= "number" and type(markerType) ~= "string" then
-    error(("expected marker type to have type 'number' or 'string' (received %s)"):format(type(markerType)))
+  local markerType = type(options.type)
+  if markerType ~= "number" and markerType ~= "string" then
+    error(("expected marker type to have type 'number' or 'string' (received %s)"):format(markerType))
   end
 
   local self = {}
