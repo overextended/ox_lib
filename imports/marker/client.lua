@@ -55,7 +55,7 @@ MarkerTypes = {
 
 ---@class MarkerProps
 ---@field type MarkerType | integer
----@field location { x: number, y: number, z: number }
+---@field coords { x: number, y: number, z: number }
 ---@field size? { width: number, height: number }
 ---@field color? { r: number, g: number, b: number, a: number }
 ---@field rotation? { x: number, y: number, z: number }
@@ -65,7 +65,7 @@ MarkerTypes = {
 local function drawMarker(self)
   DrawMarker(
     self.type,
-    self.location.x, self.location.y, self.location.z,
+    self.coords.x, self.coords.y, self.coords.z,
     self.direction.x, self.direction.y, self.direction.z,
     self.rotation.x, self.rotation.y, self.rotation.z,
     self.size.width, self.size.width, self.size.height,
@@ -75,7 +75,7 @@ local function drawMarker(self)
 end
 
 ---@param options MarkerProps
-function lib.marker.create(options)
+function lib.marker.new(options)
   local markerType = type(options.type)
   if markerType ~= "number" and markerType ~= "string" then
     error(("expected marker type to have type 'number' or 'string' (received %s)"):format(markerType))
@@ -83,7 +83,7 @@ function lib.marker.create(options)
 
   local self = {}
   self.type = options.type
-  self.location = options.location
+  self.coords = options.coords
   self.color = options.color or defaultColor
   self.size = options.size or defaultSize
   self.rotation = options.rotation or defaultRotation
