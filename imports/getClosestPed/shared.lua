@@ -3,12 +3,12 @@
 ---@return number? ped
 ---@return vector3? pedCoords
 function lib.getClosestPed(coords, maxDistance)
-    local peds = GetAllPeds()
-    local closestPed, closestCoords
-    maxDistance = maxDistance or 2.0
+	local peds = lib.getGamePool('CPed')
+	local closestPed, closestCoords
+	maxDistance = maxDistance or 2.0
 
-    for i = 1, #peds do
-        local ped = peds[i]
+	for i = 1, #peds do
+		local ped = peds[i]
 
         if not IsPedAPlayer(ped) then
             local pedCoords = GetEntityCoords(ped)
@@ -20,9 +20,9 @@ function lib.getClosestPed(coords, maxDistance)
                 closestCoords = pedCoords
             end
         end
-    end
+	end
 
-    return closestPed, closestCoords
+	return closestPed, closestCoords
 end
 
 return lib.getClosestPed

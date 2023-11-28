@@ -2,7 +2,7 @@
 ---@param maxDistance number The max distance to check.
 ---@return { ped: number, coords: vector3 }[]
 function lib.getNearbyPeds(coords, maxDistance)
-    local peds = GetGamePool('CPed')
+    local peds = lib.getGamePool('CPed')
     local nearby = {}
     local count = 0
     maxDistance = maxDistance or 2.0
