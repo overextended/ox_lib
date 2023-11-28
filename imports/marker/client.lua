@@ -1,7 +1,7 @@
 lib.marker = {}
 
-local defaultRotation = { x = 0, y = 0, z = z }
-local defaultDirection = { x = 0, y = 0, z = z }
+local defaultRotation = vector3(0, 0, 0)
+local defaultDirection = vector3(0, 0, 0)
 local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
 local defaultSize = { width = 2, height = 1 }
 
@@ -56,7 +56,8 @@ MarkerTypes = {
 ---@class MarkerProps
 ---@field type MarkerType | integer
 ---@field coords { x: number, y: number, z: number }
----@field size? { width: number, height: number }
+---@field width? number
+---@field height? number
 ---@field color? { r: number, g: number, b: number, a: number }
 ---@field rotation? { x: number, y: number, z: number }
 ---@field direction? { x: number, y: number, z: number }
@@ -68,7 +69,7 @@ local function drawMarker(self)
     self.coords.x, self.coords.y, self.coords.z,
     self.direction.x, self.direction.y, self.direction.z,
     self.rotation.x, self.rotation.y, self.rotation.z,
-    self.size.width, self.size.width, self.size.height,
+    self.width, self.width, self.height,
     self.color.r, self.color.g, self.color.b, self.color.a,
     ---@diagnostic disable-next-line: param-type-mismatch
     false, true, 2, false, nil, nil, false)
@@ -77,21 +78,22 @@ end
 ---@param options MarkerProps
 function lib.marker.new(options)
   local markerType = type(options.type)
-  if markerType ~= "number" and markerType ~= "string" then
-    error(("expected marker type to have type 'number' or 'string' (received %s)"):format(markerType))
+  if markerType ~= "number" then
+    error(("expected marker type to have type 'number' (received %s)"):format(markerType))
   end
 
   local self = {}
   self.type = options.type
   self.coords = options.coords
   self.color = options.color or defaultColor
-  self.size = options.size or defaultSize
+  self.width = options.width or defaultSize.width
+  self.height = options.height or defaultSize.height
   self.rotation = options.rotation or defaultRotation
   self.direction = options.direction or defaultDirection
   self.draw = drawMarker
 
-  self.size.width += 0.0
-  self.size.height += 0.0
+  self.width += 0.0
+  self.height += 0.0
 
   return self
 end
