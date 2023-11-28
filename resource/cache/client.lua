@@ -17,11 +17,16 @@ local GetVehicleMaxNumberOfPassengers = GetVehicleMaxNumberOfPassengers
 local GetMount = GetMount
 local IsPedOnMount = IsPedOnMount
 local GetCurrentPedWeapon = GetCurrentPedWeapon
+local GetEntityHealth = GetEntityHealth
+local GetPedArmour = GetPedArmour
 
 CreateThread(function()
 	while true do
 		local ped = PlayerPedId()
 		cache:set('ped', ped)
+
+		cache:set('health', GetEntityHealth(ped))
+		cache:set('armour', GetPedArmour(ped))
 
 		local vehicle = GetVehiclePedIsIn(ped, false)
 
