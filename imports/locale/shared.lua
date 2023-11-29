@@ -1,22 +1,26 @@
 ---@type { [string]: string }
 local dict = {}
 
+---@param prefix string|nil
+---@param source { [string]: string }
+---@param target { [string]: string }
+local function flattenDict(prefix, source, target)
+    for key, value in pairs(source) do
+        local fullKey = prefix and (prefix .. "." .. key) or key
+
+        if type(value) == "table" then
+            flattenDict(fullKey, value, target)
+        else
+            target[fullKey] = value
+        end
+    end
+end
+
 ---@param str string
 ---@param ... string | number
 ---@return string
 function locale(str, ...)
-    
-    ---@type { [string]: string } | string | nil
-    local lstr = dict
-
-    for key in str:gmatch("[^.]+") do
-        if lstr and lstr[key] ~= nil then
-            lstr = lstr[key]
-        else
-            lstr = nil
-            break
-        end
-    end
+    local lstr = dict[str]
 
     if lstr then
         if ... then
@@ -52,7 +56,10 @@ function lib.locale()
         if not locales then return end
     end
 
-    for k, v in pairs(locales) do
+    local flattenedDict = {}
+    flattenDict(nil, locales, flattenedDict)
+
+    for k, v in pairs(flattenedDict) do
         if type(v) == 'string' then
             for var in v:gmatch('${[%w%s%p]-}') do
                 local locale = locales[var:sub(3, -2)]
