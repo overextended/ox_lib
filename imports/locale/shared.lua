@@ -5,7 +5,18 @@ local dict = {}
 ---@param ... string | number
 ---@return string
 function locale(str, ...)
-    local lstr = dict[str]
+    
+    ---@type { [string]: string } | string | nil
+    local lstr = dict
+
+    for key in str:gmatch("[^.]+") do
+        if lstr and lstr[key] ~= nil then
+            lstr = lstr[key]
+        else
+            lstr = nil
+            break
+        end
+    end
 
     if lstr then
         if ... then
