@@ -1,4 +1,3 @@
-local onServer = IsDuplicityVersion()
 local poolNames = {
     CPed = "GetAllPeds",
     CObject = "GetAllObjects",
@@ -6,7 +5,7 @@ local poolNames = {
 }
 
 function lib.getGamePool(pool)
-    if not onServer then
+    if lib.context == "client" then
         return GetGamePool(pool)
     end
     local poolNative = poolNames[pool]
