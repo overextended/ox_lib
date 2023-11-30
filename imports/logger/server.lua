@@ -208,7 +208,7 @@ if service == 'loki' then
                 server = hostname,
                 resource = cache.resource,
                 event = event,
-                player = source
+                playerId = source
             },
             values = {
                 {
