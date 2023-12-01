@@ -35,7 +35,7 @@ function lib.hideTextUI()
     currentText = nil
 end
 
----@return boolean, string
+---@return boolean, string | nil
 function lib.isTextUIOpen()
     return isOpen, currentText
 end
