@@ -1,6 +1,6 @@
 ---@param coords vector3 The coords to check from.
----@param maxDistance number The max distance to check.
----@param includePlayer boolean? Whether or not to include the current player.
+---@param maxDistance? number The max distance to check.
+---@param includePlayer? boolean Whether or not to include the current player.
 ---@return { id: number, ped: number, coords: vector3 }[]
 function lib.getNearbyPlayers(coords, maxDistance, includePlayer)
     local players = GetActivePlayers()

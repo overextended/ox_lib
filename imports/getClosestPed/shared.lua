@@ -3,7 +3,7 @@
 ---@return number? ped
 ---@return vector3? pedCoords
 function lib.getClosestPed(coords, maxDistance)
-	local peds = lib.getGamePool('CPed')
+	local peds = GetGamePool('CPed')
 	local closestPed, closestCoords
 	maxDistance = maxDistance or 2.0
 
