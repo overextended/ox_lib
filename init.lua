@@ -222,6 +222,33 @@ else
     function lib.notify(playerId, data)
         TriggerClientEvent(notifyEvent, playerId, data)
     end
+
+    local poolNatives = {
+        CPed = GetAllPeds,
+        CObject = GetAllObjects,
+        CVehicle = GetAllVehicles,
+    }
+
+    ---@param poolName 'CPed' | 'CObject' | 'CVehicle'
+    ---@return number[]
+    ---Server-side parity for the `GetGamePool` client native.
+    function GetGamePool(poolName)
+        local fn = poolNatives[poolName]
+        return fn and fn() --[[@as number[] ]]
+    end
+
+    ---@return number[]
+    ---Server-side parity for the `GetPlayers` client native.
+    function GetActivePlayers()
+        local playerNum = GetNumPlayerIndices()
+        local players = table.create(playerNum, 0)
+
+        for i = 1, playerNum do
+            players[i] = tonumber(GetPlayerFromIndex(i - 1))
+        end
+
+        return players
+    end
 end
 
 for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
