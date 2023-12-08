@@ -31,41 +31,45 @@ end
 
 CreateThread(function()
 	while true do
-		if #points > 0 then
-			if nearbyCount ~= 0 then
+		if #points == 0 then
+			goto continue
+		end
+		
+		do 
+       	if nearbyCount ~= 0 then
 				table.wipe(nearbyPoints)
 				nearbyCount = 0
 			end
-	
+
 			local coords = GetEntityCoords(cache.ped)
 			cache.coords = coords
-	
-			if closestPoint and #(coords - closestPoint.coords) > closestPoint.distance then
-				closestPoint = nil
-			end
-	
+
+       	if closestPoint and #(coords - closestPoint.coords) > closestPoint.distance then
+       	    closestPoint = nil
+       	end
+
 			for _, point in pairs(points) do
 				local distance = #(coords - point.coords)
-	
+
 				if distance <= point.distance then
 					point.currentDistance = distance
-	
-					if closestPoint then
-						if distance < closestPoint.currentDistance then
-							closestPoint.isClosest = nil
-							point.isClosest = true
-							closestPoint = point
-						end
-					elseif distance < point.distance then
-						point.isClosest = true
-						closestPoint = point
-					end
-	
+
+       	        if closestPoint then
+       	            if distance < closestPoint.currentDistance then
+       	                closestPoint.isClosest = nil
+       	                point.isClosest = true
+       	                closestPoint = point
+       	            end
+       	        elseif distance < point.distance then
+       	            point.isClosest = true
+       	            closestPoint = point
+       	        end
+
 					if point.nearby then
-						nearbyCount += 1
+       	            nearbyCount += 1
 						nearbyPoints[nearbyCount] = point
 					end
-	
+
 					if point.onEnter and not point.inside then
 						point.inside = true
 						point:onEnter()
@@ -76,26 +80,25 @@ CreateThread(function()
 					point.currentDistance = nil
 				end
 			end
-	
+
 			if not tick then
 				if nearbyCount ~= 0 then
 					tick = SetInterval(function()
 						for i = 1, nearbyCount do
-							local point = nearbyPoints[i]
-	
-							if point then
-								point:nearby()
-							end
+       	                local point = nearbyPoints[i]
+
+       	                if point then
+       	                    point:nearby()
+       	                end
 						end
 					end)
 				end
 			elseif nearbyCount == 0 then
 				tick = ClearInterval(tick)
 			end
-		else
-			nearbyPoints = nil
-		end
 
+		end
+		:: continue ::
 		Wait(300)
 	end
 end)
