@@ -37,6 +37,7 @@ function lib.getLocales()
     return dict
 end
 
+---Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
 function lib.locale()
     local lang = GetConvar('ox:locale', 'en')
     local locales = json.decode(LoadResourceFile(cache.resource, ('locales/%s.json'):format(lang)))
@@ -74,5 +75,33 @@ function lib.locale()
         dict[k] = v
     end
 end
+
+---Gets a locale string from another resource and adds it to the dict.
+---@param resource string
+---@param key string
+---@return string?
+function lib.getLocale(resource, key)
+    local locale = dict[key]
+
+    if locale then
+        warn(("overwriting existing locale '%s' (%s)"):format(key, locale))
+    end
+
+    locale = exports[resource]:getLocale(key)
+    dict[key] = locale
+
+    if not locale then
+        warn(("no locale exists with key '%s' in resource '%s'"):format(key, resource))
+    end
+
+    return locale
+end
+
+---Backing function for lib.getLocale.
+---@param key string
+---@return string?
+exports('getLocale', function(key)
+    return dict[key]
+end)
 
 return lib.locale
