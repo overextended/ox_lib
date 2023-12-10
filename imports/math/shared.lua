@@ -114,4 +114,14 @@ function math.groupdigits(number, seperator) -- credit http://richard.warburton.
     return left..(num:reverse():gsub('(%d%d%d)','%1' .. (seperator or ',')):reverse())..right
 end
 
+---Clamp a number between 2 other numbers
+---@param val number
+---@param lower number
+---@param upper number
+---@return number
+function math.clamp(val, lower, upper) -- credit https://love2d.org/forums/viewtopic.php?t=1856
+    if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
+    return math.max(lower, math.min(upper, val))
+end
+
 return lib.math
