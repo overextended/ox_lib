@@ -96,6 +96,16 @@ function math.torgba(input)
     return math.tovector(input, 0, 255, true)
 end
 
+---Takes a hexidecimal string and returns three integers.
+---@param input string
+---@return integer
+---@return integer
+---@return integer
+function math.hextorgb(input)
+    local r, g, b = string.match(input, '([^#]+.)(..)(..)')
+    return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
+end
+
 ---Formats a number as a hexadecimal string.
 ---@param n number | string
 ---@param upper? boolean
