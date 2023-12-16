@@ -324,6 +324,7 @@ lib.addKeybind({
             DisablePlayerFiring(cache.playerId, true)
             DisableControlAction(0, 1, true)
             DisableControlAction(0, 2, true)
+            DisableControlAction(0, 142, true)
             DisableControlAction(2, 199, true)
             DisableControlAction(2, 200, true)
             Wait(0)

@@ -1,4 +1,5 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { IconAnimation } from '../components/LibIcon';
 
 export interface Option {
   menu?: string;
@@ -8,10 +9,14 @@ export interface Option {
   image?: string;
   icon?: IconProp | string;
   iconColor?: string;
+  iconAnimation?: IconAnimation;
   progress?: number;
   colorScheme?: string;
   readOnly?: boolean;
-  metadata?: string[] | { [key: string]: any } | { label: string; value: any; progress?: number }[];
+  metadata?:
+    | string[]
+    | { [key: string]: any }
+    | { label: string; value: any; progress?: number; colorScheme?: string }[];
   disabled?: boolean;
   event?: string;
   serverEvent?: string;

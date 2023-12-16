@@ -1,5 +1,4 @@
-import { ActionIcon, Tooltip, Drawer, Stack, Divider, Button } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ActionIcon, Button, Divider, Drawer, Stack, Tooltip } from '@mantine/core';
 import { debugAlert } from './debug/alert';
 import { debugContext } from './debug/context';
 import { debugInput } from './debug/input';
@@ -10,6 +9,7 @@ import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
 import { useState } from 'react';
 import { debugRadial } from './debug/radial';
+import LibIcon from '../../components/LibIcon';
 
 const Dev: React.FC = () => {
   const [opened, setOpened] = useState(false);
@@ -27,7 +27,7 @@ const Dev: React.FC = () => {
           mr={50}
           mb={50}
         >
-          <FontAwesomeIcon icon="wrench" fontSize={24} />
+          <LibIcon icon="wrench" fontSize={24} />
         </ActionIcon>
       </Tooltip>
 

@@ -1,7 +1,22 @@
 lib.cron = {}
 
-local currentDate = os.date('*t') --[[@as { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }]]
-currentDate.sec = 0
+---@alias Date { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }
+---@type Date
+local currentDate = {}
+
+setmetatable(currentDate, {
+    __index = function(self, index)
+        local newDate = os.date('*t') --[[@as Date]]
+
+        for k, v in pairs(newDate) do
+            self[k] = v
+        end
+
+        SetTimeout(1000, function() table.wipe(self) end)
+
+        return self[index]
+    end
+})
 
 ---@class OxTaskProperties
 ---@field minute? number | string
@@ -16,6 +31,7 @@ currentDate.sec = 0
 ---@field debug? boolean
 
 ---@class OxTask : OxTaskProperties
+---@field expression string
 ---@field private scheduleTask fun(self: OxTask): boolean?
 local OxTask = {}
 OxTask.__index = OxTask
@@ -208,6 +224,10 @@ function OxTask:getAbsoluteNextTime()
     })
 end
 
+function OxTask:getTimeAsString(timestamp)
+    return os.date('%A %H:%M, %d %B %Y', timestamp or self:getAbsoluteNextTime())
+end
+
 ---@type OxTask[]
 local tasks = {}
 
@@ -225,8 +245,11 @@ function OxTask:scheduleTask()
         return self:stop(self.debug and ('scheduled time expired %s seconds ago'):format(-sleep))
     end
 
+    local timeAsString = self:getTimeAsString(runAt)
+
     if self.debug then
-        print(('running task %s in %d seconds (%0.2f minutes or %0.2f hours)'):format(self.id, sleep, sleep / 60,
+        print(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep,
+            sleep / 60,
             sleep / 60 / 60))
     end
 
@@ -238,13 +261,15 @@ function OxTask:scheduleTask()
     end
 
     if self.isActive then
-        self:job(currentDate)
-
         if self.debug then
-            print(('(%s/%s/%s %s:%s) ran task %s'):format(currentDate.year, currentDate.month, currentDate.day, currentDate.hour, currentDate.min, self.id))
+            print(('(%s) running task %s'):format(timeAsString, self.id))
         end
 
-        Wait(30000)
+        Citizen.CreateThreadNow(function()
+            self:job(currentDate)
+        end)
+
+        -- Wait(30000)
 
         return true
     end
@@ -319,12 +344,15 @@ end
 ---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
 ---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
 function lib.cron.new(expression, job, options)
-    if not job or type(job) ~= 'function' then return end
+    if not job or type(job) ~= 'function' then
+        error(("expected job to have type 'function' (received %s)"):format(type(job)))
+    end
 
     local minute, hour, day, month, weekday = string.strsplit(' ', string.lower(expression))
     ---@type OxTask
     local task = setmetatable(options or {}, OxTask)
 
+    task.expression = expression
     task.minute = parseCron(minute, 'min')
     task.hour = parseCron(hour, 'hour')
     task.day = parseCron(day, 'day')
@@ -337,15 +365,6 @@ function lib.cron.new(expression, job, options)
 
     return task
 end
-
--- update the currentDate every minute
-lib.cron.new('* * * * *', function()
-    currentDate.min += 1
-
-    if currentDate.min > 59 then
-        currentDate = os.date('*t') --[[@as osdate]]
-    end
-end)
 
 -- reschedule any dead tasks on a new day
 lib.cron.new('0 0 * * *', function()

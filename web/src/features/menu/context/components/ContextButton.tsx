@@ -1,11 +1,11 @@
-import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, createStyles, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
 import ReactMarkdown from 'react-markdown';
-import { Option, ContextMenuProps } from '../../../../typings';
+import { ContextMenuProps, Option } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import MarkdownComponents from '../../../../config/MarkdownComponents';
+import LibIcon from '../../../../components/LibIcon';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -105,25 +105,28 @@ const ContextButton: React.FC<{
           >
             <Group position="apart" w="100%" noWrap>
               <Stack className={classes.buttonStack}>
-                <Group className={classes.buttonGroup}>
-                  {button?.icon && (
-                    <Stack className={classes.buttonIconContainer}>
-                      {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
-                        <img src={button.icon} className={classes.iconImage} alt="Missing img" />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={button.icon as IconProp}
-                          fixedWidth
-                          size="lg"
-                          style={{ color: button.iconColor }}
-                        />
-                      )}
-                    </Stack>
-                  )}
-                  <Text className={classes.buttonTitleText}>
-                    <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
-                  </Text>
-                </Group>
+                {(button.title || Number.isNaN(+buttonKey)) && (
+                  <Group className={classes.buttonGroup}>
+                    {button?.icon && (
+                      <Stack className={classes.buttonIconContainer}>
+                        {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
+                          <img src={button.icon} className={classes.iconImage} alt="Missing img" />
+                        ) : (
+                          <LibIcon
+                            icon={button.icon as IconProp}
+                            fixedWidth
+                            size="lg"
+                            style={{ color: button.iconColor }}
+                            animation={button.iconAnimation}
+                          />
+                        )}
+                      </Stack>
+                    )}
+                    <Text className={classes.buttonTitleText}>
+                      <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
+                    </Text>
+                  </Group>
+                )}
                 {button.description && (
                   <Text className={classes.description}>
                     <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
@@ -135,7 +138,7 @@ const ContextButton: React.FC<{
               </Stack>
               {(button.menu || button.arrow) && button.arrow !== false && (
                 <Stack className={classes.buttonArrowContainer}>
-                  <FontAwesomeIcon icon="chevron-right" fixedWidth />
+                  <LibIcon icon="chevron-right" fixedWidth />
                 </Stack>
               )}
             </Group>
@@ -145,14 +148,21 @@ const ContextButton: React.FC<{
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
             button.metadata.map(
-              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
+              (
+                metadata: string | { label: string; value?: any; progress?: number; colorScheme?: string },
+                index: number
+              ) => (
                 <>
                   <Text key={`context-metadata-${index}`}>
                     {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
                   </Text>
 
                   {typeof metadata === 'object' && metadata.progress !== undefined && (
-                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
+                    <Progress
+                      value={metadata.progress}
+                      size="sm"
+                      color={metadata.colorScheme || button.colorScheme || 'dark.3'}
+                    />
                   )}
                 </>
               )

@@ -50,3 +50,5 @@ if not LoadResourceFile(lib.name, 'web/build/index.html') then
 end
 
 function lib.hasLoaded() return true end
+
+lib.locale()

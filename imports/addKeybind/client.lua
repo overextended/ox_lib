@@ -19,39 +19,33 @@ if cache.game == 'redm' then return end
 
 local keybinds = {}
 
-local function disableKeybind(self, toggle)
-    keybinds[self.name].disabled = toggle
-end
-
 local IsPauseMenuActive = IsPauseMenuActive
 local GetControlInstructionalButton = GetControlInstructionalButton
 
 local keybind_mt = {
     disabled = false,
+    defaultKey = '',
+    defaultMapper = 'keyboard',
 }
 
 function keybind_mt:__index(index)
-    local value = keybind_mt[index]
-
-    if value then
-        return value
-    end
-
-    if index == 'currentKey' then
-        return self:getCurrentKey()
-    end
+    return index == 'currentKey' and self:getCurrentKey() or keybind_mt[index]
 end
 
 function keybind_mt:getCurrentKey()
     return GetControlInstructionalButton(0, self.hash, true):sub(3)
 end
 
+function keybind_mt:disable(toggle)
+    self.disabled = toggle
+end
+
 ---@param data KeybindProps
 ---@return CKeybind
 function lib.addKeybind(data)
     ---@cast data CKeybind
-    if not data.defaultKey then data.defaultKey = '' end
-    if not data.defaultMapper then data.defaultMapper = 'keyboard' end
+    data.hash = joaat('+' .. data.name) | 0x80000000
+    keybinds[data.name] = setmetatable(data, keybind_mt)
 
     RegisterCommand('+' .. data.name, function()
         if not data.onPressed or data.disabled or IsPauseMenuActive() then return end
@@ -65,15 +59,14 @@ function lib.addKeybind(data)
 
     RegisterKeyMapping('+' .. data.name, data.description, data.defaultMapper, data.defaultKey)
 
+    if data.secondaryKey then
+        RegisterKeyMapping('~!+' .. data.name, data.description, data.secondaryMapper or data.defaultMapper, data.secondaryKey)
+    end
+
     SetTimeout(500, function()
         TriggerEvent('chat:removeSuggestion', ('/+%s'):format(data.name))
         TriggerEvent('chat:removeSuggestion', ('/-%s'):format(data.name))
     end)
-
-    data.hash = joaat('+' .. data.name) | 0x80000000
-    data.disabled = data.disabled
-    data.disable = disableKeybind
-    keybinds[data.name] = setmetatable(data, keybind_mt)
 
     return data
 end

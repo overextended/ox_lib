@@ -1,4 +1,4 @@
-import { Checkbox, createStyles, Stack } from '@mantine/core';
+import { Checkbox, createStyles } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
   root: {

@@ -20,11 +20,13 @@ export const debugContext = () => {
                 ['label']: 'Body',
                 ['value']: '55%',
                 ['progress']: 55,
+                colorScheme: 'red',
               },
               {
                 ['label']: 'Engine',
                 ['value']: '100%',
                 ['progress']: 100,
+                colorScheme: 'green',
               },
               {
                 ['label']: 'Oil',

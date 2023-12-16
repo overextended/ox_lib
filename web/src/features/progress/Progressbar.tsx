@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, createStyles } from '@mantine/core';
+import { Box, createStyles, Text } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';

@@ -1,8 +1,8 @@
 import { NumberInput } from '@mantine/core';
 import { INumber } from '../../../../typings/dialog';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   row: INumber;
@@ -33,7 +33,7 @@ const NumberField: React.FC<Props> = (props) => {
       step={props.row.step}
       precision={props.row.precision}
       disabled={props.row.disabled}
-      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
       withAsterisk={props.row.required}
     />
   );
