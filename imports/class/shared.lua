@@ -9,8 +9,22 @@ local private_mt = {
     __pack = function() return '' end,
 }
 
+---@param id number | string
+---@param var any
+---@param expected type
+local function assertType(id, var, expected)
+    local received = type(var)
+
+    if received ~= expected then
+        error(("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id, expected, received), 3)
+    end
+
+    return true
+end
+
 local function newClass(self, obj)
     if obj.private then
+        assertType('private', obj.private, 'table')
         setmetatable(obj.private, private_mt)
     end
 
@@ -33,8 +47,10 @@ local function setMetamethod(self, metamethod, value)
     rawset(getmetatable(self), metamethod, value)
 end
 
----@param name? string
+---@param name string
 function lib.class.new(name)
+    assertType(1, name, 'string')
+
     local data = {}
     local class = {
         __index = data,
