@@ -66,9 +66,8 @@ function lib.load(filePath, env)
         local resourceFile = LoadResourceFile(resourceSrc, scriptPath)
 
         if resourceFile then
-            filePath = ('@@%s/%s'):format(resourceSrc, filePath)
 
-            local chunk, err = load(resourceFile, filePath, 't', env or _ENV)
+            local chunk, err = load(resourceFile, ('@@%s/%s'):format(resourceSrc, modpath), 't', env or _ENV)
 
             if not chunk or err then
                 error(err or 'an unknown error occurred', 2)
@@ -78,7 +77,7 @@ function lib.load(filePath, env)
         end
     end
 
-    error(('cannot load file at path %s'):format(filePath))
+    error(('cannot load file at path %s'):format(modpath))
 end
 
 ---@param filePath string
@@ -104,7 +103,7 @@ function lib.loadJson(filePath)
         return json.decode(resourceFile)
     end
 
-    error(('cannot load json file at path %s'):format(filePath))
+    error(('cannot load json file at path %s'):format(modpath))
 end
 
 ---Loads the given module inside the current resource, returning any values returned by the file or `true` when `nil`.
