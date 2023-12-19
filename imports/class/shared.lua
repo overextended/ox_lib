@@ -1,7 +1,5 @@
 lib.print.warn('ox_lib\'s class module is experimental and may break without warning.')
 
-lib.class = {}
-
 -- Fields added to the "private" field on a class will not be msgpacked.
 -- Use setters/getters when working with these values.
 local private_mt = {
@@ -9,6 +7,7 @@ local private_mt = {
     __pack = function() return '' end,
 }
 
+---Ensure the given argument or property has a valid type, otherwise throwing an error.
 ---@param id number | string
 ---@param var any
 ---@param expected type
@@ -22,45 +21,34 @@ local function assertType(id, var, expected)
     return true
 end
 
-local function newClass(self, obj)
+---Creates a new instance of the given class.
+local function createObj(class, obj)
     if obj.private then
         assertType('private', obj.private, 'table')
         setmetatable(obj.private, private_mt)
     end
 
-    setmetatable(obj, self)
+    setmetatable(obj, class)
 
-    if self.init then obj:init() end
+    if class.init then obj:init() end
 
     return obj
 end
 
----@param self table
----@param metamethod string
----@param value any
-local function setMetamethod(self, metamethod, value)
-    local mt = getmetatable(self)
-
-    if not mt then return error('no metatable') end
-    if not metamethod:match('^__%w+$') then return error('invalid metamethod') end
-
-    rawset(getmetatable(self), metamethod, value)
-end
-
+---Creates a new class.
 ---@param name string
-function lib.class.new(name)
+---@param super? table
+function lib.class(name, super)
     assertType(1, name, 'string')
 
-    local data = {}
     local class = {
-        __index = data,
-        __newindex = data,
-        __name = name or nil,
-        new = newClass,
-        setMetamethod = setMetamethod,
+        __name = name,
+        new = createObj,
     }
 
-    return setmetatable(class, class)
+    class.__index = class
+
+    return super and setmetatable(class, super) or class
 end
 
 return lib.class
@@ -71,15 +59,20 @@ local fruits = {}
 
 ---@class Fruit
 ---@field private new fun(self: self, obj): self
----@field private setMetamethod fun(self: self, metamethod: string, value: any)
 ---@field private init fun(self: self)
 ---@field private private table
 ---@field name string
 ---@field colour string
-local Fruit = lib.class.new('Fruit')
+local Fruit = lib.class('Fruit')
+
+function Fruit:__gc() print('ran __gc', self.name) end
+
+function Fruit:__close()
+    print('closed', self.name); self:remove()
+end
 
 function Fruit:init()
-    print(('Created an %s %s'):format(self:getColour(), self:getName()))
+    print(('Created a %s %s'):format(self:getColour(), self:getName()))
     fruits[self.name] = self
 end
 
@@ -88,19 +81,26 @@ function Fruit:remove()
     fruits[self.name] = nil
 end
 
-Fruit:setMetamethod('__gc', function(self) print('ran __gc', self.name) end)
-
 function Fruit:getName() return self.name end
+
 function Fruit:getColour() return self.colour end
+
 function Fruit:getSeeds() return self.private.seeds end
+
+---@class SpoiledFruit : Fruit
+---@field private new fun(self: self, obj): self
+---@field stench string
+local SpoiledFruit = lib.class('SpoiledFruit', Fruit)
+
+function SpoiledFruit:getStench() return self.stench end
 
 CreateThread(function()
     local apple = Fruit:new({
         name = 'apple',
-        colour = 'red'
+        colour = math.random(0, 1) == 1 and 'red' or 'green'
     })
 
-    local orange = Fruit:new({
+    local orange <close> = Fruit:new({
         name = 'orange',
         colour = 'orange',
         private = {
@@ -108,14 +108,18 @@ CreateThread(function()
         }
     })
 
-    if apple:getColour() == 'red' then
-        print('the apple is red')
-    end
-
+    print(('the apple is %s'):format(apple:getColour()))
     print(('the orange contains %d seeds'):format(orange:getSeeds()))
+    --print(orange.private.seeds)
 
-    for _, fruit in pairs(fruits) do
-        fruit:remove()
-    end
+    apple:remove()
+
+    local rottenBanana = SpoiledFruit:new({
+        name = 'banana',
+        colour = 'black',
+        stench = 'musty'
+    })
+
+    print(('the banana is %s and %s - gross!'):format(rottenBanana:getColour(), rottenBanana:getStench()))
 end)
 ]]
