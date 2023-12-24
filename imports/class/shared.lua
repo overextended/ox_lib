@@ -36,6 +36,7 @@ local function createObj(class, obj)
 end
 
 ---Creates a new class.
+---@todo add inherited types for new/private/init fields (not yet supported by lls)
 ---@param name string
 ---@param super? table
 function lib.class(name, super)
@@ -52,74 +53,3 @@ function lib.class(name, super)
 end
 
 return lib.class
-
---[[
----@type table<string, Fruit>
-local fruits = {}
-
----@class Fruit
----@field private new fun(self: self, obj): self
----@field private init fun(self: self)
----@field private private table
----@field name string
----@field colour string
-local Fruit = lib.class('Fruit')
-
-function Fruit:__gc() print('ran __gc', self.name) end
-
-function Fruit:__close()
-    print('closed', self.name); self:remove()
-end
-
-function Fruit:init()
-    print(('Created a %s %s'):format(self:getColour(), self:getName()))
-    fruits[self.name] = self
-end
-
-function Fruit:remove()
-    print('Removed', self:getName(), self)
-    fruits[self.name] = nil
-end
-
-function Fruit:getName() return self.name end
-
-function Fruit:getColour() return self.colour end
-
-function Fruit:getSeeds() return self.private.seeds end
-
----@class SpoiledFruit : Fruit
----@field private new fun(self: self, obj): self
----@field stench string
-local SpoiledFruit = lib.class('SpoiledFruit', Fruit)
-
-function SpoiledFruit:getStench() return self.stench end
-
-CreateThread(function()
-    local apple = Fruit:new({
-        name = 'apple',
-        colour = math.random(0, 1) == 1 and 'red' or 'green'
-    })
-
-    local orange <close> = Fruit:new({
-        name = 'orange',
-        colour = 'orange',
-        private = {
-            seeds = 7
-        }
-    })
-
-    print(('the apple is %s'):format(apple:getColour()))
-    print(('the orange contains %d seeds'):format(orange:getSeeds()))
-    --print(orange.private.seeds)
-
-    apple:remove()
-
-    local rottenBanana = SpoiledFruit:new({
-        name = 'banana',
-        colour = 'black',
-        stench = 'musty'
-    })
-
-    print(('the banana is %s and %s - gross!'):format(rottenBanana:getColour(), rottenBanana:getStench()))
-end)
-]]
