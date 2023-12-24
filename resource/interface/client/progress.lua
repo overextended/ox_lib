@@ -20,7 +20,7 @@ local playerState = LocalPlayer.state
 ---@field canCancel? boolean
 ---@field anim? { dict?: string, clip: string, flag?: number, blendIn?: number, blendOut?: number, duration?: number, playbackRate?: number, lockX?: boolean, lockY?: boolean, lockZ?: boolean, scenario?: string, playEnter?: boolean }
 ---@field prop? ProgressPropProps | ProgressPropProps[]
----@field disable? { move?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
+---@field disable? { move?: boolean, sprint?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
 
 local function createProp(prop)
     lib.requestModel(prop.model)
@@ -103,6 +103,10 @@ local function startProgress(data)
                 DisableControlAction(0, controls.INPUT_MOVE_LR, true)
                 DisableControlAction(0, controls.INPUT_MOVE_UD, true)
                 DisableControlAction(0, controls.INPUT_DUCK, true)
+            end
+
+            if disable.sprint and not disable.move then
+                DisableControlAction(0, controls.INPUT_SPRINT, true)
             end
 
             if disable.car then
