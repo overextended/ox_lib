@@ -125,6 +125,9 @@ function lib.marker.new(options)
   local markerType
   if type(options.type) == "string" then
     markerType = markerTypesMap[options.type]
+    if markerType == nil then
+      error(("unknown marker type '%s'"):format(options.type))
+    end
   elseif type(options.type) == "number" then
     markerType = options.type
   else
