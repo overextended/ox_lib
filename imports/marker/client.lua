@@ -1,3 +1,4 @@
+---@diagnostic disable: param-type-mismatch
 lib.marker = {}
 
 local defaultRotation = vector3(0, 0, 0)
@@ -5,8 +6,7 @@ local defaultDirection = vector3(0, 0, 0)
 local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
 local defaultSize = { width = 2, height = 1 }
 
----@enum MarkerType
-MarkerTypes = {
+local markerTypesMap = {
   UpsideDownCone = 0,
   VerticalCylinder = 1,
   ThickChevronUp = 2,
@@ -53,8 +53,54 @@ MarkerTypes = {
   Unknown43 = 43,
 }
 
+---@alias MarkerType
+---| "UpsideDownCone"
+---| "VerticalCylinder"
+---| "ThickChevronUp"
+---| "ThinChevronUp"
+---| "CheckeredFlagRect"
+---| "CheckeredFlagCircle"
+---| "VerticleCircle"
+---| "PlaneModel"
+---| "LostMCTransparent"
+---| "LostMC"
+---| "Number0"
+---| "Number1"
+---| "Number2"
+---| "Number3"
+---| "Number4"
+---| "Number5"
+---| "Number6"
+---| "Number7"
+---| "Number8"
+---| "Number9"
+---| "ChevronUpx1"
+---| "ChevronUpx2"
+---| "ChevronUpx3"
+---| "HorizontalCircleFat"
+---| "ReplayIcon"
+---| "HorizontalCircleSkinny"
+---| "HorizontalCircleSkinny_Arrow"
+---| "HorizontalSplitArrowCircle"
+---| "DebugSphere"
+---| "DollarSign"
+---| "HorizontalBars"
+---| "WolfHead"
+---| "QuestionMark"
+---| "PlaneSymbol"
+---| "HelicopterSymbol"
+---| "BoatSymbol"
+---| "CarSymbol"
+---| "MotorcycleSymbol"
+---| "BikeSymbol"
+---| "TruckSymbol"
+---| "ParachuteSymbol"
+---| "Unknown41"
+---| "SawbladeSymbol"
+---| "Unknown43"
+
 ---@class MarkerProps
----@field type MarkerType | integer
+---@field type MarkerType | number
 ---@field coords { x: number, y: number, z: number }
 ---@field width? number
 ---@field height? number
@@ -71,19 +117,22 @@ local function drawMarker(self)
     self.rotation.x, self.rotation.y, self.rotation.z,
     self.width, self.width, self.height,
     self.color.r, self.color.g, self.color.b, self.color.a,
-    ---@diagnostic disable-next-line: param-type-mismatch
     false, true, 2, false, nil, nil, false)
 end
 
 ---@param options MarkerProps
 function lib.marker.new(options)
-  local markerType = type(options.type)
-  if markerType ~= "number" then
-    error(("expected marker type to have type 'number' (received %s)"):format(markerType))
+  local markerType
+  if type(options.type) == "string" then
+    markerType = markerTypesMap[options.type]
+  elseif type(options.type) == "number" then
+    markerType = options.type
+  else
+    error(("expected marker type to have type 'string' or 'number' (received %s)"):format(type(options.type)))
   end
 
   local self = {}
-  self.type = options.type
+  self.type = markerType
   self.coords = options.coords
   self.color = options.color or defaultColor
   self.width = options.width or defaultSize.width
