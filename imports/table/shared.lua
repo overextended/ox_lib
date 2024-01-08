@@ -92,7 +92,7 @@ end
 ---@param tbl table
 ---@param callback fun(key: string | number, value: any)
 ---Runs function on table elements
-function table_foreach(tbl, callback)
+local function table_foreach(tbl, callback)
     for key, value in pairs(tbl) do
         callback(key, value);
     end
