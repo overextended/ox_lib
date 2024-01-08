@@ -89,10 +89,20 @@ local function table_merge(t1, t2)
     return t1
 end
 
+---@param tbl table
+---@param callback fun(key: string | number, value: any)
+---Runs function on table elements
+function table_foreach(tbl, callback)
+    for key, value in pairs(tbl) do
+        callback(key, value);
+    end
+end
+
 table.contains = contains
 table.matches = table_matches
 table.deepclone = table_deepclone
 table.merge = table_merge
+table.foreach = table_foreach
 
 local frozenNewIndex = function(self) error(('cannot set values on a frozen table (%s)'):format(self), 2) end
 local _rawset = rawset
