@@ -1,4 +1,4 @@
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
+import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type ChangeFunction = (selected: number, scrollIndex?: number, args?: any, checked?: boolean) => void;

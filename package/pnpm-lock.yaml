@@ -5,6 +5,20 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@mantine/core':
+    specifier: ^6.0.10
+    version: 6.0.10(@emotion/react@11.11.0)(@mantine/hooks@6.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+  '@nativewrappers/client':
+    specifier: ^1.7.33
+    version: 1.7.33
+  fast-printf:
+    specifier: ^1.6.9
+    version: 1.6.9
+  typescript:
+    specifier: ^5.3.3
+    version: 5.3.3
+
+devDependencies:
   '@citizenfx/client':
     specifier: 2.0.5885-1
     version: 2.0.5885-1
@@ -14,26 +28,12 @@ dependencies:
   '@fortawesome/fontawesome-common-types':
     specifier: 6.1.1
     version: 6.1.1
-  '@mantine/core':
-    specifier: ^6.0.10
-    version: 6.0.10(@emotion/react@11.11.0)(@mantine/hooks@6.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
-  '@nativewrappers/client':
-    specifier: ^1.7.33
-    version: 1.7.33
   '@types/node':
     specifier: 16.9.1
     version: 16.9.1
   '@types/react':
     specifier: ^18.0.26
     version: 18.0.26
-  fast-printf:
-    specifier: ^1.6.9
-    version: 1.6.9
-  typescript:
-    specifier: ^4.9.4
-    version: 4.9.4
-
-devDependencies:
   prettier:
     specifier: ^2.8.1
     version: 2.8.1
@@ -91,11 +91,11 @@ packages:
 
   /@citizenfx/client@2.0.5885-1:
     resolution: {integrity: sha512-Ba5YYfxhZ82PcOY+2rjqDElTzPt7NrN6/o2U+wYPKK2VU/wRdCsMonpMsr7dYob2ToN5Qe96w5VNI3m5OrouJQ==}
-    dev: false
+    dev: true
 
   /@citizenfx/server@2.0.5885-1:
     resolution: {integrity: sha512-q8KRecfjJ3RjCfBT/3CSHNTr2efUs9uq8pIoPF4TGkn5X7jgTBprrp3VMayaee3Xekay3RTufpzsOaeHUntQeA==}
-    dev: false
+    dev: true
 
   /@emotion/babel-plugin@11.11.0:
     resolution: {integrity: sha512-m4HEDZleaaCH+XgDDsPF15Ht6wTLsgDTeR3WYj9Q/k76JtWhrJjcP4+/XlG8LGT/Rol9qUfOIztXeA84ATpqPQ==}
@@ -224,7 +224,7 @@ packages:
     resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
     engines: {node: '>=6'}
     requiresBuild: true
-    dev: false
+    dev: true
 
   /@mantine/core@6.0.10(@emotion/react@11.11.0)(@mantine/hooks@6.0.10)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Q8HdRTBkQDs6LEtklpYm6efz2WaV6T5rvgjUOfXq0z44G/XYM+P1B1BSFnHvUDkeWYLcGkK6aPI5Uxc0GEN04w==}
@@ -395,7 +395,7 @@ packages:
 
   /@types/node@16.9.1:
     resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
-    dev: false
+    dev: true
 
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -403,7 +403,6 @@ packages:
 
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
-    dev: false
 
   /@types/react@18.0.26:
     resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
@@ -411,11 +410,9 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-    dev: false
 
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
-    dev: false
 
   /ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -494,7 +491,6 @@ packages:
 
   /csstype@3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
-    dev: false
 
   /detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
@@ -774,9 +770,9 @@ packages:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: false
 
-  /typescript@4.9.4:
-    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
-    engines: {node: '>=4.2.0'}
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
     hasBin: true
     dev: false
 

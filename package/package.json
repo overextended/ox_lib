@@ -3,7 +3,6 @@
   "author": "Overextended",
   "version": "1.0.0",
   "description": "JS/TS wrapper for ox_lib exports",
-  "types": "./client/index.d.ts",
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
@@ -24,17 +23,17 @@
   },
   "license": "LGPL-3.0",
   "dependencies": {
+    "@mantine/core": "^6.0.10",
+    "@nativewrappers/client": "^1.7.33",
+    "fast-printf": "^1.6.9",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "16.9.1",
+    "@types/react": "^18.0.26",
     "@citizenfx/client": "2.0.5885-1",
     "@citizenfx/server": "2.0.5885-1",
     "@fortawesome/fontawesome-common-types": "6.1.1",
-    "@mantine/core": "^6.0.10",
-    "@nativewrappers/client": "^1.7.33",
-    "@types/node": "16.9.1",
-    "@types/react": "^18.0.26",
-    "fast-printf": "^1.6.9",
-    "typescript": "^4.9.4"
-  },
-  "devDependencies": {
     "prettier": "^2.8.1"
   }
 }
