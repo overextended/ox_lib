@@ -22,7 +22,7 @@ if cache.game == 'redm' then return end
 ---@field wheelSize? number
 ---@field wheels? number
 ---@field windowTint? number
----@field xenonColor? number
+---@field xenonColor? number | number[]
 ---@field neonEnabled? boolean[]
 ---@field neonColor? number | number[]
 ---@field extras? table<number | string, 0 | 1>
@@ -123,6 +123,14 @@ function lib.getVehicleProperties(vehicle)
         ---@type number | number[], number | number[]
         local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
         local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+        local xenonColor = GetVehicleXenonLightsColor(vehicle)
+        local xenonRetreval, xenonColorR, xenonColorG, xenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
+        if xenonRetreval then
+            xenonColorR = xenonColorR % 256
+            xenonColorG = xenonColorG % 256
+            xenonColorB = xenonColorB % 256
+            xenonColor = { xenonColorR, xenonColorG, xenonColorB }
+        end
         local paintType1 = GetVehicleModColor_1(vehicle)
         local paintType2 = GetVehicleModColor_2(vehicle)
 
@@ -209,7 +217,7 @@ function lib.getVehicleProperties(vehicle)
             wheelSize = GetVehicleWheelSize(vehicle),
             wheels = GetVehicleWheelType(vehicle),
             windowTint = GetVehicleWindowTint(vehicle),
-            xenonColor = GetVehicleXenonLightsColor(vehicle),
+            xenonColor = xenonColor,
             neonEnabled = neons,
             neonColor = { GetVehicleNeonLightsColour(vehicle) },
             extras = extras,
@@ -515,7 +523,12 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
     end
 
     if props.xenonColor then
-        SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        if type(props.xenonColor) == 'number' then
+            ClearVehicleXenonLightsCustomColor(vehicle)
+            SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        else
+            SetVehicleXenonLightsCustomColor(vehicle, props.xenonColor[1], props.xenonColor[2], props.xenonColor[3])
+        end
     end
 
     if props.modFrontWheels then
