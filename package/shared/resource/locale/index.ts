@@ -1,9 +1,9 @@
 import { cache } from '../cache/index';
 import { printf } from 'fast-printf';
 
-const dict: { [key: string]: string | number } = {};
+const dict: Record<string, string> = {};
 
-export const locale = (str: keyof typeof dict, ...args: any[]) => {
+export const locale = (str: string, ...args: any[]) => {
   const lstr = dict[str];
 
   if (!lstr) return str;
