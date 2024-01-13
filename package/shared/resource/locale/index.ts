@@ -61,3 +61,5 @@ export const initLocale = () => {
     dict[k] = v;
   }
 };
+
+initLocale();
