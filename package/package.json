@@ -3,7 +3,8 @@
   "author": "Overextended",
   "version": "1.0.0",
   "description": "JS/TS wrapper for ox_lib exports",
-  "main": "index.js",
+  "main": "./shared/index.js",
+  "types": "./shared/index.d.ts",
   "scripts": {
     "compile": "tsc",
     "prepare": "npm run compile"
