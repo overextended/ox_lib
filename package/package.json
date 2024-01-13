@@ -23,7 +23,6 @@
   },
   "license": "LGPL-3.0",
   "dependencies": {
-    "@mantine/core": "^6.0.10",
     "@nativewrappers/client": "^1.7.33",
     "fast-printf": "^1.6.9",
     "typescript": "^5.3.3"
@@ -34,6 +33,7 @@
     "@citizenfx/client": "2.0.5885-1",
     "@citizenfx/server": "2.0.5885-1",
     "@fortawesome/fontawesome-common-types": "6.1.1",
+    "@mantine/core": "^6.0.10",
     "prettier": "^2.8.1"
   }
 }
