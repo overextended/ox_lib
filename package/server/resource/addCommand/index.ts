@@ -60,9 +60,9 @@ function parseArguments(
         break;
     }
 
-    if (!value && (!param.optional || (param.optional && arg))) {
+    if (value === undefined && (!param.optional || (param.optional && arg))) {
       return Citizen.trace(
-        `^1command '${raw.split(' ') || raw}' received an invalid ${param.paramType} for argument ${index} (${
+        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.paramType} for argument ${index + 1} (${
           param.name
         }), received '${arg}'^0`
       );
