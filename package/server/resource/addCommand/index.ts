@@ -34,7 +34,7 @@ function parseArguments(
   raw: string,
   params?: OxCommandParams[]
 ): OxCommandArguments | undefined {
-  if (!params) { return args; }
+  if (!params) return args;
 
   const result = params.every((param, index) => {
     const arg = args[index];
@@ -51,9 +51,8 @@ function parseArguments(
 
       case 'playerId':
         value = arg === 'me' ? source : +arg;
-        if (!value || !GetPlayerGuid(value.toString())) {
-          value = false;
-        }
+        if (!value || !GetPlayerGuid(value.toString())) value = false;
+
         break;
 
       default:
@@ -78,9 +77,9 @@ function parseArguments(
   return result ? args : undefined;
 }
 
-export function addCommand(
+export function addCommand<T extends OxCommandArguments>(
   commandName: string | string[],
-  cb: (source: number, args: object, raw: string) => any,
+  cb: (source: number, args: T, raw: string) => any,
   properties?: OxCommandProperties
 ) {
   const restricted = properties?.restricted;
@@ -88,9 +87,8 @@ export function addCommand(
 
   if (params) {
     params.forEach((param) => {
-      if (param.paramType) {
+      if (param.paramType)
         param.help = param.help ? `${param.help} (type: ${param.paramType})` : `(type: ${param.paramType})`;
-      }
     });
   }
 
@@ -98,8 +96,9 @@ export function addCommand(
   const numCommands = commands.length;
 
   const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {
-    const parsed = parseArguments(source, args, raw, params);
-    if (!parsed) { return; }
+    const parsed = parseArguments(source, args, raw, params) as T | undefined;
+
+    if (!parsed) return;
 
     cb(source, parsed, raw);
   };
@@ -116,9 +115,7 @@ export function addCommand(
       } else if (restrictedType === 'object') {
         const _restricted = restricted as string[];
         _restricted.forEach((principal) => {
-          if (!IsPrincipalAceAllowed(principal, ace)) {
-            addAce(principal as string, ace, true);
-          }
+          if (!IsPrincipalAceAllowed(principal, ace)) addAce(principal as string, ace, true);
         });
       }
     }
@@ -128,13 +125,9 @@ export function addCommand(
       delete properties.restricted;
       registeredCommmands.push(properties);
 
-      if (index !== numCommands && numCommands !== 1) {
-        properties = { ...properties };
-      }
+      if (index !== numCommands && numCommands !== 1) properties = { ...properties };
 
-      if (shouldSendCommands) {
-        emitNet('chat:addSuggestions', -1, properties);
-      }
+      if (shouldSendCommands) emitNet('chat:addSuggestions', -1, properties);
     }
   });
 }
