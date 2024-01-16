@@ -1,11 +1,10 @@
-import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
-import { createStyles } from '@mantine/core';
 import { isIconUrl } from '../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import LibIcon from '../../../components/LibIcon';
 
 interface Props {
   item: MenuItem;
@@ -89,7 +88,12 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
               <img src={item.icon} alt="Missing image" className={classes.iconImage} />
             ) : (
-              <FontAwesomeIcon icon={item.icon as IconProp} className={classes.icon} fixedWidth />
+              <LibIcon
+                icon={item.icon as IconProp}
+                className={classes.icon}
+                fixedWidth
+                animation={item.iconAnimation}
+              />
             )}
           </Box>
         )}
@@ -105,11 +109,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               </Text>
             </Stack>
             <Group spacing={1} position="center">
-              <FontAwesomeIcon icon="chevron-left" className={classes.chevronIcon} />
+              <LibIcon icon="chevron-left" className={classes.chevronIcon} />
               <Text className={classes.scrollIndexValue}>
                 {scrollIndex + 1}/{item.values.length}
               </Text>
-              <FontAwesomeIcon icon="chevron-right" className={classes.chevronIcon} />
+              <LibIcon icon="chevron-right" className={classes.chevronIcon} />
             </Group>
           </Group>
         ) : item.checked !== undefined ? (

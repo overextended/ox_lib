@@ -1,8 +1,8 @@
 import { Textarea } from '@mantine/core';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { ITextarea } from '../../../../typings/dialog';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   register: UseFormRegisterReturn;
@@ -17,7 +17,7 @@ const TextareaField: React.FC<Props> = (props) => {
       defaultValue={props.row.default}
       label={props.row.label}
       description={props.row.description}
-      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
       placeholder={props.row.placeholder}
       disabled={props.row.disabled}
       withAsterisk={props.row.required}

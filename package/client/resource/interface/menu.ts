@@ -1,11 +1,14 @@
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
+import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 type ChangeFunction = (selected: number, scrollIndex?: number, args?: any, checked?: boolean) => void;
+type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 
 interface MenuOptions {
   label: string;
   icon?: IconName | [IconPrefix, IconName] | string;
+  iconColor?: string;
+  iconAnimation?: IconAnimation;
   checked?: boolean;
   values?: Array<string | { label: string; description: string }>;
   description?: string;

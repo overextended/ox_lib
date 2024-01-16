@@ -1,6 +1,6 @@
 import { Button, createStyles } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   icon: IconProp;
@@ -38,7 +38,7 @@ const HeaderButton: React.FC<Props> = ({ icon, canClose, iconSize, handleClick }
       disabled={canClose === false}
       onClick={handleClick}
     >
-      <FontAwesomeIcon icon={icon} fontSize={iconSize} fixedWidth />
+      <LibIcon icon={icon} fontSize={iconSize} fixedWidth />
     </Button>
   );
 };

@@ -1,5 +1,5 @@
 ---@param coords vector3 The coords to check from.
----@param maxDistance number The max distance to check.
+---@param maxDistance? number The max distance to check.
 ---@return { object: number, coords: vector3 }[]
 function lib.getNearbyObjects(coords, maxDistance)
 	local objects = GetGamePool('CObject')

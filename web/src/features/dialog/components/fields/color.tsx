@@ -2,7 +2,7 @@ import { IColorInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import { ColorInput } from '@mantine/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   row: IColorInput;
@@ -32,7 +32,7 @@ const ColorField: React.FC<Props> = (props) => {
       defaultValue={props.row.default}
       format={props.row.format}
       withAsterisk={props.row.required}
-      icon={props.row.icon && <FontAwesomeIcon icon={props.row.icon} fixedWidth />}
+      icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
     />
   );
 };

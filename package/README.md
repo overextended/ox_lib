@@ -3,8 +3,7 @@
 Not all ox_lib functions found in Lua are supported, the ones that are will have a JS/TS example
 on the documentation.
 
-Currently, all the available functions for JS/TS can be found under the `resource` folder in  
-ox_lib.
+You still need to use and have the ox_lib resource included into the resource you are using the npm package in.
 
 ## Installation
 

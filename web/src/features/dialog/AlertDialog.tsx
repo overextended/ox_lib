@@ -1,4 +1,4 @@
-import { Modal, Button, Stack, Group, useMantineTheme, createStyles } from '@mantine/core';
+import { Button, createStyles, Group, Modal, Stack, useMantineTheme } from '@mantine/core';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';

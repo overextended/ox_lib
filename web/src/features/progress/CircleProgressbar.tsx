@@ -1,9 +1,9 @@
 import React from 'react';
-import { RingProgress, Text, useMantineTheme, keyframes, Stack, createStyles } from '@mantine/core';
-import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { fetchNui } from '../../utils/fetchNui';
+import {createStyles, keyframes, RingProgress, Stack, Text, useMantineTheme} from '@mantine/core';
+import {useNuiEvent} from '../../hooks/useNuiEvent';
+import {fetchNui} from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
-import type { CircleProgressbarProps } from '../../typings';
+import type {CircleProgressbarProps} from '../../typings';
 
 // 33.5 is the r of the circle
 const progressCircle = keyframes({

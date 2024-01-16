@@ -1,7 +1,22 @@
 lib.cron = {}
 
-local currentDate = os.date('*t') --[[@as { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }]]
-currentDate.sec = 0
+---@alias Date { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }
+---@type Date
+local currentDate = {}
+
+setmetatable(currentDate, {
+    __index = function(self, index)
+        local newDate = os.date('*t') --[[@as Date]]
+
+        for k, v in pairs(newDate) do
+            self[k] = v
+        end
+
+        SetTimeout(1000, function() table.wipe(self) end)
+
+        return self[index]
+    end
+})
 
 ---@class OxTaskProperties
 ---@field minute? number | string
@@ -233,7 +248,8 @@ function OxTask:scheduleTask()
     local timeAsString = self:getTimeAsString(runAt)
 
     if self.debug then
-        print(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep, sleep / 60,
+        print(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep,
+            sleep / 60,
             sleep / 60 / 60))
     end
 
@@ -253,7 +269,7 @@ function OxTask:scheduleTask()
             self:job(currentDate)
         end)
 
-        Wait(30000)
+        -- Wait(30000)
 
         return true
     end
@@ -349,15 +365,6 @@ function lib.cron.new(expression, job, options)
 
     return task
 end
-
--- update the currentDate every minute
-lib.cron.new('* * * * *', function()
-    currentDate.min += 1
-
-    if currentDate.min > 59 then
-        currentDate = os.date('*t') --[[@as osdate]]
-    end
-end)
 
 -- reschedule any dead tasks on a new day
 lib.cron.new('0 0 * * *', function()

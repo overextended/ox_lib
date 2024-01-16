@@ -1,8 +1,8 @@
 import { TimeInput } from '@mantine/dates';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Control, useController } from 'react-hook-form';
 import { ITimeInput } from '../../../../typings/dialog';
 import { FormValues } from '../../InputDialog';
+import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   row: ITimeInput;
@@ -30,7 +30,7 @@ const TimeField: React.FC<Props> = (props) => {
       format={props.row.format || '12'}
       withAsterisk={props.row.required}
       clearable={props.row.clearable}
-      icon={props.row.icon && <FontAwesomeIcon fixedWidth icon={props.row.icon} />}
+      icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
     />
   );
 };

@@ -1,11 +1,11 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, createStyles, Group, Stack, Box, Text, keyframes, Sx } from '@mantine/core';
+import { Avatar, Box, createStyles, Group, keyframes, Stack, Text } from '@mantine/core';
 import React from 'react';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
+import LibIcon from '../../components/LibIcon';
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -169,13 +169,23 @@ const Notifications: React.FC = () => {
                         ? 'yellow'
                         : 'blue'
                     }
+                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                     radius="xl"
                     size={32}
                   >
-                    <FontAwesomeIcon icon={data.icon} fixedWidth size="lg" />
+                    <LibIcon icon={data.icon} fixedWidth size="lg" animation={data.iconAnimation} />
                   </Avatar>
                 ) : (
-                  <FontAwesomeIcon icon={data.icon} style={{ color: data.iconColor }} fixedWidth size="lg" />
+                  <LibIcon
+                    icon={data.icon}
+                    animation={data.iconAnimation}
+                    style={{
+                      color: data.iconColor,
+                      alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
+                    }}
+                    fixedWidth
+                    size="lg"
+                  />
                 )}
               </>
             )}
