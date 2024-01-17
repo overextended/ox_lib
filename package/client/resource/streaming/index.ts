@@ -1,4 +1,4 @@
-import { waitFor } from 'shared';
+import { waitFor } from '../../';
 
 async function streamingRequest(
   request: Function,
