@@ -15,7 +15,7 @@ description  'A library of shared functions to utilise in other resources.'
 
 --[[ Manifest ]]--
 dependencies {
-	'/server:5848',
+	'/server:7290',
     '/onesync',
 }
 
