@@ -17,7 +17,7 @@
 
 ---Load a weapon asset. When called from a thread, it will yield until it has loaded.
 ---@param weaponType string | number
----@param timeout number? Number of ticks to wait for the asset to load. Default is 500.
+---@param timeout number? Approximate milliseconds to wait for the asset to load. Default is 1000.
 ---@param weaponResourceFlags WeaponResourceFlags? Default is 31.
 ---@param extraWeaponComponentFlags ExtraWeaponComponentFlags? Default is 0.
 ---@return string | number? weaponType
@@ -44,7 +44,7 @@ function lib.requestWeaponAsset(weaponType, timeout, weaponResourceFlags, extraW
 
     return lib.waitFor(function()
         if HasWeaponAssetLoaded(weaponType) then return weaponType end
-    end, ("failed to load weaponType '%s'"):format(weaponType), timeout or 500)
+    end, ("failed to load weaponType '%s'"):format(weaponType), timeout)
 end
 
 return lib.requestWeaponAsset

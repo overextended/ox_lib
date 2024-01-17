@@ -1,6 +1,6 @@
 ---Load an animation dictionary. When called from a thread, it will yield until it has loaded.
 ---@param animDict string
----@param timeout number? Number of ticks to wait for the dictionary to load. Default is 500.
+---@param timeout number? Approximate milliseconds to wait for the dictionary to load. Default is 1000.
 ---@return string? animDict
 function lib.requestAnimDict(animDict, timeout)
     if HasAnimDictLoaded(animDict) then return animDict end
@@ -19,7 +19,7 @@ function lib.requestAnimDict(animDict, timeout)
 
     return lib.waitFor(function()
         if HasAnimDictLoaded(animDict) then return animDict end
-    end, ("failed to load animDict '%s'"):format(animDict), timeout or 500)
+    end, ("failed to load animDict '%s'"):format(animDict), timeout)
 end
 
 return lib.requestAnimDict
