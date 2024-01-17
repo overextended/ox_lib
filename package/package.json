@@ -29,12 +29,12 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/node": "16.9.1",
-    "@types/react": "^18.0.26",
-    "@citizenfx/client": "2.0.5885-1",
-    "@citizenfx/server": "2.0.5885-1",
+    "@citizenfx/client": "latest",
+    "@citizenfx/server": "latest",
     "@fortawesome/fontawesome-common-types": "6.1.1",
-    "@mantine/core": "^6.0.10",
-    "prettier": "^2.8.1"
+    "@mantine/core": "^6.0.21",
+    "@types/node": "16.9.1",
+    "@types/react": "^18.2.48",
+    "prettier": "^2.8.8"
   }
 }

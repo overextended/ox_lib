@@ -51,7 +51,7 @@ function parseArguments(
 
       case 'playerId':
         value = arg === 'me' ? source : +arg;
-        if (!value || !GetPlayerGuid(value.toString())) value = false;
+        if (!value || !DoesPlayerExist(value.toString())) value = false;
 
         break;
 
@@ -79,7 +79,7 @@ function parseArguments(
 
 export function addCommand<T extends OxCommandArguments>(
   commandName: string | string[],
-  cb: (source: number, args: T, raw: string) => any,
+  cb: (source: number, args: T, raw: string) => Promise<any>,
   properties?: OxCommandProperties
 ) {
   const restricted = properties?.restricted;
@@ -100,7 +100,9 @@ export function addCommand<T extends OxCommandArguments>(
 
     if (!parsed) return;
 
-    cb(source, parsed, raw);
+    cb(source, parsed, raw).catch((e) =>
+      Citizen.trace(`^1command '${raw.split(' ')[0] || raw}' failed to execute!^0\n${e.message}`)
+    );
   };
 
   commands.forEach((commandName, index) => {
