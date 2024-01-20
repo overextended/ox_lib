@@ -11,13 +11,21 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms, null));
 }
 
-export async function waitFor<T>(cb: () => T, errMessage: string | void, timeout = 1000): Promise<T> {
+/**
+ * Creates a promise that will be resolved once any value is returned by the function (including null).
+ * @param {number?} timeout Error out after `~x` ms. Defaults to 1000, unless set to `false`.
+ */
+export async function waitFor<T>(cb: () => T, errMessage?: string, timeout?: number): Promise<T> {
   let value = await cb();
 
   if (value !== undefined) return value;
 
-  if (IsDuplicityVersion()) timeout /= 50;
-  else timeout -= GetFrameTime() * 1000;
+  if (timeout || timeout == null) {
+    if (typeof timeout !== 'number') timeout = 1000;
+
+    if (IsDuplicityVersion()) timeout /= 50;
+    else timeout -= GetFrameTime() * 1000;
+  }
 
   const start = GetGameTimer();
   let id: number;
@@ -25,10 +33,12 @@ export async function waitFor<T>(cb: () => T, errMessage: string | void, timeout
 
   const p = new Promise<T>((resolve, reject) => {
     id = setTick(async () => {
-      i++;
+      if (timeout) {
+        i++;
 
-      if (i > timeout)
-        return reject(`${errMessage || 'failed to resolve callback'} (waited ${(GetGameTimer() - start) / 1000}ms)`);
+        if (i > timeout)
+          return reject(`${errMessage || 'failed to resolve callback'} (waited ${(GetGameTimer() - start) / 1000}ms)`);
+      }
 
       value = await cb();
 
