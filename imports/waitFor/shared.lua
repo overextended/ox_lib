@@ -1,11 +1,11 @@
 ---Yields the current thread until a non-nil value is returned by the function.
 ---@generic T
 ---@param cb fun(): T?
----@param errMessage string?
+---@param onTimeout string | fun()?
 ---@param timeout number? Error out after `~x` ms. Defaults to 1000, unless set to `false`.
 ---@return T?
 ---@async
-function lib.waitFor(cb, errMessage, timeout)
+function lib.waitFor(cb, onTimeout, timeout)
     local value = cb()
 
     if value ~= nil then return value end
@@ -30,7 +30,13 @@ function lib.waitFor(cb, errMessage, timeout)
             i += 1
 
             if i > timeout then
-                return error(('%s (waited %.1fms)'):format(errMessage or 'failed to resolve callback', (GetGameTimer() - start) / 1000), 2)
+                if type(onTimeout) == "function" then
+                    onTimeout()
+                else
+                    error(('%s (waited %.1fms)'):format(onTimeout or 'failed to resolve callback', (GetGameTimer() - start) / 1000), 2)
+                end
+
+                return
             end
         end
 
