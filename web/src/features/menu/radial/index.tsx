@@ -134,8 +134,8 @@ const RadialMenu: React.FC = () => {
               const cosAngle = Math.cos(angle);
               const iconX = 175 + sinAngle * radius;
               const iconY = 175 + cosAngle * radius;
-              const iconWidth = item.iconWidth || 50;
-              const iconHeight = item.iconHeight || 50;
+              const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100);
+              const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100);
               
 
               return (
