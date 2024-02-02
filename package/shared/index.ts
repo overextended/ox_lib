@@ -15,7 +15,7 @@ export function sleep(ms: number) {
  * Creates a promise that will be resolved once any value is returned by the function (including null).
  * @param {number?} timeout Error out after `~x` ms. Defaults to 1000, unless set to `false`.
  */
-export async function waitFor<T>(cb: () => T, errMessage?: string, timeout?: number): Promise<T> {
+export async function waitFor<T>(cb: () => T, errMessage?: string, timeout?: number | false): Promise<T> {
   let value = await cb();
 
   if (value !== undefined) return value;
