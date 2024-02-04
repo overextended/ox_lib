@@ -1,0 +1,15 @@
+{
+    "language": "العربية",
+    "ui": {
+      "cancel": "إلغاء",
+      "close": "إغلاق",
+      "confirm": "تأكيد",
+      "more": "المزيد ..."
+    },
+    "txadmin_announcement": "إعلان من قبل %s",
+    "txadmin_dm": "رسالة من %s",
+    "txadmin_warn": "تم تحذيرك من قبل %s",
+    "txadmin_warn_content": "%s  \nأيدي: %s",
+    "txadmin_scheduledrestart": "تحديد ريستارت للسرفر"
+  }
+  
