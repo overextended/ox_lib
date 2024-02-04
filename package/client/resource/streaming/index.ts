@@ -1,4 +1,6 @@
-function streamingRequest(
+import { waitFor } from '../../';
+
+async function streamingRequest(
   request: Function,
   hasLoaded: Function,
   assetType: string,
@@ -6,23 +8,17 @@ function streamingRequest(
   timeout?: number,
   ...args: any
 ): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if (hasLoaded(asset)) resolve(asset);
+  if (hasLoaded(asset)) return asset;
 
-    request(asset, ...args);
+  request(asset, ...args);
 
-    if (typeof timeout !== 'number') timeout = 500;
-
-    let i = 0;
-
-    setTick(() => {
-      if (hasLoaded(asset)) resolve(asset);
-
-      i++;
-
-      if (i === timeout) reject(`failed to load ${assetType} '${asset}' after ${timeout} ticks`);
-    });
-  });
+  waitFor(
+    () => {
+      if (hasLoaded(asset)) return asset;
+    },
+    `failed to load ${assetType} '${asset}' after ${timeout} ticks`,
+    timeout || 500
+  );
 }
 
 export const requestAnimDict = (animDict: string, timeout?: number): Promise<string> => {
@@ -50,5 +46,18 @@ export const requestScaleformMovie = (scaleformName: string, timeout?: number): 
 export const requestStreamedTextureDict = (textureDict: string, timeout?: number): Promise<string> =>
   streamingRequest(RequestStreamedTextureDict, HasStreamedTextureDictLoaded, 'textureDict', textureDict, timeout);
 
-export const requestWeaponAsset = (weaponHash: string | number, timeout?: number, weaponResourceFlags: number = 31, extraWeaponComponentFlags: number = 0): Promise<string | number> =>
-  streamingRequest(RequestWeaponAsset, HasWeaponAssetLoaded, 'weaponHash', weaponHash, timeout, weaponResourceFlags, extraWeaponComponentFlags);
+export const requestWeaponAsset = (
+  weaponHash: string | number,
+  timeout?: number,
+  weaponResourceFlags: number = 31,
+  extraWeaponComponentFlags: number = 0
+): Promise<string | number> =>
+  streamingRequest(
+    RequestWeaponAsset,
+    HasWeaponAssetLoaded,
+    'weaponHash',
+    weaponHash,
+    timeout,
+    weaponResourceFlags,
+    extraWeaponComponentFlags
+  );

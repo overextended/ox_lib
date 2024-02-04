@@ -41,7 +41,7 @@ local function parseArguments(source, args, raw, params)
         elseif param.type == 'playerId' then
             value = arg == 'me' and source or tonumber(arg)
 
-            if not value or not GetPlayerGuid(value--[[@as string]]) then
+            if not value or not DoesPlayerExist(value--[[@as string]]) then
                 value = false
             end
         else
@@ -102,7 +102,11 @@ function lib.addCommand(commandName, properties, cb, ...)
 
         if not args then return end
 
-        cb(source, args, raw)
+        local success, resp = pcall(cb, source, args, raw)
+
+        if not success then
+            Citizen.Trace(("^1command '%s' failed to execute!\n%s"):format(string.strsplit(' ', raw) or raw, resp))
+        end
     end
 
     for i = 1, numCommands do

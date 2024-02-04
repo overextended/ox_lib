@@ -1,6 +1,6 @@
 ---Load a named particle effect. When called from a thread, it will yield until it has loaded.
 ---@param ptFxName string
----@param timeout number? Number of ticks to wait for the particle effect to load. Default is 500.
+---@param timeout number? Approximate milliseconds to wait for the particle effect to load. Default is 1000.
 ---@return string? ptFxName
 function lib.requestNamedPtfxAsset(ptFxName, timeout)
     if HasNamedPtfxAssetLoaded(ptFxName) then return ptFxName end
@@ -15,7 +15,7 @@ function lib.requestNamedPtfxAsset(ptFxName, timeout)
 
     return lib.waitFor(function()
         if HasNamedPtfxAssetLoaded(ptFxName) then return ptFxName end
-    end, ("failed to load ptFxName '%s'"):format(ptFxName), timeout or 500)
+    end, ("failed to load ptFxName '%s'"):format(ptFxName), timeout)
 end
 
 return lib.requestNamedPtfxAsset
