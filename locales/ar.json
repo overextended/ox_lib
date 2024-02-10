@@ -6,9 +6,9 @@
     "confirm": "تأكيد",
     "more": "...المزيد"
   },
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "txadmin_announcement": "%s بواسطة إعلان الخادم",
+  "txadmin_dm": "%s من الرسالة المباشرة",
+  "txadmin_warn": "%s تم تحذيرك من قبل",
+  "txadmin_warn_content": "%s  \nرقم العمل: %s",
+  "txadmin_scheduledrestart": "إعادة التشغيل المجدولة"
 }
