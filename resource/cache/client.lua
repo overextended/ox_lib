@@ -19,6 +19,10 @@ local IsPedOnMount = IsPedOnMount
 local GetCurrentPedWeapon = GetCurrentPedWeapon
 local GetPlayerName = GetPlayerName
 
+local playerName = GetPlayerName(cache.playerId)
+
+cache:set('playername', playerName)
+
 CreateThread(function()
 	while true do
 		local ped = PlayerPedId()
@@ -51,10 +55,6 @@ CreateThread(function()
 		local hasWeapon, currentWeapon = GetCurrentPedWeapon(ped, true)
 
 		cache:set('weapon', hasWeapon and currentWeapon or false)
-
-		local playername = GetPlayerName(PlayerId())
-
-		cache:set('playername', playername)
 
 		Wait(100)
 	end
