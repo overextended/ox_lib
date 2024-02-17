@@ -155,7 +155,8 @@ function lib.require(modname)
                     return error(err or ("unable to load module '%s'"):format(modname), 3)
                 end
 
-                module = chunk(modname) or true
+                local result = chunk(modname)
+                module = result or result == nil
                 loaded[modname] = module
 
                 return module
