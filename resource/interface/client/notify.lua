@@ -1,5 +1,6 @@
 ---@alias NotificationPosition 'top' | 'top-right' | 'top-left' | 'bottom' | 'bottom-right' | 'bottom-left' | 'center-right' | 'center-left'
 ---@alias NotificationType 'info' | 'warning' | 'success' | 'error'
+---@alias IconAnimationType 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake'
 
 ---@class NotifyProps
 ---@field id? string
@@ -10,6 +11,7 @@
 ---@field type? NotificationType
 ---@field style? { [string]: any }
 ---@field icon? string | {[1]: IconProp, [2]: string};
+---@field iconAnimation? IconAnimationType;
 ---@field iconColor? string;
 ---@field alignIcon? 'top' | 'center';
 
