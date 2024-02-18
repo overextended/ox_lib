@@ -3,9 +3,11 @@ import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types
 type RadialItem = {
   id: string;
   label: string;
-  icon: IconName | [IconPrefix, IconName];
+  icon: IconName | [IconPrefix, IconName] | string;
   onSelect?: (currentMenu: string | null, itemIndex: number) => void | string;
   menu?: string;
+  iconWidth?: number;
+  iconHeight?: number;
 };
 
 export const addRadialItem = (items: RadialItem | RadialItem[]) => exports.ox_lib.addRadialItem(items);

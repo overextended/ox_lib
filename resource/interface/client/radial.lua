@@ -5,6 +5,8 @@
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
 ---@field [string] any
 ---@field keepOpen? boolean
+---@field iconWidth? number
+---@field iconHeight? number
 
 ---@class RadialMenuItem: RadialItem
 ---@field id string
