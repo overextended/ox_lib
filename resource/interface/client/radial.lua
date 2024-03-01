@@ -300,7 +300,7 @@ end
 lib.addKeybind({
     name = 'ox_lib-radial',
     description = 'Open radial menu',
-    defaultKey = 'z',
+    defaultKey = GetConvar('ox:openRadialMenuKey', 'z'),
     onPressed = function()
         if isDisabled then return end
 
