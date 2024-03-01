@@ -6,6 +6,8 @@
     "confirm": "Potvrdit",
     "more": "Více..."
   },
+  "open_radial_menu": "Otevřít kruhové menu",
+  "cancel_progress": "Zrušit aktuální progress bar",
   "txadmin_announcement": "Server oznámení od %s",
   "txadmin_dm": "Soukromá zpráva od %s",
   "txadmin_warn": "Byl jsi varován %s",
