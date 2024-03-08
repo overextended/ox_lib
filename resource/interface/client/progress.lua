@@ -3,11 +3,21 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local playerState = LocalPlayer.state
 
+local function togglePropVisibility(prop, visible)
+    if not DoesEntityExist(prop) then return end
+    SetEntityVisible(prop, visible, false)
+end
+
+---@class propVisibilityTimer
+---@field time number
+---@field visible boolean
+
 ---@class ProgressPropProps
 ---@field model string
 ---@field bone? number
 ---@field pos vector3
 ---@field rot vector3
+---@field visibility? propVisibilityTimer | propVisibilityTimer[]
 
 ---@class ProgressProps
 ---@field label? string
@@ -29,6 +39,25 @@ local function createProp(prop)
 
     AttachEntityToEntity(object, cache.ped, GetPedBoneIndex(cache.ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
     SetModelAsNoLongerNeeded(prop.model)
+
+    if prop.visibility then
+        if prop.visibility.time then
+            SetTimeout(prop.visibility.time, function()
+                local visible = prop.visibility.visible
+                if not DoesEntityExist(object) then return end
+                SetEntityVisible(object, visible, false)
+            end)
+        else
+            for i = 1, #prop.visibility do
+                local visibility = prop.visibility[i]
+                SetTimeout(visibility.time, function()
+                    local visible = visibility.visible
+                    if not DoesEntityExist(object) then return end
+                    SetEntityVisible(object, visible, false)
+                end)
+            end
+        end
+    end
 
     return object
 end
