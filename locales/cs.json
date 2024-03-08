@@ -6,9 +6,9 @@
     "confirm": "Potvrdit",
     "more": "Více..."
   },
-  "txadmin_announcement": "Server oznámení od %s",
+  "txadmin_announcement": "Serverové oznámení od %s",
   "txadmin_dm": "Soukromá zpráva od %s",
-  "txadmin_warn": "Byl jsi varován %s",
-  "txadmin_warn_content": "%s  \nID Akce: %s",
+  "txadmin_warn": "Byl jsi varován od %s",
+  "txadmin_warn_content": "%s  \nID akce: %s",
   "txadmin_scheduledrestart": "Plánovaný restart"
 }
