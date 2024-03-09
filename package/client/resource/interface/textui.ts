@@ -4,7 +4,7 @@ import { CSSProperties } from 'react';
 type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 
 interface OptionsProps {
-  position?: 'right-center' | 'left-center' | 'top-center';
+  position?: 'right-center' | 'left-center' | 'top-center' | 'bottom-center';
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
   iconAnimation?: IconAnimation;
