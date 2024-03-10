@@ -37,6 +37,11 @@ function mixins.new(class, obj)
     return obj
 end
 
+---Checks if an object is an instance of the given class.
+function mixins.instanceOf(obj, class)
+    return getmetatable(obj) == class
+end
+
 ---Creates a new class.
 ---@todo add inherited types for new/private/init fields (not yet supported by lls)
 ---@param name string
