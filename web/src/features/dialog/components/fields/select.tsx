@@ -32,6 +32,7 @@ const SelectField: React.FC<Props> = (props) => {
           description={props.row.description}
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
+          searchable={props.row.searchable}
           icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
         />
       ) : (
@@ -49,6 +50,7 @@ const SelectField: React.FC<Props> = (props) => {
               description={props.row.description}
               withAsterisk={props.row.required}
               clearable={props.row.clearable}
+              searchable={props.row.searchable}
               icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
             />
           )}
