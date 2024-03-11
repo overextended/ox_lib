@@ -15,14 +15,18 @@ local function assertType(id, var, expected)
     local received = type(var)
 
     if received ~= expected then
-        error(("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id, expected, received), 3)
+        error(
+            ("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id,
+                expected, received), 3)
     end
 
     return true
 end
 
+local mixins = {}
+
 ---Creates a new instance of the given class.
-local function createObj(class, obj)
+function mixins.new(class, obj)
     if obj.private then
         assertType('private', obj.private, 'table')
         setmetatable(obj.private, private_mt)
@@ -30,9 +34,39 @@ local function createObj(class, obj)
 
     setmetatable(obj, class)
 
-    if class.init then obj:init() end
+    if class.init then
+        local parent = class
+
+        function obj:super(...)
+            parent = getmetatable(parent)
+            local superInit = parent and parent.init
+
+            if superInit then return superInit(self, ...) end
+        end
+
+        obj:init()
+        obj.super = nil
+    end
 
     return obj
+end
+
+---Checks if an object is an instance of the given class.
+function mixins.isClass(obj, class)
+    return getmetatable(obj) == class
+end
+
+---Checks if an object is an instance or derivative of the given class.
+function mixins.instanceOf(obj, class)
+    local mt = getmetatable(obj)
+
+    while mt do
+        if mt == class then return true end
+
+        mt = getmetatable(mt)
+    end
+
+    return false
 end
 
 ---Creates a new class.
@@ -42,11 +76,9 @@ end
 function lib.class(name, super)
     assertType(1, name, 'string')
 
-    local class = {
-        __name = name,
-        new = createObj,
-    }
+    local class = table.clone(mixins)
 
+    class.__name = name
     class.__index = class
 
     return super and setmetatable(class, super) or class
