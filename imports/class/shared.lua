@@ -16,8 +16,8 @@ local function assertType(id, var, expected)
 
     if received ~= expected then
         error(
-        ("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id,
-            expected, received), 3)
+            ("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id,
+                expected, received), 3)
     end
 
     return true
@@ -34,7 +34,19 @@ function mixins.new(class, obj)
 
     setmetatable(obj, class)
 
-    if class.init then obj:init() end
+    if class.init then
+        local parent = class
+
+        function obj:super(...)
+            parent = getmetatable(parent)
+            local superInit = parent and parent.init
+
+            if superInit then return superInit(self, ...) end
+        end
+
+        obj:init()
+        obj.super = nil
+    end
 
     return obj
 end
