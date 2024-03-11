@@ -206,6 +206,8 @@ end)
 RegisterKeyMapping('cancelprogress', 'Cancel current progress bar', 'keyboard', 'x')
 
 AddStateBagChangeHandler("lib:progressProps", nil, function(bagName, key, value, reserved, replicated)
+    if replicated then return end
+
     local ply = GetPlayerFromStateBagName(bagName)
     if ply == 0 then return end
 
