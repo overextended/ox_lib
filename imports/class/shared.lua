@@ -15,7 +15,9 @@ local function assertType(id, var, expected)
     local received = type(var)
 
     if received ~= expected then
-        error(("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id, expected, received), 3)
+        error(
+        ("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id,
+            expected, received), 3)
     end
 
     return true
@@ -38,8 +40,21 @@ function mixins.new(class, obj)
 end
 
 ---Checks if an object is an instance of the given class.
-function mixins.instanceOf(obj, class)
+function mixins.isClass(obj, class)
     return getmetatable(obj) == class
+end
+
+---Checks if an object is an instance or derivative of the given class.
+function mixins.instanceOf(obj, class)
+    local mt = getmetatable(obj)
+
+    while mt do
+        if mt == class then return true end
+
+        mt = getmetatable(mt)
+    end
+
+    return false
 end
 
 ---Creates a new class.
