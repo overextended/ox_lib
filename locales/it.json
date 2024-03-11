@@ -6,6 +6,8 @@
     "confirm": "Conferma",
     "more": "Altro..."
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Annuncio server da %s",
   "txadmin_dm": "Messaggio diretto da %s",
   "txadmin_warn": "Sei stato richiamato da %s",

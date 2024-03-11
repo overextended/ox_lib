@@ -1,14 +1,16 @@
 {
-    "language": "Dansk",
-    "ui": {
-      "cancel": "Annuller",
-      "close": "Luk",
-      "confirm": "Bekræft",
-      "more": "Mere..."
-    },
-    "txadmin_announcement": "Servermeddelelse af %s",
-    "txadmin_dm": "Direkte besked fra %s",
-    "txadmin_warn": "Du er blevet advaret af %s",
-    "txadmin_warn_content": "%s  \nHandlings-id: %s",
-    "txadmin_scheduledrestart": "Planlagt genstart"
+  "language": "Dansk",
+  "ui": {
+    "cancel": "Annuller",
+    "close": "Luk",
+    "confirm": "Bekræft",
+    "more": "Mere..."
+  },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
+  "txadmin_announcement": "Servermeddelelse af %s",
+  "txadmin_dm": "Direkte besked fra %s",
+  "txadmin_warn": "Du er blevet advaret af %s",
+  "txadmin_warn_content": "%s  \nHandlings-id: %s",
+  "txadmin_scheduledrestart": "Planlagt genstart"
 }

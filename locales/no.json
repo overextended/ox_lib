@@ -1,14 +1,16 @@
 {
-    "language": "Norsk",
-    "ui": {
+  "language": "Norsk",
+  "ui": {
     "cancel": "Avbryt",
     "close": "Lukk",
     "confirm": "Bekreft",
     "more": "Mer..."
-    },
-    "txadmin_announcement": "Server announcement by %s",
-    "txadmin_dm": "Direct Message from %s",
-    "txadmin_warn": "You have been warned by %s",
-    "txadmin_warn_content": "%s  \nAction ID: %s",
-    "txadmin_scheduledrestart": "Scheduled Restart"
-  }
+  },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
+  "txadmin_announcement": "Server announcement by %s",
+  "txadmin_dm": "Direct Message from %s",
+  "txadmin_warn": "You have been warned by %s",
+  "txadmin_warn_content": "%s  \nAction ID: %s",
+  "txadmin_scheduledrestart": "Scheduled Restart"
+}
