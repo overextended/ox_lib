@@ -2,6 +2,7 @@ local progress
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local playerState = LocalPlayer.state
+local createdProps = {}
 
 ---@class ProgressPropProps
 ---@field model string
@@ -25,7 +26,7 @@ local playerState = LocalPlayer.state
 local function createProp(prop)
     lib.requestModel(prop.model)
     local coords = GetEntityCoords(cache.ped)
-    local object = CreateObject(prop.model, coords.x, coords.y, coords.z, true, true, true)
+    local object = CreateObject(prop.model, coords.x, coords.y, coords.z, false, false, false)
 
     AttachEntityToEntity(object, cache.ped, GetPedBoneIndex(cache.ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
     SetModelAsNoLongerNeeded(prop.model)
@@ -75,17 +76,7 @@ local function startProgress(data)
     end
 
     if data.prop then
-        if data.prop.model then
-            data.prop1 = createProp(data.prop)
-        else
-            for i = 1, #data.prop do
-                local prop = data.prop[i]
-
-                if prop then
-                    data['prop'..i] = createProp(prop)
-                end
-            end
-        end
+        playerState:set("lib:progressProps", data.prop, true)
     end
 
     local disable = data.disable
@@ -131,14 +122,7 @@ local function startProgress(data)
     end
 
     if data.prop then
-        local n = #data.prop
-        for i = 1, n > 0 and n or 1 do
-            local prop = data['prop'..i]
-
-            if prop then
-                DeleteEntity(prop)
-            end
-        end
+        playerState:set("lib:progressProps", nil, true)
     end
 
     if anim then
@@ -220,3 +204,42 @@ RegisterCommand('cancelprogress', function()
 end)
 
 RegisterKeyMapping('cancelprogress', 'Cancel current progress bar', 'keyboard', 'x')
+
+AddStateBagChangeHandler("lib:progressProps", nil, function(bagName, key, value, reserved, replicated)
+    local ply = GetPlayerFromStateBagName(bagName)
+    if ply == 0 then return end
+
+    local ped = GetPlayerPed(ply)
+    local serverId = GetPlayerServerId(ply)
+    local playerProps = createdProps[serverId]
+    
+    if not value then
+        if not playerProps then return end
+        
+        for i = 1, #playerProps do
+            local prop = playerProps[i]
+            if DoesEntityExist(prop) then
+                DeleteEntity(prop)
+            end
+        end
+        
+        return
+    end
+
+    if not playerProps then
+        createdProps[serverId] = {}
+        playerProps = createdProps[serverId]
+    end
+    
+    if value.model then
+        playerProps[#playerProps+1] = createProp(value)
+    else
+        for i = 1, #value do
+            local prop = value[i]
+
+            if prop then
+                playerProps[#playerProps+1] = createProp(prop)
+            end
+        end
+    end
+end)
