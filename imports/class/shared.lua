@@ -50,10 +50,13 @@ local function void() return '' end
 ---@param class T
 ---@return T
 function mixins.new(class, ...)
-    local obj
     ---@cast class +OxClass
+    local constructor = getConstructor(class)
+    local obj = {
+        private = {}
+    }
 
-    if table.type(...) == 'hash' then
+    if not constructor and table.type(...) == 'hash' then
         lib.print.warn(([[Creating instance of %s with a table and no constructor.
 This behaviour is deprecated and will not be supported in the future.]])
             :format(class.__name))
@@ -63,14 +66,9 @@ This behaviour is deprecated and will not be supported in the future.]])
         if obj.private then
             assertType('private', obj.private, 'table')
         end
-    else
-        obj = {}
-        obj.private = {}
     end
 
     setmetatable(obj, class)
-
-    local constructor = getConstructor(class)
 
     if constructor and obj ~= ... then
         local parent = class
