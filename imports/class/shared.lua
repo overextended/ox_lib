@@ -1,12 +1,5 @@
 lib.print.warn('ox_lib\'s class module is experimental and may break without warning.')
 
--- Fields added to the "private" field on a class will not be msgpacked.
--- Use setters/getters when working with these values.
-local private_mt = {
-    __ext = 0,
-    __pack = function() return '' end,
-}
-
 ---Ensure the given argument or property has a valid type, otherwise throwing an error.
 ---@param id number | string
 ---@param var any
@@ -29,22 +22,27 @@ end
 
 local mixins = {}
 
+local function void() return '' end
+
+local getinfo = debug.getinfo
+
 ---Creates a new instance of the given class.
 function mixins.new(class, ...)
     local obj
 
     if table.type(...) == 'hash' then
-        obj = ...
         lib.print.warn(([[Creating instance of %s with a table and no constructor.
 This behaviour is deprecated and will not be supported in the future.]])
             :format(class.__name))
+
+        obj = ...
+
+        if obj.private then
+            assertType('private', obj.private, 'table')
+        end
     else
         obj = {}
-    end
-
-    if obj.private then
-        assertType('private', obj.private, 'table')
-        setmetatable(obj.private, private_mt)
+        obj.private = {}
     end
 
     setmetatable(obj, class)
@@ -69,6 +67,34 @@ Use %s:constructor(...args) and assign properties in the constructor.]])
     end
 
     obj.super = nil
+
+    if next(obj.private) then
+        local private = table.clone(obj.private)
+
+        table.wipe(obj.private)
+        setmetatable(obj.private, {
+            __metatable = 'private',
+            __tostring = void,
+            __index = function(self, index)
+                local di = getinfo(2, 'n')
+
+                if di.namewhat ~= 'method' then return end
+
+                return private[index]
+            end,
+            __newindex = function(self, index, value)
+                local di = getinfo(2, 'n')
+
+                if di.namewhat ~= 'method' then
+                    error(("cannot set values on private field '%s'"):format(index), 2)
+                end
+
+                private[index] = value
+            end
+        })
+    else
+        obj.private = nil
+    end
 
     return obj
 end
