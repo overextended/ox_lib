@@ -19,6 +19,7 @@ local input
 ---@field format? string
 ---@field returnString? boolean
 ---@field clearable? boolean
+---@field searchable? boolean
 ---@field description? string
 
 ---@class InputDialogOptionsProps

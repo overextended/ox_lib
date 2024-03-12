@@ -14,9 +14,12 @@ const useStyles = createStyles((theme, params: { position?: TextUiPosition }) =>
     width: '100%',
     position: 'absolute',
     display: 'flex',
-    alignItems: params.position === 'top-center' ? 'baseline' : 'center',
-    justifyContent:
-      params.position === 'right-center' ? 'flex-end' : params.position === 'left-center' ? 'flex-start' : 'center',
+    alignItems: 
+      params.position === 'top-center' ? 'baseline' :
+      params.position === 'bottom-center' ? 'flex-end' : 'center',
+    justifyContent: 
+      params.position === 'right-center' ? 'flex-end' :
+      params.position === 'left-center' ? 'flex-start' : 'center',
   },
   container: {
     fontSize: 16,
