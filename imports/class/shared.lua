@@ -30,7 +30,18 @@ end
 local mixins = {}
 
 ---Creates a new instance of the given class.
-function mixins.new(class, obj)
+function mixins.new(class, ...)
+    local obj
+
+    if table.type(...) == 'hash' then
+        obj = ...
+        lib.print.warn(([[Creating instance of %s with a table and no constructor.
+This behaviour is deprecated and will not be supported in the future.]])
+            :format(class.__name))
+    else
+        obj = {}
+    end
+
     if obj.private then
         assertType('private', obj.private, 'table')
         setmetatable(obj.private, private_mt)
@@ -38,19 +49,26 @@ function mixins.new(class, obj)
 
     setmetatable(obj, class)
 
-    if class.init then
+    if class.constructor and obj ~= ... then
         local parent = class
 
         function obj:super(...)
             parent = getmetatable(parent)
-            local superInit = parent and parent.init
+            local constructor = parent and parent.constructor
 
-            if superInit then return superInit(self, ...) end
+            if constructor then return constructor(self, ...) end
         end
 
+        obj:constructor(...)
+    elseif class.init then
+        lib.print.warn(([[Calling %s:init() is deprecated and will not be supported in the future.
+Use %s:constructor(...args) and assign properties in the constructor.]])
+            :format(class.__name, class.__name))
+
         obj:init()
-        obj.super = nil
     end
+
+    obj.super = nil
 
     return obj
 end
