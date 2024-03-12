@@ -21,10 +21,23 @@ local function assertType(id, var, expected)
 end
 
 local mixins = {}
+local constructors = {}
+local getinfo = debug.getinfo
+
+---Somewhat hacky way to remove the constructor from the class.__index.
+---Maybe add static fields in the future?
+local function getConstructor(class)
+    local constructor = constructors[class] or class.constructor
+
+    if class.constructor then
+        constructors[class] = class.constructor
+        class.constructor = nil
+    end
+
+    return constructor
+end
 
 local function void() return '' end
-
-local getinfo = debug.getinfo
 
 ---Creates a new instance of the given class.
 function mixins.new(class, ...)
@@ -47,17 +60,19 @@ This behaviour is deprecated and will not be supported in the future.]])
 
     setmetatable(obj, class)
 
-    if class.constructor and obj ~= ... then
+    local constructor = getConstructor(class)
+
+    if constructor and obj ~= ... then
         local parent = class
 
         function obj:super(...)
             parent = getmetatable(parent)
-            local constructor = parent and parent.constructor
+            constructor = getConstructor(parent)
 
             if constructor then return constructor(self, ...) end
         end
 
-        obj:constructor(...)
+        constructor(obj, ...)
     elseif class.init then
         lib.print.warn(([[Calling %s:init() is deprecated and will not be supported in the future.
 Use %s:constructor(...args) and assign properties in the constructor.]])
