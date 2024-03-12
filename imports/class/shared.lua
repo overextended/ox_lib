@@ -15,9 +15,13 @@ local function assertType(id, var, expected)
     local received = type(var)
 
     if received ~= expected then
-        error(
-            ("expected %s %s to have type '%s' (received %s)"):format(type(id) == 'string' and 'field' or 'argument', id,
-                expected, received), 3)
+        error(("expected %s %s to have type '%s' (received %s)")
+            :format(type(id) == 'string' and 'field' or 'argument', id, expected, received), 3)
+    end
+
+    if expected == 'table' and table.type(var) ~= 'hash' then
+        error(("expected argument %s to have table.type 'hash' (received %s)")
+            :format(id, table.type(var)), 3)
     end
 
     return true
@@ -81,7 +85,12 @@ function lib.class(name, super)
     class.__name = name
     class.__index = class
 
-    return super and setmetatable(class, super) or class
+    if super then
+        assertType('super', super, 'table')
+        setmetatable(class, super)
+    end
+
+    return class
 end
 
 return lib.class
