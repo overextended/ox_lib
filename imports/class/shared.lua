@@ -1,3 +1,4 @@
+---@diagnostic disable: invisible
 lib.print.warn('ox_lib\'s class module is experimental and may break without warning.')
 
 ---Ensure the given argument or property has a valid type, otherwise throwing an error.
@@ -20,6 +21,11 @@ local function assertType(id, var, expected)
     return true
 end
 
+---@class OxClass
+---@field protected __name string
+---@field protected private table
+---@field protected super function
+---@field protected constructor function
 local mixins = {}
 local constructors = {}
 local getinfo = debug.getinfo
@@ -40,8 +46,12 @@ end
 local function void() return '' end
 
 ---Creates a new instance of the given class.
+---@generic T
+---@param class T
+---@return T
 function mixins.new(class, ...)
     local obj
+    ---@cast class +OxClass
 
     if table.type(...) == 'hash' then
         lib.print.warn(([[Creating instance of %s with a table and no constructor.
@@ -111,15 +121,20 @@ Use %s:constructor(...args) and assign properties in the constructor.]])
         obj.private = nil
     end
 
+    ---@cast class -OxClass
     return obj
 end
 
 ---Checks if an object is an instance of the given class.
+---@param obj table
+---@param class OxClass
 function mixins.isClass(obj, class)
     return getmetatable(obj) == class
 end
 
 ---Checks if an object is an instance or derivative of the given class.
+---@param obj table
+---@param class OxClass
 function mixins.instanceOf(obj, class)
     local mt = getmetatable(obj)
 
@@ -133,15 +148,16 @@ function mixins.instanceOf(obj, class)
 end
 
 ---Creates a new class.
----@todo add inherited types for new/private/init fields (not yet supported by lls)
+---@generic S : OxClass
 ---@param name string
----@param super? table
+---@param super? S
 function lib.class(name, super)
     assertType(1, name, 'string')
 
     local class = table.clone(mixins)
 
     class.__name = name
+    ---@diagnostic disable-next-line: inject-field
     class.__index = class
 
     if super then
@@ -149,6 +165,7 @@ function lib.class(name, super)
         setmetatable(class, super)
     end
 
+    ---@todo See if there's a way we can auto-create a class using the name and super
     return class
 end
 
