@@ -23,12 +23,12 @@ local createdProps = {}
 ---@field prop? ProgressPropProps | ProgressPropProps[]
 ---@field disable? { move?: boolean, sprint?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
 
-local function createProp(prop)
+local function createProp(ped, prop)
     lib.requestModel(prop.model)
-    local coords = GetEntityCoords(cache.ped)
+    local coords = GetEntityCoords(ped)
     local object = CreateObject(prop.model, coords.x, coords.y, coords.z, false, false, false)
 
-    AttachEntityToEntity(object, cache.ped, GetPedBoneIndex(cache.ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
+    AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
     SetModelAsNoLongerNeeded(prop.model)
 
     return object
@@ -239,13 +239,13 @@ AddStateBagChangeHandler("lib:progressProps", nil, function(bagName, key, value,
     end
     
     if value.model then
-        playerProps[#playerProps+1] = createProp(value)
+        playerProps[#playerProps+1] = createProp(ped, value)
     else
         for i = 1, #value do
             local prop = value[i]
 
             if prop then
-                playerProps[#playerProps+1] = createProp(prop)
+                playerProps[#playerProps+1] = createProp(ped, prop)
             end
         end
     end
