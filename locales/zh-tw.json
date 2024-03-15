@@ -6,6 +6,8 @@
     "confirm": "確認",
     "more": "更多..."
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "來自 %s 的伺服器通告",
   "txadmin_dm": "來自 %s 的訊息",
   "txadmin_warn": "您被 %s 警告了",

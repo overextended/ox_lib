@@ -6,6 +6,8 @@
     "confirm": "Подтвердить",
     "more": "Ещё..."
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Server announcement by %s",
   "txadmin_dm": "Direct Message from %s",
   "txadmin_warn": "You have been warned by %s",
