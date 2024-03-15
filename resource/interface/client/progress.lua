@@ -76,7 +76,7 @@ local function startProgress(data)
     end
 
     if data.prop then
-        playerState:set("lib:progressProps", data.prop, true)
+        playerState:set('lib:progressProps', data.prop, true)
     end
 
     local disable = data.disable
@@ -122,7 +122,7 @@ local function startProgress(data)
     end
 
     if data.prop then
-        playerState:set("lib:progressProps", nil, true)
+        playerState:set('lib:progressProps', nil, true)
     end
 
     if anim then
