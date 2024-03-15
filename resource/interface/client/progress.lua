@@ -213,6 +213,7 @@ local function deleteProgressProps(playerProps)
             DeleteEntity(prop)
         end
     end
+    playerProps = nil
 end
 
 RegisterNetEvent('onPlayerDropped', function(serverId)
