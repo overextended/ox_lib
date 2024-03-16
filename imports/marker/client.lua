@@ -5,6 +5,11 @@ local defaultRotation = vector3(0, 0, 0)
 local defaultDirection = vector3(0, 0, 0)
 local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
 local defaultSize = { width = 2, height = 1 }
+local defaultBobUpAndDown = false
+local defaultFaceCamera = true
+local defaultRotate = false
+local defaultTextureDict = nil
+local defaultTextureName = nil
 
 local markerTypesMap = {
   UpsideDownCone = 0,
@@ -107,6 +112,11 @@ local markerTypesMap = {
 ---@field color? { r: number, g: number, b: number, a: number }
 ---@field rotation? { x: number, y: number, z: number }
 ---@field direction? { x: number, y: number, z: number }
+---@field bobUpAndDown? boolean
+---@field faceCamera? boolean
+---@field rotate? boolean
+---@field textureDict? string
+---@field textureName? string
 
 ---@param self MarkerProps
 local function drawMarker(self)
@@ -117,7 +127,7 @@ local function drawMarker(self)
     self.rotation.x, self.rotation.y, self.rotation.z,
     self.width, self.width, self.height,
     self.color.r, self.color.g, self.color.b, self.color.a,
-    false, true, 2, false, nil, nil, false)
+    self.bobUpAndDown, self.faceCamera, 2, self.rotate, self.textureDict, self.textureName, false)
 end
 
 ---@param options MarkerProps
@@ -142,6 +152,11 @@ function lib.marker.new(options)
   self.height = options.height or defaultSize.height
   self.rotation = options.rotation or defaultRotation
   self.direction = options.direction or defaultDirection
+  self.bobUpAndDown = options.bobUpAndDown or defaultBobUpAndDown
+  self.faceCamera = options.faceCamera or defaultFaceCamera
+  self.rotate = options.rotate or defaultRotate
+  self.textureDict = options.textureDict or defaultTextureDict
+  self.textureName = options.textureName or defaultTextureName
   self.draw = drawMarker
 
   self.width += 0.0
