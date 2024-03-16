@@ -10,15 +10,12 @@ function lib.waitFor(cb, errMessage, timeout)
 
     if value ~= nil then return value end
 
+    if type(timeout) ~= 'number' then timeout = 1000 end
 
-    if timeout or timeout == nil then
-        if type(timeout) ~= 'number' then timeout = 1000 end
-
-        if IsDuplicityVersion() then
-            timeout /= 50;
-        else
-            timeout -= GetFrameTime() * 1000;
-        end
+    if IsDuplicityVersion() then
+        timeout /= 50;
+    else
+        timeout /= (GetFrameTime() * 1000)
     end
 
 
@@ -30,7 +27,7 @@ function lib.waitFor(cb, errMessage, timeout)
             i += 1
 
             if i > timeout then
-                return error(('%s (waited %.1fms)'):format(errMessage or 'failed to resolve callback', (GetGameTimer() - start) / 1000), 2)
+                return error(('%s (waited %dms)'):format(errMessage or 'failed to resolve callback', (GetGameTimer() - start)), 2)
             end
         end
 
