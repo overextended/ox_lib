@@ -10,13 +10,15 @@ function lib.waitFor(cb, errMessage, timeout)
 
     if value ~= nil then return value end
 
-    if type(timeout) ~= 'number' then timeout = 1000 end
+	if timeout or timeout == nil then
+		if type(timeout) ~= 'number' then timeout = 1000 end
 
-    if IsDuplicityVersion() then
-        timeout /= 50;
-    else
-        timeout /= (GetFrameTime() * 1000)
-    end
+		if IsDuplicityVersion() then
+			timeout /= 50;
+		else
+			timeout /= (GetFrameTime() * 1000)
+		end
+	end
 
 
     local start = GetGameTimer()
