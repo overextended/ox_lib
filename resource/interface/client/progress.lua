@@ -205,7 +205,8 @@ end)
 
 RegisterKeyMapping('cancelprogress', 'Cancel current progress bar', 'keyboard', 'x')
 
-local function deleteProgressProps(playerProps)
+local function deleteProgressProps(serverId)
+    local playerProps = createdProps[serverId]
     if not playerProps then return end
     for i = 1, #playerProps do
         local prop = playerProps[i]
@@ -213,14 +214,14 @@ local function deleteProgressProps(playerProps)
             DeleteEntity(prop)
         end
     end
-    playerProps = nil
+    createdProps[serverId] = nil
 end
 
 RegisterNetEvent('onPlayerDropped', function(serverId)
-    deleteProgressProps(createdProps[serverId])
+    deleteProgressProps(serverId)
 end)
 
-AddStateBagChangeHandler("lib:progressProps", nil, function(bagName, key, value, reserved, replicated)
+AddStateBagChangeHandler('lib:progressProps', nil, function(bagName, key, value, reserved, replicated)
     if replicated then return end
 
     local ply = GetPlayerFromStateBagName(bagName)
@@ -228,16 +229,13 @@ AddStateBagChangeHandler("lib:progressProps", nil, function(bagName, key, value,
 
     local ped = GetPlayerPed(ply)
     local serverId = GetPlayerServerId(ply)
-    local playerProps = createdProps[serverId]
     
     if not value then
-        return deleteProgressProps(playerProps)
+        return deleteProgressProps(serverId)
     end
-
-    if not playerProps then
-        createdProps[serverId] = {}
-        playerProps = createdProps[serverId]
-    end
+    
+    createdProps[serverId] = {}
+    local playerProps = createdProps[serverId]
     
     if value.model then
         playerProps[#playerProps+1] = createProp(ped, value)
