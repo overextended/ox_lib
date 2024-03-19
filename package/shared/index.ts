@@ -93,7 +93,7 @@ export interface VehicleProperties {
   modLightbar: number;
   windows: number[];
   doors: number[];
-  tyres: Record<number | string, 1 | 2>
+  tyres: Record<number | string, 1 | 2>;
   leftHeadlight: boolean;
   rightHeadlight: boolean;
   frontBumper: boolean;
@@ -113,22 +113,17 @@ export async function waitFor<T>(cb: () => T, errMessage?: string, timeout?: num
 
   if (timeout || timeout == null) {
     if (typeof timeout !== 'number') timeout = 1000;
-
-    if (IsDuplicityVersion()) timeout /= 50;
-    else timeout -= GetFrameTime() * 1000;
   }
 
   const start = GetGameTimer();
   let id: number;
-  let i = 0;
 
   const p = new Promise<T>((resolve, reject) => {
     id = setTick(async () => {
-      if (timeout) {
-        i++;
+      const elapsed = timeout && GetGameTimer() - start;
 
-        if (i > timeout)
-          return reject(`${errMessage || 'failed to resolve callback'} (waited ${(GetGameTimer() - start) / 1000}ms)`);
+      if (elapsed && elapsed > (timeout as number)) {
+        return reject(`${errMessage || 'failed to resolve callback'} (waited ${elapsed}ms)`);
       }
 
       value = await cb();

@@ -1,5 +1,5 @@
 import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
-import { CSSProperties } from 'react';
+import type { Properties as CSSProperties } from 'csstype';
 
 type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 

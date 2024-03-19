@@ -18,6 +18,7 @@ local createdProps = {}
 ---@field allowRagdoll? boolean
 ---@field allowCuffed? boolean
 ---@field allowFalling? boolean
+---@field allowSwimming? boolean
 ---@field canCancel? boolean
 ---@field anim? { dict?: string, clip: string, flag?: number, blendIn?: number, blendOut?: number, duration?: number, playbackRate?: number, lockX?: boolean, lockY?: boolean, lockZ?: boolean, scenario?: string, playEnter?: boolean }
 ---@field prop? ProgressPropProps | ProgressPropProps[]
@@ -39,6 +40,7 @@ local function interruptProgress(data)
     if not data.allowRagdoll and IsPedRagdoll(cache.ped) then return true end
     if not data.allowCuffed and IsPedCuffed(cache.ped) then return true end
     if not data.allowFalling and IsPedFalling(cache.ped) then return true end
+    if not data.allowSwimming and IsPedSwimming(cache.ped) then return true end
 end
 
 local isFivem = cache.game == 'fivem'
@@ -203,7 +205,7 @@ RegisterCommand('cancelprogress', function()
     if progress?.canCancel then progress = false end
 end)
 
-RegisterKeyMapping('cancelprogress', 'Cancel current progress bar', 'keyboard', 'x')
+RegisterKeyMapping('cancelprogress', locale('cancel_progress'), 'keyboard', 'x')
 
 local function deleteProgressProps(serverId)
     local playerProps = createdProps[serverId]

@@ -6,6 +6,8 @@
     "confirm": "Megerősít",
     "more": "Tovább..."
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Szerver bejelentés által %s",
   "txadmin_dm": "Közvetlen üzenet a %s",
   "txadmin_warn": "Figyelmeztetett %s",

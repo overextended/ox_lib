@@ -6,6 +6,8 @@
     "confirm": "Potwierdź",
     "more": "Więcej..."
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Ogłoszenie serwerowe od %s",
   "txadmin_dm": "Prywatna wiadomość od %s",
   "txadmin_warn": "Otrzymano ostrzeżenie od %s",
