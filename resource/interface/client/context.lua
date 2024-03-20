@@ -1,5 +1,6 @@
 local contextMenus = {}
 local openContextMenu = nil
+local contextFocus = false
 
 ---@class ContextMenuItem
 ---@field title? string
@@ -28,6 +29,7 @@ local openContextMenu = nil
 ---@field onExit? fun()
 ---@field onBack? fun()
 ---@field canClose? boolean
+---@field toggleFocus? boolean
 ---@field options { [string]: ContextMenuItem } | ContextMenuArrayItem[]
 
 local function closeContext(_, cb, onExit)
@@ -37,6 +39,8 @@ local function closeContext(_, cb, onExit)
 
     if not openContextMenu then return end
 
+    if contextFocus then contextFocus = false end
+    
     if (cb or onExit) and contextMenus[openContextMenu].onExit then contextMenus[openContextMenu].onExit() end
 
     if not cb then SendNUIMessage({ action = 'hideContext' }) end
@@ -51,6 +55,7 @@ function lib.showContext(id)
     local data = contextMenus[id]
     openContextMenu = id
 
+    if contextFocus then contextFocus = false end
     lib.setNuiFocus(false)
 
     SendNuiMessage(json.encode({
@@ -58,6 +63,7 @@ function lib.showContext(id)
         data = {
             title = data.title,
             canClose = data.canClose,
+            toggleFocus = data.toggleFocus,
             menu = data.menu,
             options = data.options
         }
@@ -102,6 +108,7 @@ RegisterNUICallback('clickContext', function(id, cb)
     if not data.event and not data.serverEvent and not data.onSelect then return end
 
     openContextMenu = nil
+    if contextFocus then contextFocus = false end
 
     SendNUIMessage({ action = 'hideContext' })
     lib.resetNuiFocus()
@@ -113,5 +120,25 @@ end)
 
 RegisterNUICallback('closeContext', closeContext)
 
+---@param new_state boolean
+RegisterNUICallback('toggleContextFocus', function(new_state)
+    if not openContextMenu then return end
 
+    lib.setNuiFocus(new_state)
+    contextFocus = new_state
 
+    if not new_state then return end
+
+    CreateThread(function()
+        lib.showTextUI(locale('context_focus_help', 'E'), {icon = 'circle-info', position = 'bottom-center'})
+
+        while contextFocus do 
+            DisableControlAction(0, 25, true)
+            DisablePlayerFiring(cache.playerId, true)
+        
+            Wait(0) 
+        end
+
+        lib.hideTextUI()
+    end)
+end)
