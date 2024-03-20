@@ -130,7 +130,7 @@ RegisterNUICallback('toggleContextFocus', function(new_state)
     if not new_state then return end
 
     CreateThread(function()
-        lib.showTextUI(locale('context_focus_help', 'E'), {icon = 'circle-info', position = 'bottom-center'})
+        lib.showTextUI(locale('context_focus_help', '**E**'), {icon = 'circle-info', position = 'bottom-center'})
 
         while contextFocus do 
             DisableControlAction(0, 25, true)
