@@ -8,6 +8,7 @@
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",
+  "context_focus_help": "Druk op %s om de camerapositie te vergrendelen",
   "txadmin_announcement": "Server mededeling door %s",
   "txadmin_dm": "Bericht van %s",
   "txadmin_warn": "Je hebt een waarschuwing gekregen van %s",
