@@ -6,8 +6,9 @@
     "confirm": "Bekræft",
     "more": "Mere..."
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Åbn radial menu",
+  "cancel_progress": "Annuller nuværende progressbar",
+  "context_focus_help": "Tryk på %s for at låse kamerapositionen",
   "txadmin_announcement": "Servermeddelelse af %s",
   "txadmin_dm": "Direkte besked fra %s",
   "txadmin_warn": "Du er blevet advaret af %s",
