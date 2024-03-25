@@ -55,25 +55,12 @@ local function void() return '' end
 ---@return T
 function mixins.new(class, ...)
     local constructor = getConstructor(class)
-    local obj = {
+
+    local obj = setmetatable({
         private = {}
-    }
+    }, class)
 
-    if not constructor and table.type(...) == 'hash' then
-        lib.print.warn(([[Creating instance of %s with a table and no constructor.
-This behaviour is deprecated and will not be supported in the future.]])
-            :format(class.__name))
-
-        obj = ...
-
-        if obj.private then
-            assertType('private', obj.private, 'table')
-        end
-    end
-
-    setmetatable(obj, class)
-
-    if constructor and obj ~= ... then
+    if constructor then
         local parent = class
 
         function obj:super(...)
@@ -84,13 +71,6 @@ This behaviour is deprecated and will not be supported in the future.]])
         end
 
         constructor(obj, ...)
-        ---@diagnostic disable-next-line: undefined-field
-    elseif class.init then
-        lib.print.warn(([[Calling %s:init() is deprecated and will not be supported in the future.
-Use %s:constructor(...args) and assign properties in the constructor.]])
-            :format(class.__name, class.__name))
-
-        obj:init()
     end
 
     obj.super = nil
@@ -113,7 +93,7 @@ Use %s:constructor(...args) and assign properties in the constructor.]])
                 local di = getinfo(2, 'n')
 
                 if di.namewhat ~= 'method' then
-                    error(("cannot set values on private field '%s'"):format(index), 2)
+                    error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
                 private[index] = value
