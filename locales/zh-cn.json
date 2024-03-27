@@ -8,6 +8,7 @@
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",
+  "context_focus_help": "按 %s 锁定摄像机位置",
   "txadmin_announcement": "来自 %s 的服务器通告",
   "txadmin_dm": "来自 %s 的信息",
   "txadmin_warn": "您被 %s 警告了",

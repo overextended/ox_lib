@@ -8,6 +8,7 @@
   },
   "open_radial_menu": "Otevřít kruhové menu",
   "cancel_progress": "Zrušit aktuální progress bar",
+  "context_focus_help": "Stiskněte %s pro uzamčení pozice kamery",
   "txadmin_announcement": "Serverové oznámení od %s",
   "txadmin_dm": "Soukromá zpráva od %s",
   "txadmin_warn": "Byl jsi varován od %s",

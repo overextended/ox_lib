@@ -49,6 +49,7 @@ const useStyles = createStyles((theme) => ({
 const ContextMenu: React.FC = () => {
   const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
+  const [contextFocus, setContextFocus] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
     title: '',
     options: { '': { description: '', metadata: [] } },
@@ -57,27 +58,37 @@ const ContextMenu: React.FC = () => {
   const closeContext = () => {
     if (contextMenu.canClose === false) return;
     setVisible(false);
+    setContextFocus(false);
     fetchNui('closeContext');
   };
 
+  const toggleContextFocus = (new_state: boolean) => {
+    if (contextMenu.toggleFocus === false) return;
+    if (new_state === contextFocus) return; 
+    setContextFocus(new_state);
+    fetchNui('toggleContextFocus', new_state);
+  };
+  
   // Hides the context menu on ESC
   useEffect(() => {
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
       if (['Escape'].includes(e.code)) closeContext();
+      if (['KeyE'].includes(e.code)) toggleContextFocus(false);
     };
 
     window.addEventListener('keydown', keyHandler);
 
     return () => window.removeEventListener('keydown', keyHandler);
-  }, [visible]);
+  }, [visible, contextFocus]);
 
   useNuiEvent('hideContext', () => setVisible(false));
 
   useNuiEvent<ContextMenuProps>('showContext', async (data) => {
     if (visible) {
       setVisible(false);
+      setContextFocus(false);
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     setContextMenu(data);
@@ -96,6 +107,9 @@ const ContextMenu: React.FC = () => {
               <ReactMarkdown components={MarkdownComponents}>{contextMenu.title}</ReactMarkdown>
             </Text>
           </Box>
+          {contextMenu.toggleFocus && (
+            <HeaderButton icon="eye" iconSize={18} handleClick={() => toggleContextFocus(!contextFocus)} />
+          )}
           <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
         </Flex>
         <Box className={classes.buttonsContainer}>

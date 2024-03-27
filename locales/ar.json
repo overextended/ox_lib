@@ -8,6 +8,7 @@
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",
+  "context_focus_help": "اضغط على %s لقفل موضع الكاميرا",
   "txadmin_announcement": "إعلان من قبل %s",
   "txadmin_dm": "رسالة من %s",
   "txadmin_warn": "تم تحذيرك من قبل %s",

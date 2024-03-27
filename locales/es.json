@@ -8,6 +8,7 @@
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",
+  "context_focus_help": "Presiona %s para bloquear la posición de la cámara",
   "txadmin_announcement": "Anuncio de servidor de %s",
   "txadmin_dm": "Mensaje directo de %s",
   "txadmin_warn": "Has sido advertido por %s",
