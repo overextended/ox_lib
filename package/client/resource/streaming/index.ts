@@ -1,6 +1,6 @@
 import { waitFor } from '../../';
 
-async function streamingRequest(
+function streamingRequest(
   request: Function,
   hasLoaded: Function,
   assetType: string,
@@ -12,7 +12,7 @@ async function streamingRequest(
 
   request(asset, ...args);
 
-  waitFor(
+  return waitFor(
     () => {
       if (hasLoaded(asset)) return asset;
     },
