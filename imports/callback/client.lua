@@ -1,6 +1,12 @@
 local events = {}
 local timers = {}
 local cbEvent = ('__ox_cb_%s')
+local keyEvent = ('__ox_cb_key_%s')
+local currentKey
+
+RegisterNetEvent(keyEvent:format(cache.resource), function(key)
+	currentKey = key
+end)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 	local cb = events[key]
@@ -38,6 +44,7 @@ local function triggerServerCallback(_, event, delay, cb, ...)
 		key = ('%s:%s'):format(event, math.random(0, 100000))
 	until not events[key]
 
+	TriggerServerEvent(keyEvent:format(cache.resource), key)
 	TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
 
 	---@type promise | false
@@ -92,6 +99,8 @@ local pcall = pcall
 --- Registers an event handler and callback function to respond to server requests.
 function lib.callback.register(name, cb)
 	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
+		if currentKey ~= key or currentKey == nil then return end
+
 		TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
 	end)
 end

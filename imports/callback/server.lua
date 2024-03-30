@@ -1,5 +1,11 @@
 local events = {}
 local cbEvent = ('__ox_cb_%s')
+local keyEvent = ('__ox_cb_key_%s')
+local currentKey
+
+RegisterNetEvent(keyEvent:format(cache.resource), function(key)
+	currentKey = key
+end)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 	local cb = events[key]
@@ -19,6 +25,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 		key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
 	until not events[key]
 
+	TriggerClientEvent(keyEvent:format(cache.resource), key)
 	TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
 	---@type promise | false
@@ -73,6 +80,8 @@ local pcall = pcall
 --- Registers an event handler and callback function to respond to client requests.
 function lib.callback.register(name, cb)
 	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
+		if currentKey ~= key or currentKey == nil then return end
+
 		TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
 	end)
 end
