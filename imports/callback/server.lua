@@ -1,10 +1,10 @@
 local events = {}
 local cbEvent = ('__ox_cb_%s')
 local keyEvent = ('__ox_cb_key_%s')
-local currentKey
+local storedKeys = {}
 
 RegisterNetEvent(keyEvent:format(cache.resource), function(key)
-	currentKey = key
+	storedKeys[key] = key
 end)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
@@ -80,9 +80,11 @@ local pcall = pcall
 --- Registers an event handler and callback function to respond to client requests.
 function lib.callback.register(name, cb)
 	RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
-		if currentKey ~= key or currentKey == nil then return end
+		if not storedKeys[key] then return end
 
 		TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
+
+		storedKeys[key] = nil
 	end)
 end
 
