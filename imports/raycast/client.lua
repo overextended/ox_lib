@@ -31,6 +31,7 @@ function lib.raycast.cam(flags, ignore, distance)
 
 		if retval ~= 1 then
             ---@diagnostic disable-next-line: return-type-mismatch
+			hit = hit == 1
 			return hit, entityHit, endCoords, surfaceNormal, materialHash
 		end
 	end
