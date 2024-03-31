@@ -1,6 +1,6 @@
 ---Yields the current thread until a non-nil value is returned by the function.
 ---@generic T
----@param cb fun(): T
+---@param cb fun(): T?
 ---@param errMessage string?
 ---@param timeout? number | false Error out after `~x` ms. Defaults to 1000, unless set to `false`.
 ---@return T
