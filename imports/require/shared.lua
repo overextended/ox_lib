@@ -108,7 +108,7 @@ end
 
 ---Loads the given module inside the current resource, returning any values returned by the file or `true` when `nil`.
 ---@param modname string
----@return unknown?
+---@return unknown
 function lib.require(modname)
     if type(modname) ~= 'string' then return end
 
