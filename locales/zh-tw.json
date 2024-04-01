@@ -4,7 +4,11 @@
     "cancel": "取消",
     "close": "關閉",
     "confirm": "確認",
-    "more": "更多..."
+    "more": "更多...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)"
+    }
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",

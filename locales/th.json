@@ -4,7 +4,11 @@
     "cancel": "ยกเลิก",
     "close": "ปิด",
     "confirm": "ยืนยัน",
-    "more": "เพิ่มเติม..."
+    "more": "เพิ่มเติม...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)"
+    }
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",

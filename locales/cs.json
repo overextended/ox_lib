@@ -4,7 +4,11 @@
     "cancel": "Zrušit",
     "close": "Zavřít",
     "confirm": "Potvrdit",
-    "more": "Více..."
+    "more": "Více...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)"
+    }
   },
   "open_radial_menu": "Otevřít kruhové menu",
   "cancel_progress": "Zrušit aktuální progress bar",

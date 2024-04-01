@@ -4,7 +4,11 @@
     "cancel": "Annuller",
     "close": "Luk",
     "confirm": "Bekræft",
-    "more": "Mere..."
+    "more": "Mere...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)"
+    }
   },
   "open_radial_menu": "Open radial menu",
   "cancel_progress": "Cancel current progress bar",
