@@ -38,9 +38,11 @@ function lib.getLocales()
 end
 
 ---Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
-function lib.locale()
-    local lang = GetConvar('ox:locale', 'en')
+function lib.locale(key)
+    local lang = key or lib.getLocaleKey()
     local locales = json.decode(LoadResourceFile(cache.resource, ('locales/%s.json'):format(lang)))
+
+    table.wipe(dict)
 
     if not locales then
         local warning = "could not load 'locales/%s.json'"
@@ -102,6 +104,10 @@ end
 ---@return string?
 exports('getLocale', function(key)
     return dict[key]
+end)
+
+AddEventHandler('ox_lib:setLocale', function(key)
+    lib.locale(key)
 end)
 
 return lib.locale
