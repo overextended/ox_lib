@@ -2,8 +2,6 @@ local settings = {
     locale = GetResourceKvpString('locale'),
 }
 
-if not settings.locale then lib.setLocale(GetConvar('ox:locale', 'en')) end
-
 RegisterCommand('ox_lib', function()
     local input = lib.inputDialog('Settings', {
         {
