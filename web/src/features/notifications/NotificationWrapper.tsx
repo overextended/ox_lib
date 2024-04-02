@@ -6,6 +6,7 @@ import React from 'react';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
+import ShowDurationBar from '../utils/ShowDurationBar';
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -108,6 +109,9 @@ const Notifications: React.FC = () => {
 
   useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
+
+    let duration = data.duration || 3000;
+
     // Backwards compat with old notifications
     let position = data.position;
     switch (position) {
@@ -201,11 +205,12 @@ const Notifications: React.FC = () => {
               )}
             </Stack>
           </Group>
+          {data.durationBar && (<ShowDurationBar duration={duration} />)}
         </Box>
       ),
       {
         id: data.id?.toString(),
-        duration: data.duration || 3000,
+        duration: duration,
         position: position || 'top-right',
       }
     );

@@ -1,5 +1,5 @@
 import { Button, createStyles, Group, Modal, Stack, useMantineTheme } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
@@ -7,6 +7,7 @@ import { useLocales } from '../../providers/LocaleProvider';
 import remarkGfm from 'remark-gfm';
 import type { AlertProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
+import ShowDurationBar from '../utils/ShowDurationBar';
 
 const useStyles = createStyles((theme) => ({
   contentStack: {
@@ -36,6 +37,16 @@ const AlertDialog: React.FC = () => {
 
   useNuiEvent('closeAlertDialog', () => {
     setOpened(false);
+  });
+
+  useEffect(() => {
+    if (dialogData.timeout) {
+      const timer = setTimeout(() => {
+        closeAlert('cancel');
+      }, dialogData.timeout);
+
+      return () => clearTimeout(timer);
+    }
   });
 
   return (
@@ -72,16 +83,19 @@ const AlertDialog: React.FC = () => {
                 {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}
-            <Button
-              uppercase
-              variant={dialogData.cancel ? 'light' : 'default'}
-              color={dialogData.cancel ? theme.primaryColor : undefined}
-              onClick={() => closeAlert('confirm')}
-            >
-              {dialogData.labels?.confirm || locale.ui.confirm}
-            </Button>
+            {dialogData.confirm && (
+              <Button
+                uppercase
+                variant={dialogData.cancel ? 'light' : 'default'}
+                color={dialogData.cancel ? theme.primaryColor : undefined}
+                onClick={() => closeAlert('confirm')}
+              >
+                {dialogData.labels?.confirm || locale.ui.confirm}
+              </Button>
+            )}
           </Group>
         </Stack>
+        {dialogData.timeout && (<ShowDurationBar duration={dialogData.timeout} marginTop={15} />)}
       </Modal>
     </>
   );

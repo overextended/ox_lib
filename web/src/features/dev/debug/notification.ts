@@ -23,6 +23,24 @@ export const debugCustomNotification = () => {
     {
       action: 'notify',
       data: {
+        title: 'Success',
+        description: 'Notification description',
+        type: 'success',
+        id: 'pogdurationbar',
+        duration: 10000,
+        durationBar: true,
+        style: {
+          '.description': {
+            color: 'blue',
+          },
+        },
+      },
+    },
+  ]);
+  debugData<NotificationProps>([
+    {
+      action: 'notify',
+      data: {
         title: 'Error',
         description: 'Notification description',
         type: 'error',
@@ -37,6 +55,7 @@ export const debugCustomNotification = () => {
         description: 'Notification description',
         type: 'success',
         icon: 'microchip',
+        durationBar: true,
       },
     },
   ]);
