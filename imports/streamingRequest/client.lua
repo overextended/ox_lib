@@ -17,3 +17,5 @@ function lib.streamingRequest(request, hasLoaded, assetType, asset, timeout, ...
         if hasLoaded(asset) then return asset end
     end, ("failed to load %s '%s'"):format(assetType, asset), timeout)
 end
+
+return lib.streamingRequest

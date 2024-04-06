@@ -7,7 +7,8 @@
     "more": "Více...",
     "settings": {
       "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)"
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
     }
   },
   "open_radial_menu": "Otevřít kruhové menu",
