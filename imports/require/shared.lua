@@ -15,32 +15,29 @@ package = {
 ---@return string
 ---@return string
 local function getModuleInfo(modName)
-    local resourceSrc
+    local resource = modName:match('^@(.-)/.+') --[[@as string?]]
 
-    if not modName:find('^@') then
-        local idx = 1
-
-        while true do
-            local di = debug.getinfo(idx, 'S')
-
-            if di then
-                if not di.short_src ~= '?' and di.source:match('^@([^%s]+)') and not di.short_src:find('^@ox_lib/imports/require') and not di.short_src:find('^citizen') then
-                    resourceSrc = di.source:gsub('^%@+([^/]+)/.+', '%1')
-                    break
-                end
-            else
-                resourceSrc = cache.resource
-                break
-            end
-
-            idx += 1
-        end
-    else
-        resourceSrc = modName:gsub('^@(.-)/.+', '%1')
-        modName = modName:sub(#resourceSrc + 3)
+    if resource then
+        return resource, modName:sub(#resource + 3)
     end
 
-    return resourceSrc, modName
+    local idx = 4 -- call stack depth (kept slightly lower than expected depth "just in case")
+
+    while true do
+        local src = debug.getinfo(idx, 'S')?.source
+
+        if not src then
+            return cache.resource, modName
+        end
+
+        resource = src:match('^@@([^/]+)/.+')
+
+        if resource and not src:find('^@@ox_lib/imports/require') then
+            return resource, modName
+        end
+
+        idx += 1
+    end
 end
 
 local tempData = {}
@@ -49,21 +46,22 @@ local tempData = {}
 ---@param path string
 ---@return string? filename
 ---@return string? errmsg
+---@diagnostic disable-next-line: duplicate-set-field
 function package.searchpath(name, path)
-    local resourceSrc, modName = getModuleInfo(name:gsub('%.', '/'))
+    local resource, modName = getModuleInfo(name:gsub('%.', '/'))
     local tried = {}
 
     for template in path:gmatch('[^;]+') do
         local fileName = template:gsub('^%./', ''):gsub('?', modName:gsub('%.', '/') or modName)
-        local file = LoadResourceFile(resourceSrc, fileName)
+        local file = LoadResourceFile(resource, fileName)
 
         if file then
             tempData[1] = file
-            tempData[2] = resourceSrc
+            tempData[2] = resource
             return fileName
         end
 
-        tried[#tried + 1] = fileName
+        tried[#tried + 1] = ("no file '@%s/%s'"):format(resource, fileName)
     end
 
     return nil, table.concat(tried, "\n\t")
@@ -81,20 +79,31 @@ local function loadModule(modName, env)
         local resource = tempData[2]
 
         table.wipe(tempData)
-        return assert(load(file, ('@@%s/%s'):format(resource, modName), 't', env or _ENV))
+        return assert(load(file, ('@@%s/%s'):format(resource, fileName), 't', env or _ENV))
     end
 
     return nil, err or 'unknown error'
 end
 
+---@alias PackageSearcher
+---| fun(modName: string): function loader
+---| fun(modName: string): nil, string errmsg
+
+---@type PackageSearcher[]
 package.searchers = {
-    function(modName) return package.preload[modName] end,
     function(modName)
         local ok, result = pcall(_require, modName)
 
         if ok then return result end
 
         return ok, result
+    end,
+    function(modName)
+        if package.preload[modName] ~= nil then
+            return package.preload[modName]
+        end
+
+        return nil, ("no field package.preload['%s']"):format(modName)
     end,
     function(modName) return loadModule(modName) end,
 }
@@ -134,7 +143,7 @@ function lib.loadJson(filePath)
 end
 
 ---Loads the given module, returns any value returned by the seacher (`true` when `nil`).\
----Passing `@resourceName.modName` loads a module from a remote resource.\
+---Passing `@resourceName.modName` loads a module from a remote resource.
 ---@param modName string
 ---@return unknown
 function lib.require(modName)
