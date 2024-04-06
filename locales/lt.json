@@ -7,7 +7,8 @@
     "more": "Daugiau...",
     "settings": {
       "locale": "Pakeisti kalbą",
-      "locale_description": "Dabartinė: ${language} (%s)"
+      "locale_description": "Dabartinė: ${language} (%s)",
+      "notification_audio": "Pranešimo garsas"
     }
   },
   "open_radial_menu": "Atidaryti radialinį meniu",
