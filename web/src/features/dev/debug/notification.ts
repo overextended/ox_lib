@@ -40,4 +40,18 @@ export const debugCustomNotification = () => {
       },
     },
   ]);
+  debugData<NotificationProps>([
+    {
+      action: 'notify',
+      data: {
+        title: 'Custom show duration',
+        duration: 5000,
+        showDuration: true,
+        icon: 'eye',
+        iconColor: 'violet',
+        iconAnimation: 'spin',
+        description: 'Notification description',
+      },
+    },
+  ]);
 };
