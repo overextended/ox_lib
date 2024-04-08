@@ -6,16 +6,16 @@
     "confirm": "Patvirtinti",
     "more": "Daugiau...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio"
+      "locale": "Pakeisti kalbą",
+      "locale_description": "Dabartinė: ${language} (%s)",
+      "notification_audio": "Pranešimo garsas"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "open_radial_menu": "Atidaryti radialinį meniu",
+  "cancel_progress": "Atšaukti dabartinę eigos juostą",
+  "txadmin_announcement": "Serverio pranešimas nuo %s",
+  "txadmin_dm": "Tiesioginis pranešimas nuo %s",
+  "txadmin_warn": "Buvote įspėtas nuo %s",
+  "txadmin_warn_content": "%s  \nVeiksmo ID: %s",
+  "txadmin_scheduledrestart": "Suplanuotas paleidimas iš naujo"
 }
