@@ -6,16 +6,16 @@
     "confirm": "Bestätigen",
     "more": "Mehr...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio"
+      "locale": "Sprache ändern",
+      "locale_description": "Aktuelle Sprache: ${language} (%s)",
+      "notification_audio": "Benachrichtigungs-Sound"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Radial Menu öffnen",
+  "cancel_progress": "Aktuelle Tätigkeit abbrechen",
   "txadmin_announcement": "Serverankündigung von %s",
   "txadmin_dm": "Direktnachricht von %s",
-  "txadmin_warn": "Du wurdest von %s gewarnt",
+  "txadmin_warn": "Du wurdest von %s verwarnt",
   "txadmin_warn_content": "%s  \nVerwarn ID: %s",
   "txadmin_scheduledrestart": "Geplanter Neustart"
 }
