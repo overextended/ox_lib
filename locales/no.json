@@ -1,14 +1,21 @@
 {
-    "language": "Norsk",
-    "ui": {
+  "language": "Norsk",
+  "ui": {
     "cancel": "Avbryt",
     "close": "Lukk",
     "confirm": "Bekreft",
-    "more": "Mer..."
-    },
-    "txadmin_announcement": "Server announcement by %s",
-    "txadmin_dm": "Direct Message from %s",
-    "txadmin_warn": "You have been warned by %s",
-    "txadmin_warn_content": "%s  \nAction ID: %s",
-    "txadmin_scheduledrestart": "Scheduled Restart"
-  }
+    "more": "Mer...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
+  },
+  "open_radial_menu": "Åpne radial menyen",
+  "cancel_progress": "Avbryt den nåværende fremdriftsindikatoren",
+  "txadmin_announcement": "Server annonsering fra %s",
+  "txadmin_dm": "Direktemelding fra %s",
+  "txadmin_warn": "Du har fått en advarsel fra %s",
+  "txadmin_warn_content": "%s  \nAction ID: %s",
+  "txadmin_scheduledrestart": "Planlagt Omstart"
+}

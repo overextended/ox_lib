@@ -5,6 +5,8 @@
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
 ---@field [string] any
 ---@field keepOpen? boolean
+---@field iconWidth? number
+---@field iconHeight? number
 
 ---@class RadialMenuItem: RadialItem
 ---@field id string
@@ -191,7 +193,6 @@ function lib.clearRadialItems()
     if isOpen then
         refreshRadial()
     end
-    
 end
 
 RegisterNUICallback('radialClick', function(index, cb)
@@ -297,7 +298,7 @@ end
 
 lib.addKeybind({
     name = 'ox_lib-radial',
-    description = 'Open radial menu',
+    description = locale('open_radial_menu'),
     defaultKey = 'z',
     onPressed = function()
         if isDisabled then return end

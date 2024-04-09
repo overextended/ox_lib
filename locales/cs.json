@@ -4,11 +4,18 @@
     "cancel": "Zrušit",
     "close": "Zavřít",
     "confirm": "Potvrdit",
-    "more": "Více..."
+    "more": "Více...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
   },
-  "txadmin_announcement": "Server oznámení od %s",
+  "open_radial_menu": "Otevřít kruhové menu",
+  "cancel_progress": "Zrušit aktuální progress bar",
+  "txadmin_announcement": "Serverové oznámení od %s",
   "txadmin_dm": "Soukromá zpráva od %s",
-  "txadmin_warn": "Byl jsi varován %s",
-  "txadmin_warn_content": "%s  \nID Akce: %s",
+  "txadmin_warn": "Byl jsi varován od %s",
+  "txadmin_warn_content": "%s  \nID akce: %s",
   "txadmin_scheduledrestart": "Plánovaný restart"
 }

@@ -4,8 +4,15 @@
     "cancel": "ยกเลิก",
     "close": "ปิด",
     "confirm": "ยืนยัน",
-    "more": "เพิ่มเติม..."
+    "more": "เพิ่มเติม...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Server announcement by %s",
   "txadmin_dm": "Direct Message from %s",
   "txadmin_warn": "You have been warned by %s",

@@ -4,8 +4,15 @@
     "cancel": "Anuluj",
     "close": "Zamknij",
     "confirm": "Potwierdź",
-    "more": "Więcej..."
+    "more": "Więcej...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Ogłoszenie serwerowe od %s",
   "txadmin_dm": "Prywatna wiadomość od %s",
   "txadmin_warn": "Otrzymano ostrzeżenie od %s",

@@ -1,7 +1,9 @@
 import { Box, createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
+import { isIconUrl } from '../../../utils/isIconUrl';
 import ScaleFade from '../../../transitions/ScaleFade';
 import type { RadialMenuItem } from '../../../typings';
 import { useLocales } from '../../../providers/LocaleProvider';
@@ -132,6 +134,9 @@ const RadialMenu: React.FC = () => {
               const cosAngle = Math.cos(angle);
               const iconX = 175 + sinAngle * radius;
               const iconY = 175 + cosAngle * radius;
+              const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100);
+              const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100);
+              
 
               return (
                 <>
@@ -153,7 +158,17 @@ const RadialMenu: React.FC = () => {
                       }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                     />
                     <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                      <LibIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon} width={25} height={25} fixedWidth />
+                      {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
+                        <image
+                          href={item.icon}
+                          width={iconWidth}
+                          height={iconHeight}
+                          x={iconX - iconWidth / 2}
+                          y={iconY - iconHeight / 2 - iconHeight / 4}
+                        />
+                      ) : (
+                        <LibIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon as IconProp} width={25} height={25} fixedWidth/>
+                      )}
                       <text
                         x={iconX}
                         y={iconY + (item.label.includes('  \n') ? 7 : 25)}

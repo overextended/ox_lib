@@ -4,8 +4,15 @@
     "cancel": "Annulla",
     "close": "Chiudi",
     "confirm": "Conferma",
-    "more": "Altro..."
+    "more": "Altro...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
   },
+  "open_radial_menu": "Open radial menu",
+  "cancel_progress": "Cancel current progress bar",
   "txadmin_announcement": "Annuncio server da %s",
   "txadmin_dm": "Messaggio diretto da %s",
   "txadmin_warn": "Sei stato richiamato da %s",

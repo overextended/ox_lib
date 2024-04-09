@@ -4,8 +4,15 @@
     "cancel": "Tühista",
     "close": "Sulge",
     "confirm": "Kinnita",
-    "more": "Rohkem..."
+    "more": "Rohkem...",
+    "settings": {
+      "locale": "Change locale",
+      "locale_description": "Current language: ${language} (%s)",
+      "notification_audio": "Notification audio"
+    }
   },
+  "open_radial_menu": "Ava rullikmenüü",
+  "cancel_progress": "Katkesta praegune edenemisriba",
   "txadmin_announcement": "Serveri teadaanne kasutajalt %s",
   "txadmin_dm": "Sulle saadeti sõnum kasutajalt %s",
   "txadmin_warn": "Sind hoiatati kasutaja %s poolt",

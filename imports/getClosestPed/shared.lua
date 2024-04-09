@@ -1,5 +1,5 @@
 ---@param coords vector3 The coords to check from.
----@param maxDistance number The max distance to check.
+---@param maxDistance? number The max distance to check.
 ---@return number? ped
 ---@return vector3? pedCoords
 function lib.getClosestPed(coords, maxDistance)

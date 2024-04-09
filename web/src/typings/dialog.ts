@@ -37,6 +37,7 @@ export type OptionValue = { value: string; label?: string };
 export interface ISelect extends BaseField<'select' | 'multi-select', string | string[]> {
   options: Array<OptionValue>;
   clearable?: boolean;
+  searchable?: boolean;
 }
 
 export interface INumber extends BaseField<'number', number> {
