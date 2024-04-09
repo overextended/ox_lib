@@ -121,7 +121,7 @@ function lib.load(filePath, env)
 
     if result then return result() end
 
-    error(err)
+    error(("file '%s' not found\n\t%s"):format(filePath, err))
 end
 
 ---@param filePath string
@@ -132,14 +132,14 @@ function lib.loadJson(filePath)
         error(("file path must be a string (received '%s')"):format(filePath), 2)
     end
 
-    local resourceSrc, modPath = getModuleInfo(filePath)
+    local resourceSrc, modPath = getModuleInfo(filePath:gsub('%.', '/'))
     local resourceFile = LoadResourceFile(resourceSrc, ('%s.json'):format(modPath))
 
     if resourceFile then
         return json.decode(resourceFile)
     end
 
-    error(('cannot load json file at path %s'):format(modPath))
+    error(("json file '%s' not found\n\tno file '@%s/%s.json'"):format(filePath, resourceSrc, modPath))
 end
 
 ---Loads the given module, returns any value returned by the seacher (`true` when `nil`).\
