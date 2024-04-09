@@ -6,13 +6,13 @@
     "confirm": "Potwierdź",
     "more": "Więcej...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio"
+      "locale": "Zmień język",
+      "locale_description": "Aktualny język: ${language} (%s)",
+      "notification_audio": "Powiadomienie audio"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Otwórz Menu Kołowe",
+  "cancel_progress": "Anuluj postęp",
   "txadmin_announcement": "Ogłoszenie serwerowe od %s",
   "txadmin_dm": "Prywatna wiadomość od %s",
   "txadmin_warn": "Otrzymano ostrzeżenie od %s",
