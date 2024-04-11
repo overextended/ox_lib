@@ -11,9 +11,6 @@ function lib.getLocaleKey() return settings.locale end
 
 ---@param key string
 function lib.setLocale(key)
-    settings.locale = key
-
-    SetResourceKvp('locale', key)
     TriggerEvent('ox_lib:setLocale', key)
     SendNUIMessage({
         action = 'setLocale',
