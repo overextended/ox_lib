@@ -1,8 +1,9 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
+import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
 import React from 'react';
+import tinycolor from 'tinycolor2';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
@@ -108,10 +109,6 @@ const durationCircle = keyframes({
   '100%': { strokeDasharray: `${15.1 * 2 * Math.PI}, 0` },
 });
 
-const isValidHexColor = (hex: string) => {
-  return /^#[0-9A-F]{6}$/i.test(hex)
-}
-
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
@@ -120,6 +117,8 @@ const Notifications: React.FC = () => {
 
     let iconColor: string;
     let duration = data.duration || 3000;
+
+    data.showDuration = data.showDuration !== undefined ? data.showDuration : true;
 
     // Backwards compat with old notifications
     let position = data.position;
@@ -150,20 +149,20 @@ const Notifications: React.FC = () => {
     if (!data.iconColor) {
       switch (data.type) {
         case 'error':
-          iconColor = 'red';
+          iconColor = 'red.6';
           break;
         case 'success':
-          iconColor = 'teal';
+          iconColor = 'teal.6';
           break;
         case 'warning':
-          iconColor = 'yellow';
+          iconColor = 'yellow.6';
           break;
         default:
-          iconColor = 'blue';
+          iconColor = 'blue.6';
           break;
       }
     } else {
-      iconColor = data.iconColor;
+      iconColor = tinycolor(data.iconColor).toRgbString();
     }
     toast.custom(
       (t) => (
@@ -193,7 +192,7 @@ const Notifications: React.FC = () => {
                   <RingProgress
                     size={38}
                     thickness={2}
-                    sections={[{ value: 100, color: iconColor}]}
+                    sections={[{ value: 100, color: iconColor }]}
                     style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                     styles={{
                       root: {
@@ -207,45 +206,36 @@ const Notifications: React.FC = () => {
                     label={
                       <Center>
                         <ThemeIcon
-                          variant="light"
                           color={iconColor}
                           radius="xl"
                           size={32}
+                          variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
                         >
-                          {!data.iconColor || !isValidHexColor(data.iconColor) ? (
-                            <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} />
-                          ) : (
-                            <LibIcon
-                              icon={data.icon}
-                              fixedWidth
-                              color={iconColor}
-                              animation={data.iconAnimation}
-                            />
-                          )}
+                          <LibIcon
+                            icon={data.icon}
+                            fixedWidth
+                            color={iconColor}
+                            animation={data.iconAnimation}
+                          />
                         </ThemeIcon>
                       </Center>
                     }
                   />
-                ) : !data.iconColor ? (
-                  <Avatar
+                ) : (
+                  <ThemeIcon
                     color={iconColor}
-                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                     radius="xl"
                     size={32}
+                    variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
+                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                   >
-                    <LibIcon icon={data.icon} fixedWidth size="lg" animation={data.iconAnimation} />
-                  </Avatar>
-                ) : (
-                  <LibIcon
-                    icon={data.icon}
-                    animation={data.iconAnimation}
-                    style={{
-                      color: iconColor,
-                      alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
-                    }}
-                    fixedWidth
-                    size="lg"
-                  />
+                    <LibIcon
+                      icon={data.icon}
+                      fixedWidth
+                      color={iconColor}
+                      animation={data.iconAnimation}
+                    />
+                  </ThemeIcon>
                 )}
               </>
             )}

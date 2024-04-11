@@ -37,20 +37,7 @@ export const debugCustomNotification = () => {
         description: 'Notification description',
         type: 'success',
         icon: 'microchip',
-      },
-    },
-  ]);
-  debugData<NotificationProps>([
-    {
-      action: 'notify',
-      data: {
-        title: 'Custom show duration',
-        duration: 5000,
-        showDuration: true,
-        icon: 'eye',
-        iconColor: 'violet',
-        iconAnimation: 'spin',
-        description: 'Notification description',
+        showDuration: false,
       },
     },
   ]);
