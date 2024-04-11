@@ -1,7 +1,7 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text } from '@mantine/core';
+import { Avatar, Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
 import React from 'react';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
@@ -108,6 +108,10 @@ const durationCircle = keyframes({
   '100%': { strokeDasharray: `${15.1 * 2 * Math.PI}, 0` },
 });
 
+const isValidHexColor = (hex: string) => {
+  return /^#[0-9A-F]{6}$/i.test(hex)
+}
+
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
@@ -202,13 +206,23 @@ const Notifications: React.FC = () => {
                     }}
                     label={
                       <Center>
-                        <Avatar
+                        <ThemeIcon
+                          variant="light"
                           color={iconColor}
                           radius="xl"
                           size={32}
                         >
-                          <LibIcon icon={data.icon} fixedWidth size="lg" animation={data.iconAnimation} />
-                        </Avatar>
+                          {!data.iconColor || !isValidHexColor(data.iconColor) ? (
+                            <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} />
+                          ) : (
+                            <LibIcon
+                              icon={data.icon}
+                              fixedWidth
+                              color={iconColor}
+                              animation={data.iconAnimation}
+                            />
+                          )}
+                        </ThemeIcon>
                       </Center>
                     }
                   />
