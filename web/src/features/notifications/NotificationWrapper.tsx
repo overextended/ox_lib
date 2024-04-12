@@ -1,8 +1,9 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-import { Avatar, Box, createStyles, Group, keyframes, Stack, Text } from '@mantine/core';
+import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
 import React from 'react';
+import tinycolor from 'tinycolor2';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
@@ -103,11 +104,22 @@ const exitAnimationBottom = keyframes({
   },
 });
 
+const durationCircle = keyframes({
+  '0%': { strokeDasharray: `0, ${15.1 * 2 * Math.PI}` },
+  '100%': { strokeDasharray: `${15.1 * 2 * Math.PI}, 0` },
+});
+
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
 
   useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
+
+    let iconColor: string;
+    let duration = data.duration || 3000;
+
+    data.showDuration = data.showDuration !== undefined ? data.showDuration : true;
+
     // Backwards compat with old notifications
     let position = data.position;
     switch (position) {
@@ -134,6 +146,24 @@ const Notifications: React.FC = () => {
           break;
       }
     }
+    if (!data.iconColor) {
+      switch (data.type) {
+        case 'error':
+          iconColor = 'red.6';
+          break;
+        case 'success':
+          iconColor = 'teal.6';
+          break;
+        case 'warning':
+          iconColor = 'yellow.6';
+          break;
+        default:
+          iconColor = 'blue.6';
+          break;
+      }
+    } else {
+      iconColor = tinycolor(data.iconColor).toRgbString();
+    }
     toast.custom(
       (t) => (
         <Box
@@ -158,34 +188,54 @@ const Notifications: React.FC = () => {
           <Group noWrap spacing={12}>
             {data.icon && (
               <>
-                {!data.iconColor ? (
-                  <Avatar
-                    color={
-                      data.type === 'error'
-                        ? 'red'
-                        : data.type === 'success'
-                        ? 'teal'
-                        : data.type === 'warning'
-                        ? 'yellow'
-                        : 'blue'
-                    }
+                {data.showDuration ? (
+                  <RingProgress
+                    size={38}
+                    thickness={2}
+                    sections={[{ value: 100, color: iconColor }]}
                     style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
+                    styles={{
+                      root: {
+                        '> svg > circle:nth-of-type(2)': {
+                          animation: `${durationCircle} linear forwards reverse`,
+                          animationDuration: `${duration}ms`,
+                        },
+                        margin: -3,
+                      }
+                    }}
+                    label={
+                      <Center>
+                        <ThemeIcon
+                          color={iconColor}
+                          radius="xl"
+                          size={32}
+                          variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
+                        >
+                          <LibIcon
+                            icon={data.icon}
+                            fixedWidth
+                            color={iconColor}
+                            animation={data.iconAnimation}
+                          />
+                        </ThemeIcon>
+                      </Center>
+                    }
+                  />
+                ) : (
+                  <ThemeIcon
+                    color={iconColor}
                     radius="xl"
                     size={32}
+                    variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
+                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                   >
-                    <LibIcon icon={data.icon} fixedWidth size="lg" animation={data.iconAnimation} />
-                  </Avatar>
-                ) : (
-                  <LibIcon
-                    icon={data.icon}
-                    animation={data.iconAnimation}
-                    style={{
-                      color: data.iconColor,
-                      alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
-                    }}
-                    fixedWidth
-                    size="lg"
-                  />
+                    <LibIcon
+                      icon={data.icon}
+                      fixedWidth
+                      color={iconColor}
+                      animation={data.iconAnimation}
+                    />
+                  </ThemeIcon>
                 )}
               </>
             )}
@@ -205,7 +255,7 @@ const Notifications: React.FC = () => {
       ),
       {
         id: data.id?.toString(),
-        duration: data.duration || 3000,
+        duration: duration,
         position: position || 'top-right',
       }
     );
