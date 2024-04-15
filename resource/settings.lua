@@ -1,5 +1,5 @@
 local settings = {
-    locale = GetResourceKvpString('locale'),
+    locale = GetResourceKvpString('locale') or GetConvar('ox:locale', 'en'),
     notification_position = GetResourceKvpString('notification_position') or 'top-right',
     notification_audio = GetResourceKvpInt('notification_audio') == 1
 }
