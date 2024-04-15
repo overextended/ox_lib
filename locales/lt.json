@@ -8,7 +8,18 @@
     "settings": {
       "locale": "Pakeisti kalbą",
       "locale_description": "Dabartinė: ${language} (%s)",
-      "notification_audio": "Pranešimo garsas"
+      "notification_audio": "Pranešimo garsas",
+      "notification_position": "Notification position"
+    },
+    "position": {
+      "bottom": "Bottom",
+      "bottom-left": "Bottom-left",
+      "bottom-right": "Bottom-right",
+      "center-left": "Center-left",
+      "center-right": "Center-right",
+      "top": "Top",
+      "top-left": "Top-left",
+      "top-right": "Top-right"
     }
   },
   "open_radial_menu": "Atidaryti radialinį meniu",

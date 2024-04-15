@@ -7,6 +7,7 @@
 ---@field title? string
 ---@field description? string
 ---@field duration? number
+---@field showDuration? boolean
 ---@field position? NotificationPosition
 ---@field type? NotificationType
 ---@field style? { [string]: any }
@@ -24,6 +25,7 @@ local settings = require 'resource.settings'
 function lib.notify(data)
     local sound = settings.notification_audio and data.sound
     data.sound = nil
+    data.position = data.position or settings.notification_position
 
     SendNUIMessage({
         action = 'notify',
