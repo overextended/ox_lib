@@ -1,6 +1,7 @@
 ---@class Array : OxClass
 local Array = lib.class('Array')
 
+---@private
 function Array:constructor(...)
     local arr = { ... }
 
@@ -9,6 +10,7 @@ function Array:constructor(...)
     end
 end
 
+---@private
 function Array:__newindex(index, value)
     if type(index) ~= 'number' then error(("Cannot insert non-number index '%s' into an array."):format(index)) end
 
@@ -146,6 +148,23 @@ end
 ---Removes the first element from an array and returns the removed element.
 function Array:shift()
     return table.remove(self, 1)
+end
+
+---The "reducer" function is applied to every element within an array, with the previous element's result serving as the accumulator.\
+---If an initial value is provided, it's used as the accumulator for index 1; otherwise, index 1 itself serves as the initial value, and iteration begins from index 2.
+---@generic T
+---@param reducer fun(accumulator: T, currentValue: T, index?: number): T
+---@param initialValue? T
+---@return T
+function Array:reduce(reducer, initialValue)
+    local initialIndex = initialValue and 1 or 2
+    local accumulator = initialValue or self[1]
+
+    for i = initialIndex, #self do
+        accumulator = reducer(accumulator, self[i], i)
+    end
+
+    return accumulator
 end
 
 lib.array = Array
