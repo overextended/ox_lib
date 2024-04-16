@@ -13,9 +13,12 @@ function lib.streamingRequest(request, hasLoaded, assetType, asset, timeout, ...
 
     request(asset, ...)
 
+    -- i hate fivem developers
+    lib.print.verbose(("Loading %s '%s' - remember to release it when done."):format(assetType, asset))
+
     return lib.waitFor(function()
         if hasLoaded(asset) then return asset end
-    end, ("failed to load %s '%s'"):format(assetType, asset), timeout)
+    end, ("failed to load %s '%s' - this is likely caused by unreleased assets"):format(assetType, asset), timeout)
 end
 
 return lib.streamingRequest
