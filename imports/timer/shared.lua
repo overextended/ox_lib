@@ -4,9 +4,9 @@
 ---@field startTime number the gametimer stamp of when the timer starts. changes when paused and played
 ---@field triggerOnEnd boolean set in the forceEnd method using the optional param. wether or not the onEnd function is triggered when force ending the timer early
 ---@field currentTime number current timer length
----@field tickActive boolean or not the tick is running
+---@field paused boolean the pause state of the timer
 
----@class CTimer : OxClass
+---@class OxTimer : OxClass
 ---@field private TimerPrivateProps
 ---@field constructor fun(self: self, time: number, onEnd: fun(), async: boolean)
 ---@field start fun(self: self) starts the timer
@@ -15,23 +15,41 @@
 ---@field pause fun(self: self) pauses the timer until play method is called
 ---@field play fun(self: self) resumes the timer if paused
 ---@field getTimeLeft fun(self: self): number returns the time left on the timer in milliseconds
-local timer = lib.class('CTimer')
+local timer = lib.class('OxTimer')
 
 function timer:constructor(time, onEnd, async)
     assert(type(time) == "number" and time > 0, "Time must be a positive number")
     assert(onEnd == nil or type(onEnd) == "function", "onEnd must be a function or nil")
     assert(type(async) == "boolean" or async == nil, "async must be a boolean or nil")
 
-    self.time = time
-    self.paused = false
+    self.currentTime = time
+    self.startTime = 0
 
-    self.private.currentTime = time
+    self.private.paused = false
     self.private.onEnd = onEnd
     self.private.async = async
-    self.private.startTime = 0
     self.private.triggerOnEnd = true
 
     self:start()
+end
+
+---@param timerInstance OxTimer
+local function tick(timerInstance)
+    while true do
+        if timerInstance.paused then
+            while timerInstance.paused do
+                Wait(0)
+            end
+        end
+
+        if GetGameTimer() - timerInstance.startTime >= timerInstance.currentTime then
+            break
+        end
+
+        Wait(0)
+    end
+
+    timerInstance:onEnd()
 end
 
 function timer:start()
@@ -41,37 +59,14 @@ function timer:start()
 
     if self.private.async then
         CreateThread(function()
-            self:tick()
+            tick(self)
         end)
     else
-        self:tick()
+        tick(self)
     end
 end
 
-function timer:tick()
-    if not debug.getinfo(2, 'S').short_src:find('@ox_lib/imports/timer') then
-        lib.print.warn('the tick method is only called interally')
-        return
-    end
-
-    self.private.tickActive = true
-
-    while true do
-        if self.paused then
-            while self.paused do
-                Wait(0)
-            end
-        end
-
-        if GetGameTimer() - self.private.startTime >= self.private.currentTime then
-            break
-        end
-
-        Wait(0)
-    end
-
-    self.private.tickActive = false
-
+function timer:onEnd()
     if self.private.triggerOnEnd and self.private.onEnd then
         self.private:onEnd()
     end
@@ -92,6 +87,10 @@ function timer:play()
     if not self.paused then return end
     self.private.startTime = GetGameTimer()
     self.paused = false
+end
+
+function timer:isPaused()
+    return self.private.paused
 end
 
 function timer:restart()
