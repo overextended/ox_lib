@@ -1,8 +1,16 @@
+-- Some users have locale set from ox_lib v2
+if GetResourceKvpInt('reset_locale') ~= 1 then
+    DeleteResourceKvp('locale')
+    SetResourceKvpInt('reset_locale', 1)
+end
+
 local settings = {
-    locale = GetResourceKvpString('locale') or GetConvar('ox:locale', 'en'),
+    default_locale = GetConvar('ox:locale', 'en'),
     notification_position = GetResourceKvpString('notification_position') or 'top-right',
     notification_audio = GetResourceKvpInt('notification_audio') == 1
 }
+
+settings.locale = GetResourceKvpString('locale') or settings.default_locale
 
 local function set(key, value)
     if settings[key] == value then return false end
