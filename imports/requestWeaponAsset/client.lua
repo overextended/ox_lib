@@ -17,7 +17,7 @@
 
 ---Load a weapon asset. When called from a thread, it will yield until it has loaded.
 ---@param weaponType string | number
----@param timeout number? Approximate milliseconds to wait for the asset to load. Default is 1000.
+---@param timeout number? Approximate milliseconds to wait for the asset to load. Default is 10000.
 ---@param weaponResourceFlags WeaponResourceFlags? Default is 31.
 ---@param extraWeaponComponentFlags ExtraWeaponComponentFlags? Default is 0.
 ---@return string | number weaponType

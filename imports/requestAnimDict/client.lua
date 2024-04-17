@@ -1,6 +1,6 @@
 ---Load an animation dictionary. When called from a thread, it will yield until it has loaded.
 ---@param animDict string
----@param timeout number? Approximate milliseconds to wait for the dictionary to load. Default is 1000.
+---@param timeout number? Approximate milliseconds to wait for the dictionary to load. Default is 10000.
 ---@return string animDict
 function lib.requestAnimDict(animDict, timeout)
     if HasAnimDictLoaded(animDict) then return animDict end
