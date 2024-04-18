@@ -1,6 +1,8 @@
 ---@class Array : OxClass
 local Array = lib.class('Array')
 
+---@alias ArrayLike<T> Array | { [number]: T }
+
 ---@private
 function Array:constructor(...)
     local arr = { ... }
@@ -18,7 +20,7 @@ function Array:__newindex(index, value)
 end
 
 ---Create a new array containing the elements from two arrays.
----@param arr Array | any[]
+---@param arr ArrayLike
 function Array:merge(arr)
     local newArr = table.clone(self)
     local length = #self
@@ -165,6 +167,21 @@ function Array:reduce(reducer, initialValue)
     end
 
     return accumulator
+end
+
+---Returns true if the given table is an instance of array or an array-like table.
+---@param tbl ArrayLike
+---@return boolean
+function Array.isArray(tbl)
+    if not type(tbl) == 'table' then return false end
+
+    local tableType = table.type(tbl)
+
+    if tableType == 'array' or tableType == 'empty' or Array.instanceOf(tbl, Array) then
+        return true
+    end
+
+    return false
 end
 
 lib.array = Array
