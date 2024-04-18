@@ -1,5 +1,7 @@
 ## Enhance RadialMenu Component Scalability and Text Handling
 
+**Files Changed**: `web/src/features/menu/radial/index.tsx`
+
 ### Before
 
 ![alt text](https://i.imgur.com/kz4OyAn.png)
