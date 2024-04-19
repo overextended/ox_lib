@@ -10,7 +10,9 @@ local settings = {
     notification_audio = GetResourceKvpInt('notification_audio') == 1
 }
 
-settings.locale = GetResourceKvpString('locale') or settings.default_locale
+local userLocales = GetConvarInt('ox:userLocales', 1) == 1
+
+settings.locale = userLocales and GetResourceKvpString('locale') or settings.default_locale
 
 local function set(key, value)
     if settings[key] == value then return false end
@@ -36,16 +38,11 @@ local function set(key, value)
 end
 
 RegisterCommand('ox_lib', function()
-    local input = lib.inputDialog('Settings', {
+    local inputSettings = {
         {
-            type = 'select',
-            label = locale('ui.settings.locale'),
-            searchable = true,
-            description = locale('ui.settings.locale_description', settings.locale),
-            options = GlobalState['ox_lib:locales'],
-            default = settings.locale,
-            required = true,
-            icon = 'book',
+            type = 'checkbox',
+            label = locale('ui.settings.notification_audio'),
+            checked = settings.notification_audio,
         },
         {
             type = 'select',
@@ -64,12 +61,23 @@ RegisterCommand('ox_lib', function()
             required = true,
             icon = 'message',
         },
-        {
-            type = 'checkbox',
-            label = locale('ui.settings.notification_audio'),
-            checked = settings.notification_audio,
-        }
-    }) --[[@as table?]]
+    }
+
+    if userLocales then
+        table.insert(inputSettings,
+            {
+                type = 'select',
+                label = locale('ui.settings.locale'),
+                searchable = true,
+                description = locale('ui.settings.locale_description', settings.locale),
+                options = GlobalState['ox_lib:locales'],
+                default = settings.locale,
+                required = true,
+                icon = 'book',
+            })
+    end
+
+    local input = lib.inputDialog(locale('settings'), inputSettings) --[[@as table?]]
 
     if not input then return end
 
