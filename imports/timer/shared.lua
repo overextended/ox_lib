@@ -8,8 +8,7 @@
 ---@field paused boolean the pause state of the timer
 
 ---@class OxTimer : OxClass
----@field private TimerPrivateProps
----@field constructor fun(self: self, time: number, onEnd: fun(), async: boolean)
+---@field private private TimerPrivateProps
 ---@field start fun(self: self, async?: boolean) starts the timer
 ---@field forceEnd fun(self: self, triggerOnEnd: boolean) end timer early and optionally trigger the onEnd function still
 ---@field isPaused fun(self: self): boolean returns wether the timer is paused or not
@@ -18,6 +17,10 @@
 ---@field getTimeLeft fun(self: self, format?: 'ms' | 's' | 'm' | 'h'): number | table returns the time left on the timer with the specified format rounded to 2 decimal places (miliseconds, seconds, minutes, hours). returns a table of all if not specified.
 local timer = lib.class('OxTimer')
 
+---@private
+---@param time number
+---@param onEnd fun(self: OxTimer)
+---@param async? boolean
 function timer:constructor(time, onEnd, async)
     assert(type(time) == "number" and time > 0, "Time must be a positive number")
     assert(onEnd == nil or type(onEnd) == "function", "onEnd must be a function or nil")
@@ -140,16 +143,11 @@ function timer:getTimeLeft(format)
     }
 end
 
-lib.timer = {
-    async = function(time, onEnd)
-        return timer:new(time, onEnd, true)
-    end
-}
-
-setmetatable(lib.timer, {
-    __call = function(t, time, onEnd)
-        return timer:new(time, onEnd)
-    end
-})
+---@param time number
+---@param onEnd fun(self: OxTimer)
+---@param async? boolean
+function lib.timer(time, onEnd, async)
+    return timer:new(time, onEnd, async)
+end
 
 return lib.timer
