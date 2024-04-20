@@ -81,8 +81,8 @@ RegisterCommand('ox_lib', function()
 
     if not input then return end
 
-    ---@type string, string, boolean
-    local locale, notification_position, notification_audio = table.unpack(input)
+    ---@type boolean, string, string
+    local notification_audio, notification_position, locale = table.unpack(input)
 
     if set('locale', locale) then lib.setLocale(locale) end
 
