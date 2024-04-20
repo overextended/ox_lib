@@ -6,20 +6,20 @@
     "confirm": "Potvrdit",
     "more": "Více...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Změnit jazyk",
+      "locale_description": "Aktuální jazyk: ${language} (%s)",
+      "notification_audio": "Zvuk notifikací",
+      "notification_position": "Pozice notifikací"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "Dole",
+      "bottom-left": "Vlevo dole",
+      "bottom-right": "Vpravo dole",
+      "center-left": "Vlevo uprostřed",
+      "center-right": "Vpravo uprostřed",
+      "top": "Nahoře",
+      "top-left": "Vlevo nahoře",
+      "top-right": "Vpravo nahoře"
     }
   },
   "open_radial_menu": "Otevřít kruhové menu",
