@@ -1,5 +1,6 @@
 {
   "language": "English",
+  "settings": "Settings",
   "ui": {
     "cancel": "Cancel",
     "close": "Close",

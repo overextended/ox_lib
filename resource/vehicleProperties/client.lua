@@ -284,16 +284,10 @@ end
 ---@param vehicle number
 ---@param props VehicleProperties
 ---@param fixVehicle? boolean Fix the vehicle after props have been set. Usually required when adding extras.
----@return boolean?
+---@return boolean isEntityOwner True if the entity is networked and the client is the current entity owner.
 function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if not DoesEntityExist(vehicle) then
-        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
-        format(vehicle))
-    end
-
-    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then
-        error((
-            "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
+        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):format(vehicle))
     end
 
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
@@ -643,5 +637,5 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleFixed(vehicle)
     end
 
-    return true
+    return not NetworkGetEntityIsNetworked(vehicle) or NetworkGetEntityOwner(vehicle) == cache.playerId
 end
