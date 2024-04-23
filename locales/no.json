@@ -1,29 +1,30 @@
 {
   "language": "Norsk",
+  "settings": "Innstillinger",
   "ui": {
     "cancel": "Avbryt",
     "close": "Lukk",
     "confirm": "Bekreft",
     "more": "Mer...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Endre språk",
+      "locale_description": "Nåværende språk: ${language} (%s)",
+      "notification_audio": "Varslings lyd",
+      "notification_position": "Varslings posisjon"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
+      "bottom": "Bunn",
+      "bottom-left": "Bunn-venstre",
+      "bottom-right": "Bunn-høyre",
+      "center-left": "Senter-venstre",
+      "center-right": "Senter-høyre",
       "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "top-left": "Top-venstre",
+      "top-right": "Top-høyre"
     }
   },
   "open_radial_menu": "Åpne radial menyen",
-  "cancel_progress": "Avbryt den nåværende fremdriftsindikatoren",
+  "cancel_progress": "Avbryt den nåværende progresjonsbaren",
   "txadmin_announcement": "Server annonsering fra %s",
   "txadmin_dm": "Direktemelding fra %s",
   "txadmin_warn": "Du har fått en advarsel fra %s",
