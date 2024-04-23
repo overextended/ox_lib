@@ -3,13 +3,13 @@
 ---
 ---Provides non-neglibible performance gains due to msgpacking all arguments _once_, instead of per-target.
 ---@param eventName string
----@param targetIds number | number[]
+---@param targetIds number | ArrayLike<number>
 ---@param ... any
 function lib.triggerClientEvent(eventName, targetIds, ...)
     local payload = msgpack.pack_args(...)
     local payloadLen = #payload
 
-    if type(targetIds) == 'table' and table.type(targetIds) == 'array' then
+    if lib.array.isArray(targetIds) then
         for i = 1, #targetIds do
             TriggerClientEventInternal(eventName, targetIds[i] --[[@as string]], payload, payloadLen)
         end

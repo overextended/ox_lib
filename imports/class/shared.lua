@@ -85,7 +85,7 @@ function mixins.new(class, ...)
             __index = function(self, index)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat ~= 'method' then return end
+                if di.namewhat == 'local' then return end
 
                 return private[index]
             end,

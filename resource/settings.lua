@@ -1,8 +1,33 @@
+-- Some users have locale set from ox_lib v2
+if GetResourceKvpInt('reset_locale') ~= 1 then
+    DeleteResourceKvp('locale')
+    SetResourceKvpInt('reset_locale', 1)
+end
+
+---@generic T
+---@param fn fun(key): unknown
+---@param key string
+---@param default? T
+---@return T
+local function safeGetKvp(fn, key, default)
+    local ok, result = pcall(fn, key)
+
+    if not ok then
+        return DeleteResourceKvp(key)
+    end
+
+    return result or default
+end
+
 local settings = {
-    locale = GetResourceKvpString('locale') or GetConvar('ox:locale', 'en'),
-    notification_position = GetResourceKvpString('notification_position') or 'top-right',
-    notification_audio = GetResourceKvpInt('notification_audio') == 1
+    default_locale = GetConvar('ox:locale', 'en'),
+    notification_position = safeGetKvp(GetResourceKvpString, 'notification_position', 'top-right'),
+    notification_audio = safeGetKvp(GetResourceKvpInt, 'notification_audio') == 1
 }
+
+local userLocales = GetConvarInt('ox:userLocales', 1) == 1
+
+settings.locale = userLocales and safeGetKvp(GetResourceKvpString, 'locale') or settings.default_locale
 
 local function set(key, value)
     if settings[key] == value then return false end
@@ -28,16 +53,11 @@ local function set(key, value)
 end
 
 RegisterCommand('ox_lib', function()
-    local input = lib.inputDialog('Settings', {
+    local inputSettings = {
         {
-            type = 'select',
-            label = locale('ui.settings.locale'),
-            searchable = true,
-            description = locale('ui.settings.locale_description', settings.locale),
-            options = GlobalState['ox_lib:locales'],
-            default = settings.locale,
-            required = true,
-            icon = 'book',
+            type = 'checkbox',
+            label = locale('ui.settings.notification_audio'),
+            checked = settings.notification_audio,
         },
         {
             type = 'select',
@@ -56,17 +76,28 @@ RegisterCommand('ox_lib', function()
             required = true,
             icon = 'message',
         },
-        {
-            type = 'checkbox',
-            label = locale('ui.settings.notification_audio'),
-            checked = settings.notification_audio,
-        }
-    }) --[[@as table?]]
+    }
+
+    if userLocales then
+        table.insert(inputSettings,
+            {
+                type = 'select',
+                label = locale('ui.settings.locale'),
+                searchable = true,
+                description = locale('ui.settings.locale_description', settings.locale),
+                options = GlobalState['ox_lib:locales'],
+                default = settings.locale,
+                required = true,
+                icon = 'book',
+            })
+    end
+
+    local input = lib.inputDialog(locale('settings'), inputSettings) --[[@as table?]]
 
     if not input then return end
 
-    ---@type string, string, boolean
-    local locale, notification_position, notification_audio = table.unpack(input)
+    ---@type boolean, string, string
+    local notification_audio, notification_position, locale = table.unpack(input)
 
     if set('locale', locale) then lib.setLocale(locale) end
 
