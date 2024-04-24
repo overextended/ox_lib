@@ -1,9 +1,11 @@
 local input
+local currentRows
 
 ---@class InputDialogRowProps
 ---@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea' | 'color'
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
+---@field onSelect? fun(args: any)
 ---@field password? boolean
 ---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string
@@ -32,6 +34,7 @@ local input
 function lib.inputDialog(heading, rows, options)
     if input then return end
     input = promise.new()
+    currentRows = rows
 
     -- Backwards compat with string tables
     for i = 1, #rows do
@@ -63,6 +66,7 @@ function lib.closeInputDialog()
 
     input:resolve(nil)
     input = nil
+    currentRows = nil
 end
 
 RegisterNUICallback('inputData', function(data, cb)
@@ -71,6 +75,19 @@ RegisterNUICallback('inputData', function(data, cb)
 
     local promise = input
     input = nil
+    currentRows = nil
 
     promise:resolve(data)
+end)
+
+RegisterNUICallback('clickSelect', function(data, cb)
+    cb(1)
+
+    for i = 1, #currentRows do
+        local row = currentRows[i]
+
+        if (type(row) == 'table') and (row.type == 'select') then
+            if row.onSelect then row.onSelect(data.value) end
+        end
+    end
 end)

@@ -2,6 +2,7 @@ import { MultiSelect, Select } from '@mantine/core';
 import { ISelect } from '../../../../typings';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
+import { fetchNui } from '../../../../utils/fetchNui';
 import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
@@ -17,6 +18,14 @@ const SelectField: React.FC<Props> = (props) => {
     rules: { required: props.row.required },
   });
 
+  const handleSelectChange = (value: string) => {
+    if (controller.field.onChange) {
+      controller.field.onChange(value);
+    };
+    
+    fetchNui('clickSelect', { index: props.index + 1, value: value });
+  };
+
   return (
     <>
       {props.row.type === 'select' ? (
@@ -26,7 +35,7 @@ const SelectField: React.FC<Props> = (props) => {
           name={controller.field.name}
           ref={controller.field.ref}
           onBlur={controller.field.onBlur}
-          onChange={controller.field.onChange}
+          onChange={handleSelectChange}
           disabled={props.row.disabled}
           label={props.row.label}
           description={props.row.description}
