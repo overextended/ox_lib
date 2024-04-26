@@ -205,7 +205,9 @@ RegisterCommand('cancelprogress', function()
     if progress?.canCancel then progress = false end
 end)
 
-RegisterKeyMapping('cancelprogress', locale('cancel_progress'), 'keyboard', 'x')
+if isFivem then
+    RegisterKeyMapping('cancelprogress', locale('cancel_progress'), 'keyboard', 'x')
+end
 
 local function deleteProgressProps(serverId)
     local playerProps = createdProps[serverId]
