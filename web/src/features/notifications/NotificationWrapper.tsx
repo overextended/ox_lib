@@ -2,7 +2,7 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
-import React from 'react';
+import React, { useRef } from 'react';
 import tinycolor from 'tinycolor2';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
@@ -111,12 +111,12 @@ const durationCircle = keyframes({
 
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
-  const [toastKey, setToastKey] = React.useState(0);
+  const toastKeyRef = useRef(0);
 
   useNuiEvent<NotificationProps>('notify', (data) => {
-    const toastId = data.id?.toString()
+    const toastId = data.id?.toString();
 
-    if (toastId) setToastKey(prevKey => prevKey + 1);
+    if (toastId) toastKeyRef.current++;
 
     if (!data.title && !data.description) return;
 
@@ -195,7 +195,7 @@ const Notifications: React.FC = () => {
               <>
                 {data.showDuration ? (
                   <RingProgress
-                    key={toastKey}
+                    key={toastKeyRef.current}
                     size={38}
                     thickness={2}
                     sections={[{ value: 100, color: iconColor }]}
@@ -207,7 +207,7 @@ const Notifications: React.FC = () => {
                           animationDuration: `${duration}ms`,
                         },
                         margin: -3,
-                      }
+                      },
                     }}
                     label={
                       <Center>
@@ -217,12 +217,7 @@ const Notifications: React.FC = () => {
                           size={32}
                           variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
                         >
-                          <LibIcon
-                            icon={data.icon}
-                            fixedWidth
-                            color={iconColor}
-                            animation={data.iconAnimation}
-                          />
+                          <LibIcon icon={data.icon} fixedWidth color={iconColor} animation={data.iconAnimation} />
                         </ThemeIcon>
                       </Center>
                     }
@@ -235,12 +230,7 @@ const Notifications: React.FC = () => {
                     variant={tinycolor(iconColor).getAlpha() === 0 ? undefined : 'light'}
                     style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
                   >
-                    <LibIcon
-                      icon={data.icon}
-                      fixedWidth
-                      color={iconColor}
-                      animation={data.iconAnimation}
-                    />
+                    <LibIcon icon={data.icon} fixedWidth color={iconColor} animation={data.iconAnimation} />
                   </ThemeIcon>
                 )}
               </>
