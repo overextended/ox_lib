@@ -1,5 +1,5 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { toast, Toaster, useToasterStore } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
 import React from 'react';
@@ -111,12 +111,12 @@ const durationCircle = keyframes({
 
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
-  const { toasts } = useToasterStore();
+  const [toastKey, setToastKey] = React.useState(0);
 
   useNuiEvent<NotificationProps>('notify', (data) => {
     const toastId = data.id?.toString()
 
-    if (toastId && toasts.some((toast) => toast.id === toastId)) return;
+    if (toastId) setToastKey(prevKey => prevKey + 1);
 
     if (!data.title && !data.description) return;
 
@@ -195,6 +195,7 @@ const Notifications: React.FC = () => {
               <>
                 {data.showDuration ? (
                   <RingProgress
+                    key={toastKey}
                     size={38}
                     thickness={2}
                     sections={[{ value: 100, color: iconColor }]}
