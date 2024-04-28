@@ -92,7 +92,7 @@ function mixins.new(class, ...)
             __newindex = function(self, index, value)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat ~= 'method' then
+                if di.namewhat ~= 'method' and di.namewhat ~= '' then
                     error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
