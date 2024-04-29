@@ -38,7 +38,7 @@ export interface ISelect extends BaseField<'select' | 'multi-select', string | s
   options: Array<OptionValue>;
   clearable?: boolean;
   searchable?: boolean;
-  max?: number;
+  maxSelectedValues?: number;
 }
 
 export interface INumber extends BaseField<'number', number> {

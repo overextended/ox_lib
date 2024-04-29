@@ -64,7 +64,7 @@ interface SelectProps extends BaseInput {
   default?: string | string[];
   clearable?: boolean;
   searchable?: boolean;
-  max?: number;
+  maxSelectedValues?: number;
 }
 
 interface SliderProps extends BaseInput {
