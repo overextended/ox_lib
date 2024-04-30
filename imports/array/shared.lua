@@ -92,7 +92,7 @@ function Array:findIndex(testFn, last)
         local element = self[i]
 
         if testFn(element) then
-            return element
+            return i
         end
     end
 end
