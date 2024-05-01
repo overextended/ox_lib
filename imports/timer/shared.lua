@@ -32,8 +32,9 @@ function timer:constructor(time, onEnd, async)
     self.private.paused = false
     self.private.onEnd = onEnd
     self.private.triggerOnEnd = true
+    self.private.isAsync = async
 
-    self:start(async)
+    self:start(self.private.isAsync)
 end
 
 function timer:start(async)
@@ -103,7 +104,7 @@ function timer:restart()
     Wait(0)
     self.private.currentTimeLeft = self.private.initialTime
     self.private.startTime = 0
-    self:start()
+    self:start(self.private.isAsync)
 end
 
 function timer:getTimeLeft(format)
