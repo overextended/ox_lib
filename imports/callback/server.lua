@@ -1,8 +1,11 @@
-local events = {}
-local cbEvent = ('__ox_cb_%s')
+local pendingCallbacks = {}
+local cbEvent = '__ox_cb_%s'
+local callbackTimeout = GetConvarInt('ox:callbackTimeout', 60000)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
-	local cb = events[key]
+	local cb = pendingCallbacks[key]
+    pendingCallbacks[key] = nil
+
 	return cb and cb(...)
 end)
 
@@ -17,16 +20,15 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 
 	repeat
 		key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
-	until not events[key]
+	until not pendingCallbacks[key]
 
 	TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
 	---@type promise | false
 	local promise = not cb and promise.new()
 
-	events[key] = function(response, ...)
+	pendingCallbacks[key] = function(response, ...)
         response = { response, ... }
-		events[key] = nil
 
 		if promise then
 			return promise:resolve(response)
@@ -38,6 +40,8 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 	end
 
 	if promise then
+        SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
+
 		return table.unpack(Citizen.Await(promise))
 	end
 end
