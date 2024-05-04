@@ -120,8 +120,8 @@ end
 ---@param seperator? string
 ---@return string
 function math.groupdigits(number, seperator) -- credit http://richard.warburton.it
-    local left,num,right = string.match(number,'^([^%d]*%d)(%d*)(.-)$')
-    return left..(num:reverse():gsub('(%d%d%d)','%1' .. (seperator or ',')):reverse())..right
+    local left, num, right = string.match(number, '^([^%d]*%d)(%d*)(.-)$')
+    return left .. (num:reverse():gsub('(%d%d%d)', '%1' .. (seperator or ',')):reverse()) .. right
 end
 
 ---Clamp a number between 2 other numbers
@@ -134,46 +134,57 @@ function math.clamp(val, lower, upper) -- credit https://love2d.org/forums/viewt
     return math.max(lower, math.min(upper, val))
 end
 
----Linearly interpolates between two values over a specified duration.
----@param start number|table|vector2|vector3|vector4  -- The starting value of the interpolation.
----@param finish number|table|vector2|vector3|vector4 -- The ending value of the interpolation.
----@param duration number                             -- The duration over which to interpolate.
----@return function                                   -- a function that returns interpolated values over time.
-function math.lerp(start, finish, duration)
-	local startTime = GetGameTimer()
-	local typeStart = type(start)
-
-	if typeStart ~= type(finish) then
-		lib.print.error("start and finish must be of the same type")
-	end
-
-	local interpolate = function(s, f, t)
-		if type(s) == "number" or type(s) == "vector2" or type(s) == "vector3" or type(s) == "vector4" then
-			return s + (f - s) * t
-		elseif type(s) == "table" then
-			local result = {}
-			for i in pairs(s) do
-				result[i] = s[i] + (f[i] - s[i]) * t
-			end
-			return result
-		else
-			lib.print.error("unsupported type for lerp: " .. type(s))
-		end
-	end
-
-	local last = false
-	return function()
-		if last then return nil end
-		Wait(0)
-		local t = (GetGameTimer() - startTime) / duration
-		t = math.min(t, 1)
-		if t == 1 then
-			last = true
-			return finish
-		end
-		return interpolate(start, finish, t)
-	end
+local function interpolate(s, f, t)
+    return s + (f - s) * t
 end
 
+local function interpolateTable(s, f, t)
+    local result = {}
+
+    for k, v in pairs(s) do
+        result[k] = v + (f[k] - v) * t
+    end
+
+    return result
+end
+
+---Linearly interpolates between two values over a specified duration, returning an iterator function that will run once per game-frame.
+---@generic T : number | table | vector2 | vector3 | vector4
+---@param start T -- The starting value of the interpolation.
+---@param finish T -- The ending value of the interpolation.
+---@param duration number -- The duration over which to interpolate over in milliseconds.
+---@return fun(): T, number
+function math.lerp(start, finish, duration)
+    local startTime = GetGameTimer()
+    local typeStart = type(start)
+    local typeFinish = type(finish)
+
+    if typeStart ~= 'number' and typeStart ~= 'vector2' and typeStart ~= 'vector3' and typeStart ~= 'vector4' and typeStart ~= 'table' then
+        error(("expected argument 1 to have type '%s' (received %s)"):format('number | table | vector2 | vector3 | vector4', typeStart))
+    end
+
+    assert(typeFinish == typeStart, ("expected argument 2 to have type '%s' (received %s)"):format(typeStart, typeFinish))
+
+    local interpFn = typeStart == 'table' and interpolateTable or interpolate
+    local step
+
+    return function()
+        if not step then
+            step = 0
+            return start, step
+        end
+
+        if step == 1 then return end
+
+        Wait(0)
+        step = math.min((GetGameTimer() - startTime) / duration, 1)
+
+        if step < 1 then
+            return interpFn(start, finish, step), step
+        end
+
+        return finish, step
+    end
+end
 
 return lib.math
