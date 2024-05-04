@@ -134,22 +134,46 @@ function math.clamp(val, lower, upper) -- credit https://love2d.org/forums/viewt
     return math.max(lower, math.min(upper, val))
 end
 
----Lerps (linearly interpolates) between two vectors over a specified duration.
----@param startVector vector -- Starting vector, the interpolation begins here.
----@param endVector vector   -- Ending vector, the interpolation targets this.
----@param duration number    -- The total duration of the interpolation in milliseconds.
----@param cb function        -- Callback function that gets called with the interpolated vector as its argument.
----@return boolean
-function math.lerpVectors(startVector, endVector, duration, cb)
+---Linearly interpolates between two values over a specified duration.
+---@param start number|table|vector2|vector3|vector4  -- The starting value of the interpolation.
+---@param finish number|table|vector2|vector3|vector4 -- The ending value of the interpolation.
+---@param duration number                             -- The duration over which to interpolate.
+---@return function                                   -- a function that returns interpolated values over time.
+function math.lerp(start, finish, duration)
 	local startTime = GetGameTimer()
-	local t = 0
-	while t < 1 do
-		t = math.min((GetGameTimer() - startTime) / duration, 1)
-		local interpolatedVector = startVector + (endVector - startVector) * t
-		cb(interpolatedVector)
-		Wait(0)
+	local typeStart = type(start)
+
+	if typeStart ~= type(finish) then
+		lib.print.error("start and finish must be of the same type")
 	end
-	return true
+
+	local interpolate = function(s, f, t)
+		if type(s) == "number" or type(s) == "vector2" or type(s) == "vector3" or type(s) == "vector4" then
+			return s + (f - s) * t
+		elseif type(s) == "table" then
+			local result = {}
+			for i in pairs(s) do
+				result[i] = s[i] + (f[i] - s[i]) * t
+			end
+			return result
+		else
+			lib.print.error("unsupported type for lerp: " .. type(s))
+		end
+	end
+
+	local last = false
+	return function()
+		if last then return nil end
+		Wait(0)
+		local t = (GetGameTimer() - startTime) / duration
+		t = math.min(t, 1)
+		if t == 1 then
+			last = true
+			return finish
+		end
+		return interpolate(start, finish, t)
+	end
 end
+
 
 return lib.math
