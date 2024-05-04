@@ -134,4 +134,22 @@ function math.clamp(val, lower, upper) -- credit https://love2d.org/forums/viewt
     return math.max(lower, math.min(upper, val))
 end
 
+---Lerps (linearly interpolates) between two vectors over a specified duration.
+---@param startVector vector -- Starting vector, the interpolation begins here.
+---@param endVector vector   -- Ending vector, the interpolation targets this.
+---@param duration number    -- The total duration of the interpolation in milliseconds.
+---@param cb function        -- Callback function that gets called with the interpolated vector as its argument.
+---@return boolean
+function math.lerpVectors(startVector, endVector, duration, cb)
+	local startTime = GetGameTimer()
+	local t = 0
+	while t < 1 do
+		t = math.min((GetGameTimer() - startTime) / duration, 1)
+		local interpolatedVector = startVector + (endVector - startVector) * t
+		cb(interpolatedVector)
+		Wait(0)
+	end
+	return true
+end
+
 return lib.math
