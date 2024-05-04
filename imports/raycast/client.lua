@@ -2,7 +2,11 @@ lib.raycast = {}
 
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
-local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
+
+local function GetForwardVector(rotation)
+    local rot = (math.pi / 180.0) * rotation
+    return vector3(-math.sin(rot.z) * math.abs(math.cos(rot.x)), math.cos(rot.z) * math.abs(math.cos(rot.x)), math.sin(rot.x))
+end
 
 ---@alias ShapetestIgnore
 ---| 1 GLASS
@@ -20,8 +24,9 @@ local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 ---@return vector3 surfaceNormal
 ---@return number materialHash
 function lib.raycast.cam(flags, ignore, distance)
-	local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
-	local destination = coords + normal * (distance or 10)
+	local coords = GetGameplayCamCoord()
+    local forwardVectors = GetForwardVector(GetGameplayCamRot(2))
+    local destination = coords + (forwardVectors * (distance or 10.0))
 	local handle = StartShapeTestLosProbe(coords.x, coords.y, coords.z, destination.x, destination.y, destination.z,
 		flags or 511, cache.ped, ignore or 4)
 
