@@ -139,7 +139,7 @@ end
 ---@param start T
 ---@param finish T
 ---@param factor integer The interpolation factor between 0 and 1.
----@return unknown
+---@return T
 function math.interp(start, finish, factor)
     return start + (finish - start) * factor
 end
