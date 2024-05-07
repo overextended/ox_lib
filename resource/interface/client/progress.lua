@@ -9,6 +9,7 @@ local createdProps = {}
 ---@field bone? number
 ---@field pos vector3
 ---@field rot vector3
+---@field rotOrder? number
 
 ---@class ProgressProps
 ---@field label? string
@@ -29,7 +30,7 @@ local function createProp(ped, prop)
     local coords = GetEntityCoords(ped)
     local object = CreateObject(prop.model, coords.x, coords.y, coords.z, false, false, false)
 
-    AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, 0, true)
+    AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, prop.rotOrder or 0, true)
     SetModelAsNoLongerNeeded(prop.model)
 
     return object
