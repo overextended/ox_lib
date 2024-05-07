@@ -129,20 +129,27 @@ end
 ---@param lower number
 ---@param upper number
 ---@return number
-function math.clamp(val, lower, upper) -- credit https://love2d.org/forums/viewtopic.php?t=1856
+function math.clamp(val, lower, upper)                    -- credit https://love2d.org/forums/viewtopic.php?t=1856
     if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
     return math.max(lower, math.min(upper, val))
 end
 
-local function interpolate(s, f, t)
-    return s + (f - s) * t
+---Calculates an intermediate value between `start` and `finish` based on the interpolation `factor`.
+---@generic T : number | vector2 | vector3 | vector4
+---@param start T
+---@param finish T
+---@param factor integer The interpolation factor between 0 and 1.
+---@return unknown
+function math.interp(start, finish, factor)
+    return start + (finish - start) * factor
 end
 
-local function interpolateTable(s, f, t)
+local function interpolateTable(start, finish, factor)
+    local interp = math.interp
     local result = {}
 
-    for k, v in pairs(s) do
-        result[k] = v + (f[k] - v) * t
+    for k, v in pairs(start) do
+        result[k] = interp(v, finish[k], factor)
     end
 
     return result
@@ -165,7 +172,7 @@ function math.lerp(start, finish, duration)
 
     assert(typeFinish == typeStart, ("expected argument 2 to have type '%s' (received %s)"):format(typeStart, typeFinish))
 
-    local interpFn = typeStart == 'table' and interpolateTable or interpolate
+    local interpFn = typeStart == 'table' and interpolateTable or math.interp
     local step
 
     return function()
