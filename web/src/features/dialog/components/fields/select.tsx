@@ -51,6 +51,7 @@ const SelectField: React.FC<Props> = (props) => {
               withAsterisk={props.row.required}
               clearable={props.row.clearable}
               searchable={props.row.searchable}
+              maxSelectedValues={props.row.maxSelectedValues}
               icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
             />
           )}
