@@ -67,19 +67,31 @@ const AlertDialog: React.FC = () => {
             {dialogData.content}
           </ReactMarkdown>
           <Group position="right" spacing={10}>
+            {dialogData.actions?.map(action => (
+                <Button
+                    key={action.id}
+                    mr={3}
+                    variant={action.variant ?? "default"}
+                    onClick={() => closeAlert(action.id)}
+                >
+                    {action.label}
+                </Button>
+            ))}
             {dialogData.cancel && (
               <Button uppercase variant="default" onClick={() => closeAlert('cancel')} mr={3}>
                 {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}
-            <Button
-              uppercase
-              variant={dialogData.cancel ? 'light' : 'default'}
-              color={dialogData.cancel ? theme.primaryColor : undefined}
-              onClick={() => closeAlert('confirm')}
-            >
-              {dialogData.labels?.confirm || locale.ui.confirm}
-            </Button>
+            {(dialogData.confirm === undefined || dialogData.confirm) && (
+                <Button
+                    uppercase
+                    variant={dialogData.cancel ? 'light' : 'default'}
+                    color={dialogData.cancel ? theme.primaryColor : undefined}
+                    onClick={() => closeAlert('confirm')}
+                >
+                    {dialogData.labels?.confirm || locale.ui.confirm}
+                </Button>
+            )}
           </Group>
         </Stack>
       </Modal>
