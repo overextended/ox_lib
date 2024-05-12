@@ -22,6 +22,8 @@ const TextareaField: React.FC<Props> = (props) => {
       disabled={props.row.disabled}
       withAsterisk={props.row.required}
       autosize={props.row.autosize}
+      minLength={props.row.minLength}
+      maxLength={props.row.maxLength}
       minRows={props.row.min}
       maxRows={props.row.max}
     />

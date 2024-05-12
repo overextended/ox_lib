@@ -74,6 +74,8 @@ export interface ITimeInput extends Omit<BaseField<'time', string>, 'placeholder
 
 export interface ITextarea extends BaseField<'textarea', string> {
   autosize?: boolean;
+  minLength?: number;
+  maxLength?: number;
   min?: number;
   max?: number;
 }
