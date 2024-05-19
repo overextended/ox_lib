@@ -23,13 +23,17 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     width: '100%',
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
     whiteSpace: 'pre-wrap',
+    fontSize: 16,
+    fontWeight: 400,
   },
   button: {
     height: 'fit-content',
     width: '100%',
+    backgroundColor: theme.colors.dark[8],
+    opacity: params.disabled ? 0.95 : 1,
     padding: 10,
     '&:hover': {
-      backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
+      backgroundColor: params.readOnly ? theme.colors.dark[8] : undefined,
       cursor: params.readOnly ? 'unset' : 'pointer',
     },
     '&:active': {
@@ -41,37 +45,43 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
   },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
-    fontSize: 12,
+    fontSize: 15,
+    fontWeight: 300,
   },
   dropdown: {
     padding: 10,
     color: theme.colors.dark[0],
-    fontSize: 14,
+    fontSize: 16,
     maxWidth: 256,
     width: 'fit-content',
     border: 'none',
   },
   buttonStack: {
-    gap: 4,
+    gap: 8,
     flex: '1',
   },
   buttonGroup: {
-    gap: 4,
+    gap: 8,
     flexWrap: 'nowrap',
   },
   buttonIconContainer: {
-    width: 25,
-    height: 25,
+    minWidth: '45px',
+    height: '45px',
+    backgroundColor: theme.colors.dark[5],
+    borderRadius: theme.radius.sm,
     justifyContent: 'center',
     alignItems: 'center',
+    color: params.disabled ? theme.colors.dark[3] : theme.colors[theme.primaryColor][theme.fn.primaryShade()],
   },
   buttonTitleText: {
     overflowWrap: 'break-word',
+    color: params.disabled ? theme.colors.dark[2] : '#fff',
   },
   buttonArrowContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 25,
+    padding: 0,
+    width: 10,
     height: 25,
   },
 }));
@@ -116,21 +126,25 @@ const ContextButton: React.FC<{
                             icon={button.icon as IconProp}
                             fixedWidth
                             size="lg"
-                            style={{ color: button.iconColor }}
+                            style={{
+                              color: button.iconColor
+                            }}
                             animation={button.iconAnimation}
                           />
                         )}
                       </Stack>
                     )}
+                    <div>
                     <Text className={classes.buttonTitleText}>
                       <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
                     </Text>
+                    {button.description && (
+                      <Text className={classes.description}>
+                        <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
+                      </Text>
+                    )}
+                    </div>
                   </Group>
-                )}
-                {button.description && (
-                  <Text className={classes.description}>
-                    <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
-                  </Text>
                 )}
                 {button.progress !== undefined && (
                   <Progress value={button.progress} size="sm" color={button.colorScheme || 'dark.3'} />

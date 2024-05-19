@@ -29,6 +29,9 @@ export interface Options {
 
 export interface ContextMenuProps {
   title: string;
+  background: boolean;
+  backgroundColor?: string;
+  description: string;
   menu?: string;
   canClose?: boolean;
   options: Options | Option[];
