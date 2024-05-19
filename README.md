@@ -1,19 +1,21 @@
 # ox_lib Redesign by mur4i
+A few changes redesign for overextened context menu, font changes, theme and colors.
 Download the release if you want to use.
 
 Added new features:
-- Add Context menu description
-- Add Background convar (ox.cfg)
+- Add new Context menu description
+- Add new Background convar (ox.cfg)
 ```setr ox:menuBackground false #true forces background on every context menu from ox_lib```
-- Add Background color
+- Add new Background color option
 
 Example of use:
 ```lua
             lib.registerContext({
                 id = 'test',
                 title = 'title from menu',
+                ---------------------------------- NEW OPTIONS BELOW
                 description = 'description from menu', --new line description on menu
-                background = true, --activates background if convars = false
+                background = true, --TOGGLE background for only this menu (you can change default to setr ox:menuBackground true)
                 backgroundColor = '#ffffff', --change the background color
                 [...]
             }) 
@@ -31,6 +33,9 @@ Changes only on: //resource/interface/client/context.lua
             options = data.options
         }
 ```
+Preview:
+![](/ox_lib-preview.png)
+
 
 ## Credits to overextended:
 A FiveM library and resource implementing reusable modules, methods, and UI elements.
