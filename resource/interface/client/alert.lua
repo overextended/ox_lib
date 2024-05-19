@@ -12,7 +12,7 @@ local alertId = 0
 ---@field labels? {cancel?: string, confirm?: string}
 
 ---@param data AlertDialogProps
----@param timeout number Force the window to timeout after `x` milliseconds.
+---@param timeout? number Force the window to timeout after `x` milliseconds.
 ---@return 'cancel' | 'confirm' | nil
 function lib.alertDialog(data, timeout)
     if alert then return end
