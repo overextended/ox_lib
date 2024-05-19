@@ -331,7 +331,7 @@ lib.addKeybind({
             Wait(0)
         end
     end,
-    -- onReleased = lib.hideRadial,
+    onReleased = lib.hideRadial, --murai
 })
 
 AddEventHandler('onClientResourceStop', function(resource)
