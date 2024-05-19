@@ -50,6 +50,7 @@ end
 local function void() return '' end
 
 ---Creates a new instance of the given class.
+---@protected
 ---@generic T
 ---@param class T | OxClass
 ---@return T
