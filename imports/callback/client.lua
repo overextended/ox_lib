@@ -1,7 +1,7 @@
 local pendingCallbacks = {}
 local timers = {}
 local cbEvent = '__ox_cb_%s'
-local callbackTimeout = GetConvarInt('ox:callbackTimeout', 60000)
+local callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
     local cb = pendingCallbacks[key]
