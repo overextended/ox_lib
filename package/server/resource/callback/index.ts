@@ -25,8 +25,9 @@ export function triggerClientCallback<T = unknown>(
 
   return new Promise<T>((resolve, reject) => {
     pendingCallbacks[key] = resolve;
-
-    setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
+    if (callbackTimeout > 0) {
+      setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
+    }
   });
 }
 

@@ -40,7 +40,9 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 	end
 
 	if promise then
-        SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
+        if callbackTimeout > 0 then
+            SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
+        end
 
 		return table.unpack(Citizen.Await(promise))
 	end
