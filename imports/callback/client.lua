@@ -68,9 +68,14 @@ end
 ---@overload fun(event: string, delay: number | false, cb: function, ...)
 lib.callback = setmetatable({}, {
     __call = function(_, event, delay, cb, ...)
-        local cbType = type(cb)
+        if not cb then
+            warn(("callback event '%s' does not have a function to callback to and will instead await\nuse lib.callback.await or a regular event to remove this warning")
+                :format(event))
+        else
+            local cbType = type(cb)
 
-        assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
+            assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
+        end
 
         return triggerServerCallback(_, event, delay, cb, ...)
     end
