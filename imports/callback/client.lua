@@ -11,7 +11,7 @@ RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 end)
 
 ---@param event string
----@param delay number | false prevent the event from being called for the given time
+---@param delay? number | false prevent the event from being called for the given time
 local function eventTimer(event, delay)
     if delay and type(delay) == 'number' and delay > 0 then
         local time = GetGameTimer()
@@ -28,8 +28,8 @@ end
 
 ---@param _ any
 ---@param event string
----@param delay number | false
----@param cb function|false
+---@param delay number | false | nil
+---@param cb function | false
 ---@param ... any
 ---@return ...
 local function triggerServerCallback(_, event, delay, cb, ...)
@@ -67,12 +67,19 @@ end
 
 ---@overload fun(event: string, delay: number | false, cb: function, ...)
 lib.callback = setmetatable({}, {
-    __call = triggerServerCallback
+    __call = function(_, event, delay, cb, ...)
+        local cbType = type(cb)
+
+        assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
+
+        return triggerServerCallback(_, event, delay, cb, ...)
+    end
 })
 
 ---@param event string
 ---@param delay? number | false prevent the event from being called for the given time.
 ---Sends an event to the server and halts the current thread until a response is returned.
+---@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.await(event, delay, ...)
     return triggerServerCallback(nil, event, delay, false, ...)
 end
@@ -94,7 +101,8 @@ local pcall = pcall
 
 ---@param name string
 ---@param cb function
---- Registers an event handler and callback function to respond to server requests.
+---Registers an event handler and callback function to respond to server requests.
+---@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.register(name, cb)
     RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
