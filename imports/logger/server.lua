@@ -243,7 +243,7 @@ if service == 'loki' then
         local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
 
         -- Initializes values table with the message
-        local values = {}
+        local values = {message = message}
 
         -- Format the args into strings
         local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
@@ -264,8 +264,7 @@ if service == 'loki' then
             values = {
                 {
                     timestamp,
-                    message,
-                    values
+                    json.encode(values)
                 }
             }
         }
