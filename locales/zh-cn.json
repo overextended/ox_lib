@@ -6,25 +6,25 @@
     "confirm": "确认",
     "more": "更多...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "更改语言",
+      "locale_description": "当前语言: ${language} (%s)",
+      "notification_audio": "通知提示音",
+      "notification_position": "通知位置"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "底部",
+      "bottom-left": "左下",
+      "bottom-right": "右下",
+      "center-left": "左侧居中",
+      "center-right": "右侧居中",
+      "top": "顶部",
+      "top-left": "左上",
+      "top-right": "右上"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
-  "txadmin_announcement": "来自 %s 的服务器通告",
+  "open_radial_menu": "打开轮盘菜单",
+  "cancel_progress": "取消当前进度条",
+  "txadmin_announcement": "来自 %s 的服务器公告",
   "txadmin_dm": "来自 %s 的信息",
   "txadmin_warn": "您被 %s 警告了",
   "txadmin_warn_content": "%s  \n操作 ID: %s",
