@@ -41,28 +41,22 @@ function timer:start(async)
 
     self.private.startTime = GetGameTimer()
 
-    local function tick(instance)
-        while true do
-            while instance.private.paused do
+    local function tick()
+        while self:getTimeLeft('ms') > 0 do
+            while self:isPaused() do
                 Wait(0)
             end
-
-            if instance:getTimeLeft('ms') <= 0 then
-                break
-            end
-
             Wait(0)
         end
+        self:onEnd()
     end
 
     if async then
         Citizen.CreateThreadNow(function()
-            tick(self)
-            self:onEnd()
+            tick()
         end)
     else
-        tick(self)
-        self:onEnd()
+        tick()
     end
 end
 
