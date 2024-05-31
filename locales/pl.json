@@ -6,24 +6,24 @@
     "confirm": "Potwierdź",
     "more": "Więcej...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Zmień język",
+      "locale_description": "Aktualny język: ${language} (%s)",
+      "notification_audio": "Powiadomienie dźwiękowe",
+      "notification_position": "Pozycja powiadomień"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "Dół",
+      "bottom-left": "Lewy dolny róg",
+      "bottom-right": "Prawy dolny róg",
+      "center-left": "Środek po lewej",
+      "center-right": "Środek po prawej",
+      "top": "Góra",
+      "top-left": "Lewy górny róg",
+      "top-right": "Prawy górny róg"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Otwórz menu promieniowe",
+  "cancel_progress": "Anulowanie bieżącego paska postępu",
   "txadmin_announcement": "Ogłoszenie serwerowe od %s",
   "txadmin_dm": "Prywatna wiadomość od %s",
   "txadmin_warn": "Otrzymano ostrzeżenie od %s",

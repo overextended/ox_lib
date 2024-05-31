@@ -52,7 +52,7 @@ end
 local table = lib.table
 
 ---Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
----@param key string
+---@param key? string
 function lib.locale(key)
     local lang = key or lib.getLocaleKey()
     local locales = loadLocale('en')

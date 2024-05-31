@@ -1,9 +1,12 @@
 import { cache } from '../cache';
 
-const activeEvents: Record<string, (...args: any[]) => void> = {};
+const pendingCallbacks: Record<string, (...args: any[]) => void> = {};
+const callbackTimeout = GetConvarInt('ox:callbackTimeout', 60000);
 
 onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
-  const resolve = activeEvents[key];
+  const resolve = pendingCallbacks[key];
+  delete pendingCallbacks[key];
+
   return resolve && resolve(...args);
 });
 
@@ -32,12 +35,14 @@ export function triggerServerCallback<T = unknown>(
 
   do {
     key = `${eventName}:${Math.floor(Math.random() * (100000 + 1))}`;
-  } while (activeEvents[key]);
+  } while (pendingCallbacks[key]);
 
   emitNet(`__ox_cb_${eventName}`, cache.resource, key, ...args);
 
-  return new Promise<T>((resolve) => {
-    activeEvents[key] = resolve;
+  return new Promise<T>((resolve, reject) => {
+    pendingCallbacks[key] = resolve;
+
+    setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
   });
 }
 

@@ -1,5 +1,4 @@
 ---@async
----@package
 ---@generic T : string | number
 ---@param request function
 ---@param hasLoaded function

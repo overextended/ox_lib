@@ -29,6 +29,8 @@ export const locale = (str: string, ...args: any[]) => {
 
     return lstr;
   }
+
+  return str;
 };
 
 export const getLocales = () => dict;
@@ -55,7 +57,7 @@ function loadLocale(key: string): typeof dict {
 }
 
 export const initLocale = (key?: string) => {
-  const lang = key || GetConvar('ox:locale', 'en');
+  const lang = key || exports.ox_lib.getLocaleKey();
   let locales = loadLocale('en');
 
   if (lang !== 'en') Object.assign(locales, loadLocale(lang));

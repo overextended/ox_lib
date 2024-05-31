@@ -98,12 +98,12 @@ function timer:isPaused()
     return self.private.paused
 end
 
-function timer:restart()
+function timer:restart(async)
     self:forceEnd(false)
     Wait(0)
     self.private.currentTimeLeft = self.private.initialTime
     self.private.startTime = 0
-    self:start()
+    self:start(async)
 end
 
 function timer:getTimeLeft(format)

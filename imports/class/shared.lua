@@ -50,6 +50,7 @@ end
 local function void() return '' end
 
 ---Creates a new instance of the given class.
+---@protected
 ---@generic T
 ---@param class T | OxClass
 ---@return T
@@ -85,14 +86,14 @@ function mixins.new(class, ...)
             __index = function(self, index)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat == 'local' then return end
+                if di.namewhat ~= 'method' and di.namewhat ~= '' then return end
 
                 return private[index]
             end,
             __newindex = function(self, index, value)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat ~= 'method' then
+                if di.namewhat ~= 'method' and di.namewhat ~= '' then
                     error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
