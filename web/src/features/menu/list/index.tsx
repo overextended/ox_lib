@@ -7,14 +7,34 @@ import FocusTrap from 'focus-trap-react';
 import { fetchNui } from '../../../utils/fetchNui';
 import type { MenuPosition, MenuSettings } from '../../../typings';
 import LibIcon from '../../../components/LibIcon';
+import ScaleFadeLazy from '../../../transitions/ScaleFadeLazy';
+import SlideTransition from '../../../transitions/SlideTransition';
 
 const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCount: number; selected: number }) => ({
+  gradient: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    zIndex: -1,
+    backgroundImage:
+      params.position === ('bottom-left' || 'bottom-right') || params.position === ('top-left' || 'top-right')
+        ? `linear-gradient(to left, rgba(255, 255, 255, 0) 50%, ${
+            theme.colors[theme.primaryColor][theme.fn.primaryShade()]
+          }70 100%)`
+        : `linear-gradient(to right, rgba(255, 255, 255, 0) 50%, ${
+            theme.colors[theme.primaryColor][theme.fn.primaryShade()]
+          }70 100%)`,
+    width: '100%',
+    height: '100vh',
+  },
   tooltip: {
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[2],
-    borderRadius: theme.radius.sm,
+    backgroundColor: `rgba(0, 0, 0, 0.7)`,
+    color: theme.colors.gray[0],
+    textShadow: 'rgba(255, 255, 255, 1) 0px 1px 5px',
+    fontSize: 15,
     maxWidth: 350,
     whiteSpace: 'normal',
+    padding: 10,
   },
   container: {
     position: 'absolute',
@@ -26,28 +46,29 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
     right: params.position === 'top-right' || params.position === 'bottom-right' ? 1 : undefined,
     left: params.position === 'bottom-left' ? 1 : undefined,
     bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 1 : undefined,
-    fontFamily: 'Roboto',
+    fontFamily: 'Saira',
     width: 384,
+    color: '#fff',
   },
   buttonsWrapper: {
     height: 'fit-content',
-    maxHeight: 415,
+    maxHeight: 475,
     overflow: 'hidden',
     borderRadius: params.itemCount <= 6 || params.selected === params.itemCount - 1 ? theme.radius.md : undefined,
-    backgroundColor: theme.colors.dark[8],
+    // backgroundColor: theme.colors.dark[8],
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
   scrollArrow: {
-    backgroundColor: theme.colors.dark[8],
+    // backgroundColor: theme.colors.dark[8],
     textAlign: 'center',
     borderBottomLeftRadius: theme.radius.md,
     borderBottomRightRadius: theme.radius.md,
     height: 25,
   },
   scrollArrowIcon: {
-    color: theme.colors.dark[2],
-    fontSize: 20,
+    color: '#fff',
+    fontSize: 25,
   },
 }));
 
@@ -198,6 +219,9 @@ const ListMenu: React.FC = () => {
 
   return (
     <>
+      <SlideTransition visible={visible} position={menu.position===('top-left' || 'bottom-left') ? 'left' : ('right')}>
+        <Box className={classes.gradient} />
+      </SlideTransition>
       {visible && (
         <Tooltip
           label={

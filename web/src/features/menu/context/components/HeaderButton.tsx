@@ -19,7 +19,15 @@ const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
     textAlign: 'center',
     justifyContent: 'center',
     padding: 2,
-    opacity: 0.8,
+    opacity: 0.5,
+    // backgroundColor: theme.colors.gray[0],
+    '&:hover': {
+      // backgroundColor: theme.colors.gray[0],
+      opacity: 0.8,
+    },
+    '&:active': {
+      opacity: 1,
+    }
   },
   root: {
     border: 'none',

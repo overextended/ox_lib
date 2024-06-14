@@ -6,7 +6,7 @@ export const debugTextUI = () => {
     {
       action: 'textUi',
       data: {
-        text: '[E] - Access locker inventory  \n [G] - Do something else',
+        text: '[E] - Access locker inventory  \n [G] - Do something else  \n [G] - Do something else  \n [G] - Do something else',
         position: 'right-center',
         icon: 'door-open',
       },

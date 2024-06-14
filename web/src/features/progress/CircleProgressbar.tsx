@@ -23,7 +23,7 @@ const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; 
   },
   progress: {
     '> svg > circle:nth-child(1)': {
-      stroke: theme.colors.dark[5],
+      stroke: 'rgba(0, 0, 0, 0.7)',
     },
     // Scuffed way of grabbing the first section and animating it
     '> svg > circle:nth-child(2)': {
@@ -35,14 +35,16 @@ const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; 
   value: {
     textAlign: 'center',
     fontFamily: 'roboto-mono',
-    textShadow: theme.shadows.sm,
-    color: theme.colors.gray[3],
+    color: 'white',
+    textShadow: 'rgba(255, 255, 255, 1) 0px 0px 5px',
+
   },
   label: {
     textAlign: 'center',
-    textShadow: theme.shadows.sm,
-    color: theme.colors.gray[3],
+    textShadow: 'rgba(255, 255, 255, 1) 0px 0px 5px',
+    color: 'white',
     height: 25,
+    fontSize: 18,
   },
   wrapper: {
     marginTop: params.position === 'middle' ? 25 : undefined,

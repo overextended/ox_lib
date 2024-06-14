@@ -34,6 +34,8 @@ const SelectField: React.FC<Props> = (props) => {
           clearable={props.row.clearable}
           searchable={props.row.searchable}
           icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+          dropdownPosition="flip"  // Adjusted position
+          withinPortal  // Render dropdown within portal
         />
       ) : (
         <>
@@ -53,6 +55,8 @@ const SelectField: React.FC<Props> = (props) => {
               searchable={props.row.searchable}
               maxSelectedValues={props.row.maxSelectedValues}
               icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+              dropdownPosition="flip"  // Adjusted position
+              withinPortal  // Render dropdown within portal
             />
           )}
         </>

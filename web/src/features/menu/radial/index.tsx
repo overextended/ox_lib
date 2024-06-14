@@ -17,7 +17,7 @@ const useStyles = createStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
   },
   sector: {
-    fill: theme.colors.dark[6],
+    fill: 'transparent',
     color: theme.colors.dark[0],
 
     '&:hover': {
@@ -27,17 +27,17 @@ const useStyles = createStyles((theme) => ({
       },
     },
     '> g > text': {
-      fill: theme.colors.dark[0],
+      fill: theme.colors.gray[0],
     },
   },
   backgroundCircle: {
-    fill: theme.colors.dark[6],
+    fill: 'rgba(0, 0, 0, 0.6)',
   },
   centerCircle: {
     fill: theme.fn.primaryColor(),
     color: '#fff',
-    stroke: theme.colors.dark[6],
-    strokeWidth: 4,
+    // stroke: 'rgba(0, 0, 0, 1)',
+    strokeWidth: 3,
     '&:hover': {
       fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
     },

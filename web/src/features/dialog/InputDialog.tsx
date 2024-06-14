@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Stack } from '@mantine/core';
+import { Button, Group, Modal, Stack, useMantineTheme, ScrollArea } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
@@ -30,6 +30,7 @@ const InputDialog: React.FC = () => {
   });
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
+  const theme = useMantineTheme();
 
   const form = useForm<{ test: { value: any }[] }>({});
   const fieldForm = useFieldArray({
@@ -103,70 +104,84 @@ const InputDialog: React.FC = () => {
         centered
         closeOnEscape={fields.options?.allowCancel !== false}
         closeOnClickOutside={false}
-        size="xs"
-        styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
+        size="sm"
+        styles={{
+          title: {
+            textAlign: 'center',
+            width: '100%',
+            fontSize: 24,
+            textShadow: '0px 0px 5px rgba(255, 255, 255, 1)',
+          },
+        }}
         title={fields.heading}
         withCloseButton={false}
-        overlayOpacity={0.5}
+        overlayOpacity={0.3}
+        overlayColor={theme.colors[theme.primaryColor][9]}
+        transitionDuration={500}
         transition="fade"
-        exitTransitionDuration={150}
+        exitTransitionDuration={300}
       >
-        <form onSubmit={onSubmit}>
-          <Stack>
-            {fieldForm.fields.map((item, index) => {
-              const row = fields.rows[index];
-              return (
-                <React.Fragment key={item.id}>
-                  {row.type === 'input' && (
-                    <InputField
-                      register={form.register(`test.${index}.value`, { required: row.required })}
-                      row={row}
-                      index={index}
-                    />
-                  )}
-                  {row.type === 'checkbox' && (
-                    <CheckboxField
-                      register={form.register(`test.${index}.value`, { required: row.required })}
-                      row={row}
-                      index={index}
-                    />
-                  )}
-                  {(row.type === 'select' || row.type === 'multi-select') && (
-                    <SelectField row={row} index={index} control={form.control} />
-                  )}
-                  {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
-                  {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
-                  {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
-                  {row.type === 'time' && <TimeField control={form.control} row={row} index={index} />}
-                  {row.type === 'date' || row.type === 'date-range' ? (
-                    <DateField control={form.control} row={row} index={index} />
-                  ) : null}
-                  {row.type === 'textarea' && (
-                    <TextareaField
-                      register={form.register(`test.${index}.value`, { required: row.required })}
-                      row={row}
-                      index={index}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            })}
-            <Group position="right" spacing={10}>
-              <Button
-                uppercase
-                variant="default"
-                onClick={() => handleClose()}
-                mr={3}
-                disabled={fields.options?.allowCancel === false}
-              >
-                {locale.ui.cancel}
-              </Button>
-              <Button uppercase variant="light" type="submit">
-                {locale.ui.confirm}
-              </Button>
-            </Group>
-          </Stack>
-        </form>
+          <ScrollArea.Autosize
+            maxHeight={'70vh'}
+            scrollbarSize={8}
+          >
+          <form onSubmit={onSubmit} style={{ padding: 30}}>
+            <Stack>
+              {fieldForm.fields.map((item, index) => {
+                const row = fields.rows[index];
+                return (
+                  <React.Fragment key={item.id}>
+                    {row.type === 'input' && (
+                      <InputField
+                        register={form.register(`test.${index}.value`, { required: row.required })}
+                        row={row}
+                        index={index}
+                      />
+                    )}
+                    {row.type === 'checkbox' && (
+                      <CheckboxField
+                        register={form.register(`test.${index}.value`, { required: row.required })}
+                        row={row}
+                        index={index}
+                      />
+                    )}
+                    {(row.type === 'select' || row.type === 'multi-select') && (
+                      <SelectField row={row} index={index} control={form.control} />
+                    )}
+                    {row.type === 'number' && <NumberField control={form.control} row={row} index={index} />}
+                    {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
+                    {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
+                    {row.type === 'time' && <TimeField control={form.control} row={row} index={index} />}
+                    {row.type === 'date' || row.type === 'date-range' ? (
+                      <DateField control={form.control} row={row} index={index} />
+                    ) : null}
+                    {row.type === 'textarea' && (
+                      <TextareaField
+                        register={form.register(`test.${index}.value`, { required: row.required })}
+                        row={row}
+                        index={index}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
+              <Group position="right" spacing={10}>
+                <Button
+                  uppercase
+                  variant="default"
+                  onClick={() => handleClose()}
+                  mr={3}
+                  disabled={fields.options?.allowCancel === false}
+                >
+                  {locale.ui.cancel}
+                </Button>
+                <Button uppercase variant="light" type="submit">
+                  {locale.ui.confirm}
+                </Button>
+              </Group>
+            </Stack>
+          </form>
+        </ScrollArea.Autosize>
       </Modal>
     </>
   );

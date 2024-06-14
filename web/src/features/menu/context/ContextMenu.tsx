@@ -127,7 +127,7 @@ const ContextMenu: React.FC = () => {
 
   return (
     <>
-    <SlideTransition visible={visible}>
+    <SlideTransition visible={visible} position="right">
       <Box
         className={classes.background}
         opacity={contextMenu.background == true ? 0.6 : 0}

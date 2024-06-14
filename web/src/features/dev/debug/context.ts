@@ -71,6 +71,7 @@ export const debugContext = () => {
             arrow: false,
             description: 'Takes you to another menu             asdasda dasd           asdasd           asdadsad',
             metadata: ['It also has metadata support'],
+            readOnly: true,
           },
           {
             title: 'Event button',

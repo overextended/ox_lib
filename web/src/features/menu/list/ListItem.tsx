@@ -1,4 +1,4 @@
-import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
+import { Box, createStyles, Group, Progress, Stack, Text, useMantineTheme } from '@mantine/core';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
@@ -15,15 +15,16 @@ interface Props {
 
 const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   buttonContainer: {
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: `rgba(0, 0, 0, 0.7)`,
     borderRadius: theme.radius.md,
-    padding: 2,
-    height: 60,
+    padding: 10,
+    height: 70,
     scrollMargin: 8,
     '&:focus': {
-      backgroundColor: theme.colors.dark[4],
+      backgroundColor: `rgba(0, 0, 0, 1)`,
       outline: 'none',
     },
+    boxShadow: theme.shadows.md,
   },
   iconImage: {
     maxWidth: 32,
@@ -36,25 +37,29 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   iconContainer: {
     display: 'flex',
     alignItems: 'center',
-    width: 32,
-    height: 32,
+    justifyContent: 'center',
+    width: 24,
+    height: 24,
+    padding: 25,
+    backgroundColor: `rgba(0, 0, 0, 0.2)`,
+    borderRadius: theme.radius.md,
   },
   icon: {
     fontSize: 24,
-    color: params.iconColor || theme.colors.dark[2],
+    color: params.iconColor || theme.colors[theme.primaryColor][theme.fn.primaryShade()],
   },
   label: {
-    color: theme.colors.dark[2],
+    color: theme.colors[theme.primaryColor][2],
     textTransform: 'uppercase',
     fontSize: 12,
     verticalAlign: 'middle',
   },
   chevronIcon: {
     fontSize: 14,
-    color: theme.colors.dark[2],
+    color: theme.colors.gray[0],
   },
   scrollIndexValue: {
-    color: theme.colors.dark[2],
+    color: theme.colors.gray[0],
     textTransform: 'uppercase',
     fontSize: 14,
   },
@@ -70,6 +75,8 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
 
 const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex, checked }, ref) => {
   const { classes } = useStyles({ iconColor: item.iconColor });
+
+  const theme = useMantineTheme();
 
   return (
     <Box
@@ -93,6 +100,9 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
                 className={classes.icon}
                 fixedWidth
                 animation={item.iconAnimation}
+                style={{
+                  filter: `drop-shadow(0 0 5px ${item.iconColor? item.iconColor : theme.colors[theme.primaryColor][theme.fn.primaryShade()]})`,
+                }}
               />
             )}
           </Box>

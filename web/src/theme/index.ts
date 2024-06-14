@@ -1,4 +1,4 @@
-import { MantineThemeOverride } from '@mantine/core';
+import { MantineThemeOverride, Paper } from '@mantine/core';
 
 export const theme: MantineThemeOverride = {
   colorScheme: 'dark',
@@ -10,6 +10,20 @@ export const theme: MantineThemeOverride = {
       styles: {
         root: {
           border: 'none',
+        },
+      },
+    },
+    Modal: {
+      styles: {
+        modal: {
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: 'white',
+        },
+        root: {
+          color: 'white',
+        },
+        title: {
+          color: 'white',
         },
       },
     },

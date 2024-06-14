@@ -12,11 +12,11 @@ const useStyles = createStyles((theme) => ({
   container: {
     width: 300,
     height: 'fit-content',
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[0],
-    padding: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    color: theme.colors.gray[0],
+    padding: 14,
     borderRadius: theme.radius.sm,
-    fontFamily: 'Roboto',
+    fontFamily: 'Saira',
     boxShadow: theme.shadows.sm,
   },
   title: {
@@ -24,15 +24,16 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 'normal',
   },
   description: {
-    fontSize: 12,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
+    fontSize: 14,
+    color: theme.colors.dark[0],
+    fontFamily: 'Saira',
+    fontWeight: 300,
     lineHeight: 'normal',
   },
   descriptionOnly: {
     fontSize: 14,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
+    color: theme.colors.dark[0],
+    fontFamily: 'Saira',
     lineHeight: 'normal',
   },
 }));

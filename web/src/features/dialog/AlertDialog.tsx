@@ -51,8 +51,10 @@ const AlertDialog: React.FC = () => {
           closeAlert('cancel');
         }}
         withCloseButton={false}
-        overlayOpacity={0.5}
-        exitTransitionDuration={150}
+        overlayOpacity={0.3}
+        overlayColor={theme.colors[theme.primaryColor][9]}
+        transitionDuration={500}
+        exitTransitionDuration={300}
         transition="fade"
         title={<ReactMarkdown components={MarkdownComponents}>{dialogData.header}</ReactMarkdown>}
       >

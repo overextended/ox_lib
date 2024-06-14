@@ -2,16 +2,25 @@ import React from 'react';
 import { Box, createStyles, Text } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
-import ScaleFade from '../../transitions/ScaleFade';
+import ScaleFadeLazy from '../../transitions/ScaleFadeLazy';
 import type { ProgressbarProps } from '../../typings';
+import SlideUp from '../../transitions/SlideUp';
+
 
 const useStyles = createStyles((theme) => ({
+  background: {
+    width: '100%',
+    height: '100vh',
+    background: `radial-gradient(ellipse at bottom, ${theme.colors[theme.primaryColor][theme.fn.primaryShade()]} 0%, transparent 20%)`,
+  },
   container: {
     width: 350,
-    height: 45,
+    height: 10,
     borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.dark[5],
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     overflow: 'hidden',
+    transition: 'all 1.5s transform ease',
+    boxShadow: `0px 100vh 200vh 100vh ${theme.colors[theme.primaryColor][theme.fn.primaryShade()]}80`,
   },
   wrapper: {
     width: '100%',
@@ -30,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     position: 'absolute',
     display: 'flex',
     width: 350,
-    height: 45,
+    height: 70,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -41,8 +50,8 @@ const useStyles = createStyles((theme) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     fontSize: 20,
-    color: theme.colors.gray[3],
-    textShadow: theme.shadows.sm,
+    color: "#fff",
+    textShadow: `0px 0px 5px rgba(255, 255, 255, 1)`,
   },
 }));
 
@@ -62,8 +71,17 @@ const Progressbar: React.FC = () => {
 
   return (
     <>
+    {/* <SlideUp visible={visible}>
+      <Box
+        className={classes.background}
+        opacity={0.6}
+        style={{
+        }}
+      />
+    </SlideUp> */}
       <Box className={classes.wrapper}>
-        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
+        <SlideUp visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
+
           <Box className={classes.container}>
             <Box
               className={classes.bar}
@@ -78,7 +96,7 @@ const Progressbar: React.FC = () => {
               </Box>
             </Box>
           </Box>
-        </ScaleFade>
+        </SlideUp>
       </Box>
     </>
   );

@@ -6,7 +6,7 @@ const useStyles = createStyles((theme) => ({
     textAlign: 'center',
     borderTopLeftRadius: theme.radius.md,
     borderTopRightRadius: theme.radius.md,
-    backgroundColor: theme.colors.dark[6],
+    // backgroundColor: theme.colors.dark[6],
     height: 60,
     width: 384,
     display: 'flex',
@@ -15,8 +15,10 @@ const useStyles = createStyles((theme) => ({
   },
   heading: {
     fontSize: 24,
+    textShadow: `1px 2px 2px rgba(0, 0, 0, 1)`,
     textTransform: 'uppercase',
     fontWeight: 500,
+    color: 'white',
   },
 }));
 
