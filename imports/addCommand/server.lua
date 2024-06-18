@@ -1,7 +1,7 @@
 ---@class OxCommandParams
 ---@field name string
 ---@field help? string
----@field type? 'number' | 'playerId' | 'string'
+---@field type? 'number' | 'playerId' | 'string' | 'longString'
 ---@field optional? boolean
 
 ---@class OxCommandProperties
@@ -30,7 +30,8 @@ end)
 local function parseArguments(source, args, raw, params)
     if not params then return args end
 
-    for i = 1, #params do
+    local paramsNum = #params
+    for i = 1, paramsNum do
         local arg, param = args[i], params[i]
         local value
 
@@ -43,6 +44,15 @@ local function parseArguments(source, args, raw, params)
 
             if not value or not DoesPlayerExist(value--[[@as string]]) then
                 value = false
+            end
+        elseif param.type == 'longString' and i == paramsNum then
+            value = arg
+
+            local argsNum = #args
+            if paramsNum < argsNum then
+                for a = i + 1, argsNum do
+                    value = value .. ' ' .. args[a]
+                end
             end
         else
             value = arg
@@ -131,6 +141,7 @@ function lib.addCommand(commandName, properties, cb, ...)
         end
 
         if properties then
+            ---@diagnostic disable-next-line: inject-field
             properties.name = ('/%s'):format(commandName)
             properties.restricted = nil
             registeredCommands[totalCommands] = properties
