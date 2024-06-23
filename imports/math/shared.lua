@@ -197,10 +197,10 @@ function math.lerp(start, finish, duration)
     end
 end
 
----Round a number to a whole number or to the specified number of decimal places
+---Rounds a number to a whole number or to the specified number of decimal places.
 ---@param value number | string
 ---@param places? number | string
----@return number?
+---@return number
 function math.round(value, places)
     if type(value) == 'string' then value = tonumber(value) end
     if type(value) ~= 'number' then error('Value must be a number') end
