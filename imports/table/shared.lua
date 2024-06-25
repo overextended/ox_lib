@@ -139,4 +139,16 @@ function table.isfrozen(tbl)
     return getmetatable(tbl) == 'readonly'
 end
 
+---Return the number of enteries in the table
+---@param tbl table
+---@return integer
+function table.length(tbl)
+    if tbl == nil then return 0 end
+    local count = 0
+    for _, v in pairs(tbl)
+        count = count + 1
+    end
+    return count
+end
+
 return lib.table
