@@ -55,4 +55,10 @@ function string.random(pattern, length)
     return table.concat(arr)
 end
 
+function string.trim(str)
+    assert(type(str) == 'string', string.format('bad argument #1 to \'trim\' (string expected, got %s)', type(str)))
+
+    return str:match('^%s*(.-)%s*$')
+end
+
 return lib.string
