@@ -46,14 +46,12 @@ local function parseArguments(source, args, raw, params)
                 value = false
             end
         elseif param.type == 'longString' and i == paramsNum then
-            value = arg
-
-            local argsNum = #args
-            if paramsNum < argsNum then
-                for a = i + 1, argsNum do
-                    value = value .. ' ' .. args[a]
-                end
+            local words = {}
+            for word in raw:gmatch('%S+') do
+                words[#words + 1] = word
             end
+
+            value = table.type(words) ~= 'empty' and table.concat(words, ' ', i)
         else
             value = arg
         end
