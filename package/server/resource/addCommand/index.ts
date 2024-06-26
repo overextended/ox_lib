@@ -28,10 +28,6 @@ on('playerJoining', (source: number) => {
   emitNet('chat:addSuggestions', source, registeredCommmands);
 });
 
-function getTextFromRecord (record: Record<string | number, string | number | boolean>, startIndex: number): string {
-  return Object.entries(record).filter(([key, value]) => !Number(key) && Number(key) >= startIndex && typeof value === 'string').map(([, value]) => value).join(' ');
-}
-
 function parseArguments(
   source: number,
   args: OxCommandArguments,
@@ -60,8 +56,9 @@ function parseArguments(
         break;
 
       case 'longString':
-        const extraText = getTextFromRecord(args, index + 1);
-        value = (extraText !== '' && extraText !== ' ') ? `${arg} ${extraText}` : arg;
+        const words = raw.split(' ');
+        const newString = words.slice(index).join(' ');
+        value = newString !== '' ? newString : false;
         break;
 
       default:
