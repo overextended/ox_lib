@@ -56,9 +56,7 @@ function parseArguments(
         break;
 
       case 'longString':
-        const words = raw.split(' ');
-        const newString = words.slice(index).join(' ');
-        value = newString !== '' ? newString : false;
+        value = raw.substring(raw.indexOf(arg as string));
         break;
 
       default:
