@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Box, createStyles, Text } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
@@ -24,8 +25,16 @@ const useStyles = createStyles((theme) => ({
   },
   bar: {
     height: '100%',
-    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
-  },
+    backgroundColor: '#444444',
+    backgroundImage: `linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)`,
+    backgroundSize: '40px 40px', 
+    animation: 'progress-bar-stripes 2s linear infinite',
+    WebkitBackgroundSize: '40px 40px',
+    WebkitAnimation: 'progress-bar-stripes 2s linear infinite',
+    MozBackgroundSize: '40px 40px',
+    MozAnimation: 'progress-bar-stripes 2s linear infinite',
+    OBackgroundSize: '40px 40px',
+},
   labelWrapper: {
     position: 'absolute',
     display: 'flex',

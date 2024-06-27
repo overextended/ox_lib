@@ -10,13 +10,13 @@ import LibIcon from '../../components/LibIcon';
 
 const useStyles = createStyles((theme) => ({
   container: {
-    width: 300,
+    width: 10,
     height: 'fit-content',
     backgroundColor: theme.colors.dark[6],
     color: theme.colors.dark[0],
-    padding: 12,
+    padding: 1520,
     borderRadius: theme.radius.sm,
-    fontFamily: 'Roboto',
+    fontFamily: 'arial',
     boxShadow: theme.shadows.sm,
   },
   title: {
