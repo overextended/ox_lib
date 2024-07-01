@@ -22,7 +22,9 @@ end
 local settings = {
     default_locale = GetConvar('ox:locale', 'en'),
     notification_position = safeGetKvp(GetResourceKvpString, 'notification_position', 'top-right'),
-    notification_audio = safeGetKvp(GetResourceKvpInt, 'notification_audio') == 1
+    notification_audio = safeGetKvp(GetResourceKvpInt, 'notification_audio') == 1,
+    primaryColor = safeGetKvp(GetResourceKvpString, 'primaryColor', 'blue'),
+    primaryShade = safeGetKvp(GetResourceKvpInt, 'primaryShade', 6),
 }
 
 local userLocales = GetConvarInt('ox:userLocales', 1) == 1
@@ -76,6 +78,48 @@ RegisterCommand('ox_lib', function()
             required = true,
             icon = 'message',
         },
+        {
+            type = 'select',
+            label = locale('ui.settings.primaryColor'),
+            options = {
+                { label = 'Dark', value = 'dark' },
+                { label = 'Gray', value = 'gray' },
+                { label = 'Red', value = 'red' },
+                { label = 'Pink', value = 'pink' },
+                { label = 'Grape', value = 'grape' },
+                { label = 'Violet', value = 'violet' },
+                { label = 'Indigo', value = 'indigo' },
+                { label = 'Blue', value = 'blue' },
+                { label = 'Cyan', value = 'cyan' },
+                { label = 'Teal', value = 'teal' },
+                { label = 'Green', value = 'green' },
+                { label = 'Lime', value = 'lime' },
+                { label = 'Yellow', value = 'yellow' },
+                { label = 'Orange', value = 'orange' },
+            },
+            default = settings.primaryColor,
+            required = true,
+            icon = 'palette',
+        },
+        {
+            type = 'select',
+            label = locale('ui.settings.primaryShade'),
+            options = {
+                { label = 'Shade 0', value = 0 },
+                { label = 'Shade 1', value = 1 },
+                { label = 'Shade 2', value = 2 },
+                { label = 'Shade 3', value = 3 },
+                { label = 'Shade 4', value = 4 },
+                { label = 'Shade 5', value = 5 },
+                { label = 'Shade 6', value = 6 },
+                { label = 'Shade 7', value = 7 },
+                { label = 'Shade 8', value = 8 },
+                { label = 'Shade 9', value = 9 },
+            },
+            default = settings.primaryShade,
+            required = true,
+            icon = 'adjust',
+        }
     }
 
     if userLocales then
@@ -96,13 +140,28 @@ RegisterCommand('ox_lib', function()
 
     if not input then return end
 
-    ---@type boolean, string, string
-    local notification_audio, notification_position, locale = table.unpack(input)
+    ---@type boolean, string, string, string, number
+    local notification_audio, notification_position, locale, primaryColor, primaryShade = table.unpack(input)
 
     if set('locale', locale) then lib.setLocale(locale) end
 
     set('notification_position', notification_position)
     set('notification_audio', notification_audio)
+    set('primaryColor', primaryColor)
+    set('primaryShade', primaryShade)
+
+    SendReactMessage('updateColorSettings', {
+        primaryColor = primaryColor,
+        primaryShade = primaryShade
+    })
+end)
+
+CreateThread(function()
+    Wait(500)
+    SendReactMessage('updateColorSettings', {
+        primaryColor = settings.primaryColor,
+        primaryShade = settings.primaryShade
+    })
 end)
 
 return settings
