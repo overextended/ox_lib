@@ -7,24 +7,24 @@
     "confirm": "Bekræft",
     "more": "Mere...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Skift Sprog",
+      "locale_description": "Nuværende sprog: ${language} (%s)",
+      "notification_audio": "Notifikations lyd",
+      "notification_position": "Notifikations position"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "Nederst",
+      "bottom-left": "Nederst til venstre",
+      "bottom-right": "Nederst til højre",
+      "center-left": "Center til venstre",
+      "center-right": "Center til højre",
+      "top": "Øverst",
+      "top-left": "Øverst til venstre",
+      "top-right": "Øverst til højre"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Åbn radial menu",
+  "cancel_progress": "Annuller den aktuelle progress bar",
   "txadmin_announcement": "Servermeddelelse af %s",
   "txadmin_dm": "Direkte besked fra %s",
   "txadmin_warn": "Du er blevet advaret af %s",
