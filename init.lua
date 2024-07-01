@@ -185,7 +185,7 @@ local cache = setmetatable({ game = GetGameName(), resource = resourceName }, {
     __call = function(self, key, func, timeout)
         local value = rawget(self, key)
 
-        if not value then
+        if value == nil then
             value = func()
 
             rawset(self, key, value)
