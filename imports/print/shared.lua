@@ -40,12 +40,70 @@ local function libPrint(level, ...)
     print(template:format(levelPrefixes[level], table.concat(args, '\t')))
 end
 
+-- Define color codes for different data types to enhance readability in the console
+local printTable_colors = {
+    ['string'] = '\27[32m',   -- Green for strings
+    ['number'] = '\27[33m',   -- Yellow for numbers
+    ['table'] = '\27[34m',    -- Blue for tables
+    ['function'] = '\27[35m', -- Magenta for functions
+    ['reset'] = '\27[0m'      -- Reset to default console color
+}
+
+--[[
+    Function: printTable
+    Description: Recursively prints a table with color coding for different data types.
+    It handles nested tables and avoids infinite loops with circular references.
+
+    Parameters:
+    t - The table to be printed.
+    indent - The current indentation level as a string (used for nested tables).
+    visited - A table keeping track of visited tables to avoid circular references.
+]]
+
+---@param t table
+---@param? indent string
+---@param? visited table
+local function printTable(t, indent, visited)
+    -- Ensure the input is a table
+    assert(type(t) == 'table', 'Expected table, got ' .. type(t))
+
+    -- Initialize visited and indent if not provided
+    visited = visited or {}
+    indent = indent or ''
+
+    -- Check for and handle circular references
+    if visited[t] then
+        print(indent .. printTable_colors['table'] .. '<circular reference>' .. printTable_colors['reset'])
+        return
+    end
+
+    -- Mark the current table as visited
+    visited[t] = true
+
+    -- Iterate over table elements
+    for key, value in pairs(t) do
+        local valueType = type(value)
+        local color = printTable_colors[valueType] or printTable_colors['reset']
+        if valueType == 'table' then
+            -- For nested tables, print the key and recursively print the table
+            print(indent .. printTable_colors['table'] .. tostring(key) .. printTable_colors['reset'] .. ':')
+            printTable(value, indent .. '  ', visited)
+        else
+            -- For other types, print the key and value with appropriate coloring
+            print(indent .. color .. tostring(key) .. ': ' .. tostring(value) .. printTable_colors['reset'])
+        end
+    end
+end
+
+-- lib.print table to hold different logging functions including the enhanced table printing function
 lib.print = {
-    error = function(...) libPrint(printLevel.error, ...) end,
-    warn = function(...) libPrint(printLevel.warn, ...) end,
-    info = function(...) libPrint(printLevel.info, ...) end,
-    verbose = function(...) libPrint(printLevel.verbose, ...) end,
-    debug = function(...) libPrint(printLevel.debug, ...) end,
+    error = function(...) libPrint(printLevel.error, ...) end,     -- Function to log errors
+    warn = function(...) libPrint(printLevel.warn, ...) end,       -- Function to log warnings
+    info = function(...) libPrint(printLevel.info, ...) end,       -- Function to log informational messages
+    verbose = function(...) libPrint(printLevel.verbose, ...) end, -- Function to log verbose messages
+    debug = function(...) libPrint(printLevel.debug, ...) end,     -- Function to log debug messages
+
+    table = printTable,                                            -- Enhanced table printing function with color coding and indentation
 }
 
 return lib.print
