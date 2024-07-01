@@ -21,7 +21,26 @@ const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
   });
 
   useEffect(() => {
+    // Initial fetch
     fetchNui<Config>('getConfig').then((data) => setConfig(data));
+
+    // Event listener for real-time updates
+    const handleConfigUpdate = (event: MessageEvent) => {
+      if (event.data.action === 'updateColorSettings') {
+        const { primaryColor, primaryShade } = event.data;
+        setConfig((prevConfig) => ({
+          ...prevConfig,
+          primaryColor,
+          primaryShade,
+        }));
+      }
+    };
+
+    window.addEventListener('message', handleConfigUpdate);
+
+    return () => {
+      window.removeEventListener('message', handleConfigUpdate);
+    };
   }, []);
 
   return <ConfigCtx.Provider value={{ config, setConfig }}>{children}</ConfigCtx.Provider>;
