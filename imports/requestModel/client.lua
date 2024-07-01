@@ -10,7 +10,7 @@ function lib.requestModel(model, timeout)
         error(("attempted to load invalid model '%s'"):format(model))
     end
 
-    return lib.streamingRequest(RequestModel, HasModelLoaded, 'model', model, timeout)
+    return lib.streamingRequest(IsModelInCdimage, HasModelLoaded, 'model', model, timeout)
 end
 
 return lib.requestModel
