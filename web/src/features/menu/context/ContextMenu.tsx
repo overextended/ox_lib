@@ -16,8 +16,8 @@ const openMenu = (id: string | undefined) => {
 const useStyles = createStyles((theme) => ({
   container: {
     position: 'absolute',
-    top: '15%',
-    right: '25%',
+    top: '25%',
+    right: '1%',
     width: 320,
     height: 580,
   },
@@ -25,12 +25,13 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    gap: 6,
+    gap: 2,
   },
   titleContainer: {
-    borderRadius: 4,
+    borderRadius: 0,
     flex: '1 85%',
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: "rgba(0, 0, 0, 0.719)",
+
   },
   titleText: {
     color: theme.colors.dark[0],

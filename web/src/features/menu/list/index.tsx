@@ -12,7 +12,7 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
   tooltip: {
     backgroundColor: theme.colors.dark[6],
     color: theme.colors.dark[2],
-    borderRadius: theme.radius.sm,
+    borderRadius: 0,
     maxWidth: 350,
     whiteSpace: 'normal',
   },
@@ -34,7 +34,7 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
     maxHeight: 415,
     overflow: 'hidden',
     borderRadius: params.itemCount <= 6 || params.selected === params.itemCount - 1 ? theme.radius.md : undefined,
-    backgroundColor: theme.colors.dark[8],
+    backgroundColor: "rgba(0, 0, 0, 0.719)",
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },

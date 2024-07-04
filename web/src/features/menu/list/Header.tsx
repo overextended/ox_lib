@@ -4,11 +4,12 @@ import React from 'react';
 const useStyles = createStyles((theme) => ({
   container: {
     textAlign: 'center',
-    borderTopLeftRadius: theme.radius.md,
-    borderTopRightRadius: theme.radius.md,
-    backgroundColor: theme.colors.dark[6],
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.719)",
     height: 60,
     width: 384,
+    
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

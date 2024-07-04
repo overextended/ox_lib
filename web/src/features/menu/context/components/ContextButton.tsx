@@ -27,9 +27,13 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
   button: {
     height: 'fit-content',
     width: '100%',
+    backgroundColor: "rgba(0, 0, 0, 0.719)",
+    borderLeft: "2px solid rgba(255, 255, 255, 0.315)",
+    borderRadius: 0,
     padding: 10,
     '&:hover': {
-      backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
+      borderLeft: "2px solid rgba(29, 27, 167, 0.8)",
+      backgroundColor: "rgba(19, 61, 100, 0.8)",
       cursor: params.readOnly ? 'unset' : 'pointer',
     },
     '&:active': {
@@ -46,6 +50,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
   dropdown: {
     padding: 10,
     color: theme.colors.dark[0],
+    backgroundColor: "rgba(0, 0, 0, 0.719)",
     fontSize: 14,
     maxWidth: 256,
     width: 'fit-content',
