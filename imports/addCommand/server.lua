@@ -113,7 +113,7 @@ function lib.addCommand(commandName, properties, cb, ...)
         local success, resp = pcall(cb, source, args, raw)
 
         if not success then
-            Citizen.Trace(("^1command '%s' failed to execute!\n%s"):format(string.strsplit(' ', raw) or raw, resp))
+            Citizen.Trace(("^1command '%s' failed to execute!\n%s"):format(string.strsplit(' ', raw) or raw, json.encode(resp)))
         end
     end
 
