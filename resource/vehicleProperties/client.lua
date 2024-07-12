@@ -99,20 +99,26 @@ RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
     end
 end)
 
---[[ Alternative to NetEvent - disabled (at least for now?)
-AddStateBagChangeHandler('setVehicleProperties', '', function(bagName, _, value)
+AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _, value)
     if not value or not GetEntityFromStateBagName then return end
 
-    local entity = GetEntityFromStateBagName(bagName)
-    local networked = not bagName:find('localEntity')
+    local entity = lib.waitFor(function()
+        local entity = GetEntityFromStateBagName(bagName)
 
-    if networked and NetworkGetEntityOwner(entity) ~= cache.playerId then return end
+        if entity > 0 then return entity end
+    end)
 
-    if lib.setVehicleProperties(entity, value) then
-        Entity(entity).state:set('setVehicleProperties', nil, true)
+
+    lib.setVehicleProperties(entity, value)
+    Wait(200)
+
+    -- this delay and second-setting of vehicle properties hopefully counters the
+    -- weird sync/ownership/shitfuckery when setting props on server-side vehicles
+    if NetworkGetEntityOwner(entity) == cache.playerId then
+        lib.setVehicleProperties(entity, value)
+        Entity(entity).state:set('ox_lib:setVehicleProperties', nil, true)
     end
 end)
-]]
 
 local gameBuild = GetGameBuildNumber()
 
