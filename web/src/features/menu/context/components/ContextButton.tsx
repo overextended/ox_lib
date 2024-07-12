@@ -25,11 +25,14 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     whiteSpace: 'pre-wrap',
   },
   button: {
+  
     height: 'fit-content',
     width: '100%',
+    boxShadow: "0px 0px 10px 0px #202020",
     padding: 10,
     '&:hover': {
-      backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
+      backgroundColor: "rgba(0, 53, 176, 0.62)",
+      borderLeft: "10px rgba(0, 53, 176, 0.62)",
       cursor: params.readOnly ? 'unset' : 'pointer',
     },
     '&:active': {

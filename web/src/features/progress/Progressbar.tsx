@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Box, createStyles, Text } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
@@ -8,9 +9,10 @@ import type { ProgressbarProps } from '../../typings';
 const useStyles = createStyles((theme) => ({
   container: {
     width: 350,
-    height: 45,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.dark[5],
+    height: 10,
+    borderRadius: "100px",
+    backgroundColor: "rgba(4, 4, 4, 0.64)",
+    boxShadow: "0px 0px 5px 0px #202020",
     overflow: 'hidden',
   },
   wrapper: {
@@ -24,8 +26,17 @@ const useStyles = createStyles((theme) => ({
   },
   bar: {
     height: '100%',
-    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
-  },
+    backgroundColor: '#33CAFF',
+    backgroundImage: `linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)`,
+    backgroundSize: '40px 40px', 
+    animation: 'progress-bar-stripes 2s linear infinite',
+    WebkitBackgroundSize: '40px 40px',
+  
+    WebkitAnimation: 'progress-bar-stripes 2s linear infinite',
+    MozBackgroundSize: '40px 40px',
+    MozAnimation: 'progress-bar-stripes 2s linear infinite',
+    OBackgroundSize: '40px 40px',
+},
   labelWrapper: {
     position: 'absolute',
     display: 'flex',
@@ -35,14 +46,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
   },
   label: {
-    maxWidth: 350,
-    padding: 8,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    fontSize: 20,
-    color: theme.colors.gray[3],
-    textShadow: theme.shadows.sm,
+    display: "none",
   },
 }));
 

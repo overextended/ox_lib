@@ -16,8 +16,8 @@ const openMenu = (id: string | undefined) => {
 const useStyles = createStyles((theme) => ({
   container: {
     position: 'absolute',
-    top: '15%',
-    right: '25%',
+    top: '20%',
+    right: '10%',
     width: 320,
     height: 580,
   },
@@ -25,24 +25,26 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    gap: 6,
+    gap: 0,
   },
   titleContainer: {
-    borderRadius: 4,
+
+    stroke: "5px",
     flex: '1 85%',
-    backgroundColor: theme.colors.dark[6],
   },
   titleText: {
     color: theme.colors.dark[0],
+    textShadow: "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
+    textTransform: "uppercase",
     padding: 6,
-    textAlign: 'center',
+    textAlign: 'right',
   },
   buttonsContainer: {
     height: 560,
     overflowY: 'scroll',
   },
   buttonsFlexWrapper: {
-    gap: 3,
+    gap: 5,
   },
 }));
 

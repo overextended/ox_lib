@@ -8,7 +8,7 @@ const useStyles = createStyles((theme) => ({
     borderTopRightRadius: theme.radius.md,
     backgroundColor: theme.colors.dark[6],
     height: 60,
-    width: 384,
+    width: 4,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
