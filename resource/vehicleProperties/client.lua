@@ -102,12 +102,15 @@ end)
 AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _, value)
     if not value or not GetEntityFromStateBagName then return end
 
-    local entity = lib.waitFor(function()
+    while NetworkIsInTutorialSession() do Wait(0) end
+
+    local entityExists, entity = pcall(lib.waitFor, function()
         local entity = GetEntityFromStateBagName(bagName)
 
         if entity > 0 then return entity end
-    end)
+    end, '', 10000)
 
+    if not entityExists then return end
 
     lib.setVehicleProperties(entity, value)
     Wait(200)
