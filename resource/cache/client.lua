@@ -34,7 +34,7 @@ CreateThread(function()
             end
 
             if cache["localplayer_armor"] ~= armor then
-                cache:Set('localplayer_armor', armor)
+                cache:set('localplayer_armor', armor)
             end
         end
 
