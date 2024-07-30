@@ -113,14 +113,28 @@ AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _,
     if not entityExists then return end
 
     lib.setVehicleProperties(entity, value)
-    Wait(200)
 
     -- this delay and second-setting of vehicle properties hopefully counters the
     -- weird sync/ownership/shitfuckery when setting props on server-side vehicles
-    if NetworkGetEntityOwner(entity) == cache.playerId then
-        lib.setVehicleProperties(entity, value)
-        Entity(entity).state:set('ox_lib:setVehicleProperties', nil, true)
-    end
+    SetTimeout(200, function()
+        local vehicleState = Entity(entity).state
+
+        local timeOut = GetGameTimer() + 10000
+
+        while vehicleState["ox_lib:setVehicleProperties"] do
+            if NetworkGetEntityOwner(entity) == cache.playerId then
+                if lib.setVehicleProperties(entity, value) then
+                    vehicleState:set('ox_lib:setVehicleProperties', nil, true)
+                    break
+                end
+            end
+            if GetGameTimer() > timeOut then
+                break
+            end
+
+            Wait(50)
+        end
+    end)
 end)
 
 local gameBuild = GetGameBuildNumber()
@@ -642,9 +656,17 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetDriftTyresEnabled(vehicle, true)
     end
 
+    if props.driftKit then
+        TriggerServerEvent('rp_driftkit:server:registerVehicle', VehToNet(vehicle))
+    end
+
     if fixVehicle then
         SetVehicleFixed(vehicle)
     end
+
+    TriggerServerEvent('ox_fuel:createStatebag', VehToNet(vehicle),
+        GetVehicleFuelLevel(vehicle))
+    TriggerServerEvent('jim-mechanic:server:loadStatus', props, VehToNet(vehicle))
 
     return not NetworkGetEntityIsNetworked(vehicle) or NetworkGetEntityOwner(vehicle) == cache.playerId
 end
