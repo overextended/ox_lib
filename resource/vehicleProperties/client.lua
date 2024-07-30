@@ -655,18 +655,10 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if gameBuild >= 2372 and props.driftTyres then
         SetDriftTyresEnabled(vehicle, true)
     end
-
-    if props.driftKit then
-        TriggerServerEvent('rp_driftkit:server:registerVehicle', VehToNet(vehicle))
-    end
-
+    
     if fixVehicle then
         SetVehicleFixed(vehicle)
     end
-
-    TriggerServerEvent('ox_fuel:createStatebag', VehToNet(vehicle),
-        GetVehicleFuelLevel(vehicle))
-    TriggerServerEvent('jim-mechanic:server:loadStatus', props, VehToNet(vehicle))
 
     return not NetworkGetEntityIsNetworked(vehicle) or NetworkGetEntityOwner(vehicle) == cache.playerId
 end
