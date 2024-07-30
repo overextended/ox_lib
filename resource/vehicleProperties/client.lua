@@ -198,7 +198,7 @@ function lib.getVehicleProperties(vehicle)
 
         return {
             model = GetEntityModel(vehicle),
-            plate = GetVehicleNumberPlateText(vehicle):sub(1, GetConvarInt('ox:plateFormat', 8)),
+            plate = GetVehicleNumberPlateText(vehicle):sub(1, #GetConvar('ox:plateFormat', '........')),
             plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
             bodyHealth = math.floor(GetVehicleBodyHealth(vehicle) + 0.5),
             engineHealth = math.floor(GetVehicleEngineHealth(vehicle) + 0.5),
