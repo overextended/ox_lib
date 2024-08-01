@@ -18,7 +18,7 @@ SetTimeout(1000, function()
     TriggerClientEvent('chat:addSuggestions', -1, registeredCommands)
 end)
 
-AddEventHandler('playerJoining', function(source)
+AddEventHandler('playerJoining', function()
     TriggerClientEvent('chat:addSuggestions', source, registeredCommands)
 end)
 
@@ -46,8 +46,12 @@ local function parseArguments(source, args, raw, params)
                 value = false
             end
         elseif param.type == 'longString' and i == paramsNum then
-            local start = raw:find(arg, 1, true)
-            value = start and raw:sub(start)
+            if arg then
+                local start = raw:find(arg, 1, true)
+                value = start and raw:sub(start)
+            else
+                value = nil
+            end
         else
             value = arg
         end
