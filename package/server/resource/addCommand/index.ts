@@ -1,11 +1,11 @@
-import { addAce } from '../acl';
+import { addAce } from "../acl";
 
 type OxCommandArguments = Record<string | number, string | number | boolean>;
 
 interface OxCommandParams {
   name: string;
   help?: string;
-  paramType?: 'number' | 'playerId' | 'string' | 'longString';
+  paramType?: "number" | "playerId" | "string" | "longString";
   optional?: boolean;
 }
 
@@ -21,11 +21,11 @@ let shouldSendCommands = false;
 
 setTimeout(() => {
   shouldSendCommands = true;
-  emitNet('chat:addSuggestions', -1, registeredCommmands);
+  emitNet("chat:addSuggestions", -1, registeredCommmands);
 }, 1000);
 
-on('playerJoining', (source: number) => {
-  emitNet('chat:addSuggestions', source, registeredCommmands);
+on("playerJoining", () => {
+  emitNet("chat:addSuggestions", source, registeredCommmands);
 });
 
 function parseArguments(
@@ -41,21 +41,21 @@ function parseArguments(
     let value;
 
     switch (param.paramType) {
-      case 'number':
+      case "number":
         value = +arg;
         break;
 
-      case 'string':
+      case "string":
         value = !Number(arg) ? arg : false;
         break;
 
-      case 'playerId':
-        value = arg === 'me' ? source : +arg;
+      case "playerId":
+        value = arg === "me" ? source : +arg;
         if (!value || !DoesPlayerExist(value.toString())) value = false;
 
         break;
 
-      case 'longString':
+      case "longString":
         value = raw.substring(raw.indexOf(arg as string));
         break;
 
@@ -66,9 +66,9 @@ function parseArguments(
 
     if (value === undefined && (!param.optional || (param.optional && arg))) {
       return Citizen.trace(
-        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.paramType} for argument ${index + 1} (${
-          param.name
-        }), received '${arg}'^0`
+        `^1command '${raw.split(" ")[0] || raw}' received an invalid ${
+          param.paramType
+        } for argument ${index + 1} (${param.name}), received '${arg}'^0`
       );
     }
 
@@ -92,20 +92,31 @@ export function addCommand<T extends OxCommandArguments>(
   if (params) {
     params.forEach((param) => {
       if (param.paramType)
-        param.help = param.help ? `${param.help} (type: ${param.paramType})` : `(type: ${param.paramType})`;
+        param.help = param.help
+          ? `${param.help} (type: ${param.paramType})`
+          : `(type: ${param.paramType})`;
     });
   }
 
-  const commands = typeof commandName !== 'object' ? [commandName] : commandName;
+  const commands =
+    typeof commandName !== "object" ? [commandName] : commandName;
   const numCommands = commands.length;
 
-  const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {
+  const commandHandler = (
+    source: number,
+    args: OxCommandArguments,
+    raw: string
+  ) => {
     const parsed = parseArguments(source, args, raw, params) as T | undefined;
 
     if (!parsed) return;
 
     cb(source, parsed, raw).catch((e) =>
-      Citizen.trace(`^1command '${raw.split(' ')[0] || raw}' failed to execute!^0\n${e.message}`)
+      Citizen.trace(
+        `^1command '${raw.split(" ")[0] || raw}' failed to execute!^0\n${
+          e.message
+        }`
+      )
     );
   };
 
@@ -116,12 +127,16 @@ export function addCommand<T extends OxCommandArguments>(
       const ace = `command.${commandName}`;
       const restrictedType = typeof restricted;
 
-      if (restrictedType === 'string' && !IsPrincipalAceAllowed(restricted as string, ace)) {
+      if (
+        restrictedType === "string" &&
+        !IsPrincipalAceAllowed(restricted as string, ace)
+      ) {
         addAce(restricted as string, ace, true);
-      } else if (restrictedType === 'object') {
+      } else if (restrictedType === "object") {
         const _restricted = restricted as string[];
         _restricted.forEach((principal) => {
-          if (!IsPrincipalAceAllowed(principal, ace)) addAce(principal as string, ace, true);
+          if (!IsPrincipalAceAllowed(principal, ace))
+            addAce(principal as string, ace, true);
         });
       }
     }
@@ -131,9 +146,10 @@ export function addCommand<T extends OxCommandArguments>(
       delete properties.restricted;
       registeredCommmands.push(properties);
 
-      if (index !== numCommands && numCommands !== 1) properties = { ...properties };
+      if (index !== numCommands && numCommands !== 1)
+        properties = { ...properties };
 
-      if (shouldSendCommands) emitNet('chat:addSuggestions', -1, properties);
+      if (shouldSendCommands) emitNet("chat:addSuggestions", -1, properties);
     }
   });
 }
