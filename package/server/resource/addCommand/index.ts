@@ -24,7 +24,7 @@ setTimeout(() => {
   emitNet('chat:addSuggestions', -1, registeredCommmands);
 }, 1000);
 
-on('playerJoining', (source: number) => {
+on('playerJoining', () => {
   emitNet('chat:addSuggestions', source, registeredCommmands);
 });
 
