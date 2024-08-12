@@ -16,6 +16,11 @@
 ---@field items RadialItem[]
 ---@field [string] any
 
+---@class EphemeralRadialMenuProps
+---@field items? EphemeralRadialMenuProps[]
+---@field item RadialItem
+---@field [string] any
+
 local isOpen = false
 
 ---@type table<string, RadialMenuProps>
@@ -57,7 +62,7 @@ local function showRadial(id, option)
         action = 'openRadialMenu',
         data = {
             items = radial and radial.items or menuItems,
-            sub = radial and true or nil,
+            sub = (radial and not radial.primaryMenu) and true or nil,
             option = option
         }
     })
@@ -119,6 +124,12 @@ end
 
 function lib.hideRadial()
     if not isOpen then return end
+    
+    for key, menu in pairs(menus) do
+        if menu.isEphemeral then
+            menus[key] = nil
+        end
+    end
 
     SendNUIMessage({
         action = 'openRadialMenu',
@@ -269,6 +280,13 @@ RegisterNUICallback('radialClose', function(_, cb)
 
     if not isOpen then return end
 
+    for key, menu in pairs(menus) do
+        if menu.isEphemeral then
+            TriggerEvent('ox_lib:radialEphemeralClosed', menu.id)
+            menus[key] = nil
+        end
+    end
+
     lib.resetNuiFocus()
 
     isOpen = false
@@ -293,6 +311,101 @@ function lib.disableRadial(state)
 
     if isOpen and state then
         return lib.hideRadial()
+    end
+end
+
+---Open directly a radial menu
+---@param radialId string
+function lib.openRadialMenu(radialId)
+    if isDisabled then return end
+
+    if isOpen then
+        return lib.hideRadial()
+    end
+
+    if IsNuiFocused() or IsPauseMenuActive() then return end
+
+    if not menus[radialId] then return end
+    isOpen = true
+
+    showRadial(radialId, nil, true)
+
+    lib.setNuiFocus(true)
+    SetCursorLocation(0.5, 0.5)
+
+    while isOpen do
+        DisablePlayerFiring(cache.playerId, true)
+        DisableControlAction(0, 1, true)
+        DisableControlAction(0, 2, true)
+        DisableControlAction(0, 142, true)
+        DisableControlAction(2, 199, true)
+        DisableControlAction(2, 200, true)
+        Wait(0)
+    end
+end
+
+---@param item EphemeralRadialMenuProps
+function generateItem(item)
+    if item.items then
+        local subRadialId = lib.string.random('........-....-....-....-............', 36)
+
+        local subItems = {}
+        for _, subItem in pairs(item.items) do
+            table.insert(subItems, generateItem(subItem))
+        end
+        local subRadial = {
+            id = subRadialId,
+            resource = GetInvokingResource(),
+            isEphemeral = true,
+            items = subItems
+        }
+        menus[subRadialId] = subRadial
+        item.menu = subRadialId
+    end
+    return item
+end
+
+---Open ephemeral radial menu
+---@param radial EphemeralRadialMenuProps[]
+function lib.openEphemeralRadialMenu(items)
+    if isDisabled then return end
+
+    if isOpen then
+        return lib.hideRadial()
+    end
+
+    if IsNuiFocused() or IsPauseMenuActive() then return end
+
+
+    local radialItems = {}
+    for _, item in pairs(items) do
+        table.insert(radialItems, generateItem(item))
+    end
+
+    local radial = {
+        id = lib.string.random('........-....-....-....-............', 36),
+        resource = GetInvokingResource(),
+        isEphemeral = true,
+        primaryMenu = true,
+        items = radialItems
+    }
+
+    menus[radial.id] = radial
+
+    isOpen = true
+    showRadial(radial.id, option)
+
+    lib.setNuiFocus(true)
+    SetCursorLocation(0.5, 0.5)
+
+    while isOpen do
+        DisablePlayerFiring(cache.playerId, true)
+        DisableControlAction(0, 1, true)
+        DisableControlAction(0, 2, true)
+        DisableControlAction(0, 142, true)
+        DisableControlAction(2, 199, true)
+        DisableControlAction(2, 200, true)
+        Wait(0)
     end
 end
 
