@@ -70,16 +70,18 @@ end
 
 ---@param t1 table
 ---@param t2 table
+---@param addDuplicateNumbers boolean? add duplicate number keys together if true, replace if false. Defaults to true.
 ---@return table
----Merges two tables together. Duplicate keys will be added together if they are numbers, or otherwise overwritten.
-local function table_merge(t1, t2)
+---Merges two tables together. Defaults to adding duplicate keys together if they are numbers, otherwise they are overriden.
+local function table_merge(t1, t2, addDuplicateNumbers)
+    if addDuplicateNumbers == nil then addDuplicateNumbers = true end
     for k, v in pairs(t2) do
         local type1 = type(t1[k])
         local type2 = type(v)
 
 		if type1 == 'table' and type2 == 'table' then
-            table_merge(t1[k], v)
-        elseif type1 == 'number' and type2 == 'number' then
+            table_merge(t1[k], v, addDuplicateNumbers)
+        elseif addDuplicateNumbers and (type1 == 'number' and type2 == 'number') then
             t1[k] += v
 		else
 			t1[k] = v

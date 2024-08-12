@@ -99,20 +99,29 @@ RegisterNetEvent('ox_lib:setVehicleProperties', function(netid, data)
     end
 end)
 
---[[ Alternative to NetEvent - disabled (at least for now?)
-AddStateBagChangeHandler('setVehicleProperties', '', function(bagName, _, value)
+AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, _, value)
     if not value or not GetEntityFromStateBagName then return end
 
-    local entity = GetEntityFromStateBagName(bagName)
-    local networked = not bagName:find('localEntity')
+    while NetworkIsInTutorialSession() do Wait(0) end
 
-    if networked and NetworkGetEntityOwner(entity) ~= cache.playerId then return end
+    local entityExists, entity = pcall(lib.waitFor, function()
+        local entity = GetEntityFromStateBagName(bagName)
 
-    if lib.setVehicleProperties(entity, value) then
-        Entity(entity).state:set('setVehicleProperties', nil, true)
+        if entity > 0 then return entity end
+    end, '', 10000)
+
+    if not entityExists then return end
+
+    lib.setVehicleProperties(entity, value)
+    Wait(200)
+
+    -- this delay and second-setting of vehicle properties hopefully counters the
+    -- weird sync/ownership/shitfuckery when setting props on server-side vehicles
+    if NetworkGetEntityOwner(entity) == cache.playerId then
+        lib.setVehicleProperties(entity, value)
+        Entity(entity).state:set('ox_lib:setVehicleProperties', nil, true)
     end
 end)
-]]
 
 local gameBuild = GetGameBuildNumber()
 
@@ -284,16 +293,10 @@ end
 ---@param vehicle number
 ---@param props VehicleProperties
 ---@param fixVehicle? boolean Fix the vehicle after props have been set. Usually required when adding extras.
----@return boolean?
+---@return boolean isEntityOwner True if the entity is networked and the client is the current entity owner.
 function lib.setVehicleProperties(vehicle, props, fixVehicle)
     if not DoesEntityExist(vehicle) then
-        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):
-        format(vehicle))
-    end
-
-    if NetworkGetEntityIsNetworked(vehicle) and NetworkGetEntityOwner(vehicle) ~= cache.playerId then
-        error((
-            "Unable to set vehicle properties for '%s' (client is not entity owner)"):format(vehicle))
+        error(("Unable to set vehicle properties for '%s' (entity does not exist)"):format(vehicle))
     end
 
     local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
@@ -643,5 +646,5 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleFixed(vehicle)
     end
 
-    return true
+    return not NetworkGetEntityIsNetworked(vehicle) or NetworkGetEntityOwner(vehicle) == cache.playerId
 end

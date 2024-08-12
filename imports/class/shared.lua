@@ -1,5 +1,5 @@
 ---@diagnostic disable: invisible
-lib.print.warn('ox_lib\'s class module is experimental and may break without warning.')
+local getinfo = debug.getinfo
 
 ---Ensure the given argument or property has a valid type, otherwise throwing an error.
 ---@param id number | string
@@ -21,17 +21,20 @@ local function assertType(id, var, expected)
     return true
 end
 
+---@alias OxClassConstructor<T> fun(self: T, ...: unknown): nil
+
 ---@class OxClass
+---@field private __index table
 ---@field protected __name string
----@field protected private table
----@field protected super function
----@field protected constructor function
+---@field protected private? { [string]: unknown }
+---@field protected super? OxClassConstructor
+---@field protected constructor? OxClassConstructor
 local mixins = {}
 local constructors = {}
-local getinfo = debug.getinfo
 
 ---Somewhat hacky way to remove the constructor from the class.__index.
 ---Maybe add static fields in the future?
+---@param class OxClass
 local function getConstructor(class)
     local constructor = constructors[class] or class.constructor
 
@@ -46,50 +49,31 @@ end
 local function void() return '' end
 
 ---Creates a new instance of the given class.
+---@protected
 ---@generic T
----@param class T
+---@param class T | OxClass
 ---@return T
 function mixins.new(class, ...)
-    ---@cast class +OxClass
     local constructor = getConstructor(class)
-    local obj = {
+
+    local obj = setmetatable({
         private = {}
-    }
+    }, class)
 
-    if not constructor and table.type(...) == 'hash' then
-        lib.print.warn(([[Creating instance of %s with a table and no constructor.
-This behaviour is deprecated and will not be supported in the future.]])
-            :format(class.__name))
-
-        obj = ...
-
-        if obj.private then
-            assertType('private', obj.private, 'table')
-        end
-    end
-
-    setmetatable(obj, class)
-
-    if constructor and obj ~= ... then
+    if constructor then
         local parent = class
 
-        function obj:super(...)
+        rawset(obj, 'super', function(self, ...)
             parent = getmetatable(parent)
             constructor = getConstructor(parent)
 
             if constructor then return constructor(self, ...) end
-        end
+        end)
 
         constructor(obj, ...)
-    elseif class.init then
-        lib.print.warn(([[Calling %s:init() is deprecated and will not be supported in the future.
-Use %s:constructor(...args) and assign properties in the constructor.]])
-            :format(class.__name, class.__name))
-
-        obj:init()
     end
 
-    obj.super = nil
+    rawset(obj, 'super', nil)
 
     if next(obj.private) then
         local private = table.clone(obj.private)
@@ -101,15 +85,15 @@ Use %s:constructor(...args) and assign properties in the constructor.]])
             __index = function(self, index)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat ~= 'method' then return end
+                if di.namewhat ~= 'method' and di.namewhat ~= '' then return end
 
                 return private[index]
             end,
             __newindex = function(self, index, value)
                 local di = getinfo(2, 'n')
 
-                if di.namewhat ~= 'method' then
-                    error(("cannot set values on private field '%s'"):format(index), 2)
+                if di.namewhat ~= 'method' and di.namewhat ~= '' then
+                    error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
                 private[index] = value
@@ -119,22 +103,19 @@ Use %s:constructor(...args) and assign properties in the constructor.]])
         obj.private = nil
     end
 
-    ---@cast class -OxClass
     return obj
 end
 
 ---Checks if an object is an instance of the given class.
----@param obj table
 ---@param class OxClass
-function mixins.isClass(obj, class)
-    return getmetatable(obj) == class
+function mixins:isClass(class)
+    return getmetatable(self) == class
 end
 
 ---Checks if an object is an instance or derivative of the given class.
----@param obj table
 ---@param class OxClass
-function mixins.instanceOf(obj, class)
-    local mt = getmetatable(obj)
+function mixins:instanceOf(class)
+    local mt = getmetatable(self)
 
     while mt do
         if mt == class then return true end
@@ -147,15 +128,16 @@ end
 
 ---Creates a new class.
 ---@generic S : OxClass
----@param name string
+---@generic T : string
+---@param name `T`
 ---@param super? S
+---@return `T`
 function lib.class(name, super)
     assertType(1, name, 'string')
 
     local class = table.clone(mixins)
 
     class.__name = name
-    ---@diagnostic disable-next-line: inject-field
     class.__index = class
 
     if super then

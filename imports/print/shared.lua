@@ -17,7 +17,11 @@ local levelPrefixes = {
 
 local resourcePrintLevel = printLevel[GetConvar('ox:printlevel:' .. cache.resource, GetConvar('ox:printlevel', 'info'))]
 local template = ('^5[%s] %%s %%s^7'):format(cache.resource)
-local jsonOptions = { sort_keys = true, indent = true }
+local function handleException(reason, value)
+    if type(value) == 'function' then return tostring(value) end
+    return reason
+end
+local jsonOptions = { sort_keys = true, indent = true, exception = handleException }
 
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.

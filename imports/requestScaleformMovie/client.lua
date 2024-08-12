@@ -9,11 +9,9 @@ function lib.requestScaleformMovie(scaleformName, timeout)
 
     local scaleform = RequestScaleformMovie(scaleformName)
 
-    if not coroutine.isyieldable() then return scaleform end
-
     return lib.waitFor(function()
         if HasScaleformMovieLoaded(scaleform) then return scaleform end
-    end, ("failed to load scaleform '%s'"):format(scaleform), timeout)
+    end, ("failed to load scaleformMovie '%s'"):format(scaleformName), timeout)
 end
 
 return lib.requestScaleformMovie

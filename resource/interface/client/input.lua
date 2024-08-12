@@ -21,6 +21,7 @@ local input
 ---@field clearable? boolean
 ---@field searchable? boolean
 ---@field description? string
+---@field maxSelectedValues? number
 
 ---@class InputDialogOptionsProps
 ---@field allowCancel? boolean

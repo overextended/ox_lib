@@ -215,8 +215,10 @@ local DrawPoly = DrawPoly
 local function debugPoly(self)
     for i = 1, #self.triangles do
         local triangle = self.triangles[i]
-        DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
-        DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z,
+            self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+        DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z,
+            self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
     end
     for i = 1, #self.polygon do
         local thickness = vec(0, 0, self.thickness / 2)
@@ -224,19 +226,20 @@ local function debugPoly(self)
         local b = self.polygon[i] - thickness
         local c = (self.polygon[i + 1] or self.polygon[1]) + thickness
         local d = (self.polygon[i + 1] or self.polygon[1]) - thickness
-        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
-        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
-        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  225)
-        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
-        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
-        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
-        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a)
+        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
+        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
+        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
+        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
     end
 end
 
 local function debugSphere(self)
-    ---@diagnostic disable-next-line: param-type-mismatch
-    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, self.debugColour.r,  self.debugColour.g,  self.debugColour.b,  self.debugColour.a, false, false, 0, false, false, false, false)
+    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, self.debugColour.r,
+        ---@diagnostic disable-next-line: param-type-mismatch
+        self.debugColour.g, self.debugColour.b, self.debugColour.a, false, false, 0, false, false, false, false)
 end
 
 local function contains(self, coords)
@@ -266,7 +269,14 @@ local function setDebug(self, bool, colour)
         insideZones[self.id] = nil
     end
 
-    self.debugColour = bool and { r = glm.tointeger(colour?.r or self.debugColour?.r or 255), g = glm.tointeger(colour?.g or self.debugColour?.g or 42), b = glm.tointeger(colour?.b or self.debugColour?.b or 24), a = glm.tointeger(colour?.a or self.debugColour?.a or 100) } or nil
+    self.debugColour = bool and
+        {
+            r = glm.tointeger(colour?.r or self.debugColour?.r or 255),
+            g = glm.tointeger(colour?.g or self.debugColour?.g or 42),
+            b = glm.tointeger(colour?.b or
+                self.debugColour?.b or 24),
+            a = glm.tointeger(colour?.a or self.debugColour?.a or 100)
+        } or nil
 
     if not bool and self.debug then
         self.triangles = nil
@@ -276,7 +286,8 @@ local function setDebug(self, bool, colour)
 
     if bool and self.debug and self.debug ~= true then return end
 
-    self.triangles = self.__type == 'poly' and getTriangles(self.polygon) or self.__type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.triangles = self.__type == 'poly' and getTriangles(self.polygon) or
+        self.__type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
     self.debug = self.__type == 'sphere' and debugSphere or debugPoly or nil
 end
 
@@ -355,9 +366,7 @@ lib.zones = {
         if data.debug then
             data.debug = nil
 
-            CreateThread(function()
-                data:setDebug(true, data.debugColour)
-            end)
+            data:setDebug(true, data.debugColour)
         end
 
         Zones[data.id] = data
@@ -385,9 +394,7 @@ lib.zones = {
         if data.debug then
             data.debug = nil
 
-            CreateThread(function()
-                data:setDebug(true, data.debugColour)
-            end)
+            data:setDebug(true, data.debugColour)
         end
 
         Zones[data.id] = data

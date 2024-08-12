@@ -39,7 +39,7 @@ dependencies:
     version: 5.10.3(react@18.2.0)
   '@vitejs/plugin-react':
     specifier: ^4.2.0
-    version: 4.2.0(vite@5.0.12)
+    version: 4.2.0(vite@5.0.13)
   dayjs:
     specifier: ^1.11.7
     version: 1.11.7
@@ -70,12 +70,15 @@ dependencies:
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
+  tinycolor2:
+    specifier: ^1.6.0
+    version: 1.6.0
   typescript:
     specifier: ^4.6.3
     version: 4.9.5
   vite:
-    specifier: ^5.0.12
-    version: 5.0.12(@types/node@20.9.0)
+    specifier: ^5.0.13
+    version: 5.0.13(@types/node@20.9.0)
   web-vitals:
     specifier: ^2.1.4
     version: 2.1.4
@@ -99,6 +102,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.0.8
     version: 18.0.10
+  '@types/tinycolor2':
+    specifier: ^1.4.6
+    version: 1.4.6
   autoprefixer:
     specifier: ^10.0.2
     version: 10.4.13(postcss@8.4.31)
@@ -1394,11 +1400,15 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
+  /@types/tinycolor2@1.4.6:
+    resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
+    dev: true
+
   /@types/unist@2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
 
-  /@vitejs/plugin-react@4.2.0(vite@5.0.12):
+  /@vitejs/plugin-react@4.2.0(vite@5.0.13):
     resolution: {integrity: sha512-+MHTH/e6H12kRp5HUkzOGqPMksezRMmW+TNzlh/QXfI8rRf6l2Z2yH/v12no1UvTwhZgEDMuQ7g7rrfMseU6FQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -1409,7 +1419,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.3)
       '@types/babel__core': 7.20.4
       react-refresh: 0.14.0
-      vite: 5.0.12(@types/node@20.9.0)
+      vite: 5.0.13(@types/node@20.9.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2632,6 +2642,10 @@ packages:
     resolution: {integrity: sha512-SYJSIgeyXW7EuX1ytdneO5e8jip42oHWg9xl/o3oTYhmXusZVgiA+VlPvjIN+kHii9v90AmzTZEBcsEvuAY+TA==}
     dev: false
 
+  /tinycolor2@1.6.0:
+    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
+    dev: false
+
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
@@ -2787,8 +2801,8 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /vite@5.0.12(@types/node@20.9.0):
-    resolution: {integrity: sha512-4hsnEkG3q0N4Tzf1+t6NdN9dg/L3BM+q8SWgbSPnJvrgH2kgdyzfVJwbR1ic69/4uMJJ/3dqDZZE5/WwqW8U1w==}
+  /vite@5.0.13(@types/node@20.9.0):
+    resolution: {integrity: sha512-/9ovhv2M2dGTuA+dY93B9trfyWMDRQw2jdVBhHNP6wr0oF34wG2i/N55801iZIpgUpnHDm4F/FabGQLyc+eOgg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:

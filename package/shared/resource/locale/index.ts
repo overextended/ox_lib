@@ -29,6 +29,8 @@ export const locale = (str: string, ...args: any[]) => {
 
     return lstr;
   }
+
+  return str;
 };
 
 export const getLocales = () => dict;
@@ -46,23 +48,19 @@ export function getLocale(resource: string, key: string) {
   return locale;
 }
 
-export const initLocale = () => {
-  const lang = GetConvar('ox:locale', 'en');
-  let locales: typeof dict = JSON.parse(LoadResourceFile(cache.resource, `locales/${lang}.json`));
+function loadLocale(key: string): typeof dict {
+  const data = LoadResourceFile(cache.resource, `locales/${key}.json`);
 
-  if (!locales) {
-    console.warn(`could not load 'locales/${lang}.json'`);
+  if (!data) console.warn(`could not load 'locales/${key}.json'`);
 
-    if (lang !== 'en') {
-      locales = JSON.parse(LoadResourceFile(cache.resource, 'locales/en.json'));
+  return JSON.parse(data) || {};
+}
 
-      if (!locales) {
-        console.warn(`could not load 'locales/en.json'`);
-      }
-    }
+export const initLocale = (key?: string) => {
+  const lang = key || exports.ox_lib.getLocaleKey();
+  let locales = loadLocale('en');
 
-    if (!locales) return;
-  }
+  if (lang !== 'en') Object.assign(locales, loadLocale(lang));
 
   const flattened = flattenDict(locales, {});
 

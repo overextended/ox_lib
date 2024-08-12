@@ -18,6 +18,7 @@ interface NotifyProps {
   title?: string;
   description?: string;
   duration?: number;
+  showDuration?: boolean;
   position?: NotificationPosition;
   type?: NotificationType;
   style?: Sx;

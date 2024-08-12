@@ -4,7 +4,23 @@
     "cancel": "Zrušit",
     "close": "Zavřít",
     "confirm": "Potvrdit",
-    "more": "Více..."
+    "more": "Více...",
+    "settings": {
+      "locale": "Změnit jazyk",
+      "locale_description": "Aktuální jazyk: ${language} (%s)",
+      "notification_audio": "Zvuk notifikací",
+      "notification_position": "Pozice notifikací"
+    },
+    "position": {
+      "bottom": "Dole",
+      "bottom-left": "Vlevo dole",
+      "bottom-right": "Vpravo dole",
+      "center-left": "Vlevo uprostřed",
+      "center-right": "Vpravo uprostřed",
+      "top": "Nahoře",
+      "top-left": "Vlevo nahoře",
+      "top-right": "Vpravo nahoře"
+    }
   },
   "open_radial_menu": "Otevřít kruhové menu",
   "cancel_progress": "Zrušit aktuální progress bar",

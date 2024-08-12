@@ -8,6 +8,7 @@ export interface NotificationProps {
   description?: string;
   title?: string;
   duration?: number;
+  showDuration?: boolean;
   icon?: IconProp;
   iconColor?: string;
   iconAnimation?: IconAnimation;
