@@ -1,3 +1,5 @@
+local tenYears = 3.1536e+11 -- because fucktards keep complaining
+
 ---@async
 ---@generic T : string | number
 ---@param request function
@@ -17,7 +19,7 @@ function lib.streamingRequest(request, hasLoaded, assetType, asset, timeout, ...
 
     return lib.waitFor(function()
         if hasLoaded(asset) then return asset end
-    end, ("failed to load %s '%s' - this is likely caused by unreleased assets"):format(assetType, asset), timeout or 10000)
+    end, ("failed to load %s '%s' - this is likely caused by unreleased assets"):format(assetType, asset), timeout or tenYears)
 end
 
 return lib.streamingRequest
