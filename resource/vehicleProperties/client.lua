@@ -135,11 +135,11 @@ function lib.getVehicleProperties(vehicle)
         local paintType1 = GetVehicleModColor_1(vehicle)
         local paintType2 = GetVehicleModColor_2(vehicle)
 
-        if GetIsVehiclePrimaryColourCustom(vehicle) then
+        if colorPrimary == 0 and GetIsVehiclePrimaryColourCustom(vehicle) then
             colorPrimary = { GetVehicleCustomPrimaryColour(vehicle) }
         end
 
-        if GetIsVehicleSecondaryColourCustom(vehicle) then
+        if colorSecondary == 0 and GetIsVehicleSecondaryColourCustom(vehicle) then
             colorSecondary = { GetVehicleCustomSecondaryColour(vehicle) }
         end
 
