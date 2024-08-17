@@ -57,8 +57,7 @@ end
 
 function string.trim(str)
     assert(type(str) == 'string', string.format('bad argument #1 to \'trim\' (string expected, got %s)', type(str)))
-
-    return str:match('^%s*(.-)%s*$')
+    return (str:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 return lib.string
