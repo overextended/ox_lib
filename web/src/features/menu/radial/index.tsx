@@ -56,14 +56,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// Utility to determine the appropriate font size based on text length
 const calculateFontSize = (text: string): number => {
-  if (text.length > 20) return 10; // Smaller font size for very long texts
-  if (text.length > 15) return 12; // Slightly smaller font size for long texts
-  return 13; // Default font size for shorter texts
+  if (text.length > 20) return 10;
+  if (text.length > 15) return 12;
+  return 13;
 };
 
-// Utility to split text into lines based on maximum character length
 const splitTextIntoLines = (text: string, maxCharPerLine: number = 15): string[] => {
   const words = text.split(' ');
   const lines: string[] = [];
@@ -149,7 +147,6 @@ const RadialMenu: React.FC = () => {
       >
         <ScaleFade visible={visible}>
           <svg width={`${newDimension}px`} height={`${newDimension}px`} viewBox="0 0 350 350" transform="rotate(90)">
-            {/* Fixed issues with background circle extending the circle when there's less than 3 items */}
             <g transform="translate(175, 175)">
               <circle r={175} className={classes.backgroundCircle} />
             </g>
@@ -184,7 +181,6 @@ const RadialMenu: React.FC = () => {
                     }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                   />
                   <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                    {/* Conditional rendering based on the type of icon */}
                     {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
                       <image
                         href={item.icon}
