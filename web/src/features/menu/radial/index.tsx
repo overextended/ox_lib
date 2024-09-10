@@ -64,7 +64,7 @@ const calculateFontSize = (text: string): number => {
 };
 
 // Utility to split text into lines based on maximum character length
-const splitTextIntoLines = (text: string, maxCharPerLine: number): string[] => {
+const splitTextIntoLines = (text: string, maxCharPerLine: number = 15): string[] => {
   const words = text.split(' ');
   const lines: string[] = [];
   let currentLine = words[0];
@@ -81,24 +81,14 @@ const splitTextIntoLines = (text: string, maxCharPerLine: number): string[] => {
   return lines;
 };
 
-// Function to determine the Y offset for icons based on whether the text wraps
-const calculateIconYOffset = (label: string, maxCharPerLine: number): number => {
-  const lines = splitTextIntoLines(label, maxCharPerLine);
-  // Adjust the Y offset based on the number of lines
-  return lines.length > 3 ? 3 : 0;
-};
-
-// includes More... button
-const PAGE_ITEMS = 6;
+const PAGE_ITEMS = 5;
 
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
 const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
   const { locale } = useLocales();
-  const baseDimension = 350;
-  const scale = 1.1025;
-  const newDimension = baseDimension * scale;
+  const newDimension = 350 * 1.1025;
   const [visible, setVisible] = useState(false);
   const [menuItems, setMenuItems] = useState<RadialMenuItem[]>([]);
   const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean; page: number }>({
@@ -107,12 +97,7 @@ const RadialMenu: React.FC = () => {
     page: 1,
   });
 
-  // Calculate scaling factor based on the number of items
-  const calculateScalingFactor = (itemCount: number): number => {
-    return itemCount > PAGE_ITEMS ? 0.7 : 1;
-  };
-
-  const scalingFactor = calculateScalingFactor(menuItems.length);
+  const scalingFactor = menuItems.length > PAGE_ITEMS ? 0.3 : 0.8;
 
   const changePage = async (increment?: boolean) => {
     setVisible(false);
@@ -175,7 +160,7 @@ const RadialMenu: React.FC = () => {
               const radius = 175 * 0.65 - gap;
               const sinAngle = Math.sin(angle);
               const cosAngle = Math.cos(angle);
-              const iconYOffset = calculateIconYOffset(item.label, 15); // Calculate Y offset based on text wrapping
+              const iconYOffset = splitTextIntoLines(item.label, 15).length > 3 ? 3 : 0;
               const iconX = 175 + sinAngle * radius;
               const iconY = 175 + cosAngle * radius + iconYOffset; // Apply the Y offset to iconY
               const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100) * scalingFactor;
