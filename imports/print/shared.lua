@@ -40,29 +40,24 @@ local function libPrint(level, ...)
     print(template:format(levelPrefixes[level], table.concat(args, '\t')))
 end
 
--- Define color codes for different data types to enhance readability in the console
-local printTable_colors = {
+-- Color codes for different data types
+local printTable_colors <const> = {
     ['string'] = '\27[32m',   -- Green for strings
     ['number'] = '\27[33m',   -- Yellow for numbers
     ['table'] = '\27[34m',    -- Blue for tables
+    ['boolean'] = '\27[36m',  -- Cyan for booleans
     ['function'] = '\27[35m', -- Magenta for functions
+    ['vector'] = '\27[35m',   -- Magenta for vector
+    ['vector2'] = '\27[35m',  -- Magenta for vector2
+    ['vector3'] = '\27[35m',  -- Magenta for vector3
+    ['vector4'] = '\27[35m',  -- Magenta for vector4
     ['reset'] = '\27[0m'      -- Reset to default console color
 }
 
---[[
-    Function: printTable
-    Description: Recursively prints a table with color coding for different data types.
-    It handles nested tables and avoids infinite loops with circular references.
-
-    Parameters:
-    t - The table to be printed.
-    indent - The current indentation level as a string (used for nested tables).
-    visited - A table keeping track of visited tables to avoid circular references.
-]]
-
----@param t table
----@param? indent string
----@param? visited table
+--- Prints a table with color-coded output for different data types.
+-- @param t The table to print.
+-- @param indent The current indentation level (used for nested tables).
+-- @param visited A table to track visited tables and avoid circular references.
 local function printTable(t, indent, visited)
     -- Ensure the input is a table
     assert(type(t) == 'table', 'Expected table, got ' .. type(t))
@@ -80,19 +75,32 @@ local function printTable(t, indent, visited)
     -- Mark the current table as visited
     visited[t] = true
 
+    -- Check if the table is empty
+    if next(t) == nil then
+        print(indent .. printTable_colors['table'] .. '{}' .. printTable_colors['reset'])
+        return
+    end
+
+    -- Print the opening bracket for the table
+    print(indent .. printTable_colors['table'] .. '{' .. printTable_colors['reset'])
+
     -- Iterate over table elements
     for key, value in pairs(t) do
         local valueType = type(value)
         local color = printTable_colors[valueType] or printTable_colors['reset']
+        local formattedKey = type(key) == 'number' and '[' .. key .. ']' or tostring(key)
         if valueType == 'table' then
             -- For nested tables, print the key and recursively print the table
-            print(indent .. printTable_colors['table'] .. tostring(key) .. printTable_colors['reset'] .. ':')
-            printTable(value, indent .. '  ', visited)
+            print(indent .. '  ' .. printTable_colors['table'] .. formattedKey .. printTable_colors['reset'] .. ':')
+            printTable(value, indent .. '    ', visited)
         else
             -- For other types, print the key and value with appropriate coloring
-            print(indent .. color .. tostring(key) .. ': ' .. tostring(value) .. printTable_colors['reset'])
+            print(indent .. '  ' .. color .. formattedKey .. ': ' .. tostring(value) .. printTable_colors['reset'])
         end
     end
+
+    -- Print the closing bracket for the table
+    print(indent .. printTable_colors['table'] .. '}' .. printTable_colors['reset'])
 end
 
 -- lib.print table to hold different logging functions including the enhanced table printing function
