@@ -79,7 +79,7 @@ const splitTextIntoLines = (text: string, maxCharPerLine: number = 15): string[]
   return lines;
 };
 
-const PAGE_ITEMS = 5;
+const PAGE_ITEMS = 6;
 
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
@@ -94,8 +94,6 @@ const RadialMenu: React.FC = () => {
     sub: false,
     page: 1,
   });
-
-  const scalingFactor = menuItems.length > PAGE_ITEMS ? 0.3 : 0.8;
 
   const changePage = async (increment?: boolean) => {
     setVisible(false);
@@ -160,8 +158,8 @@ const RadialMenu: React.FC = () => {
               const iconYOffset = splitTextIntoLines(item.label, 15).length > 3 ? 3 : 0;
               const iconX = 175 + sinAngle * radius;
               const iconY = 175 + cosAngle * radius + iconYOffset; // Apply the Y offset to iconY
-              const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100) * scalingFactor;
-              const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100) * scalingFactor;
+              const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100);
+              const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100);
 
               return (
                 <g
@@ -194,8 +192,8 @@ const RadialMenu: React.FC = () => {
                         x={iconX - 14.5}
                         y={iconY - 17.5}
                         icon={item.icon as IconProp}
-                        width={30 * scalingFactor}
-                        height={30 * scalingFactor}
+                        width={30}
+                        height={30}
                         fixedWidth
                       />
                     )}
