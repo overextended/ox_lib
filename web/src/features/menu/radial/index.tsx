@@ -19,10 +19,10 @@ const useStyles = createStyles((theme) => ({
   sector: {
     fill: theme.colors.dark[6],
     color: theme.colors.dark[0],
-    stroke: '#2f3137',
 
     '&:hover': {
       fill: theme.fn.primaryColor(),
+      cursor: 'pointer',
       '> g > text, > g > svg > path': {
         fill: '#fff',
       },
@@ -41,6 +41,7 @@ const useStyles = createStyles((theme) => ({
     stroke: theme.colors.dark[6],
     strokeWidth: 4,
     '&:hover': {
+      cursor: 'pointer',
       fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
     },
   },
@@ -144,7 +145,14 @@ const RadialMenu: React.FC = () => {
         }}
       >
         <ScaleFade visible={visible}>
-          <svg width={`${newDimension}px`} height={`${newDimension}px`} viewBox="0 0 350 350" transform="rotate(90)">
+          <svg
+            style={{ overflow: 'visible' }}
+            width={`${newDimension}px`}
+            height={`${newDimension}px`}
+            viewBox="0 0 350 350"
+            transform="rotate(90)"
+          >
+            {/* Fixed issues with background circle extending the circle when there's less than 3 items */}
             <g transform="translate(175, 175)">
               <circle r={175} className={classes.backgroundCircle} />
             </g>
