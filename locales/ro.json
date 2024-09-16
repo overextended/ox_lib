@@ -1,0 +1,34 @@
+{
+    "language": "Română",
+    "settings": "Setări",
+    "ui": {
+      "cancel": "Anulează",
+      "close": "Închide",
+      "confirm": "Confirmă",
+      "more": "Mai multe...",
+      "settings": {
+        "locale": "Schimbă limba",
+        "locale_description": "Limba actuală: ${language} (%s)",
+        "notification_audio": "Audio notificări",
+        "notification_position": "Poziţie notificări"
+      },
+      "position": {
+        "bottom": "Jos",
+        "bottom-left": "Jos-stânga",
+        "bottom-right": "Jos-dreapta",
+        "center-left": "Centru-stânga",
+        "center-right": "Centru-dreapta",
+        "top": "Sus",
+        "top-left": "Sus-stânga",
+        "top-right": "Sus-dreapta"
+      }
+    },
+    "open_radial_menu": "Deschide meniul radial",
+    "cancel_progress": "Anuleaza bara de progres actuala",
+    "txadmin_announcement": "Anunţ de server dat de %s",
+    "txadmin_dm": "Mesaj Direct de la %s",
+    "txadmin_warn": "Ai fost avertizat de %s",
+    "txadmin_warn_content": "%s  \nID Acţiune: %s",
+    "txadmin_scheduledrestart": "Restart Programat"
+  }
+  
