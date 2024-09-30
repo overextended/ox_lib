@@ -10,23 +10,26 @@ local pairs = pairs
 ---Checks if tbl contains the given values. Only intended for simple values and unnested tables.
 local function contains(tbl, value)
 	if type(value) ~= 'table' then
-		for _, v in pairs(tbl) do
-			if v == value then return true end
-		end
-	else
-		local matched_values = 0
-		local values = 0
-		for _, v1 in pairs(value) do
-			values += 1
+        for _, v in ipairs(tbl) do
+            if v == value then 
+                return true 
+            end
+        end
+    
+        return false
+    else
+        local set = {}
+        for _, v in ipairs(tbl) do
+            set[v] = true
+        end
+        for _, v in ipairs(value) do
+            if not set[v] then 
+                return false 
+            end
+        end
 
-			for _, v2 in pairs(tbl) do
-				if v1 == v2 then matched_values += 1 end
-			end
-		end
-		if matched_values == values then return true end
-	end
-
-	return false
+        return true
+    end
 end
 
 ---@param t1 any
