@@ -40,22 +40,23 @@ end
 ---@return boolean
 ---Compares if two values are equal, iterating over tables and matching both keys and values.
 local function table_matches(t1, t2)
-	local type1, type2 = type(t1), type(t2)
+    if type(t1) ~= type(t2) then return false end
+    if type(t1) ~= 'table' then return t1 == t2 end
 
-	if type1 ~= type2 then return false end
-	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
+    for k, v1 in pairs(t1) do
+        local v2 = t2[k]
+        if v2 == nil or not table_matches(v1, v2) then
+            return false
+        end
+    end
 
-	for k1,v1 in pairs(t1) do
-	   local v2 = t2[k1]
-	   if v2 == nil or not table_matches(v1,v2) then return false end
-	end
+    for k in pairs(t2) do
+        if t1[k] == nil then
+            return false
+        end
+    end
 
-	for k2,v2 in pairs(t2) do
-	   local v1 = t1[k2]
-	   if v1 == nil or not table_matches(v1,v2) then return false end
-	end
-
-	return true
+    return true
 end
 
 ---@generic T
