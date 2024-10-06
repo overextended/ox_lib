@@ -18,7 +18,7 @@
 ---@field setUrl fun(CDui, string)
 ---@field sendMessage fun(CDui, table)
 
----@type table<number, CDui>
+---@type table<string, CDui>
 local duis = {}
 local resourceName = GetCurrentResourceName()
 
