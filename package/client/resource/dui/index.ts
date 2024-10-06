@@ -1,6 +1,5 @@
 import {
   GetGameTimer,
-  GetCurrentResourceName,
   CreateDui,
   GetDuiHandle,
   CreateRuntimeTxd,
@@ -9,9 +8,9 @@ import {
   DestroyDui,
   SendDuiMessage,
 } from '@nativewrappers/client';
+import { cache } from '../cache';
 
 let duis: { [key: string]: Dui } = {};
-const resourceName = GetCurrentResourceName();
 
 interface LibDui {
   url: string;
@@ -33,9 +32,9 @@ export class Dui {
 
   constructor(data: LibDui) {
     const time = GetGameTimer();
-    let id = `${resourceName}_${time}_${Math.floor(Math.random() * 1000)}`;
+    let id = `${cache.resource}_${time}_${Math.floor(Math.random() * 1000)}`;
     while (duis[id]) {
-      id = `${resourceName}_${time}_${Math.floor(Math.random() * 1000)}`;
+      id = `${cache.resource}_${time}_${Math.floor(Math.random() * 1000)}`;
     }
     this.id = id;
     this.debug = data.debug || false;
@@ -74,8 +73,8 @@ export class Dui {
   }
 }
 
-on('onResourceStop', (stoppedResourceName: string) => {
-  if (stoppedResourceName !== resourceName) return;
+on('onResourceStop', (resourceName: string) => {
+  if (cache.resource !== resourceName) return;
 
   for (const dui in duis) {
     duis[dui].remove();
