@@ -1,19 +1,9 @@
-import {
-	GetGameTimer,
-	CreateDui,
-	GetDuiHandle,
-	CreateRuntimeTxd,
-	CreateRuntimeTextureFromDuiHandle,
-	SetDuiUrl,
-	DestroyDui,
-	SendDuiMessage,
-} from '@nativewrappers/client';
 import { cache } from '../cache';
 
-let duis: { [key: string]: Dui } = {};
+const duis: Record<string, Dui> = {};
 let currentId = 0;
 
-interface LibDui {
+interface DuiProperties {
 	url: string;
 	width: number;
 	height: number;
@@ -21,8 +11,8 @@ interface LibDui {
 }
 
 export class Dui {
-	id: string = "";
-	debug: boolean = false;
+	private id: string = "";
+	private debug: boolean = false;
 	url: string = "";
 	duiObject: number = 0;
 	duiHandle: string = "";
@@ -31,7 +21,7 @@ export class Dui {
 	dictName: string = "";
 	txtName: string = "";
 
-	constructor(data: LibDui) {
+	constructor(data: DuiProperties) {
 		const time = GetGameTimer();
 		const id = `${cache.resource}_${time}_${currentId}`;
 		currentId++;
@@ -49,7 +39,7 @@ export class Dui {
 		if (this.debug) console.log(`Dui ${this.id} created`);
 	}
 
-	remove = () => {
+	remove() {
 		SetDuiUrl(this.duiObject, 'about:blank');
 		DestroyDui(this.duiObject);
 		delete duis[this.id];

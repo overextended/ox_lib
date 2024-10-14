@@ -5,8 +5,7 @@
 ---@field debug? boolean
 
 ---@class Dui : OxClass
----@field id string
----@field debug boolean
+---@field private private { id: string, debug: boolean }
 ---@field url string
 ---@field duiObject number
 ---@field duiHandle string
@@ -32,8 +31,8 @@ function lib.dui:constructor(data)
 	local duiHandle = GetDuiHandle(duiObject)
 	local runtimeTxd = CreateRuntimeTxd(dictName)
 	local txdObject = CreateRuntimeTextureFromDuiHandle(runtimeTxd, txtName, duiHandle)
-	self.id = id
-	self.debug = data.debug or false
+	self.private.id = id
+	self.private.debug = data.debug or false
 	self.url = data.url
 	self.duiObject = duiObject
 	self.duiHandle = duiHandle
@@ -43,7 +42,7 @@ function lib.dui:constructor(data)
 	self.txtName = txtName
 	duis[id] = self
 
-	if self.debug then
+	if self.private.debug then
 		print(('Dui %s created'):format(id))
 	end
 end
@@ -51,10 +50,10 @@ end
 function lib.dui:remove()
 	SetDuiUrl(self.duiObject, 'about:blank')
 	DestroyDui(self.duiObject)
-	duis[self.id] = nil
+	duis[self.private.id] = nil
 
-	if self.debug then
-		print(('Dui %s removed'):format(self.id))
+	if self.private.debug then
+		print(('Dui %s removed'):format(self.private.id))
 	end
 end
 
@@ -63,8 +62,8 @@ function lib.dui:setUrl(url)
 	self.url = url
 	SetDuiUrl(self.duiObject, url)
 
-	if self.debug then
-		print(('Dui %s url set to %s'):format(self.id, url))
+	if self.private.debug then
+		print(('Dui %s url set to %s'):format(self.private.id, url))
 	end
 end
 
@@ -72,8 +71,8 @@ end
 function lib.dui:sendMessage(message)
 	SendDuiMessage(self.duiObject, json.encode(message))
 
-	if self.debug then
-		print(('Dui %s message sent with data :'):format(self.id), json.encode(message, { indent = true }))
+	if self.private.debug then
+		print(('Dui %s message sent with data :'):format(self.private.id), json.encode(message, { indent = true }))
 	end
 end
 
