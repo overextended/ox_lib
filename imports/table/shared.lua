@@ -9,24 +9,23 @@ local pairs = pairs
 ---@return boolean
 ---Checks if tbl contains the given values. Only intended for simple values and unnested tables.
 local function contains(tbl, value)
-    if not next(tbl) then return false end
-
     if type(value) ~= 'table' then
         for _, v in pairs(tbl) do
-            if v == value then 
-                return true 
+            if v == value then
+                return true
             end
         end
-        
+
         return false
     else
         local set = {}
+
         for _, v in pairs(tbl) do
             set[v] = true
         end
 
         for _, v in pairs(value) do
-            if not set[v] then 
+            if not set[v] then
                 return false
             end
         end
@@ -40,11 +39,12 @@ end
 ---@return boolean
 ---Compares if two values are equal, iterating over tables and matching both keys and values.
 local function table_matches(t1, t2)
-    local tabletype1 = table.type(t1) 
+    local tabletype1 = table.type(t1)
 
     if not tabletype1 then return t1 == t2 end
-    if tabletype1 ~= table.type(t2) or (tabletype1 == 'array' and #t1 ~= #t2) then 
-        return false 
+
+    if tabletype1 ~= table.type(t2) or (tabletype1 == 'array' and #t1 ~= #t2) then
+        return false
     end
 
     for k, v1 in pairs(t1) do
@@ -68,15 +68,15 @@ end
 ---@return T
 ---Recursively clones a table to ensure no table references.
 local function table_deepclone(tbl)
-	tbl = table.clone(tbl)
+    tbl = table.clone(tbl)
 
-	for k, v in pairs(tbl) do
-		if type(v) == 'table' then
-			tbl[k] = table_deepclone(v)
-		end
-	end
+    for k, v in pairs(tbl) do
+        if type(v) == 'table' then
+            tbl[k] = table_deepclone(v)
+        end
+    end
 
-	return tbl
+    return tbl
 end
 
 ---@param t1 table
@@ -91,12 +91,12 @@ local function table_merge(t1, t2, addDuplicateNumbers)
         local type1 = type(v1)
         local type2 = type(v2)
 
-		if type1 == 'table' and type2 == 'table' then
+        if type1 == 'table' and type2 == 'table' then
             table_merge(v1, v2, addDuplicateNumbers)
         elseif addDuplicateNumbers and (type1 == 'number' and type2 == 'number') then
             t1[k] = v1 + v2
-		else
-			t1[k] = v2
+        else
+            t1[k] = v2
         end
     end
 
