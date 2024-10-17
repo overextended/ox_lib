@@ -6,6 +6,7 @@ if GetConvarInt('txAdmin-hideDefaultAnnouncement', 0) == 1 then
             id = 'txAdmin:announcement',
             title = locale('txadmin_announcement', eventData.author),
             description = eventData.message,
+            position = 'top-left',
             duration = 5000
         })
     end)
@@ -17,6 +18,7 @@ if GetConvarInt('txAdmin-hideDefaultDirectMessage', 0) == 1 then
             id = 'txAdmin:playerDirectMessage',
             title = locale('txadmin_dm', eventData.author),
             description = eventData.message,
+            position = 'top-left',
             duration = 5000
         })
     end)
@@ -38,6 +40,7 @@ if GetConvarInt('txAdmin-hideDefaultScheduledRestartWarning', 0) == 1 then
             id = 'txAdmin:scheduledRestart',
             title = locale('txadmin_scheduledrestart'),
             description = eventData.translatedMessage,
+            position = 'top-left',
             duration = 5000
         })
     end)

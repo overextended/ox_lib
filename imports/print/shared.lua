@@ -42,16 +42,16 @@ end
 
 -- Color codes for different data types
 local printTable_colors <const> = {
-    ['string'] = '\27[32m',   -- Green for strings
-    ['number'] = '\27[33m',   -- Yellow for numbers
-    ['table'] = '\27[34m',    -- Blue for tables
-    ['boolean'] = '\27[36m',  -- Cyan for booleans
-    ['function'] = '\27[35m', -- Magenta for functions
-    ['vector'] = '\27[35m',   -- Magenta for vector
-    ['vector2'] = '\27[35m',  -- Magenta for vector2
-    ['vector3'] = '\27[35m',  -- Magenta for vector3
-    ['vector4'] = '\27[35m',  -- Magenta for vector4
-    ['reset'] = '\27[0m'      -- Reset to default console color
+    ['string'] = '^1',
+    ['number'] = '^9',
+    ['table'] = '^4',
+    ['boolean'] = '^5',
+    ['function'] = '^3',
+    ['vector'] = '^2',
+    ['vector2'] = '^2',
+    ['vector3'] = '^2',
+    ['vector4'] = '^2',
+    ['reset'] = '^7'
 }
 
 --- Prints a table with color-coded output for different data types.
