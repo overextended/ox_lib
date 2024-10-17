@@ -5,7 +5,7 @@ function streamingRequest<T extends string | number>(
   hasLoaded: Function,
   assetType: string,
   asset: T,
-  timeout: number = 1000,
+  timeout: number = 30000,
   ...args: any
 ) {
   if (hasLoaded(asset)) return asset;
@@ -16,7 +16,7 @@ function streamingRequest<T extends string | number>(
     () => {
       if (hasLoaded(asset)) return asset;
     },
-    `failed to load ${assetType} '${asset}'`,
+    `failed to load ${assetType} '${asset}' - this may be caused by\n- too many loaded assets\n- oversized, invalid, or corrupted assets`,
     timeout
   );
 }

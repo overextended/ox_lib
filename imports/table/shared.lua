@@ -9,24 +9,29 @@ local pairs = pairs
 ---@return boolean
 ---Checks if tbl contains the given values. Only intended for simple values and unnested tables.
 local function contains(tbl, value)
-	if type(value) ~= 'table' then
-		for _, v in pairs(tbl) do
-			if v == value then return true end
-		end
-	else
-		local matched_values = 0
-		local values = 0
-		for _, v1 in pairs(value) do
-			values += 1
+    if type(value) ~= 'table' then
+        for _, v in pairs(tbl) do
+            if v == value then
+                return true
+            end
+        end
 
-			for _, v2 in pairs(tbl) do
-				if v1 == v2 then matched_values += 1 end
-			end
-		end
-		if matched_values == values then return true end
-	end
+        return false
+    else
+        local set = {}
 
-	return false
+        for _, v in pairs(tbl) do
+            set[v] = true
+        end
+
+        for _, v in pairs(value) do
+            if not set[v] then
+                return false
+            end
+        end
+
+        return true
+    end
 end
 
 ---@param t1 any
@@ -34,22 +39,28 @@ end
 ---@return boolean
 ---Compares if two values are equal, iterating over tables and matching both keys and values.
 local function table_matches(t1, t2)
-	local type1, type2 = type(t1), type(t2)
+    local tabletype1 = table.type(t1)
 
-	if type1 ~= type2 then return false end
-	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
+    if not tabletype1 then return t1 == t2 end
 
-	for k1,v1 in pairs(t1) do
-	   local v2 = t2[k1]
-	   if v2 == nil or not table_matches(v1,v2) then return false end
-	end
+    if tabletype1 ~= table.type(t2) or (tabletype1 == 'array' and #t1 ~= #t2) then
+        return false
+    end
 
-	for k2,v2 in pairs(t2) do
-	   local v1 = t1[k2]
-	   if v1 == nil or not table_matches(v1,v2) then return false end
-	end
+    for k, v1 in pairs(t1) do
+        local v2 = t2[k]
+        if v2 == nil or not table_matches(v1, v2) then
+            return false
+        end
+    end
 
-	return true
+    for k in pairs(t2) do
+        if t1[k] == nil then
+            return false
+        end
+    end
+
+    return true
 end
 
 ---@generic T
@@ -57,15 +68,15 @@ end
 ---@return T
 ---Recursively clones a table to ensure no table references.
 local function table_deepclone(tbl)
-	tbl = table.clone(tbl)
+    tbl = table.clone(tbl)
 
-	for k, v in pairs(tbl) do
-		if type(v) == 'table' then
-			tbl[k] = table_deepclone(v)
-		end
-	end
+    for k, v in pairs(tbl) do
+        if type(v) == 'table' then
+            tbl[k] = table_deepclone(v)
+        end
+    end
 
-	return tbl
+    return tbl
 end
 
 ---@param t1 table
@@ -74,17 +85,18 @@ end
 ---@return table
 ---Merges two tables together. Defaults to adding duplicate keys together if they are numbers, otherwise they are overriden.
 local function table_merge(t1, t2, addDuplicateNumbers)
-    if addDuplicateNumbers == nil then addDuplicateNumbers = true end
-    for k, v in pairs(t2) do
-        local type1 = type(t1[k])
-        local type2 = type(v)
+    addDuplicateNumbers = addDuplicateNumbers ~= nil and addDuplicateNumbers or true
+    for k, v2 in pairs(t2) do
+        local v1 = t1[k]
+        local type1 = type(v1)
+        local type2 = type(v2)
 
-		if type1 == 'table' and type2 == 'table' then
-            table_merge(t1[k], v, addDuplicateNumbers)
+        if type1 == 'table' and type2 == 'table' then
+            table_merge(v1, v2, addDuplicateNumbers)
         elseif addDuplicateNumbers and (type1 == 'number' and type2 == 'number') then
-            t1[k] += v
-		else
-			t1[k] = v
+            t1[k] = v1 + v2
+        else
+            t1[k] = v2
         end
     end
 

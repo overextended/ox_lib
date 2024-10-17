@@ -19,15 +19,20 @@ function lib.array:__newindex(index, value)
     rawset(self, index, value)
 end
 
----Create a new array containing the elements from two arrays.
----@param arr ArrayLike
-function lib.array:merge(arr)
+---Create a new array containing the elements of two or more arrays.
+---@param ... ArrayLike
+function lib.array:merge(...)
     local newArr = table.clone(self)
     local length = #self
+    local arrays = { ... }
 
-    for i = 1, #arr do
-        length += 1
-        newArr[length] = arr[i]
+    for i = 1, #arrays do
+        local arr = arrays[i]
+
+        for j = 1, #arr do
+            length += 1
+            newArr[length] = arr[j]
+        end
     end
 
     return lib.array:new(table.unpack(newArr))
@@ -122,10 +127,33 @@ function lib.array:forEach(cb)
     end
 end
 
+---Determines if a given element exists inside an array.
+---@param element unknown The value to find in the array.
+---@param fromIndex? number The position in the array to begin searching from.
+function lib.array:includes(element, fromIndex)
+    for i = (fromIndex or 1), #self do
+        if self[i] == element then return true end
+    end
+
+    return false
+end
+
 ---Concatenates all array elements into a string, seperated by commas or the specified seperator.
 ---@param seperator? string
 function lib.array:join(seperator)
     return table.concat(self, seperator or ',')
+end
+
+---Create a new array containing the results from calling the provided function on every element in an array.
+---@param cb fun(element: unknown, index: number, array: self): unknown
+function lib.array:map(cb)
+    local arr = {}
+
+    for i = 1, #self do
+        arr[i] = cb(self[i], i, self)
+    end
+
+    return lib.array:new(table.unpack(arr))
 end
 
 ---Removes the last element from an array and returns the removed element.
@@ -147,11 +175,6 @@ function lib.array:push(...)
     return length
 end
 
----Removes the first element from an array and returns the removed element.
-function lib.array:shift()
-    return table.remove(self, 1)
-end
-
 ---The "reducer" function is applied to every element within an array, with the previous element's result serving as the accumulator.\
 ---If an initial value is provided, it's used as the accumulator for index 1; otherwise, index 1 itself serves as the initial value, and iteration begins from index 2.
 ---@generic T
@@ -169,13 +192,42 @@ function lib.array:reduce(reducer, initialValue)
     return accumulator
 end
 
+---Reverses the elements inside an array.
+function lib.array:reverse()
+    local i, j = 1, #self
+
+    while i < j do
+        self[i], self[j] = self[j], self[i]
+        i += 1
+        j -= 1
+    end
+
+    return self
+end
+
+---Removes the first element from an array and returns the removed element.
+function lib.array:shift()
+    return table.remove(self, 1)
+end
+
+---Creates a new array with reversed elements from the given array.
+function lib.array:toReversed()
+    local reversed = lib.array:new()
+
+    for i = #self, 1, -1 do
+        reversed:push(self[i])
+    end
+
+    return reversed
+end
+
 ---Returns true if the given table is an instance of array or an array-like table.
 ---@param tbl ArrayLike
 ---@return boolean
 function lib.array.isArray(tbl)
-    if not type(tbl) == 'table' then return false end
-
     local tableType = table.type(tbl)
+
+    if not tableType then return false end
 
     if tableType == 'array' or tableType == 'empty' or lib.array.instanceOf(tbl, lib.array) then
         return true
