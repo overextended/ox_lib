@@ -32,7 +32,7 @@ end
 ---@param cb function | false
 ---@param ... any
 ---@return ...
-local function triggerServerCallback(_, event, delay, cb, ...)
+local function triggerServerCallback(_, event, delay, cb, bps, ...)
     if not eventTimer(event, delay) then return end
 
     local key
@@ -41,7 +41,11 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         key = ('%s:%s'):format(event, math.random(0, 100000))
     until not pendingCallbacks[key]
 
-    TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
+    if bps then
+        TriggerLatentServerEvent(cbEvent:format(event), bps, cache.resource, key, ...)
+    else
+        TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
+    end
 
     ---@type promise | false
     local promise = not cb and promise.new()
@@ -77,7 +81,7 @@ lib.callback = setmetatable({}, {
             assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
         end
 
-        return triggerServerCallback(_, event, delay, cb, ...)
+        return triggerServerCallback(_, event, delay, cb, nil, ...)
     end
 })
 
@@ -86,7 +90,32 @@ lib.callback = setmetatable({}, {
 ---Sends an event to the server and halts the current thread until a response is returned.
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.await(event, delay, ...)
-    return triggerServerCallback(nil, event, delay, false, ...)
+    return triggerServerCallback(nil, event, delay, false, nil, ...)
+end
+
+---@param event string
+---@param bps number
+---@param cb function
+---Works the same as lib.callback with this difference that this function sends latent client event
+---@diagnostic disable-next-line: duplicate-set-field
+function lib.callback.latent(event, bps, cb, ...)
+    if not bps or type(bps) ~= 'number' then
+        bps = 50000
+    end
+
+    return triggerServerCallback(nil, event, delay, cb, bps, ...)
+end
+
+---@param event string
+---@param bps number
+--- Sends an latent event to a client and halts the current thread until a response is returned.
+---@diagnostic disable-next-line: duplicate-set-field
+function lib.callback.latentAwait(event, bps, ...)
+    if not bps or type(bps) ~= 'number' then
+        bps = 50000
+    end
+
+    return triggerServerCallback(nil, event, delay, false, bps, ...)
 end
 
 local function callbackResponse(success, result, ...)
@@ -111,6 +140,20 @@ local pcall = pcall
 function lib.callback.register(name, cb)
     RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
         TriggerServerEvent(cbEvent:format(resource), key, callbackResponse(pcall(cb, ...)))
+    end)
+end
+
+---@param name string
+---@param cb function
+---@param bps number
+---Works almost the same as lib.callback.register with the difference that this function sends latent server event
+function lib.callback.registerLatent(name, bps, cb)
+    if not bps or type(bps) ~= 'number' then
+        bps = 50000
+    end
+
+    RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
+        TriggerLatentServerEvent(cbEvent:format(resource), bps, key, callbackResponse(pcall(cb, ...)))
     end)
 end
 
