@@ -15,7 +15,7 @@ end)
 ---@param cb function|false
 ---@param ... any
 ---@return ...
-local function triggerClientCallback(_, event, playerId, cb, bps, ...)
+local function triggerClientCallback(_, event, playerId, cb, ...)
     assert(DoesPlayerExist(playerId --[[@as string]]), ("target playerId '%s' does not exist"):format(playerId))
 
     local key
@@ -24,11 +24,7 @@ local function triggerClientCallback(_, event, playerId, cb, bps, ...)
         key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
     until not pendingCallbacks[key]
 
-    if bps then
-        TriggerLatentClientEvent(cbEvent:format(event), bps, playerId, cache.resource, key, ...)
-    else
-        TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
-    end
+    TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
     ---@type promise | false
     local promise = not cb and promise.new()
@@ -64,7 +60,7 @@ lib.callback = setmetatable({}, {
             assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
         end
 
-        return triggerClientCallback(_, event, playerId, cb, nil, ...)
+        return triggerClientCallback(_, event, playerId, cb, ...)
     end
 })
 
@@ -73,32 +69,7 @@ lib.callback = setmetatable({}, {
 --- Sends an event to a client and halts the current thread until a response is returned.
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.await(event, playerId, ...)
-    return triggerClientCallback(nil, event, playerId, false, nil, ...)
-end
-
----@param event string
----@param playerId number
----@param cb function
----Works the same as lib.callback with this difference that this function sends latent client event
----@diagnostic disable-next-line: duplicate-set-field
-function lib.callback.latent(event, playerId, bps, cb, ...)
-    if not bps or type(bps) ~= 'number' then
-        bps = 50000
-    end
-
-    return triggerClientCallback(nil, event, playerId, cb, bps, ...)
-end
-
----@param event string
----@param playerId number
---- Sends an latent event to a client and halts the current thread until a response is returned.
----@diagnostic disable-next-line: duplicate-set-field
-function lib.callback.latentAwait(event, playerId, bps, ...)
-    if not bps or type(bps) ~= 'number' then
-        bps = 50000
-    end
-
-    return triggerClientCallback(nil, event, playerId, false, bps, ...)
+    return triggerClientCallback(nil, event, playerId, false, ...)
 end
 
 local function callbackResponse(success, result, ...)
@@ -123,20 +94,6 @@ local pcall = pcall
 function lib.callback.register(name, cb)
     RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
-    end)
-end
-
----@param name string
----@param cb function
----@param bps number
----Works almost the same as lib.callback.register with the difference that this function sends latent client event
-function lib.callback.registerLatent(name, bps, cb)
-    if not bps or type(bps) ~= 'number' then
-        bps = 50000
-    end
-
-    RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
-        TriggerLatentClientEvent(cbEvent:format(resource), source, bps, key, callbackResponse(pcall(cb, source, ...)))
     end)
 end
 
