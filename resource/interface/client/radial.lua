@@ -3,6 +3,8 @@
 ---@field label string
 ---@field menu? string
 ---@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
+---@field canSelect? fun()
+---@field onEvent? string
 ---@field [string] any
 ---@field keepOpen? boolean
 ---@field iconWidth? number
@@ -209,22 +211,45 @@ RegisterNUICallback('radialClick', function(index, cb)
     end
 
     local menuResource = currentRadial and currentRadial.resource or item.resource
+    local success, resp = true, ""
 
-    if item.menu then
-        menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
-        showRadial(item.menu)
-    elseif not item.keepOpen then
-        lib.hideRadial()
-    end
+    if item.canSelect then
+        success, resp = pcall(item.canSelect, currentMenu, itemIndex)
+        if success and resp then
+            if item.menu then
+                menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
+                showRadial(item.menu)
+            elseif not item.keepOpen then
+                lib.hideRadial()
+            end
+            
+            if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
+            if item.onSelect then
+                if type(item.onSelect) == 'string' then
+                    return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
+                end
 
-    local onSelect = item.onSelect
-
-    if onSelect then
-        if type(onSelect) == 'string' then
-            return exports[menuResource][onSelect](0, currentMenu, itemIndex)
+                item.onSelect(currentMenu, itemIndex)
+            end
+        else
+            error(resp)
+        end
+    else
+        if item.menu then
+            menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
+            showRadial(item.menu)
+        elseif not item.keepOpen then
+            lib.hideRadial()
         end
 
-        onSelect(currentMenu, itemIndex)
+        if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
+        if item.onSelect then
+            if type(item.onSelect) == 'string' then
+                return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
+            end
+
+            item.onSelect(currentMenu, itemIndex)
+        end
     end
 end)
 
