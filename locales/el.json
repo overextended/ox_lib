@@ -1,0 +1,34 @@
+{
+    "language": "Ελληνικά",
+    "settings": "Ρυθμίσεις",
+    "ui": {
+      "cancel": "Ακύρωση",
+      "close": "Κλείσιμο",
+      "confirm": "Επιβεβαίωση",
+      "more": "Περισσότερα...",
+      "settings": {
+        "locale": "Αλλαγή γλώσσας",
+        "locale_description": "Τρέχουσα γλώσσα: ${language} (%s)",
+        "notification_audio": "Ήχος ειδοποίησης",
+        "notification_position": "Θέση ειδοποίησης"
+      },
+      "position": {
+        "bottom": "Κάτω",
+        "bottom-left": "Κάτω αριστερά",
+        "bottom-right": "Κάτω δεξιά",
+        "center-left": "Κέντρο αριστερά",
+        "center-right": "Κέντρο δεξιά",
+        "top": "Πάνω",
+        "top-left": "Πάνω αριστερά",
+        "top-right": "Πάνω δεξιά"
+      }
+    },
+    "open_radial_menu": "Άνοιγμα κυκλικού μενού",
+    "cancel_progress": "Ακύρωση τρέχουσας γραμμής προόδου",
+    "txadmin_announcement": "Ανακοίνωση διακομιστή από τον %s",
+    "txadmin_dm": "Άμεσο μήνυμα από τον %s",
+    "txadmin_warn": "Έχετε προειδοποιηθεί από τον %s",
+    "txadmin_warn_content": "%s  \nID Ενέργειας: %s",
+    "txadmin_scheduledrestart": "Προγραμματισμένη επανεκκίνηση"
+  }
+  
