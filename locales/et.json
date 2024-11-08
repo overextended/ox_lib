@@ -6,20 +6,20 @@
     "confirm": "Kinnita",
     "more": "Rohkem...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Vaheta keelt",
+      "locale_description": "Praegune keel: ${language} (%s)",
+      "notification_audio": "Teate heli",
+      "notification_position": "Teate asukoht"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "All",
+      "bottom-left": "All vasakul",
+      "bottom-right": "All paremal",
+      "center-left": "Keskel vasakul",
+      "center-right": "Keskel paremal",
+      "top": "Üleval",
+      "top-left": "Üleval vasakul",
+      "top-right": "Üleval paremal"
     }
   },
   "open_radial_menu": "Ava rullikmenüü",
