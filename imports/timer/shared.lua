@@ -96,6 +96,7 @@ function timer:restart(async)
     self:forceEnd(false)
     Wait(0)
     self.private.currentTimeLeft = self.private.initialTime
+    self.private.triggerOnEnd = true
     self.private.startTime = 0
     self:start(async)
 end
