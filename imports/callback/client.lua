@@ -74,7 +74,7 @@ lib.callback = setmetatable({}, {
         else
             local cbType = type(cb)
 
-            assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
+            assert(cbType == 'function' or cbType == 'table', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
         end
 
         return triggerServerCallback(_, event, delay, cb, ...)
