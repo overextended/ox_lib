@@ -49,6 +49,11 @@ function lib.showMenu(id, startIndex)
     if not menu then
         error(('No menu with id %s was found'):format(id))
     end
+
+    if table.type(menu.options) == 'empty' then
+        error(('Can\'t open empty menu with id %s'):format(id))
+    end
+    
     if not openMenu then
         local control = cache.game == 'fivem' and 140 or 0xE30CD707
 
