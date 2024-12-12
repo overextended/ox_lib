@@ -26,6 +26,10 @@ CreateThread(function()
 		local vehicle = GetVehiclePedIsIn(ped, false)
 
 		if vehicle > 0 then
+			if vehicle ~= cache.vehicle then
+				cache:set('seat', false)
+			end
+
 			cache:set('vehicle', vehicle)
 
 			if not cache.seat or GetPedInVehicleSeat(vehicle, cache.seat) ~= ped then
