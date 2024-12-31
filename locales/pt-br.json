@@ -6,27 +6,27 @@
     "confirm": "Confirmar",
     "more": "Mais...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Alterar idioma",
+      "locale_description": "Idioma atual: ${language} (%s)",
+      "notification_audio": "Áudio de notificação",
+      "notification_position": "Posição da notificação"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "Inferior",
+      "bottom-left": "Inferior esquerdo",
+      "bottom-right": "Inferior direito",
+      "center-left": "Centro-esquerdo",
+      "center-right": "Centro-direito",
+      "top": "Superior",
+      "top-left": "Superior esquerdo",
+      "top-right": "Superior direito"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "open_radial_menu": "Abrir menu radial",
+  "cancel_progress": "Cancelar barra de progresso atual",
+  "txadmin_announcement": "Anúncio por %s",
+  "txadmin_dm": "Mensagem de %s",
+  "txadmin_warn": "Você foi alertado por %s",
+  "txadmin_warn_content": "%s  \nID do aviso: %s",
+  "txadmin_scheduledrestart": "Reinício agendado"
 }
