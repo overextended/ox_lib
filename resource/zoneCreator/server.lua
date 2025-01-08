@@ -37,6 +37,10 @@ exports.ox_target:addPolyZone({
 })
 ]]
 
+local function formatNumber(num)
+	return tostring(num):gsub(",", ".")
+end
+
 local parse = {
 	poly = function(data)
 		local points = {}
@@ -82,18 +86,34 @@ local parse = {
 			pattern = {
 				'local box = lib.zones.box({\n',
 				('\tname = "%s",\n'):format(data.name),
-				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
-				('\tsize = vec3(%s, %s, %s),\n'):format(data.width, data.length, data.height),
-				('\trotation = %s,\n'):format(data.heading),
+				('\tcoords = vec3(%s, %s, %s),\n'):format(
+					formatNumber(data.xCoord),
+					formatNumber(data.yCoord),
+					formatNumber(data.zCoord)
+				),
+				('\tsize = vec3(%s, %s, %s),\n'):format(
+					formatNumber(data.width),
+					formatNumber(data.length),
+					formatNumber(data.height)
+				),
+				('\trotation = %s,\n'):format(formatNumber(data.heading)),
 				'})\n',
 			}
 		elseif data.format == 'array' then
 			pattern = {
 				'{\n',
 				('\tname = "%s",\n'):format(data.name),
-				('\tcoords = vec3(%s, %s, %s),\n'):format(data.xCoord, data.yCoord, data.zCoord),
-				('\tsize = vec3(%s, %s, %s),\n'):format(data.width, data.length, data.height),
-				('\trotation = %s,\n'):format(data.heading),
+				('\tcoords = vec3(%s, %s, %s),\n'):format(
+					formatNumber(data.xCoord),
+					formatNumber(data.yCoord),
+					formatNumber(data.zCoord)
+				),
+				('\tsize = vec3(%s, %s, %s),\n'):format(
+					formatNumber(data.width),
+					formatNumber(data.length),
+					formatNumber(data.height)
+				),
+				('\trotation = %s,\n'):format(formatNumber(data.heading)),
 				'},\n',
 			}
 		elseif data.format == 'target' then
@@ -142,7 +162,7 @@ local parse = {
 }
 
 RegisterNetEvent('ox_lib:saveZone', function(data)
-    if not source or not IsPlayerAceAllowed(source, 'command') then return end
-    local output = (LoadResourceFile(cache.resource, 'created_zones.lua') or '') .. parse[data.zoneType](data)
-    SaveResourceFile(cache.resource, 'created_zones.lua', output, -1)
+	if not source or not IsPlayerAceAllowed(source, 'command') then return end
+	local output = (LoadResourceFile(cache.resource, 'created_zones.lua') or '') .. parse[data.zoneType](data)
+	SaveResourceFile(cache.resource, 'created_zones.lua', output, -1)
 end)

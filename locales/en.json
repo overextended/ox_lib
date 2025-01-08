@@ -1,11 +1,11 @@
 {
-  "language": "English",
-  "settings": "Settings",
+  "language": "Eesti",
+  "settings": "Seaded",
   "ui": {
-    "cancel": "Cancel",
-    "close": "Close",
-    "confirm": "Confirm",
-    "more": "More...",
+    "cancel": "Tühista",
+    "close": "Sulge",
+    "confirm": "Kinnita",
+    "more": "Rohkem",
     "settings": {
       "locale": "Change locale",
       "locale_description": "Current language: ${language} (%s)",
@@ -23,11 +23,11 @@
       "top-right": "Top-right"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "open_radial_menu": "Ava rullikmenüü",
+  "cancel_progress": "Katkesta praegune edenemisriba",
+  "txadmin_announcement": "Serveri teadaanne kasutajalt %s",
+  "txadmin_dm": "Sulle saadeti sõnum kasutajalt %s",
+  "txadmin_warn": "Sind hoiatati kasutaja %s poolt",
+  "txadmin_warn_content": "%s  \nTegevuse ID: %s",
+  "txadmin_scheduledrestart": "Planeeritud taaskäivitus"
 }
