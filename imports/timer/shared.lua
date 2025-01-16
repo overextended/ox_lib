@@ -92,8 +92,8 @@ function timer:isPaused()
     return self.private.paused
 end
 
-function timer:restart(async)
-    self:forceEnd(true)
+function timer:restart(async, triggerOnEnd)
+    self:forceEnd(triggerOnEnd)
     Wait(0)
     self.private.currentTimeLeft = self.private.initialTime
     self.private.startTime = 0
