@@ -10,6 +10,7 @@
 ---@class OxTimer : OxClass
 ---@field private private TimerPrivateProps
 ---@field start fun(self: self, async?: boolean) starts the timer
+---@field restart fun(self: self, async?: boolean, onEnd?: boolean | function) restart the timer
 ---@field forceEnd fun(self: self, triggerOnEnd: boolean) end timer early and optionally trigger the onEnd function still
 ---@field isPaused fun(self: self): boolean returns wether the timer is paused or not
 ---@field pause fun(self: self) pauses the timer until play method is called
