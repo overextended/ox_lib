@@ -1,29 +1,30 @@
 {
   "language": "Nederlands",
+  "settings": "Instellingen",
   "ui": {
     "cancel": "Annuleren",
     "close": "Sluiten",
     "confirm": "Bevestigen",
     "more": "Meer...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "Taal wijzigen",
+      "locale_description": "Huidige taal: ${language} (%s)",
+      "notification_audio": "Meldingsgeluid",
+      "notification_position": "Meldingspositie"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "Onder",
+      "bottom-left": "Linksonder",
+      "bottom-right": "Rechtsonder",
+      "center-left": "Linksmidden",
+      "center-right": "Rechtsmidden",
+      "top": "Boven",
+      "top-left": "Linksboven",
+      "top-right": "Rechtsboven"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "Radiaal menu openen",
+  "cancel_progress": "Huidige voortgangsbalk annuleren",
   "txadmin_announcement": "Server mededeling door %s",
   "txadmin_dm": "Bericht van %s",
   "txadmin_warn": "Je hebt een waarschuwing gekregen van %s",
