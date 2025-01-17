@@ -104,14 +104,20 @@ local enteringZones = {}
 local exitingZones = {}
 local enteringSize = 0
 local exitingSize = 0
+local pauseRequests = 0
+local isPaused = false
 local tick
 local glm_polygon_contains = glm.polygon.contains
 
 local function removeZone(self)
+    pauseRequests += 1
+
+    lib.waitFor(function() return isPaused end, "Failed to pause Zone thread", 1000)
+
     Zones[self.id] = nil
     insideZones[self.id] = nil
-    enteringZones[self.id] = nil
-    exitingZones[self.id] = nil
+
+    pauseRequests -= 1
 end
 
 CreateThread(function()
@@ -203,6 +209,16 @@ CreateThread(function()
             end
         elseif not next(insideZones) then
             tick = ClearInterval(tick)
+        end
+
+        if pauseRequests > 0 then
+            isPaused = true
+
+            while pauseRequests > 0 do
+                Wait(50)
+            end
+
+            isPaused = false
         end
 
         Wait(300)
