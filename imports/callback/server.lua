@@ -57,6 +57,10 @@ lib.callback = setmetatable({}, {
         else
             local cbType = type(cb)
 
+            if cbType == 'table' and getmetatable(cb)?.__call then
+                cbType = 'function'
+            end
+
             assert(cbType == 'function', ("expected argument 3 to have type 'function' (received %s)"):format(cbType))
         end
 

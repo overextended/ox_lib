@@ -85,7 +85,7 @@ end
 ---@return table
 ---Merges two tables together. Defaults to adding duplicate keys together if they are numbers, otherwise they are overriden.
 local function table_merge(t1, t2, addDuplicateNumbers)
-    addDuplicateNumbers = addDuplicateNumbers ~= nil and addDuplicateNumbers or true
+    addDuplicateNumbers = addDuplicateNumbers == nil or addDuplicateNumbers
     for k, v2 in pairs(t2) do
         local v1 = t1[k]
         local type1 = type(v1)

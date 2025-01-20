@@ -5,9 +5,6 @@ local defaultRotation = vector3(0, 0, 0)
 local defaultDirection = vector3(0, 0, 0)
 local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
 local defaultSize = { width = 2, height = 1 }
-local defaultBobUpAndDown = false
-local defaultFaceCamera = true
-local defaultRotate = false
 local defaultTextureDict = nil
 local defaultTextureName = nil
 
@@ -164,9 +161,9 @@ function lib.marker.new(options)
   self.height = options.height or defaultSize.height
   self.rotation = options.rotation or defaultRotation
   self.direction = options.direction or defaultDirection
-  self.bobUpAndDown = options.bobUpAndDown
-  self.faceCamera = options.faceCamera
-  self.rotate = options.rotate
+  self.bobUpAndDown = options.bobUpAndDown or defaultBobUpAndDown
+  self.faceCamera = options.faceCamera or defaultFaceCamera
+  self.rotate = options.rotate or defaultRotate
   self.textureDict = options.textureDict or defaultTextureDict
   self.textureName = options.textureName or defaultTextureName
   self.draw = drawMarker
