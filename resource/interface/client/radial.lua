@@ -235,6 +235,10 @@ RegisterNUICallback('radialClick', function(index, cb)
 
         item.onSelect(currentMenu, itemIndex)
     end
+
+    if item.onExport then 
+        return exports[menuResource][item.onExport](0, currentMenu, itemIndex)
+    end
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)
