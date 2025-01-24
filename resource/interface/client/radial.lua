@@ -2,9 +2,10 @@
 ---@field icon string | {[1]: IconProp, [2]: string};
 ---@field label string
 ---@field menu? string
----@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
----@field canSelect? fun()
+---@field onSelect? fun(currentMenu: string | nil, itemIndex: number)
+---@field canSelect? fun(currentMenu: string | nil, itemIndex: number)
 ---@field onEvent? string
+---@field onExport? string
 ---@field [string] any
 ---@field keepOpen? boolean
 ---@field iconWidth? number
