@@ -2,9 +2,10 @@
 ---@field icon string | {[1]: IconProp, [2]: string};
 ---@field label string
 ---@field menu? string
----@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
----@field canSelect? fun()
+---@field onSelect? fun(currentMenu: string | nil, itemIndex: number)
+---@field canSelect? fun(currentMenu: string | nil, itemIndex: number)
 ---@field onEvent? string
+---@field onExport? string
 ---@field [string] any
 ---@field keepOpen? boolean
 ---@field iconWidth? number
@@ -211,46 +212,21 @@ RegisterNUICallback('radialClick', function(index, cb)
     end
 
     local menuResource = currentRadial and currentRadial.resource or item.resource
-    local success, resp = true, ""
 
     if item.canSelect then
-        success, resp = pcall(item.canSelect, currentMenu, itemIndex)
-        if success and resp then
-            if item.menu then
-                menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
-                showRadial(item.menu)
-            elseif not item.keepOpen then
-                lib.hideRadial()
-            end
-            
-            if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
-            if item.onSelect then
-                if type(item.onSelect) == 'string' then
-                    return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
-                end
-
-                item.onSelect(currentMenu, itemIndex)
-            end
-        else
-            error(resp)
-        end
-    else
-        if item.menu then
-            menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
-            showRadial(item.menu)
-        elseif not item.keepOpen then
-            lib.hideRadial()
-        end
-
-        if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
-        if item.onSelect then
-            if type(item.onSelect) == 'string' then
-                return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
-            end
-
-            item.onSelect(currentMenu, itemIndex)
-        end
+        local success, resp = pcall(item.canSelect, currentMenu, itemIndex)
+        if not success then return end
     end
+
+    if item.menu then
+        menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
+        showRadial(item.menu)
+    elseif not item.keepOpen then
+        lib.hideRadial()
+    end
+    if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
+    if item.onSelect then item.onSelect(currentMenu, itemIndex) end
+    if item.onExport then return exports[menuResource][item.onExport](0, currentMenu, itemIndex) end
 end)
 
 RegisterNUICallback('radialBack', function(_, cb)
