@@ -211,45 +211,28 @@ RegisterNUICallback('radialClick', function(index, cb)
     end
 
     local menuResource = currentRadial and currentRadial.resource or item.resource
-    local success, resp = true, ""
-
+    
     if item.canSelect then
-        success, resp = pcall(item.canSelect, currentMenu, itemIndex)
-        if success and resp then
-            if item.menu then
-                menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
-                showRadial(item.menu)
-            elseif not item.keepOpen then
-                lib.hideRadial()
-            end
-            
-            if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
-            if item.onSelect then
-                if type(item.onSelect) == 'string' then
-                    return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
-                end
-
-                item.onSelect(currentMenu, itemIndex)
-            end
-        else
-            error(resp)
+        local success, resp = pcall(item.canSelect, currentMenu, itemIndex)
+        if not success then
+            return
         end
-    else
-        if item.menu then
-            menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
-            showRadial(item.menu)
-        elseif not item.keepOpen then
-            lib.hideRadial()
+    end
+
+    if item.menu then
+        menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
+        showRadial(item.menu)
+    elseif not item.keepOpen then
+        lib.hideRadial()
+    end
+    
+    if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
+    if item.onSelect then
+        if type(item.onSelect) == 'string' then
+            return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
         end
 
-        if item.onEvent then TriggerEvent(item.onEvent, currentMenu, itemIndex) end
-        if item.onSelect then
-            if type(item.onSelect) == 'string' then
-                return exports[menuResource][item.onSelect](0, currentMenu, itemIndex)
-            end
-
-            item.onSelect(currentMenu, itemIndex)
-        end
+        item.onSelect(currentMenu, itemIndex)
     end
 end)
 
