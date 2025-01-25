@@ -55,10 +55,8 @@ local function void() return '' end
 ---@return T
 function mixins.new(class, ...)
     local constructor = getConstructor(class)
-
-    local obj = setmetatable({
-        private = {}
-    }, class)
+    local private = {}
+    local obj = setmetatable({ private = private }, class)
 
     if constructor then
         local parent = class
@@ -75,8 +73,8 @@ function mixins.new(class, ...)
 
     rawset(obj, 'super', nil)
 
-    if next(obj.private) then
-        local private = table.clone(obj.private)
+    if private ~= obj.private or next(obj.private) then
+        private = table.clone(obj.private)
 
         table.wipe(obj.private)
         setmetatable(obj.private, {
