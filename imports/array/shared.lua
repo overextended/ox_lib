@@ -114,7 +114,7 @@ function lib.array:indexOf(value, last)
         local element = self[i]
 
         if element == value then
-            return element
+            return i
         end
     end
 end
