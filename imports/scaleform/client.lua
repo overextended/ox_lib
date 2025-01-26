@@ -23,28 +23,30 @@ lib.scaleform = lib.class('Scaleform')
 --- Converts the arguments into data types usable by scaleform
 ---@param argsTable table
 local function convertArgs(argsTable)
-    for i=1, #argsTable do
+    for i = 1, #argsTable do
         local arg = argsTable[i]
-        if type(arg) == 'string' then
+        local argType = type(arg)
+
+        if argType == 'string' then
             ScaleformMovieMethodAddParamPlayerNameString(arg)
-        elseif type(arg) == 'number' then
+        elseif argType == 'number' then
             if math.type(arg) == 'integer' then
                 ScaleformMovieMethodAddParamInt(arg)
             else
                 ScaleformMovieMethodAddParamFloat(arg)
             end
-        elseif type(arg) == 'boolean' then
+        elseif argType == 'boolean' then
             ScaleformMovieMethodAddParamBool(arg)
         else
-            error(('Unsupported Parameter type [%s]'):format(type(arg)))
+            error(('Unsupported Parameter type [%s]'):format(argType))
         end
     end
 end
 
----@param type 'boolean' | 'integer' | 'string'
+---@param expectedType 'boolean' | 'integer' | 'string'
 ---@return boolean | integer | string
 ---@description Awaits the return value, and converts it to a usable data type
-local function retrieveReturnValue(type)
+local function retrieveReturnValue(expectedType)
     local result = EndScaleformMovieMethodReturnValue()
 
     lib.waitFor(function()
@@ -53,9 +55,9 @@ local function retrieveReturnValue(type)
         end
     end, "Failed to retrieve return value", 1000)
 
-    if type == "integer" then
+    if expectedType == "integer" then
         return GetScaleformMovieMethodReturnValueInt(result)
-    elseif type == "boolean" then
+    elseif expectedType == "boolean" then
         return GetScaleformMovieMethodReturnValueBool(result)
     else
         return GetScaleformMovieMethodReturnValueString(result)
@@ -66,7 +68,7 @@ end
 ---@return nil
 ---@description Create a new scaleform class
 function lib.scaleform:constructor(details)
-    details = type(details) == "table" and details or {name = details}
+    details = type(details) == "table" and details or { name = details }
 
     local scaleform = lib.requestScaleformMovie(details.name)
     if not scaleform then
@@ -97,7 +99,7 @@ function lib.scaleform:callMethod(name, args, returnValue)
         return error('Scaleform handle is nil')
     end
 
-    if args and type(args) ~= 'table' then
+    if type(args) ~= 'table' then
         return error('Args must be a table')
     end
 
