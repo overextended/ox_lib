@@ -35,27 +35,28 @@ function timer:constructor(time, onEnd, async)
     self:start(async)
 end
 
+---@protected
+function timer:run()
+    while self:isPaused() or self:getTimeLeft('ms') > 0 do
+        Wait(0)
+    end
+
+    if self.private.triggerOnEnd then
+        self:onEnd()
+    end
+
+    self.private.triggerOnEnd = true
+end
+
 function timer:start(async)
-    if self.private.startTime > 0 then return end
+    if self.private.startTime > 0 then error('Cannot start a timer that is already running') end
 
     self.private.startTime = GetGameTimer()
 
-    local function tick()
-        while self:isPaused() or self:getTimeLeft('ms') > 0 do
-            Wait(0)
-        end
-
-        if self.private.triggerOnEnd then
-            self:onEnd()
-        end
-
-        self.private.triggerOnEnd = true
-    end
-
-    if not async then return tick() end
+    if not async then return self:run() end
 
     Citizen.CreateThreadNow(function()
-        tick()
+        self:run()
     end)
 end
 
