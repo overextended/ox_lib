@@ -80,6 +80,7 @@ if cache.game == 'redm' then return end
 ---@field modLivery? number
 ---@field modRoofLivery? number
 ---@field modLightbar? number
+---@field livery? number
 ---@field windows? number[]
 ---@field doors? number[]
 ---@field tyres? table<number | string, 1 | 2>
@@ -149,13 +150,6 @@ function lib.getVehicleProperties(vehicle)
             if DoesExtraExist(vehicle, i) then
                 extras[i] = IsVehicleExtraTurnedOn(vehicle, i) and 0 or 1
             end
-        end
-
-        local modLiveryCount = GetVehicleLiveryCount(vehicle)
-        local modLivery = GetVehicleLivery(vehicle)
-
-        if modLiveryCount == -1 or modLivery == -1 then
-            modLivery = GetVehicleMod(vehicle, 48)
         end
 
         local damage = {
@@ -273,9 +267,10 @@ function lib.getVehicleProperties(vehicle)
             modTank = GetVehicleMod(vehicle, 45),
             modWindows = GetVehicleMod(vehicle, 46),
             modDoorR = GetVehicleMod(vehicle, 47),
-            modLivery = modLivery,
+            modLivery = GetVehicleMod(vehicle, 48),
             modRoofLivery = GetVehicleRoofLivery(vehicle),
             modLightbar = GetVehicleMod(vehicle, 49),
+            livery = GetVehicleLivery(vehicle),
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
@@ -623,7 +618,6 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
 
     if props.modLivery then
         SetVehicleMod(vehicle, 48, props.modLivery, false)
-        SetVehicleLivery(vehicle, props.modLivery)
     end
 
     if props.modRoofLivery then
@@ -632,6 +626,10 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
 
     if props.modLightbar then
         SetVehicleMod(vehicle, 49, props.modLightbar, false)
+    end
+
+    if props.livery then
+        SetVehicleLivery(vehicle, props.livery)
     end
 
     if props.bulletProofTyres ~= nil then
