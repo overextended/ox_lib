@@ -52,7 +52,7 @@ function lib.array:from(iter)
         return arr
     end
 
-    error('Array.from argument was not a valid iterable value (received %s)')
+    error(('Array.from argument was not a valid iterable value (received %s)'):format(iterType))
 end
 
 ---Returns the element at the given index, with negative numbers counting backwards from the end of the array.
