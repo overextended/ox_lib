@@ -37,7 +37,7 @@ function lib.array:from(iter)
     end
 
     if iterType == 'string' then
-        return lib.array:new(string.strsplit('delimiter', iter))
+        return lib.array:new(string.strsplit('', iter))
     end
 
     if iterType == 'function' then
