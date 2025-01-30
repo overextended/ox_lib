@@ -1,6 +1,6 @@
 ---@class renderTargetTable
 ---@field name string
----@field model string|number
+---@field model string | number
 
 ---@class detailsTable
 ---@field name string
@@ -155,13 +155,13 @@ end
 
 ---@return nil
 function lib.scaleform:startDrawing()
-    if self.isDrawing then
+    if self.private.isDrawing then
         return
     end
 
-    self.isDrawing = true
+    self.private.isDrawing = true
     CreateThread(function()
-        while self.isDrawing do
+        while self.private.isDrawing do
             if self.target then
                 SetTextRenderId(self.target)
                 SetScriptGfxDrawOrder(4)
@@ -190,10 +190,11 @@ end
 
 ---@return nil
 function lib.scaleform:stopDrawing()
-    if not self.isDrawing then
+    if not self.private.isDrawing then
         return
     end
-    self.isDrawing = false
+
+    self.private.isDrawing = false
 end
 
 ---@return nil
@@ -208,7 +209,7 @@ function lib.scaleform:dispose()
 
     self.sfHandle = nil
     self.target = nil
-    self.isDrawing = false
+    self.private.isDrawing = false
 end
 
 ---@return Scaleform
