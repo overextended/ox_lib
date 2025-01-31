@@ -1,29 +1,30 @@
 {
   "language": "繁體中文",
+  "settings": "設置",
   "ui": {
     "cancel": "取消",
     "close": "關閉",
     "confirm": "確認",
     "more": "更多...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "更改語言",
+      "locale_description": "當前語言: ${language} (%s)",
+      "notification_audio": "通知提示音",
+      "notification_position": "通知位置"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "底部",
+      "bottom-left": "左下",
+      "bottom-right": "右下",
+      "center-left": "左側居中",
+      "center-right": "右側居中",
+      "top": "頂部",
+      "top-left": "左上",
+      "top-right": "右上"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
+  "open_radial_menu": "打開輪盤菜單",
+  "cancel_progress": "取消當前進度條",
   "txadmin_announcement": "來自 %s 的伺服器通告",
   "txadmin_dm": "來自 %s 的訊息",
   "txadmin_warn": "您被 %s 警告了",
