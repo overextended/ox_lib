@@ -5,7 +5,7 @@ local glm_rad = require 'glm'.rad --[[@as fun(n: number): number]]
 ---@param coords vector3 The base coordinates
 ---@param rotation number | vector3 Either a heading (number) or full rotation (vector3)
 ---@param offset vector3 The offset to apply
----@return vector3 | vector4
+---@return vector3
 function lib.getRelativeCoords(coords, rotation, offset)
     if type(rotation) == 'number' then
         local sin, cos = glm_sincos(glm_rad(rotation))
