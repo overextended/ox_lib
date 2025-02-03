@@ -5,9 +5,12 @@ const callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000);
 
 onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
   const resolve = pendingCallbacks[key];
+
+  if (!resolve) return;
+
   delete pendingCallbacks[key];
 
-  return resolve && resolve(...args);
+  resolve(args);
 });
 
 const eventTimers: Record<string, number> = {};
@@ -37,16 +40,23 @@ export function triggerServerCallback<T = unknown>(
     key = `${eventName}:${Math.floor(Math.random() * (100000 + 1))}`;
   } while (pendingCallbacks[key]);
 
+  emitNet(`ox_lib:validateCallback`, eventName, cache.resource, key);
   emitNet(`__ox_cb_${eventName}`, cache.resource, key, ...args);
 
   return new Promise<T>((resolve, reject) => {
-    pendingCallbacks[key] = resolve;
+    pendingCallbacks[key] = (args) => {
+      if (args[0] === 'cb_invalid') reject(`callback '${eventName} does not exist`);
+
+      resolve(args);
+    };
 
     setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
   });
 }
 
 export function onServerCallback(eventName: string, cb: (...args: any[]) => any) {
+  exports.ox_lib.setValidCallback(eventName, true)
+
   onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args: any[]) => {
     let response: any;
 
