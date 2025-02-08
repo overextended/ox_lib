@@ -16,8 +16,9 @@
 ---@field draw boolean
 ---@field target number
 ---@field targetName string
----@field handle number
+---@field sfHandle? number
 ---@field fullScreen boolean
+---@field private private { isDrawing: boolean }
 lib.scaleform = lib.class('Scaleform')
 
 --- Converts the arguments into data types usable by scaleform
