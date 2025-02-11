@@ -27,6 +27,7 @@ setmetatable(currentDate, {
 ---@field id number
 ---@field debug? boolean
 ---@field lastRun? number
+---@field maxDelay? number Maximum allowed delay in seconds before skipping (0 to disable)
 
 ---@class OxTask : OxTaskProperties
 ---@field expression string
@@ -284,7 +285,7 @@ function OxTask:getNextTime()
 
     if self.lastRun and nextTime - self.lastRun < 60 then
         if self.debug then
-            print(('Preventing duplicate execution of task %s - Last run: %s, Next scheduled: %s'):format(
+            lib.print.debug(('Preventing duplicate execution of task %s - Last run: %s, Next scheduled: %s'):format(
                 self.id,
                 os.date('%c', self.lastRun),
                 os.date('%c', nextTime)
@@ -353,13 +354,25 @@ function OxTask:scheduleTask()
     local sleep = runAt - currentTime
 
     if sleep < 0 then
-        return self:stop(self.debug and ('scheduled time expired %s seconds ago'):format(-sleep))
+        if not self.maxDelay or -sleep > self.maxDelay then
+            return self:stop(self.debug and ('scheduled time expired %s seconds ago'):format(-sleep))
+        end
+
+        if self.debug then
+            lib.print.debug(('Task %s is %s seconds overdue, executing now due to maxDelay=%s'):format(
+                self.id,
+                -sleep,
+                self.maxDelay
+            ))
+        end
+
+        sleep = 0
     end
 
     local timeAsString = self:getTimeAsString(runAt)
 
     if self.debug then
-        print(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep,
+        lib.print.debug(('(%s) task %s will run in %d seconds (%0.2f minutes / %0.2f hours)'):format(timeAsString, self.id, sleep,
             sleep / 60,
             sleep / 60 / 60))
     end
@@ -367,13 +380,13 @@ function OxTask:scheduleTask()
     if sleep > 0 then
         Wait(sleep * 1000)
     else
-        Wait(1000)
+        Wait(0)
         return true
     end
 
     if self.isActive then
         if self.debug then
-            print(('(%s) running task %s'):format(timeAsString, self.id))
+            lib.print.debug(('(%s) running task %s'):format(timeAsString, self.id))
         end
 
         Citizen.CreateThreadNow(function()
@@ -400,10 +413,10 @@ function OxTask:stop(msg)
 
     if self.debug then
         if msg then
-            return print(('stopping task %s (%s)'):format(self.id, msg))
+            return lib.print.debug(('stopping task %s (%s)'):format(self.id, msg))
         end
 
-        print(('stopping task %s'):format(self.id))
+        lib.print.debug(('stopping task %s'):format(self.id))
     end
 end
 
@@ -413,6 +426,7 @@ end
 ---Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.
 ---Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
 ---Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
+---@note maxDelay: Maximum allowed delay in seconds before skipping (0 to disable)
 function lib.cron.new(expression, job, options)
     if not job or type(job) ~= 'function' then
         error(("expected job to have type 'function' (received %s)"):format(type(job)))
@@ -431,6 +445,7 @@ function lib.cron.new(expression, job, options)
     task.id = #tasks + 1
     task.job = job
     task.lastRun = nil
+    task.maxDelay = task.maxDelay or 1
     tasks[task.id] = task
     task:run()
 
