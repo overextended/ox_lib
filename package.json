@@ -1,0 +1,58 @@
+{
+  "name": "ox_lib",
+  "version": "0.1.0",
+  "homepage": "web/build",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-brands-svg-icons": "^6.3.0",
+    "@fortawesome/free-regular-svg-icons": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/react-fontawesome": "^0.1.19",
+    "@mantine/core": "^5.10.0",
+    "@mantine/dates": "^5.10.0",
+    "@mantine/hooks": "^5.10.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "dayjs": "^1.11.7",
+    "focus-trap-react": "^9.0.2",
+    "framer-motion": "^8.0.2",
+    "prettier": "^2.7.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.41.3",
+    "react-hot-toast": "^2.4.0",
+    "react-markdown": "^8.0.1",
+    "remark-gfm": "^3.0.1",
+    "tinycolor2": "^1.6.0",
+    "typescript": "^4.6.3",
+    "vite": "^5.0.13",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "vite",
+    "start:game": "vite build --watch",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@babel/core": ">=7.0.0 <8.0.0",
+    "@babel/plugin-syntax-flow": "^7.14.5",
+    "@babel/plugin-transform-react-jsx": "^7.14.9",
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@types/tinycolor2": "^1.4.6",
+    "autoprefixer": "^10.0.2",
+    "cross-env": "^7.0.3",
+    "csstype": "^3.0.10",
+    "postcss": "^8.4.31",
+    "prop-types": "^15.8.1",
+    "rimraf": "^3.0.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "react-hot-toast@2.4.0": "patches/react-hot-toast@2.4.0.patch"
+    }
+  }
+}
