@@ -1,6 +1,7 @@
 local pendingCallbacks = {}
 local cbEvent = '__ox_cb_%s'
 local callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000)
+local eventsTree = {}
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
     local cb = pendingCallbacks[key]
@@ -110,7 +111,11 @@ function lib.callback.register(name, cb)
 
     lib.setValidCallback(name, true)
 
-    RegisterNetEvent(event, function(resource, key, ...)
+    if eventsTree[event] then
+        RemoveEventHandler(eventsTree[event])
+    end
+
+    eventsTree[event] = RegisterNetEvent(event, function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
     end)
 end
