@@ -30,7 +30,8 @@ local function createProp(ped, prop)
     local coords = GetEntityCoords(ped)
     local object = CreateObject(prop.model, coords.x, coords.y, coords.z, false, false, false)
 
-    AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true, true, false, true, prop.rotOrder or 0, true)
+    AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, prop.bone or 60309), prop.pos.x, prop.pos.y, prop.pos.z, prop.rot.x, prop.rot.y, prop.rot.z, true,
+        true, false, true, prop.rotOrder or 0, true)
     SetModelAsNoLongerNeeded(prop.model)
 
     return object
@@ -62,6 +63,7 @@ local controls = {
     INPUT_VEH_MOUSE_CONTROL_OVERRIDE = isFivem and 106 or 0x39CCABD5
 }
 
+---@param data ProgressProps
 local function startProgress(data)
     playerState.invBusy = true
     progress = data
@@ -71,10 +73,11 @@ local function startProgress(data)
         if anim.dict then
             lib.requestAnimDict(anim.dict)
 
-            TaskPlayAnim(cache.ped, anim.dict, anim.clip, anim.blendIn or 3.0, anim.blendOut or 1.0, anim.duration or -1, anim.flag or 49, anim.playbackRate or 0, anim.lockX, anim.lockY, anim.lockZ)
+            TaskPlayAnim(cache.ped, anim.dict, anim.clip, anim.blendIn or 3.0, anim.blendOut or 1.0, anim.duration or -1, anim.flag or 49, anim.playbackRate or 0,
+                anim.lockX, anim.lockY, anim.lockZ)
             RemoveAnimDict(anim.dict)
         elseif anim.scenario then
-            TaskStartScenarioInPlace(cache.ped, anim.scenario, 0, anim.playEnter == nil or anim.playEnter)
+            TaskStartScenarioInPlace(cache.ped, anim.scenario, 0, anim.playEnter == nil or anim.playEnter --[[@as boolean]])
         end
     end
 
@@ -83,6 +86,7 @@ local function startProgress(data)
     end
 
     local disable = data.disable
+    local startTime = GetGameTimer()
 
     while progress do
         if disable then
@@ -141,6 +145,12 @@ local function startProgress(data)
 
     if progress == false then
         SendNUIMessage({ action = 'progressCancel' })
+        return false
+    end
+
+    local actualDuration = GetGameTimer() - startTime + 100 -- give slight leeway
+
+    if actualDuration <= data.duration then
         return false
     end
 
@@ -234,22 +244,22 @@ AddStateBagChangeHandler('lib:progressProps', nil, function(bagName, key, value,
 
     local ped = GetPlayerPed(ply)
     local serverId = GetPlayerServerId(ply)
-    
+
     if not value then
         return deleteProgressProps(serverId)
     end
-    
+
     createdProps[serverId] = {}
     local playerProps = createdProps[serverId]
-    
+
     if value.model then
-        playerProps[#playerProps+1] = createProp(ped, value)
+        playerProps[#playerProps + 1] = createProp(ped, value)
     else
         for i = 1, #value do
             local prop = value[i]
 
             if prop then
-                playerProps[#playerProps+1] = createProp(ped, prop)
+                playerProps[#playerProps + 1] = createProp(ped, prop)
             end
         end
     end
