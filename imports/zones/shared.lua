@@ -1,18 +1,20 @@
 local glm = require 'glm'
 
----@class CZone
----@field id number
+---@class ZoneProperties
 ---@field coords vector3
----@field distance number
----@field __type 'poly' | 'sphere' | 'box'
----@field debugColour vector4?
----@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
----@field remove fun()
----@field contains fun(self: CZone, coords?: vector3): boolean
+---@field debug? boolean
+---@field debugColour? vector4
 ---@field onEnter fun(self: CZone)?
 ---@field onExit fun(self: CZone)?
 ---@field inside fun(self: CZone)?
 ---@field [string] any
+
+---@class CZone : PolyZone, BoxZone, SphereZone
+---@field id number
+---@field __type 'poly' | 'sphere' | 'box'
+---@field remove fun()
+---@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
+---@field contains fun(self: CZone, coords?: vector3): boolean
 
 ---@type table<number, CZone>
 local Zones = {}
@@ -291,9 +293,10 @@ local function setDebug(self, bool, colour)
     self.debug = self.__type == 'sphere' and debugSphere or debugPoly or nil
 end
 
----@param data CZone
+---@param data ZoneProperties
 ---@return CZone
 local function setZone(data)
+    ---@cast data CZone
     data.remove = removeZone
     data.contains = data.contains or contains
 
@@ -316,6 +319,11 @@ end
 
 lib.zones = {}
 
+---@class PolyZone : ZoneProperties
+---@field points vector3[]
+
+---@param data PolyZone
+---@return CZone
 function lib.zones.poly(data)
     data.id = #Zones + 1
     data.thickness = data.thickness or 4
@@ -374,6 +382,7 @@ function lib.zones.poly(data)
         end
 
         for i = 1, pointN do
+            ---@diagnostic disable-next-line: param-type-mismatch
             points[i] = vec3(data.points[i].xy, zCoord)
         end
 
@@ -386,6 +395,13 @@ function lib.zones.poly(data)
     return setZone(data)
 end
 
+---@class BoxZone : ZoneProperties
+---@field size number | vector3
+---@field thickness? number
+---@field rotation? vector4
+
+---@param data BoxZone
+---@return CZone
 function lib.zones.box(data)
     data.id = #Zones + 1
     data.coords = convertToVector(data.coords)
@@ -403,6 +419,11 @@ function lib.zones.box(data)
     return setZone(data)
 end
 
+---@class SphereZone : ZoneProperties
+---@field radius? number
+
+---@param data SphereZone
+---@return CZone
 function lib.zones.sphere(data)
     data.id = #Zones + 1
     data.coords = convertToVector(data.coords)
