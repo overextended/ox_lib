@@ -167,7 +167,7 @@ CreateThread(function()
                 return a.distance > b.distance
             end)
 
-            for i = 1, exitingSize do
+            for i = exitingSize, 1, -1 do
                 exitingZones[i]:onExit()
             end
 
