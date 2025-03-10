@@ -14,14 +14,26 @@ local levelPrefixes = {
     '^4[VERBOSE]',
     '^6[DEBUG]',
 }
-
-local resourcePrintLevel = printLevel[GetConvar('ox:printlevel:' .. cache.resource, GetConvar('ox:printlevel', 'info'))]
+local convarNames = {
+    resource = 'ox:printlevel:' .. cache.resource,
+    global = 'ox:printlevel',
+}
+local function getPrintLevelFromConvar()
+    return printLevel[GetConvar(convarNames.resource, GetConvar(convarNames.global, 'info'))]
+end
+local resourcePrintLevel = getPrintLevelFromConvar()
 local template = ('^5[%s] %%s %%s^7'):format(cache.resource)
 local function handleException(reason, value)
     if type(value) == 'function' then return tostring(value) end
     return reason
 end
 local jsonOptions = { sort_keys = true, indent = true, exception = handleException }
+
+-- Update the print level when the convar changes
+AddConvarChangeListener('ox:printlevel*', function(convarName, reserved)
+    if (convarName ~= convarNames.resource and convarName ~= convarNames.global) then return end
+    resourcePrintLevel = getPrintLevelFromConvar()
+end)
 
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
