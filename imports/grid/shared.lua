@@ -81,8 +81,9 @@ function lib.grid.getCell(point)
 end
 
 ---@param point vector
+---@param filter? fun(entry: GridEntry): boolean
 ---@return GridEntry[]
-function lib.grid.getNearbyEntries(point)
+function lib.grid.getNearbyEntries(point, filter)
     local minX, maxX, minY, maxY = getGridDimensions(point, xDelta, yDelta)
 
     if lastNearbyEntries.minX == minX and
@@ -107,7 +108,7 @@ function lib.grid.getNearbyEntries(point)
                 for j = 1, #cell do
                     local entry = cell[j]
 
-                    if not entrySet[entry] then
+                    if not entrySet[entry] and (not filter or filter(entry)) then
                         n = n + 1
                         entrySet[entry] = true
                         entries[n] = entry
