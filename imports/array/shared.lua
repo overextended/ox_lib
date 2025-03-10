@@ -1,4 +1,4 @@
----@class Array : OxClass
+---@class Array<T> : OxClass, { [number]: T }
 lib.array = lib.class('Array')
 
 local table_unpack = table.unpack
@@ -6,7 +6,6 @@ local table_remove = table.remove
 local table_clone = table.clone
 local table_concat = table.concat
 local table_type = table.type
-
 
 ---@alias ArrayLike<T> Array | { [number]: T }
 
