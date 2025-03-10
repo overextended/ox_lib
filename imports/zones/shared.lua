@@ -125,7 +125,7 @@ CreateThread(function()
 
     while true do
         local coords = GetEntityCoords(cache.ped)
-        local zones = lib.grid.getNearbyEntries(coords) --[[@as CZone[] ]]
+        local zones = lib.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as CZone[] ]]
         local cellX, cellY = lib.grid.getCellPosition(coords)
         cache.coords = coords
 
