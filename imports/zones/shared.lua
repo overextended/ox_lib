@@ -12,7 +12,7 @@ local glm = require 'glm'
 ---@class CZone : PolyZone, BoxZone, SphereZone
 ---@field id number
 ---@field __type 'poly' | 'sphere' | 'box'
----@field remove fun()
+---@field remove fun(self: self)
 ---@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
 ---@field contains fun(self: CZone, coords?: vector3): boolean
 
@@ -104,8 +104,11 @@ local enteringZones = lib.context == 'client' and lib.array:new() --[[@as Array<
 local glm_polygon_contains = glm.polygon.contains
 local tick
 
+---@param zone CZone
 local function removeZone(zone)
     Zones[zone.id] = nil
+
+    lib.grid.removeEntry(zone)
 
     if lib.context == 'server' then return end
 
@@ -118,13 +121,31 @@ end
 CreateThread(function()
     if lib.context == 'server' then return end
 
+    local lastZones = {}
+
     while true do
         local coords = GetEntityCoords(cache.ped)
+        local zones = lib.grid.getNearbyEntries(coords) --[[@as CZone[] ]]
+        local cellX, cellY = lib.grid.getCellPosition(coords)
         cache.coords = coords
 
-        for _, zone in pairs(Zones) do
-            zone.distance = #(zone.coords - coords)
+        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
+            for i = 1, #lastZones do
+                local zone = lastZones[i]
+
+                zone.insideZone = false
+                insideZones[zone.id] = nil
+            end
+
+            lastZones = zones
+            cache.lastCellX = cellX
+            cache.lastCellY = cellY
+        end
+
+        for i = 1, #zones do
+            local zone = zones[i]
             local radius, contains = zone.radius, nil
+            zone.distance = #(zone.coords - coords)
 
             if radius then
                 contains = zone.distance < radius
@@ -165,7 +186,7 @@ CreateThread(function()
 
         if exitingSize > 0 then
             table.sort(exitingZones, function(a, b)
-                return a.distance > b.distance
+                return a.distance < b.distance
             end)
 
             for i = exitingSize, 1, -1 do
@@ -313,6 +334,7 @@ local function setZone(data)
     end
 
     Zones[data.id] = data
+    lib.grid.addEntry(data)
 
     return data
 end
@@ -391,6 +413,10 @@ function lib.zones.poly(data)
 
     data.coords = data.polygon:centroid()
     data.__type = 'poly'
+    data.radius = lib.array.reduce(data.polygon, function(acc, point)
+        local distance = #(point - data.coords)
+        return distance > acc and distance or acc
+    end, 0)
 
     return setZone(data)
 end
@@ -409,6 +435,8 @@ function lib.zones.box(data)
     data.thickness = data.size.z * 2 or 4
     data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
     data.__type = 'box'
+    data.width = data.size.x * 2
+    data.length = data.size.y * 2
     data.polygon = (data.rotation * glm.polygon.new({
         vec3(data.size.x, data.size.y, 0),
         vec3(-data.size.x, data.size.y, 0),
