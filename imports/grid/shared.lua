@@ -144,6 +144,8 @@ function lib.grid.addEntry(entry)
         end
 
         grid[y] = row
+
+        table.wipe(lastNearbyEntries)
     end
 end
 
@@ -181,6 +183,8 @@ function lib.grid.removeEntry(entry)
 
         ::continue::
     end
+
+    table.wipe(lastNearbyEntries)
 
     return success
 end
