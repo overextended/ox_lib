@@ -334,7 +334,7 @@ lib.zones = {
             end)
 
             local zCoord = coordsArray[1].coord
-            local averageTo
+            local averageTo = 1
 
             for i = 1, #coordsArray do
                 if coordsArray[i].count < coordsArray[1].count then
