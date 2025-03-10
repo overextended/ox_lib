@@ -96,20 +96,17 @@ local function getTriangles(polygon)
     return triangles
 end
 
----@type table<number, CZone>
-local insideZones = {}
-
----@type CZone[] | Array
-local exitingZones = lib.array:new()
-
----@type CZone[] | Array
-local enteringZones = lib.array:new()
-
-local tick
+local insideZones = lib.context == 'client' and {} --[[@as table<number, CZone>]]
+local exitingZones = lib.context == 'client' and lib.array:new() --[[@as Array<CZone>]]
+local enteringZones = lib.context == 'client' and lib.array:new() --[[@as Array<CZone>]]
 local glm_polygon_contains = glm.polygon.contains
+local tick
 
 local function removeZone(zone)
     Zones[zone.id] = nil
+
+    if lib.context == 'server' then return end
+
     insideZones[zone.id] = nil
 
     table.remove(exitingZones, exitingZones:indexOf(zone))
@@ -117,6 +114,8 @@ local function removeZone(zone)
 end
 
 CreateThread(function()
+    if lib.context == 'server' then return end
+
     while true do
         local coords = GetEntityCoords(cache.ped)
         cache.coords = coords
@@ -292,137 +291,130 @@ local function setDebug(self, bool, colour)
     self.debug = self.__type == 'sphere' and debugSphere or debugPoly or nil
 end
 
-lib.zones = {
-    ---@return CZone
-    poly = function(data)
-        data.id = #Zones + 1
-        data.thickness = data.thickness or 4
+---@param data CZone
+---@return CZone
+local function setZone(data)
+    data.remove = removeZone
+    data.contains = data.contains or contains
 
-        local pointN = #data.points
-        local points = table.create(pointN, 0)
+    if lib.context == 'client' then
+        data.setDebug = setDebug
+
+        if data.debug then
+            data.debug = nil
+
+            data:setDebug(true, data.debugColour)
+        end
+    else
+        data.debug = nil
+    end
+
+    Zones[data.id] = data
+
+    return data
+end
+
+lib.zones = {}
+
+function lib.zones.poly(data)
+    data.id = #Zones + 1
+    data.thickness = data.thickness or 4
+
+    local pointN = #data.points
+    local points = table.create(pointN, 0)
+
+    for i = 1, pointN do
+        points[i] = convertToVector(data.points[i])
+    end
+
+    data.polygon = glm.polygon.new(points)
+
+    if not data.polygon:isPlanar() then
+        local zCoords = {}
 
         for i = 1, pointN do
-            points[i] = convertToVector(data.points[i])
+            local zCoord = points[i].z
+
+            if zCoords[zCoord] then
+                zCoords[zCoord] += 1
+            else
+                zCoords[zCoord] = 1
+            end
+        end
+
+        local coordsArray = {}
+
+        for coord, count in pairs(zCoords) do
+            coordsArray[#coordsArray + 1] = {
+                coord = coord,
+                count = count
+            }
+        end
+
+        table.sort(coordsArray, function(a, b)
+            return a.count > b.count
+        end)
+
+        local zCoord = coordsArray[1].coord
+        local averageTo = 1
+
+        for i = 1, #coordsArray do
+            if coordsArray[i].count < coordsArray[1].count then
+                averageTo = i - 1
+                break
+            end
+        end
+
+        if averageTo > 1 then
+            for i = 2, averageTo do
+                zCoord += coordsArray[i].coord
+            end
+
+            zCoord /= averageTo
+        end
+
+        for i = 1, pointN do
+            points[i] = vec3(data.points[i].xy, zCoord)
         end
 
         data.polygon = glm.polygon.new(points)
+    end
 
-        if not data.polygon:isPlanar() then
-            local zCoords = {}
+    data.coords = data.polygon:centroid()
+    data.__type = 'poly'
 
-            for i = 1, pointN do
-                local zCoord = points[i].z
+    return setZone(data)
+end
 
-                if zCoords[zCoord] then
-                    zCoords[zCoord] += 1
-                else
-                    zCoords[zCoord] = 1
-                end
-            end
+function lib.zones.box(data)
+    data.id = #Zones + 1
+    data.coords = convertToVector(data.coords)
+    data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
+    data.thickness = data.size.z * 2 or 4
+    data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
+    data.__type = 'box'
+    data.polygon = (data.rotation * glm.polygon.new({
+        vec3(data.size.x, data.size.y, 0),
+        vec3(-data.size.x, data.size.y, 0),
+        vec3(-data.size.x, -data.size.y, 0),
+        vec3(data.size.x, -data.size.y, 0),
+    }) + data.coords)
 
-            local coordsArray = {}
+    return setZone(data)
+end
 
-            for coord, count in pairs(zCoords) do
-                coordsArray[#coordsArray + 1] = {
-                    coord = coord,
-                    count = count
-                }
-            end
+function lib.zones.sphere(data)
+    data.id = #Zones + 1
+    data.coords = convertToVector(data.coords)
+    data.radius = (data.radius or 2) + 0.0
+    data.__type = 'sphere'
+    data.contains = insideSphere
 
-            table.sort(coordsArray, function(a, b)
-                return a.count > b.count
-            end)
+    return setZone(data)
+end
 
-            local zCoord = coordsArray[1].coord
-            local averageTo = 1
+function lib.zones.getAllZones() return Zones end
 
-            for i = 1, #coordsArray do
-                if coordsArray[i].count < coordsArray[1].count then
-                    averageTo = i - 1
-                    break
-                end
-            end
-
-            if averageTo > 1 then
-                for i = 2, averageTo do
-                    zCoord += coordsArray[i].coord
-                end
-
-                zCoord /= averageTo
-            end
-
-            for i = 1, pointN do
-                points[i] = vec3(data.points[i].xy, zCoord)
-            end
-
-            data.polygon = glm.polygon.new(points)
-        end
-
-        data.coords = data.polygon:centroid()
-        data.__type = 'poly'
-        data.remove = removeZone
-        data.contains = contains
-        data.setDebug = setDebug
-
-        if data.debug then
-            data.debug = nil
-
-            data:setDebug(true, data.debugColour)
-        end
-
-        Zones[data.id] = data
-        return data
-    end,
-
-    ---@return CZone
-    box = function(data)
-        data.id = #Zones + 1
-        data.coords = convertToVector(data.coords)
-        data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
-        data.thickness = data.size.z * 2 or 4
-        data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
-        data.polygon = (data.rotation * glm.polygon.new({
-            vec3(data.size.x, data.size.y, 0),
-            vec3(-data.size.x, data.size.y, 0),
-            vec3(-data.size.x, -data.size.y, 0),
-            vec3(data.size.x, -data.size.y, 0),
-        }) + data.coords)
-        data.__type = 'box'
-        data.remove = removeZone
-        data.contains = contains
-        data.setDebug = setDebug
-
-        if data.debug then
-            data.debug = nil
-
-            data:setDebug(true, data.debugColour)
-        end
-
-        Zones[data.id] = data
-        return data
-    end,
-
-    ---@return CZone
-    sphere = function(data)
-        data.id = #Zones + 1
-        data.coords = convertToVector(data.coords)
-        data.radius = (data.radius or 2) + 0.0
-        data.__type = 'sphere'
-        data.remove = removeZone
-        data.contains = insideSphere
-        data.setDebug = setDebug
-
-        if data.debug then
-            data:setDebug(true, data.debugColour)
-        end
-
-        Zones[data.id] = data
-        return data
-    end,
-
-    getAllZones = function() return Zones end,
-
-    getCurrentZones = function() return insideZones end,
-}
+function lib.zones.getCurrentZones() return insideZones end
 
 return lib.zones
