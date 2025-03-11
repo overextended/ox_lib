@@ -14,12 +14,10 @@ local levelPrefixes = {
     '^4[VERBOSE]',
     '^6[DEBUG]',
 }
-local convarNames = {
-    resource = 'ox:printlevel:' .. cache.resource,
-    global = 'ox:printlevel',
-}
+local convarGlobal = 'ox:printlevel'
+local convarResource = 'ox:printlevel:' .. cache.resource
 local function getPrintLevelFromConvar()
-    return printLevel[GetConvar(convarNames.resource, GetConvar(convarNames.global, 'info'))]
+    return printLevel[GetConvar(convarResource, GetConvar(convarResource, 'info'))]
 end
 local resourcePrintLevel = getPrintLevelFromConvar()
 local template = ('^5[%s] %%s %%s^7'):format(cache.resource)
@@ -31,7 +29,7 @@ local jsonOptions = { sort_keys = true, indent = true, exception = handleExcepti
 
 -- Update the print level when the convar changes
 AddConvarChangeListener('ox:printlevel*', function(convarName, reserved)
-    if (convarName ~= convarNames.resource and convarName ~= convarNames.global) then return end
+    if (convarName ~= convarResource and convarName ~= convarResource) then return end
     resourcePrintLevel = getPrintLevelFromConvar()
 end)
 
