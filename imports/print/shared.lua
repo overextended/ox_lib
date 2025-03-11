@@ -27,12 +27,6 @@ local function handleException(reason, value)
 end
 local jsonOptions = { sort_keys = true, indent = true, exception = handleException }
 
--- Update the print level when the convar changes
-AddConvarChangeListener('ox:printlevel*', function(convarName, reserved)
-    if (convarName ~= convarResource and convarName ~= convarGlobal) then return end
-    resourcePrintLevel = getPrintLevelFromConvar()
-end)
-
 ---Prints to console conditionally based on what ox:printlevel is.
 ---Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
 ---@param level PrintLevel
@@ -57,5 +51,15 @@ lib.print = {
     verbose = function(...) libPrint(printLevel.verbose, ...) end,
     debug = function(...) libPrint(printLevel.debug, ...) end,
 }
+
+-- Update the print level when the convar changes
+if (AddConvarChangeListener) then
+    AddConvarChangeListener('ox:printlevel*', function(convarName, reserved)
+        if (convarName ~= convarResource and convarName ~= convarGlobal) then return end
+        resourcePrintLevel = getPrintLevelFromConvar()
+    end)
+else
+    lib.print.info('Convar change listener not available, print level will not update dynamically.')
+end
 
 return lib.print
