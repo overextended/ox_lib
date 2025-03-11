@@ -59,7 +59,7 @@ if (AddConvarChangeListener) then
         resourcePrintLevel = getPrintLevelFromConvar()
     end)
 else
-    lib.print.info('Convar change listener not available, print level will not update dynamically.')
+    libPrint(printLevel.verbose, 'Convar change listener not available, print level will not update dynamically.')
 end
 
 return lib.print
