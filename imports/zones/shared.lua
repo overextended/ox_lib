@@ -1,7 +1,6 @@
 local glm = require 'glm'
 
 ---@class ZoneProperties
----@field coords vector3
 ---@field debug? boolean
 ---@field debugColour? vector4
 ---@field onEnter fun(self: CZone)?
@@ -343,6 +342,7 @@ lib.zones = {}
 
 ---@class PolyZone : ZoneProperties
 ---@field points vector3[]
+---@field thickness? number
 
 ---@param data PolyZone
 ---@return CZone
@@ -422,9 +422,9 @@ function lib.zones.poly(data)
 end
 
 ---@class BoxZone : ZoneProperties
----@field size number | vector3
----@field thickness? number
----@field rotation? vector4
+---@field coords vector3
+---@field size? vector3
+---@field rotation? number | vector3 | vector4 | matrix
 
 ---@param data BoxZone
 ---@return CZone
@@ -432,7 +432,7 @@ function lib.zones.box(data)
     data.id = #Zones + 1
     data.coords = convertToVector(data.coords)
     data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
-    data.thickness = data.size.z * 2 or 4
+    data.thickness = data.size.z * 2
     data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
     data.__type = 'box'
     data.width = data.size.x * 2
@@ -448,6 +448,7 @@ function lib.zones.box(data)
 end
 
 ---@class SphereZone : ZoneProperties
+---@field coords vector3
 ---@field radius? number
 
 ---@param data SphereZone
