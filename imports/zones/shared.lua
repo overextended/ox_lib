@@ -131,8 +131,14 @@ CreateThread(function()
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
 
-                zone.insideZone = false
-                insideZones[zone.id] = nil
+                if zone.insideZone then
+                    local contains = zone.thickness and glm_polygon_contains(zone.polygon, coords, zone.thickness / 4) or #(zone.coords - coords) < zone.radius
+
+                    if not contains then
+                        zone.insideZone = false
+                        insideZones[zone.id] = nil
+                    end
+                end
             end
 
             nearbyZones = zones
