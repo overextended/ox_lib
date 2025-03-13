@@ -262,16 +262,18 @@ local function debugSphere(self)
         self.debugColour.g, self.debugColour.b, self.debugColour.a, false, false, 0, false, false, false, false)
 end
 
-local function contains(self, coords)
+local function contains(self, coords, updateDistance)
+    if updateDistance then self.distance = #(self.coords - coords) end
+
     return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
 end
 
 local function insideSphere(self, coords, updateDistance)
-    local distance = #(self.coords - coords) < self.radius
+    local distance = #(self.coords - coords)
 
     if updateDistance then self.distance = distance end
 
-    return distance
+    return distance < self.radius
 end
 
 local function convertToVector(coords)
