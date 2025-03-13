@@ -13,7 +13,7 @@ local glm = require 'glm'
 ---@field __type 'poly' | 'sphere' | 'box'
 ---@field remove fun(self: self)
 ---@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
----@field contains fun(self: CZone, coords?: vector3): boolean
+---@field contains fun(self: CZone, coords?: vector3, updateDistance?: boolean): boolean
 
 ---@type table<number, CZone>
 local Zones = {}
@@ -132,7 +132,7 @@ CreateThread(function()
                 local zone = nearbyZones[i]
 
                 if zone.insideZone then
-                    local contains = zone.thickness and glm_polygon_contains(zone.polygon, coords, zone.thickness / 4) or #(zone.coords - coords) < zone.radius
+                    local contains = zone:contains(coords, true)
 
                     if not contains then
                         zone.insideZone = false
@@ -148,14 +148,7 @@ CreateThread(function()
 
         for i = 1, #zones do
             local zone = zones[i]
-            local radius, contains = zone.radius, nil
-            zone.distance = #(zone.coords - coords)
-
-            if radius then
-                contains = zone.distance < radius
-            else
-                contains = glm_polygon_contains(zone.polygon, coords, zone.thickness / 4)
-            end
+            local contains = zone:contains(coords, true)
 
             if contains then
                 if not zone.insideZone then
@@ -273,8 +266,12 @@ local function contains(self, coords)
     return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
 end
 
-local function insideSphere(self, coords)
-    return #(self.coords - coords) < self.radius
+local function insideSphere(self, coords, updateDistance)
+    local distance = #(self.coords - coords) < self.radius
+
+    if updateDistance then self.distance = distance end
+
+    return distance
 end
 
 local function convertToVector(coords)
