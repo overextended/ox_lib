@@ -100,6 +100,7 @@ end
 local insideZones = lib.context == 'client' and {} --[[@as table<number, CZone>]]
 local exitingZones = lib.context == 'client' and lib.array:new() --[[@as Array<CZone>]]
 local enteringZones = lib.context == 'client' and lib.array:new() --[[@as Array<CZone>]]
+local nearbyZones = lib.array:new() --[[@as Array<CZone>]]
 local glm_polygon_contains = glm.polygon.contains
 local tick
 
@@ -120,23 +121,21 @@ end
 CreateThread(function()
     if lib.context == 'server' then return end
 
-    local lastZones = {}
-
     while true do
         local coords = GetEntityCoords(cache.ped)
-        local zones = lib.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as CZone[] ]]
+        local zones = lib.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = lib.grid.getCellPosition(coords)
         cache.coords = coords
 
         if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
-            for i = 1, #lastZones do
-                local zone = lastZones[i]
+            for i = 1, #nearbyZones do
+                local zone = nearbyZones[i]
 
                 zone.insideZone = false
                 insideZones[zone.id] = nil
             end
 
-            lastZones = zones
+            nearbyZones = zones
             cache.lastCellX = cellX
             cache.lastCellY = cellY
         end
@@ -466,5 +465,7 @@ end
 function lib.zones.getAllZones() return Zones end
 
 function lib.zones.getCurrentZones() return insideZones end
+
+function lib.zones.getNearbyZones() return nearbyZones end
 
 return lib.zones
