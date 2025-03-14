@@ -141,10 +141,11 @@ CreateThread(function()
                 end
             end
 
-            nearbyZones = zones
             cache.lastCellX = cellX
             cache.lastCellY = cellY
         end
+
+        nearbyZones = zones
 
         for i = 1, #zones do
             local zone = zones[i]
