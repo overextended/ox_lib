@@ -86,7 +86,8 @@ end
 function lib.grid.getNearbyEntries(point, filter)
     local minX, maxX, minY, maxY = getGridDimensions(point, xDelta, yDelta)
 
-    if gridCache.minX == minX and
+    if gridCache.filter == filter and
+        gridCache.minX == minX and
         gridCache.maxX == maxX and
         gridCache.minY == minY and
         gridCache.maxY == maxY then
@@ -123,6 +124,7 @@ function lib.grid.getNearbyEntries(point, filter)
     gridCache.minY = minY
     gridCache.maxY = maxY
     gridCache.entries = entries
+    gridCache.filter = filter
 
     return entries
 end
