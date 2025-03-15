@@ -27,7 +27,10 @@ function lib.setValidCallback(callbackName, isValid)
 
         if callbackResource == resourceName then return end
 
-        error(("cannot overwrite callback '%s' owned by resource '%s'"):format(callbackName, callbackResource))
+        local errMessage = ("^1resource '%s' attempted to overwrite callback '%s' owned by resource '%s'^0"):format(resourceName, callbackName, callbackResource)
+
+        return print(('^1SCRIPT ERROR: %s^0\n%s'):format(errMessage,
+            Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString()) or ''))
     end
 
     lib.print.verbose(("set valid callback '%s' for resource '%s'"):format(callbackName, resourceName))
