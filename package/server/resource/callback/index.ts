@@ -39,9 +39,10 @@ export function triggerClientCallback<T = unknown>(
 }
 
 export function onClientCallback(eventName: string, cb: (playerId: number, ...args: any[]) => any) {
+  eventName = `__ox_cb_${eventName}`;
+  
   exports.ox_lib.setValidCallback(eventName, true)
-
-  onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args: any[]) => {
+  onNet(eventName, async (resource: string, key: string, ...args: any[]) => {
     const src = source;
     let response: any;
 
