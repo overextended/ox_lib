@@ -138,6 +138,10 @@ CreateThread(function()
                         zone.insideZone = false
                         insideZones[zone.id] = nil
                     end
+
+                    if zone.onExit then
+                        exitingZones:push(zone)
+                    end
                 end
             end
 
