@@ -137,6 +137,10 @@ CreateThread(function()
                     if not contains then
                         zone.insideZone = false
                         insideZones[zone.id] = nil
+
+                        if zone.onExit then
+                            exitingZones:push(zone)
+                        end
                     end
                 end
             end
