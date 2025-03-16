@@ -18,6 +18,7 @@ local openMenu
 ---@field defaultIndex? number
 ---@field args? {[any]: any}
 ---@field close? boolean
+---@field isVisible? fun(): boolean
 
 ---@class MenuProps
 ---@field id string
@@ -48,6 +49,12 @@ function lib.showMenu(id, startIndex)
     local menu = registeredMenus[id]
     if not menu then
         error(('No menu with id %s was found'):format(id))
+    end
+
+    for i = #menu.options, 1, -1 do
+        if menu.options[i].isVisible and not menu.options[i].isVisible() then
+            table.remove(menu.options, i)
+        end
     end
 
     if table.type(menu.options) == 'empty' then
