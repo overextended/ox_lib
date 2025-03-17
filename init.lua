@@ -52,7 +52,15 @@ local function loadModule(self, module)
         local fn, err = load(chunk, ('@@ox_lib/imports/%s/%s.lua'):format(module, context))
 
         if not fn or err then
-            return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
+            if shared then
+                lib.print.warn(("An error occurred when importing '@ox_lib/imports/%s'.\nThis is likely caused by improperly updating ox_lib.\n%s'")
+                    :format(module, err))
+                fn, err = load(shared, ('@@ox_lib/imports/%s/shared.lua'):format(module))
+            end
+
+            if not fn or err then
+                return error(('\n^1Error importing module (%s): %s^0'):format(dir, err), 3)
+            end
         end
 
         local result = fn()
