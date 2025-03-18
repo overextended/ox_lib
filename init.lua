@@ -1,7 +1,11 @@
 ---@meta
----ox_lib <https://github.com/overextended/ox_lib>
----Copyright (C) 2021 Linden <https://github.com/thelindat>
----LGPL-3.0-or-later <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright (c) 2025 Linden <https://github.com/thelindat/fivem>
+]]
 
 if not _VERSION:find('5.4') then
     error('Lua 5.4 must be enabled in the resource manifest!', 2)

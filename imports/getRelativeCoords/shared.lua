@@ -1,3 +1,11 @@
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright (c) 2025 Linden <https://github.com/thelindat/fivem>
+]]
+
 local glm_sincos = require 'glm'.sincos --[[@as fun(n: number): number, number]]
 local glm_rad = require 'glm'.rad --[[@as fun(n: number): number]]
 

@@ -1,3 +1,11 @@
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright (c) 2025 Linden <https://github.com/thelindat/fivem>
+]]
+
 ---Load a scaleform movie. When called from a thread, it will yield until it has loaded.
 ---@param scaleformName string
 ---@param timeout number? Approximate milliseconds to wait for the scaleform movie to load. Default is 1000.

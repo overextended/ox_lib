@@ -1,3 +1,11 @@
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright (c) 2025 Linden <https://github.com/thelindat/fivem>
+]]
+
 ---Triggers an event for the given playerIds, sending additional parameters as arguments.\
 ---Implements functionality from [this pending pull request](https://github.com/citizenfx/fivem/pull/1210) and may be deprecated.
 ---

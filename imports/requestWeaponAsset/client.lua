@@ -1,3 +1,11 @@
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright (c) 2025 Linden <https://github.com/thelindat/fivem>
+]]
+
 ---@alias WeaponResourceFlags
 ---| 1 WRF_REQUEST_BASE_ANIMS
 ---| 2 WRF_REQUEST_COVER_ANIMS
