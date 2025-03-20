@@ -7,7 +7,7 @@
 ]]
 
 ---@type promise?
-local alert = nil
+local alert, alertData = nil, nil
 local alertId = 0
 
 ---@class AlertDialogProps
@@ -28,11 +28,12 @@ function lib.alertDialog(data, timeout)
     local id = alertId + 1
     alertId = id
     alert = promise.new()
+    alertData = data
 
     lib.setNuiFocus(false)
     SendNUIMessage({
         action = 'sendAlert',
-        data = data
+        data = alertData
     })
 
     if timeout then
@@ -41,7 +42,11 @@ function lib.alertDialog(data, timeout)
         end)
     end
 
-    return Citizen.Await(alert)
+    return alert:await()
+end
+
+function lib.getOpenAlertDialog()
+    return alert ~= nil, alertData
 end
 
 ---@param reason? string An optional reason for the window to be closed.
@@ -54,7 +59,7 @@ function lib.closeAlertDialog(reason)
     })
 
     local p = alert
-    alert = nil
+    alert, alertData = nil, nil
 
     if reason then p:reject(reason) else p:resolve() end
 end
@@ -64,7 +69,7 @@ RegisterNUICallback('closeAlert', function(data, cb)
     lib.resetNuiFocus()
 
     local promise = alert --[[@as promise]]
-    alert = nil
+    alert, alertData = nil, nil
 
     promise:resolve(data)
 end)
