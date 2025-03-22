@@ -19,6 +19,7 @@ local openMenu
 ---@field args? {[any]: any}
 ---@field close? boolean
 ---@field isVisible? fun(): boolean
+---@field hidden? boolean
 
 ---@class MenuProps
 ---@field id string
@@ -52,8 +53,8 @@ function lib.showMenu(id, startIndex)
     end
 
     for i = #menu.options, 1, -1 do
-        if menu.options[i].isVisible and not menu.options[i].isVisible() then
-            table.remove(menu.options, i)
+        if menu.options[i].isVisible then
+            menu.options[i].hidden = not menu.options[i].isVisible()
         end
     end
 
