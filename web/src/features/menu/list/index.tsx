@@ -220,7 +220,9 @@ const ListMenu: React.FC = () => {
             <Box className={classes.buttonsWrapper} onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => moveMenu(e)}>
               <FocusTrap active={visible}>
                 <Stack spacing={8} p={8} sx={{ overflowY: 'scroll' }}>
-                  {menu.items.map((item, index) => (
+                {menu.items
+                  .filter(item => !item.hidden)
+                  .map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (
                         <ListItem
