@@ -10,7 +10,7 @@
       "locale": "Sprache ändern",
       "locale_description": "Aktuelle Sprache: ${language} (%s)",
       "notification_audio": "Benachrichtigungs-Sound",
-      "notification_position": "Notification position"
+      "notification_position": "Benachrichtigungs-Position"
     },
     "position": {
       "bottom": "Unten",
