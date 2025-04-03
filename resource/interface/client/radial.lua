@@ -194,6 +194,64 @@ function lib.removeRadialItem(id)
     refreshRadial(id)
 end
 
+---Registers an item or array of items in a specific radial sub menu.
+---@param string parentMenuId
+---@param items RadialMenuItem | RadialMenuItem[]
+function lib.addRadialSubItem(parentMenuId, items)
+
+    local parentMenu = menus[parentMenuId]
+    if not parentMenu then
+        return error('No radial menu with such id found.')
+    end
+
+    local invokingResource = GetInvokingResource()
+
+    items = table.type(items) == 'array' and items or { items }
+
+    for i = 1, #items do
+        local item = items[i]
+        item.resource = invokingResource
+
+        for j = 1, #parentMenu.items do
+            if parentMenu.items[j].id == item.id then
+                parentMenu.items[j] = item
+            end
+
+            if j == #parentMenu.items then
+                parentMenu.items[#parentMenu.items + 1] = item
+            end
+        end
+        
+    end
+
+    if isOpen then
+        refreshRadial(parentMenuId)
+    end
+end
+
+-- Removes an item from a radial submenu with the given parentMenuId
+---@param parentMenuId string
+---@param id string
+function lib.removeRadialSubItem(parentMenuId, id)
+    local parentMenu = menus[parentMenuId]
+    if not parentMenu then
+        return error('No radial menu with such id found.')
+    end
+
+    for i = 1, #parentMenu.items do
+        local item = parentMenu.items[i]
+
+        if item.id == id then
+            table.remove(parentMenu.items, i)
+            break
+        end
+    end
+
+    if isOpen then
+        refreshRadial(parentMenuId)
+    end
+end
+
 ---Removes all items from the global radial menu.
 function lib.clearRadialItems()
     table.wipe(menuItems)
