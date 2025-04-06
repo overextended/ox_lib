@@ -10,7 +10,7 @@ onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
 
   delete pendingCallbacks[key];
 
-  resolve(args);
+  resolve(...args);
 });
 
 export function triggerClientCallback<T = unknown>(
