@@ -6,14 +6,14 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
-local input
+local input, inputData
 
 ---@class InputDialogRowProps
 ---@field type 'input' | 'number' | 'checkbox' | 'select' | 'slider' | 'multi-select' | 'date' | 'date-range' | 'time' | 'textarea' | 'color'
 ---@field label string
 ---@field options? { value: string, label: string, default?: string }[]
 ---@field password? boolean
----@field icon? string | {[1]: IconProp, [2]: string};
+---@field icon? string | {[1]: IconProp, [2]: string}
 ---@field iconColor? string
 ---@field placeholder? string
 ---@field default? string | number
@@ -41,6 +41,7 @@ local input
 function lib.inputDialog(heading, rows, options)
     if input then return end
     input = promise.new()
+    inputData = { heading = heading, rows = rows, options = options }
 
     -- Backwards compat with string tables
     for i = 1, #rows do
@@ -50,16 +51,13 @@ function lib.inputDialog(heading, rows, options)
     end
 
     lib.setNuiFocus(false)
-    SendNUIMessage({
-        action = 'openDialog',
-        data = {
-            heading = heading,
-            rows = rows,
-            options = options
-        }
-    })
+    SendNUIMessage({ action = 'openDialog', data = inputData })
 
-    return Citizen.Await(input)
+    return input:await()
+end
+
+function lib.getOpenInputDialog()
+    return input ~= nil, inputData
 end
 
 function lib.closeInputDialog()
@@ -69,17 +67,16 @@ function lib.closeInputDialog()
     SendNUIMessage({
         action = 'closeInputDialog'
     })
-
+    
     input:resolve(nil)
-    input = nil
+    input, inputData = nil, nil
 end
 
 RegisterNUICallback('inputData', function(data, cb)
     cb(1)
     lib.resetNuiFocus()
-
+    
     local promise = input
-    input = nil
-
+    input, inputData = nil, nil
     promise:resolve(data)
 end)
