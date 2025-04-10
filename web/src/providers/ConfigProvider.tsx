@@ -1,5 +1,5 @@
 import { Context, createContext, useContext, useEffect, useState } from 'react';
-import { MantineColor } from '@mantine/core';
+import { MantineColor, DEFAULT_THEME } from '@mantine/core';
 import { fetchNui } from '../utils/fetchNui';
 
 interface Config {
@@ -12,6 +12,7 @@ interface ConfigCtxValue {
   setConfig: (config: Config) => void;
 }
 
+const availableTheme = DEFAULT_THEME.colors;
 const ConfigCtx = createContext<{ config: Config; setConfig: (config: Config) => void } | null>(null);
 
 const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -21,7 +22,9 @@ const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
   });
 
   useEffect(() => {
-    fetchNui<Config>('getConfig').then((data) => setConfig(data));
+    fetchNui<Config>('getConfig').then((data) => {
+      if (availableTheme[data.primaryColor][data.primaryShade]) setConfig(data);
+    });
   }, []);
 
   return <ConfigCtx.Provider value={{ config, setConfig }}>{children}</ConfigCtx.Provider>;
