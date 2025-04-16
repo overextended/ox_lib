@@ -17,54 +17,54 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   buttonContainer: {
     backgroundColor: theme.colors.dark[6],
     borderRadius: theme.radius.md,
-    padding: 2,
-    height: 60,
-    scrollMargin: 8,
+    padding: '0.125rem',
+    height: '3.75rem',
+    scrollMargin: '0.5rem',
     '&:focus': {
       backgroundColor: theme.colors.dark[4],
       outline: 'none',
     },
   },
   iconImage: {
-    maxWidth: 32,
+    maxWidth: '2rem',
   },
   buttonWrapper: {
-    paddingLeft: 5,
-    paddingRight: 12,
+    paddingLeft: '0.3125rem',
+    paddingRight: '0.75rem',
     height: '100%',
   },
   iconContainer: {
     display: 'flex',
     alignItems: 'center',
-    width: 32,
-    height: 32,
+    width: '2rem',
+    height: '2rem',
   },
   icon: {
-    fontSize: 24,
+    fontSize: '1.5rem',
     color: params.iconColor || theme.colors.dark[2],
   },
   label: {
     color: theme.colors.dark[2],
     textTransform: 'uppercase',
-    fontSize: 12,
+    fontSize: '0.75rem',
     verticalAlign: 'middle',
   },
   chevronIcon: {
-    fontSize: 14,
+    fontSize: '0.875rem',
     color: theme.colors.dark[2],
   },
   scrollIndexValue: {
     color: theme.colors.dark[2],
     textTransform: 'uppercase',
-    fontSize: 14,
+    fontSize: '0.875rem',
   },
   progressStack: {
     width: '100%',
-    marginRight: 5,
+    marginRight: '0.3125rem',
   },
   progressLabel: {
     verticalAlign: 'middle',
-    marginBottom: 3,
+    marginBottom: '0.1875rem',
   },
 }));
 

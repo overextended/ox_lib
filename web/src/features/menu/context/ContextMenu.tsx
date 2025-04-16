@@ -18,31 +18,31 @@ const useStyles = createStyles((theme) => ({
     position: 'absolute',
     top: '15%',
     right: '25%',
-    width: 320,
-    height: 580,
+    width: '20rem',
+    height: '36.25rem',
   },
   header: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
-    gap: 6,
+    marginBottom: '0.625rem',
+    gap: '0.375rem',
   },
   titleContainer: {
-    borderRadius: 4,
+    borderRadius: '0.25rem',
     flex: '1 85%',
     backgroundColor: theme.colors.dark[6],
   },
   titleText: {
     color: theme.colors.dark[0],
-    padding: 6,
+    padding: '0.375rem',
     textAlign: 'center',
   },
   buttonsContainer: {
-    height: 560,
+    height: '35rem',
     overflowY: 'scroll',
   },
   buttonsFlexWrapper: {
-    gap: 3,
+    gap: '0.1875rem',
   },
 }));
 

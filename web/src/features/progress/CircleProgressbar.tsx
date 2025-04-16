@@ -37,15 +37,16 @@ const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; 
     fontFamily: 'Roboto Mono',
     textShadow: theme.shadows.sm,
     color: theme.colors.gray[3],
+    fontSize: '1rem',
   },
   label: {
     textAlign: 'center',
     textShadow: theme.shadows.sm,
     color: theme.colors.gray[3],
-    height: 25,
+    height: '1.5625rem',
   },
   wrapper: {
-    marginTop: params.position === 'middle' ? 25 : undefined,
+    marginTop: params.position === 'middle' ? '1.5625rem' : undefined,
   },
 }));
 
@@ -86,7 +87,7 @@ const CircleProgressbar: React.FC = () => {
         <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
           <Stack spacing={0} align="center" className={classes.wrapper}>
             <RingProgress
-              size={90}
+              size={90} // This size works better with rem units but can stay as is
               thickness={7}
               sections={[{ value: 0, color: theme.primaryColor }]}
               onAnimationEnd={() => setVisible(false)}

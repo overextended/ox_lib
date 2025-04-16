@@ -87,7 +87,8 @@ const degToRad = (deg: number) => deg * (Math.PI / 180);
 const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
   const { locale } = useLocales();
-  const newDimension = 350 * 1.1025;
+  // We'll make these values relative to viewport size
+  const svgSize = 350;
   const [visible, setVisible] = useState(false);
   const [menuItems, setMenuItems] = useState<RadialMenuItem[]>([]);
   const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean; page: number }>({
@@ -147,31 +148,33 @@ const RadialMenu: React.FC = () => {
         <ScaleFade visible={visible}>
           <svg
             style={{ overflow: 'visible' }}
-            width={`${newDimension}px`}
-            height={`${newDimension}px`}
-            viewBox="0 0 350 350"
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${svgSize} ${svgSize}`}
             transform="rotate(90)"
           >
             {/* Fixed issues with background circle extending the circle when there's less than 3 items */}
-            <g transform="translate(175, 175)">
-              <circle r={175} className={classes.backgroundCircle} />
+            <g transform={`translate(${svgSize / 2}, ${svgSize / 2})`}>
+              <circle r={svgSize / 2} className={classes.backgroundCircle} />
             </g>
             {menuItems.map((item, index) => {
               const pieAngle = 360 / (menuItems.length < 3 ? 3 : menuItems.length);
               const angle = degToRad(pieAngle / 2 + 90);
               const gap = 1;
-              const radius = 175 * 0.65 - gap;
+              const radius = (svgSize / 2) * 0.65 - gap;
               const sinAngle = Math.sin(angle);
               const cosAngle = Math.cos(angle);
               const iconYOffset = splitTextIntoLines(item.label, 15).length > 3 ? 3 : 0;
-              const iconX = 175 + sinAngle * radius;
-              const iconY = 175 + cosAngle * radius + iconYOffset; // Apply the Y offset to iconY
+              const iconX = svgSize / 2 + sinAngle * radius;
+              const iconY = svgSize / 2 + cosAngle * radius + iconYOffset; // Apply the Y offset to iconY
               const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100);
               const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100);
 
               return (
                 <g
-                  transform={`rotate(-${index * pieAngle} 175 175) translate(${sinAngle * gap}, ${cosAngle * gap})`}
+                  transform={`rotate(-${index * pieAngle} ${svgSize / 2} ${svgSize / 2}) translate(${sinAngle * gap}, ${
+                    cosAngle * gap
+                  })`}
                   className={classes.sector}
                   onClick={async () => {
                     const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
@@ -182,9 +185,9 @@ const RadialMenu: React.FC = () => {
                   }}
                 >
                   <path
-                    d={`M175.01,175.01 l${175 - gap},0 A175.01,175.01 0 0,0 ${
-                      175 + (175 - gap) * Math.cos(-degToRad(pieAngle))
-                    }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
+                    d={`M${svgSize / 2},${svgSize / 2} l${svgSize / 2 - gap},0 A${svgSize / 2},${svgSize / 2} 0 0,0 ${
+                      svgSize / 2 + (svgSize / 2 - gap) * Math.cos(-degToRad(pieAngle))
+                    }, ${svgSize / 2 + (svgSize / 2 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                   />
                   <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
                     {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
@@ -225,7 +228,7 @@ const RadialMenu: React.FC = () => {
               );
             })}
             <g
-              transform={`translate(175, 175)`}
+              transform={`translate(${svgSize / 2}, ${svgSize / 2})`}
               onClick={async () => {
                 if (menu.page > 1) await changePage();
                 else {

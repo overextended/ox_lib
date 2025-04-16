@@ -27,7 +27,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
   button: {
     height: 'fit-content',
     width: '100%',
-    padding: 10,
+    padding: '0.625rem',
     '&:hover': {
       backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
       cursor: params.readOnly ? 'unset' : 'pointer',
@@ -37,31 +37,31 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     },
   },
   iconImage: {
-    maxWidth: '25px',
+    maxWidth: '1.5625rem',
   },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
-    fontSize: 12,
+    fontSize: '0.75rem',
   },
   dropdown: {
-    padding: 10,
+    padding: '0.625rem',
     color: theme.colors.dark[0],
-    fontSize: 14,
-    maxWidth: 256,
+    fontSize: '0.875rem',
+    maxWidth: '16rem',
     width: 'fit-content',
     border: 'none',
   },
   buttonStack: {
-    gap: 4,
+    gap: '0.25rem',
     flex: '1',
   },
   buttonGroup: {
-    gap: 4,
+    gap: '0.25rem',
     flexWrap: 'nowrap',
   },
   buttonIconContainer: {
-    width: 25,
-    height: 25,
+    width: '1.5625rem',
+    height: '1.5625rem',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -71,8 +71,8 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
   buttonArrowContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 25,
-    height: 25,
+    width: '1.5625rem',
+    height: '1.5625rem',
   },
 }));
 
