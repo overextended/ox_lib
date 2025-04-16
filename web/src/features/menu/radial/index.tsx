@@ -87,7 +87,6 @@ const degToRad = (deg: number) => deg * (Math.PI / 180);
 const RadialMenu: React.FC = () => {
   const { classes } = useStyles();
   const { locale } = useLocales();
-  // We'll make these values relative to viewport size
   const svgSize = 350;
   const [visible, setVisible] = useState(false);
   const [menuItems, setMenuItems] = useState<RadialMenuItem[]>([]);
