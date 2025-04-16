@@ -87,7 +87,7 @@ const CircleProgressbar: React.FC = () => {
         <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
           <Stack spacing={0} align="center" className={classes.wrapper}>
             <RingProgress
-              size={90} // This size works better with rem units but can stay as is
+              size={90}
               thickness={7}
               sections={[{ value: 0, color: theme.primaryColor }]}
               onAnimationEnd={() => setVisible(false)}
