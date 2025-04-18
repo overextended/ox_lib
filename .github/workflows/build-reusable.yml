@@ -1,0 +1,102 @@
+name: Build (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      bump_version:
+        required: false
+        default: false
+        type: boolean
+      version:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  build:
+    name: Build ox_lib
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.6.1
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.x
+          cache: 'pnpm'
+          cache-dependency-path: 'web/pnpm-lock.yaml'
+
+      - name: Set env
+        if: inputs.version != ''
+        run: echo "RELEASE_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: web
+
+      - name: Install package dependencies
+        run: pnpm install
+        working-directory: package
+
+      - name: Bump package version
+        if: inputs.bump_version
+        run: pnpm version ${{ inputs.version }}
+        working-directory: package
+
+      - name: Run build
+        run: pnpm build
+        working-directory: web
+        env:
+          CI: false
+
+      - name: Bump manifest version
+        if: inputs.bump_version
+        run: node .github/actions/bump-manifest-version.js
+        env:
+          TGT_RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Push manifest change
+        if: inputs.bump_version
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: fxmanifest.lua
+          push: true
+          author_name: Manifest Bumper
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'chore: bump manifest version to ${{ inputs.version }}'
+
+      - name: Bundle files
+        run: |
+          mkdir -p ./temp/ox_lib
+          mkdir -p ./temp/ox_lib/web/
+          cp ./{LICENSE,README.md,fxmanifest.lua,init.lua} ./temp/ox_lib
+          cp -r ./{imports,resource,locales} ./temp/ox_lib
+          cp -r ./web/build ./temp/ox_lib/web/
+          
+      - name: Upload plugin build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ox_lib_plugin_build
+          path: ./temp/
+      
+      - name: Build and publish package
+        uses: JS-DevTools/npm-publish@v3
+        if: inputs.bump_version
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: './package/package.json'
+          access: 'public'
+
+      - name: Build package
+        if: !inputs.bump_version
+        working-directory: package
+        run: pnpm run compile
+
+
