@@ -1,0 +1,14 @@
+name: Build
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+  build:
+    name: Build ox_lib
+    uses: ./.github/workflows/build-reusable.yml
+    with:
+      bump_version: false
