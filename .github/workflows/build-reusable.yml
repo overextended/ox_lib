@@ -95,7 +95,7 @@ jobs:
           access: 'public'
 
       - name: Build package
-        if: !inputs.bump_version
+        if: inputs.bump_version == false
         working-directory: package
         run: pnpm run compile
 
