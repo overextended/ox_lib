@@ -117,6 +117,15 @@ function math.hextorgb(input)
     return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
 end
 
+---Converts RGB values to a hexadecimal string.
+---@param r integer
+---@param g integer
+---@param b integer
+---@return string
+function math.rgbtohex(r, g, b)
+    return string.format("#%02X%02X%02X", r, g, b)
+end
+
 ---Formats a number as a hexadecimal string.
 ---@param n number | string
 ---@param upper? boolean
