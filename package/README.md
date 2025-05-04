@@ -9,13 +9,13 @@ You still need to use and have the ox_lib resource included into the resource yo
 
 ```yaml
 # With pnpm
-pnpm add @overextended/ox_lib
+pnpm add @communityox/ox_lib
 
 # With Yarn
-yarn add @overextended/ox_lib
+yarn add @communityox/ox_lib
 
 # With npm
-npm install @overextended/ox_lib
+npm install @communityox/ox_lib
 ```
 
 ## Usage
@@ -23,16 +23,16 @@ You can either import the lib from client or server files or deconstruct the obj
 you may require.
 
 ```ts
-import lib from '@overextended/ox_lib/client'
+import lib from '@communityox/ox_lib/client'
 ```
 
 ```ts
-import lib from '@overextended/ox_lib/server'
+import lib from '@communityox/ox_lib/server'
 ```
 
 ```ts
-import { checkDependency } from '@overextended/ox_lib/shared';
+import { checkDependency } from '@communityox/ox_lib/shared';
 ```
 
 ## Documentation
-[View documentation](https://overextended.github.io/docs/ox_lib)
+[View documentation](https://coxdocs.dev/ox_lib)

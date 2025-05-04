@@ -22,9 +22,9 @@ const useStyles = createStyles((theme, params: { position?: TextUiPosition }) =>
       params.position === 'left-center' ? 'flex-start' : 'center',
   },
   container: {
-    fontSize: 16,
-    padding: 12,
-    margin: 8,
+    fontSize: '1rem',
+    padding: '0.75rem',
+    margin: '0.5rem',
     backgroundColor: theme.colors.dark[6],
     color: theme.colors.dark[0],
     fontFamily: 'Roboto',

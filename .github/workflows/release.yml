@@ -1,4 +1,4 @@
-name: Release
+name: Create release
 
 on:
   push:
@@ -7,68 +7,66 @@ on:
 
 jobs:
   create-release:
-    name: Build and Create Tagged Release
     runs-on: ubuntu-latest
     steps:
-      - name: Install archive tools
-        run: sudo apt install zip
-
-      - name: Checkout source code
-        uses: actions/checkout@v2
+      - name: Get latest code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.repository.default_branch }}
 
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 8.6.1
+          bun-version: latest
 
-      - name: Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: 'pnpm'
-          cache-dependency-path: 'web/pnpm-lock.yaml'
-
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: pnpm install
-        working-directory: web
 
       - name: Install package dependencies
-        run: pnpm install
+        run: bun install
         working-directory: package
+
+      - name: Install web dependencies
+        run: bun install
+        working-directory: web
+
+      - name: Run web build script
+        run: bun run build
+        working-directory: web
+
 
       - name: Bump package version
-        run: pnpm version ${{ github.ref_name }}
-        working-directory: package
-
-      - name: Run build
-        run: pnpm build
-        working-directory: web
-        env:
-          CI: false
-
-      - name: Bump manifest version
-        run: node .github/actions/bump-manifest-version.js
+        run: bun .github/actions/bump-package-version.js
         env:
           TGT_RELEASE_VERSION: ${{ github.ref_name }}
 
-      - name: Push manifest change
-        uses: EndBug/add-and-commit@v8
-        with:
-          add: fxmanifest.lua
-          push: true
-          author_name: Manifest Bumper
-          author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: 'chore: bump manifest version to ${{ github.ref_name }}'
+      - name: Bump manifest version
+        run: bun .github/actions/bump-manifest-version.js
+        env:
+          TGT_RELEASE_VERSION: ${{ github.ref_name }}
 
-      - name: Update tag ref
-        uses: EndBug/latest-tag@latest
+
+      - name: Push version bump change
+        uses: EndBug/add-and-commit@v9
         with:
-          tag-name: ${{ github.ref_name }}
+          add: '["fxmanifest.lua", "package/package.json"]'
+          push: true
+          default_author: github_actions
+          message: 'chore: bump version to ${{ github.ref_name }}'
+
+      - name: Update tag
+        uses: EndBug/latest-tag@v1
+        with:
+          ref: ${{ github.ref_name }}
+
+
+      - name: Publish package to npm registry
+        run: bun publish --access public
+        working-directory: package
+        env:
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Install zip
+        run: sudo apt install zip
 
       - name: Bundle files
         run: |
@@ -79,22 +77,13 @@ jobs:
           cp -r ./web/build ./temp/ox_lib/web/
           cd ./temp && zip -r ../ox_lib.zip ./ox_lib
 
-      - name: Create Release
+      - name: Create release
         uses: 'marvinpinto/action-automatic-releases@v1.2.1'
         id: auto_release
         with:
-          repo_token: '${{ secrets.GITHUB_TOKEN }}'
-          title: ${{ env.RELEASE_VERSION }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           files: ox_lib.zip
-
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish npm package
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: './package/package.json'
-          access: 'public'

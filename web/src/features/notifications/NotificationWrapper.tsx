@@ -10,11 +10,11 @@ import LibIcon from '../../components/LibIcon';
 
 const useStyles = createStyles((theme) => ({
   container: {
-    width: 300,
+    width: '18.75rem',
     height: 'fit-content',
     backgroundColor: theme.colors.dark[6],
     color: theme.colors.dark[0],
-    padding: 12,
+    padding: '0.75rem',
     borderRadius: theme.radius.sm,
     fontFamily: 'Roboto',
     boxShadow: theme.shadows.sm,
@@ -24,13 +24,13 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 'normal',
   },
   description: {
-    fontSize: 12,
+    fontSize: '0.75rem',
     color: theme.colors.dark[2],
     fontFamily: 'Roboto',
     lineHeight: 'normal',
   },
   descriptionOnly: {
-    fontSize: 14,
+    fontSize: '0.875rem',
     color: theme.colors.dark[2],
     fontFamily: 'Roboto',
     lineHeight: 'normal',

@@ -289,6 +289,7 @@
 
 html {
   color-scheme: normal !important;
+  font-size: 16px; /* Base font size for standard resolution */
 }
 
 body {
@@ -301,6 +302,19 @@ body {
   height: 100vh;
   user-select: none;
   overflow: hidden !important;
+}
+
+/* Scale root font size based on viewport height for 4K displays */
+@media (min-height: 1440px) {
+  html {
+    font-size: calc(16px + 0.5vw);
+  }
+}
+
+@media (min-height: 2160px) {
+  html {
+    font-size: calc(16px + 1vw);
+  }
 }
 
 p {

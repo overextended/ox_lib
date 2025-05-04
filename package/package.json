@@ -1,7 +1,7 @@
 {
-  "name": "@overextended/ox_lib",
+  "name": "@communityox/ox_lib",
   "author": "Overextended",
-  "version": "1.0.0",
+  "version": "3.30.7",
   "description": "JS/TS wrapper for ox_lib exports",
   "main": "./shared/index.js",
   "types": "./shared/index.d.ts",
@@ -14,14 +14,15 @@
     "fivem",
     "ox_lib",
     "ox",
-    "overextended"
+    "overextended",
+    "communityox"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/overextended/ox_lib.git"
+    "url": "git+https://github.com/communityox/ox_lib.git"
   },
   "bugs": {
-    "url": "https://github.com/overextended/ox_lib/issues"
+    "url": "https://github.com/communityox/ox_lib/issues"
   },
   "license": "LGPL-3.0",
   "dependencies": {
