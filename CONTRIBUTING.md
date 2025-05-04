@@ -6,7 +6,7 @@ We welcome you to contribute to our projects, whether reporting a bug, suggestin
 
 ### Search for existing issues
 
-Before creating a new issue, please search existing [issues](https://github.com/overextended/ox_lib/issues) to see if it has already been reported.
+Before creating a new issue, please search existing [issues](https://github.com/communityox/ox_lib/issues) to see if it has already been reported.
 
 ### Add details to existing issues
 
@@ -51,7 +51,7 @@ Pull requests that do not contribute meaningful improvements to the project's st
 - Fork the repository and, optionally, create a new branch for your changes.
 - If applicable, include example code to demonstrate your changes.
 - Ensure your code's style is consistent with the project, e.g. uses the same indentation and string quotations.
-- If you have modified or introduced new APIs, open a pull request to our [documentation](https://github.com/overextended/overextended.github.io). We will not accept undocumented code.
+- If you have modified or introduced new APIs, open a pull request to our [documentation](https://github.com/communityox/docs). We will not accept undocumented code.
 
 ## Contributor License Agreement
 

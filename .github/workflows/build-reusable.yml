@@ -1,0 +1,88 @@
+name: Build (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      bump_version:
+        required: false
+        default: false
+        type: boolean
+      version:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  build:
+    name: Build ox_lib
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Set env
+        if: inputs.version != ''
+        run: echo "RELEASE_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+
+      - name: Install package dependencies
+        run: bun install
+        working-directory: package
+
+      - name: Install web dependencies
+        run: bun install
+        working-directory: web
+
+      - name: Run web build script
+        run: bun run build
+        working-directory: web
+
+      - name: Bump package version
+        if: inputs.bump_version
+        run: bun .github/actions/bump-package-version.js
+        env:
+          TGT_RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Bump manifest version
+        if: inputs.bump_version
+        run: bun .github/actions/bump-manifest-version.js
+        env:
+          TGT_RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Push version bump change
+        if: inputs.bump_version
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: '["fxmanifest.lua", "package/package.json"]'
+          push: true
+          default_author: github_actions
+          message: 'chore: bump version to ${{ inputs.version }}'
+
+      - name: Bundle files
+        run: |
+          mkdir -p ./temp/ox_lib
+          mkdir -p ./temp/ox_lib/web/
+          cp ./{LICENSE,README.md,fxmanifest.lua,init.lua} ./temp/ox_lib
+          cp -r ./{imports,resource,locales} ./temp/ox_lib
+          cp -r ./web/build ./temp/ox_lib/web/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ox_lib_build
+          path: ./temp/ox_lib
+
+      - name: Publish package to npm registry
+        if: inputs.bump_version
+        run: bun publish --access public
+        working-directory: package
+        env:
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+
