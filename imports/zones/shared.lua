@@ -27,32 +27,68 @@ local glm = require 'glm'
 local Zones = {}
 _ENV.Zones = Zones
 
-local function nextFreePoint(points, b, len)
-    for i = 1, len do
-        local n = (i + b) % len
-
-        n = n ~= 0 and n or len
-
-        if points[n] then
-            return n
-        end
-    end
-end
-
 local function unableToSplit(polygon)
-    print('The following polygon is malformed and has failed to be split into triangles for debug')
+    print('The following polygon has failed to be split into triangles for debugging and may be malformed.')
 
     for k, v in pairs(polygon) do
         print(k, v)
     end
 end
 
-local function getTriangles(polygon)
+local function isCCW(a, b, c)
+    return ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)) > 0
+end
+
+local function signedArea(vertices)
+    local area = 0
+
+    for i = 1, #vertices do
+        local j = (i % #vertices) + 1
+        area = area + (vertices[i].x * vertices[j].y - vertices[j].x * vertices[i].y)
+    end
+
+    return area * 0.5
+end
+
+local function getTriangles(polygon, height, type)
+    if type == 'sphere' then return end
+
     local triangles = {}
 
+    local _ <close> = defer(function()
+        local thickness = vec(0, 0, height / 2)
+
+        for i = 1, #triangles do
+            local triangle = triangles[i]
+            local copy = table.clone(triangle)
+
+            for j = 1, 3 do
+                copy[j] = triangle[j] - thickness
+                triangle[j] = triangle[j] + thickness
+            end
+
+            table.insert(triangles, copy)
+        end
+    end)
+
+    if type == 'box' then
+        table.move({
+            { polygon[1], polygon[2], polygon[3] }, { polygon[1], polygon[3], polygon[4] }
+        }, 1, 2, 1, triangles)
+        return triangles
+    end
+
+    local numPoints = #polygon
+
+    if numPoints < 3 then
+        unableToSplit(polygon)
+
+        return triangles
+    end
+
     if polygon:isConvex() then
-        for i = 2, #polygon - 1 do
-            triangles[#triangles + 1] = mat(polygon[1], polygon[i], polygon[i + 1])
+        for i = 2, numPoints - 1 do
+            triangles[#triangles + 1] = { polygon[1], polygon[i], polygon[i + 1] }
         end
 
         return triangles
@@ -64,42 +100,53 @@ local function getTriangles(polygon)
         return triangles
     end
 
-    local points = {}
-    local polygonN = #polygon
+    local indices = table.create(numPoints, 0)
+    local reverse = signedArea(polygon) < 0
 
-    for i = 1, polygonN do
-        points[i] = polygon[i]
+    print(signedArea(polygon), isCCW(polygon[1], polygon[2], polygon[3]))
+
+    for i = 1, numPoints do
+        indices[i] = reverse and numPoints + 1 - i or i
     end
 
-    local a, b, c = 1, 2, 3
-    local zValue = polygon[1].z
-    local count = 0
+    while #indices > 2 do
+        local foundEar = false
 
-    while polygonN - #triangles > 2 do
-        local a2d = polygon[a].xy
-        local c2d = polygon[c].xy
+        for i = 1, #indices do
+            local i1 = indices[(i - 2) % #indices + 1]
+            local i2 = indices[(i - 1) % #indices + 1]
+            local i3 = indices[i % #indices + 1]
+            local a, b, c = polygon[i1], polygon[i2], polygon[i3]
 
-        if polygon:containsSegment(vec3(glm.segment2d.getPoint(a2d, c2d, 0.01), zValue), vec3(glm.segment2d.getPoint(a2d, c2d, 0.99), zValue)) then
-            triangles[#triangles + 1] = mat(polygon[a], polygon[b], polygon[c])
-            points[b] = false
+            if isCCW(a, b, c) then
+                local isEar = true
+                local triangle = glm.polygon.new({ a, b, c })
 
-            b = c
-            c = nextFreePoint(points, b, polygonN)
-        else
-            a = b
-            b = c
-            c = nextFreePoint(points, b, polygonN)
+                for j = 1, #indices do
+                    local idx = indices[j]
+
+                    if idx ~= i1 and idx ~= i2 and idx ~= i3 then
+                        if triangle:contains(polygon[idx]) then
+                            isEar = false
+                            break
+                        end
+                    end
+                end
+
+                if isEar then
+                    table.insert(triangles, { a, b, c })
+                    table.remove(indices, (i - 1) % #indices + 1)
+
+                    foundEar = true
+                    break
+                end
+            end
         end
 
-        count += 1
-
-        if count > polygonN and #triangles == 0 then
+        if not foundEar then
             unableToSplit(polygon)
-
-            return triangles
+            break
         end
-
-        Wait(0)
     end
 
     return triangles
@@ -253,31 +300,38 @@ local DrawLine = DrawLine
 local DrawPoly = DrawPoly
 
 local function debugPoly(self)
+    local rgba = self.debugColour
+    local thickness = vec(0, 0, self.thickness / 2)
+
     for i = 1, #self.triangles do
-        local triangle = self.triangles[i]
-        DrawPoly(triangle[1].x, triangle[1].y, triangle[1].z, triangle[2].x, triangle[2].y, triangle[2].z, triangle[3].x, triangle[3].y, triangle[3].z,
-            self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
-        DrawPoly(triangle[2].x, triangle[2].y, triangle[2].z, triangle[1].x, triangle[1].y, triangle[1].z, triangle[3].x, triangle[3].y, triangle[3].z,
-            self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+        local a = self.triangles[i][1]
+        local b = self.triangles[i][2]
+        local c = self.triangles[i][3]
+
+        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, rgba.r, rgba.g, rgba.b, rgba.a)
+        DrawPoly(b.x, b.y, b.z, a.x, a.y, a.z, c.x, c.y, c.z, rgba.r, rgba.g, rgba.b, rgba.a)
     end
+    -- do return end
     for i = 1, #self.polygon do
-        local thickness = vec(0, 0, self.thickness / 2)
         local a = self.polygon[i] + thickness
         local b = self.polygon[i] - thickness
         local c = (self.polygon[i + 1] or self.polygon[1]) + thickness
         local d = (self.polygon[i + 1] or self.polygon[1]) - thickness
-        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
-        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
-        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, 225)
-        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
-        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
-        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
-        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, self.debugColour.r, self.debugColour.g, self.debugColour.b, self.debugColour.a)
+
+        DrawLine(a.x, a.y, a.z, b.x, b.y, b.z, rgba.r, rgba.g, rgba.b, 225)
+        DrawLine(a.x, a.y, a.z, c.x, c.y, c.z, rgba.r, rgba.g, rgba.b, 225)
+        DrawLine(b.x, b.y, b.z, d.x, d.y, d.z, rgba.r, rgba.g, rgba.b, 225)
+
+        DrawPoly(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z, rgba.r, rgba.g, rgba.b, rgba.a)
+        DrawPoly(c.x, c.y, c.z, b.x, b.y, b.z, a.x, a.y, a.z, rgba.r, rgba.g, rgba.b, rgba.a)
+        DrawPoly(b.x, b.y, b.z, c.x, c.y, c.z, d.x, d.y, d.z, rgba.r, rgba.g, rgba.b, rgba.a)
+        DrawPoly(d.x, d.y, d.z, c.x, c.y, c.z, b.x, b.y, b.z, rgba.r, rgba.g, rgba.b, rgba.a)
     end
 end
 
 local function debugSphere(self)
-    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, self.debugColour.r,
+    DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius,
+        self.radius, self.debugColour.r,
         ---@diagnostic disable-next-line: param-type-mismatch
         self.debugColour.g, self.debugColour.b, self.debugColour.a, false, false, 0, false, false, false, false)
 end
@@ -332,8 +386,7 @@ local function setDebug(self, bool, colour)
 
     if bool and self.debug and self.debug ~= true then return end
 
-    self.triangles = self.__type == 'poly' and getTriangles(self.polygon) or
-        self.__type == 'box' and { mat(self.polygon[1], self.polygon[2], self.polygon[3]), mat(self.polygon[1], self.polygon[3], self.polygon[4]) } or nil
+    self.triangles = getTriangles(self.polygon, self.thickness, self.__type)
     self.debug = self.__type == 'sphere' and debugSphere or debugPoly or nil
 end
 
