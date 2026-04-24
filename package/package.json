@@ -1,7 +1,7 @@
 {
   "name": "@overextended/ox_lib",
   "author": "Overextended",
-  "version": "3.32.5",
+  "version": "3.32.6",
   "description": "JS/TS wrapper for ox_lib exports",
   "main": "./shared/index.js",
   "types": "./shared/index.d.ts",
