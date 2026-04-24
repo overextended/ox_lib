@@ -1,5 +1,5 @@
 {
-  "name": "@communityox/ox_lib",
+  "name": "@overextended/ox_lib",
   "author": "Overextended",
   "version": "3.32.3",
   "description": "JS/TS wrapper for ox_lib exports",
@@ -17,14 +17,14 @@
     "ox_lib",
     "ox",
     "overextended",
-    "communityox"
+    "overextended"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CommunityOx/ox_lib.git"
+    "url": "git+https://github.com/overextended/ox_lib.git"
   },
   "bugs": {
-    "url": "https://github.com/CommunityOx/ox_lib/issues"
+    "url": "https://github.com/overextended/ox_lib/issues"
   },
   "license": "LGPL-3.0",
   "dependencies": {
