@@ -72,7 +72,7 @@ function OxSelector:getRandomWeighted(setName)
 
     for i = 1, #set do
         cumulativeWeight = cumulativeWeight + set[i][1]
-        if randomWeight <= cumulativeWeight then
+        if randomWeight < cumulativeWeight then
             local item = set[i][2]
             return type(item) == "table" and deepClone(item) or item
         end
