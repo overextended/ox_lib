@@ -13,7 +13,7 @@ const SliderField: React.FC<Props> = (props) => {
   const controller = useController({
     name: `test.${props.index}.value`,
     control: props.control,
-    defaultValue: props.row.default || props.row.min || 0,
+    defaultValue: props.row.default ?? props.row.min ?? 0,
   });
 
   return (
@@ -26,14 +26,14 @@ const SliderField: React.FC<Props> = (props) => {
         ref={controller.field.ref}
         onBlur={controller.field.onBlur}
         onChange={controller.field.onChange}
-        defaultValue={props.row.default || props.row.min || 0}
+        defaultValue={props.row.default ?? props.row.min ?? 0}
         min={props.row.min}
         max={props.row.max}
         step={props.row.step}
         disabled={props.row.disabled}
         marks={[
-          { value: props.row.min || 0, label: props.row.min || 0 },
-          { value: props.row.max || 100, label: props.row.max || 100 },
+          { value: props.row.min ?? 0, label: props.row.min ?? 0 },
+          { value: props.row.max ?? 100, label: props.row.max ?? 100 },
         ]}
       />
     </Box>
