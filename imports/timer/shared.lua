@@ -105,7 +105,9 @@ function timer:restart(async)
 end
 
 function timer:getTimeLeft(format)
-    local ms = self.private.currentTimeLeft - (GetGameTimer() - self.private.startTime)
+    local ms = self.private.paused
+        and self.private.currentTimeLeft
+        or self.private.currentTimeLeft - (GetGameTimer() - self.private.startTime)
 
     local roundedfloat = function(value)
         return tonumber(string.format('%.2f', value))
