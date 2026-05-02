@@ -210,6 +210,10 @@ local function getTimeUnit(value, unit)
                 return min + unitMax
             end
 
+            if max > unitMax and currentTime + unitMax <= max then
+                return currentTime
+            end
+
             return currentTime < min and min or currentTime
         end
 
