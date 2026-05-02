@@ -13,7 +13,8 @@ local function safeGetKvp(fn, key, default)
     local ok, result = pcall(fn, key)
 
     if not ok then
-        return DeleteResourceKvp(key)
+        DeleteResourceKvp(key)
+        return default
     end
 
     return result or default
