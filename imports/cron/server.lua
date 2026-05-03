@@ -270,17 +270,31 @@ function OxTask:getNextTime()
     if not hour then return end
 
     if minute >= maxUnits.min then
-        if not self.hour then
-            hour += math.floor(minute / maxUnits.min)
-        end
+        local carry = math.floor(minute / maxUnits.min)
         minute = minute % maxUnits.min
+
+        if not self.hour then
+            hour += carry
+        elseif not self.day then
+            day += carry
+        elseif not self.month then
+            month += carry
+        else
+            month += 12 * carry
+        end
     end
 
     if hour >= maxUnits.hour and day then
-        if not self.day then
-            day += math.floor(hour / maxUnits.hour)
-        end
+        local carry = math.floor(hour / maxUnits.hour)
         hour = hour % maxUnits.hour
+
+        if not self.day then
+            day += carry
+        elseif not self.month then
+            month += carry
+        else
+            month += 12 * carry
+        end
     end
 
     local nextTime = os.time({
