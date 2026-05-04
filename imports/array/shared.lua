@@ -113,6 +113,8 @@ function lib.array:fill(value, start, endIndex)
     start = start or 1
     endIndex = endIndex or length
 
+    if start < 0 then start = length + start + 1 end
+    if endIndex < 0 then endIndex = length + endIndex + 1 end
     if start < 1 then start = 1 end
     if endIndex > length then endIndex = length end
 
