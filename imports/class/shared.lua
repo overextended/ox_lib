@@ -85,20 +85,27 @@ function mixins.new(class, ...)
         private = table.clone(obj.private)
 
         table.wipe(obj.private)
+
+        local function calledFromMethod()
+            local level = 3
+            while true do
+                local di = getinfo(level, 'n')
+                if not di then return false end
+                if di.namewhat == 'method' then return true end
+                level += 1
+            end
+        end
+
         setmetatable(obj.private, {
             __metatable = 'private',
             __tostring = void,
             __index = function(self, index)
-                local di = getinfo(2, 'n')
-
-                if di.namewhat ~= 'method' and di.namewhat ~= '' then return end
+                if not calledFromMethod() then return end
 
                 return private[index]
             end,
             __newindex = function(self, index, value)
-                local di = getinfo(2, 'n')
-
-                if di.namewhat ~= 'method' and di.namewhat ~= '' then
+                if not calledFromMethod() then
                     error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
