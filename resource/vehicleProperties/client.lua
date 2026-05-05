@@ -650,8 +650,8 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleTyresCanBurst(vehicle, props.bulletProofTyres)
     end
 
-    if gameBuild >= 2372 and props.driftTyres then
-        SetDriftTyresEnabled(vehicle, true)
+    if gameBuild >= 2372 and props.driftTyres ~= nil then
+        SetDriftTyresEnabled(vehicle, props.driftTyres)
     end
 
     if fixVehicle then
