@@ -15,6 +15,6 @@
     "noImplicitAny": true,
     "outDir": "dist"
   },
-  "include": ["client", "server", "shared"],
+  "include": ["client", "server", "common"],
   "exclude": ["**/node_modules"]
 }

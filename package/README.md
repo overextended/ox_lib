@@ -19,20 +19,22 @@ npm install @overextended/ox_lib
 ```
 
 ## Usage
+
 You can either import the lib from client or server files or deconstruct the object and import only certain functions
 you may require.
 
 ```ts
-import lib from '@overextended/ox_lib/client'
+import lib from '@overextended/ox_lib/client';
 ```
 
 ```ts
-import lib from '@overextended/ox_lib/server'
+import lib from '@overextended/ox_lib/server';
 ```
 
 ```ts
-import { checkDependency } from '@overextended/ox_lib/shared';
+import { checkDependency } from '@overextended/ox_lib';
 ```
 
 ## Documentation
+
 [View documentation](https://overextended.dev/ox_lib)

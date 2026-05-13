@@ -12,7 +12,7 @@ interface PropProps {
 }
 
 interface ProgressProps {
-  label?: string; 
+  label?: string;
   duration: number;
   position?: 'middle' | 'bottom';
   useWhileDead?: boolean;

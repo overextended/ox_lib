@@ -1,4 +1,4 @@
-console.warn(`The ox_lib zones module is experimental and may change in future versions.`)
+console.warn(`The ox_lib zones module is experimental and may change in future versions.`);
 
 import { Grid } from '@overextended/core/grid';
 import { Cylinder, Prism, Sphere } from '@overextended/core/geometry';
@@ -47,7 +47,7 @@ export class Zone {
   }
 
   public static getNearby(point: Vector2 | Vector3) {
-    return Zone.grid.getEntries(point.x, point.y)
+    return Zone.grid.getEntries(point.x, point.y);
   }
 
   public static has(id: string) {
@@ -84,7 +84,32 @@ export class Zone {
       const { x, y, z } = this.shape.coords;
       const radius = this.shape.radius;
 
-      return DrawMarker(28, x, y, z, 0, 0, 0, 0, 0, 0, radius, radius, radius, red, green, blue, alpha, false, false, 0, false, null as any, null as any, false)
+      return DrawMarker(
+        28,
+        x,
+        y,
+        z,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        radius,
+        radius,
+        radius,
+        red,
+        green,
+        blue,
+        alpha,
+        false,
+        false,
+        0,
+        false,
+        null as any,
+        null as any,
+        false
+      );
     }
 
     if (this.shape instanceof Prism) {
@@ -97,23 +122,23 @@ export class Zone {
         const curr = polygon.vertices[i]!;
         const next = (polygon.vertices[i + 1] || polygon.vertices[0])!;
 
-        DrawLine(curr.x, curr.y, minZ, curr.x, curr.y, maxZ, red, green, blue, 225)
-        DrawLine(curr.x, curr.y, maxZ, next.x, next.y, maxZ, red, green, blue, 225)
-        DrawLine(curr.x, curr.y, minZ, next.x, next.y, minZ, red, green, blue, 225)
+        DrawLine(curr.x, curr.y, minZ, curr.x, curr.y, maxZ, red, green, blue, 225);
+        DrawLine(curr.x, curr.y, maxZ, next.x, next.y, maxZ, red, green, blue, 225);
+        DrawLine(curr.x, curr.y, minZ, next.x, next.y, minZ, red, green, blue, 225);
 
-        DrawPoly(curr.x, curr.y, minZ, curr.x, curr.y, maxZ, next.x, next.y, maxZ, red, green, blue, alpha)
-        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, maxZ, next.x, next.y, minZ, red, green, blue, alpha)
-        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, maxZ, curr.x, curr.y, maxZ, red, green, blue, alpha)
-        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, minZ, next.x, next.y, maxZ, red, green, blue, alpha)
+        DrawPoly(curr.x, curr.y, minZ, curr.x, curr.y, maxZ, next.x, next.y, maxZ, red, green, blue, alpha);
+        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, maxZ, next.x, next.y, minZ, red, green, blue, alpha);
+        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, maxZ, curr.x, curr.y, maxZ, red, green, blue, alpha);
+        DrawPoly(curr.x, curr.y, minZ, next.x, next.y, minZ, next.x, next.y, maxZ, red, green, blue, alpha);
       }
 
       for (let i = 0; i < polygon.triangles.length; i++) {
         const [a, b, c] = polygon.triangles[i]!;
 
-        DrawPoly(a.x, a.y, minZ, b.x, b.y, minZ, c.x, c.y, minZ, red, green, blue, alpha)
-        DrawPoly(a.x, a.y, maxZ, b.x, b.y, maxZ, c.x, c.y, maxZ, red, green, blue, alpha)
-        DrawPoly(b.x, b.y, minZ, a.x, a.y, minZ, c.x, c.y, minZ, red, green, blue, alpha)
-        DrawPoly(b.x, b.y, maxZ, a.x, a.y, maxZ, c.x, c.y, maxZ, red, green, blue, alpha)
+        DrawPoly(a.x, a.y, minZ, b.x, b.y, minZ, c.x, c.y, minZ, red, green, blue, alpha);
+        DrawPoly(a.x, a.y, maxZ, b.x, b.y, maxZ, c.x, c.y, maxZ, red, green, blue, alpha);
+        DrawPoly(b.x, b.y, minZ, a.x, a.y, minZ, c.x, c.y, minZ, red, green, blue, alpha);
+        DrawPoly(b.x, b.y, maxZ, a.x, a.y, maxZ, c.x, c.y, maxZ, red, green, blue, alpha);
       }
 
       return;
@@ -142,7 +167,7 @@ function startPolling() {
         if (!lastZones.has(zone)) {
           if (zone.onEnter) zone.onEnter();
         } else {
-          lastZones.delete(zone)
+          lastZones.delete(zone);
         }
       }
     }
@@ -150,7 +175,7 @@ function startPolling() {
     for (const zone of lastZones) {
       if (zone.onExit) zone.onExit();
     }
-  }, 300)
+  }, 300);
 
   setTick(() => {
     for (const zone of nearbyZones) {
@@ -160,7 +185,7 @@ function startPolling() {
     for (const zone of insideZones) {
       if (zone.inside) zone.inside();
     }
-  })
+  });
 }
 
 startPolling();

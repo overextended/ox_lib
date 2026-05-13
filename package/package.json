@@ -34,7 +34,8 @@
   ],
   "scripts": {
     "compile": "tsc",
-    "prepublishOnly": "npm run compile"
+    "format": "prettier . --write",
+    "prepublishOnly": "bun run format & bun run compile"
   },
   "keywords": [
     "fivem",
@@ -66,6 +67,6 @@
     "@types/node": "16.9.1",
     "@types/react": "^18.2.66",
     "barrelize": "^1.8.0",
-    "prettier": "^2.8.8"
+    "prettier": "^3.8.3"
   }
 }

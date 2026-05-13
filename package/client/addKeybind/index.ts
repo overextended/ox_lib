@@ -39,16 +39,16 @@ class Keybind implements CKeybind {
   constructor(data: KeybindProps) {
     this.name = data.name;
     this.description = data.description;
-    this.defaultMapper = data.defaultMapper ?? "keyboard";
-    this.defaultKey = data.defaultKey ?? "";
+    this.defaultMapper = data.defaultMapper ?? 'keyboard';
+    this.defaultKey = data.defaultKey ?? '';
     this.secondaryKey = data.secondaryKey;
     this.secondaryMapper = data.secondaryMapper;
 
-    if (typeof data.disabled === "boolean") this.disabled = data.disabled;
+    if (typeof data.disabled === 'boolean') this.disabled = data.disabled;
     this.onPressed = data.onPressed;
     this.onReleased = data.onReleased;
 
-    this.hash = GetHashKey("+" + this.name) | 0x80000000;
+    this.hash = GetHashKey('+' + this.name) | 0x80000000;
   }
 
   get currentKey(): string {
@@ -69,43 +69,45 @@ class Keybind implements CKeybind {
   }
 }
 
-
 export function addKeybind(data: KeybindProps): CKeybind {
   const kb = new Keybind(data);
 
   keybinds[kb.name] = kb;
 
-  RegisterCommand("+" + kb.name, () => {
-    if (kb.disabled || IsPauseMenuActive()) return;
-    kb.isPressed = true;
-    kb.onPressed?.call(kb);
-  }, false);
-
-  RegisterCommand("-" + kb.name, () => {
-    if (kb.disabled || IsPauseMenuActive()) return;
-    kb.isPressed = false;
-    kb.onReleased?.call(kb);
-  }, false);
-
-  RegisterKeyMapping(
-    "+" + kb.name,
-    kb.description,
-    kb.defaultMapper ?? "keyboard",
-    kb.defaultKey ?? ""
+  RegisterCommand(
+    '+' + kb.name,
+    () => {
+      if (kb.disabled || IsPauseMenuActive()) return;
+      kb.isPressed = true;
+      kb.onPressed?.call(kb);
+    },
+    false
   );
+
+  RegisterCommand(
+    '-' + kb.name,
+    () => {
+      if (kb.disabled || IsPauseMenuActive()) return;
+      kb.isPressed = false;
+      kb.onReleased?.call(kb);
+    },
+    false
+  );
+
+  RegisterKeyMapping('+' + kb.name, kb.description, kb.defaultMapper ?? 'keyboard', kb.defaultKey ?? '');
 
   if (kb.secondaryKey) {
     RegisterKeyMapping(
-      "~!+" + kb.name,
+      '~!+' + kb.name,
       kb.description,
-      kb.secondaryMapper ?? kb.defaultMapper ?? "keyboard",
+      kb.secondaryMapper ?? kb.defaultMapper ?? 'keyboard',
       kb.secondaryKey
     );
   }
 
   setTimeout(() => {
-    emit("chat:removeSuggestion", `/+${kb.name}`);
-    emit("chat:removeSuggestion", `/-${kb.name}`);
+    emit('chat:removeSuggestion', `/+${kb.name}`);
+    emit('chat:removeSuggestion', `/-${kb.name}`);
   }, 500);
 
   return kb;

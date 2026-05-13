@@ -10,5 +10,5 @@ export * from './version';
 export * as lib from '.';
 
 export function setVehicleProperties(vehicle: number, props: VehicleProperties) {
-  Entity(vehicle).state.set('ox_lib:setVehicleProperties', props, true)
+  Entity(vehicle).state.set('ox_lib:setVehicleProperties', props, true);
 }

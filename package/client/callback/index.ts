@@ -57,7 +57,7 @@ export function triggerServerCallback<T = unknown>(
 }
 
 export function onServerCallback(eventName: string, cb: (...args: any[]) => any) {
-  exports.ox_lib.setValidCallback(eventName, true)
+  exports.ox_lib.setValidCallback(eventName, true);
 
   onNet(`__ox_cb_${eventName}`, async (resource: string, key: string, ...args: any[]) => {
     let response: any;
