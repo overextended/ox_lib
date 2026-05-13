@@ -3,14 +3,38 @@
   "author": "Overextended",
   "version": "3.33.0",
   "description": "JS/TS wrapper for ox_lib exports",
-  "main": "./shared/index.js",
-  "types": "./shared/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/common/index.js",
+      "types": "./dist/common/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/common/*/index.js",
+      "types": "./dist/common/*/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/index.js",
+      "types": "./dist/client/index.d.ts"
+    },
+    "./client/*": {
+      "import": "./dist/client/*/index.js",
+      "types": "./dist/client/*/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "types": "./dist/server/index.d.ts"
+    },
+    "./server/*": {
+      "import": "./dist/server/*/index.js",
+      "types": "./dist/server/*/index.d.ts"
+    }
+  },
   "sideEffects": [
-    "./shared/resource/locale/index.js"
+    "./common/locale/index.js"
   ],
   "scripts": {
     "compile": "tsc",
-    "prepare": "npm run compile"
+    "prepublishOnly": "npm run compile"
   },
   "keywords": [
     "fivem",
@@ -41,6 +65,7 @@
     "@mantine/core": "^6.0.21",
     "@types/node": "16.9.1",
     "@types/react": "^18.2.66",
+    "barrelize": "^1.8.0",
     "prettier": "^2.8.8"
   }
 }

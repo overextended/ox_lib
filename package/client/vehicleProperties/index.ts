@@ -1,4 +1,4 @@
-import type { VehicleProperties } from '../../'
+import type { VehicleProperties } from '..'
 
 export const getVehicleProperties = (vehicle: number): VehicleProperties =>
   exports.ox_lib.getVehicleProperties(vehicle);

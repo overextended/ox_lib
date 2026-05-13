@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "rootDir": ".",
     "strict": true,
     "module": "es2022",
     "types": ["@types/node", "@citizenfx/client", "@citizenfx/server"],
@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "outDir": "dist"
   },
   "include": ["client", "server", "shared"],
   "exclude": ["**/node_modules"]

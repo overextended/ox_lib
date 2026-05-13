@@ -1,4 +1,4 @@
-import { waitFor } from '../../';
+import { waitFor } from '..';
 
 function streamingRequest<T extends string | number>(
   request: Function,

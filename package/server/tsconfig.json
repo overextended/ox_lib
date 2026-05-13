@@ -1,9 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": ".",
     "types": ["@citizenfx/server"]
   },
-  "include": ["./**/*"],
-  "exclude": ["**/node_modules"]
+  "include": ["./**/*", "../common/**/*"],
 }

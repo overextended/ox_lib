@@ -3,7 +3,7 @@ console.warn(`The ox_lib zones module is experimental and may change in future v
 import { Grid } from '@overextended/core/grid';
 import { Cylinder, Prism, Sphere } from '@overextended/core/geometry';
 import { Vector2, Vector3 } from '@overextended/core/vector';
-import { cache } from '../resource/cache';
+import { cache } from '../cache';
 
 type Shapes = Prism | Sphere | Cylinder;
 

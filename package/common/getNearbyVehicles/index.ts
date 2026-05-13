@@ -1,5 +1,5 @@
 import { cache } from '../cache/index';
-import { context } from '../../index';
+import { context } from '../';
 import { Vector3 } from "@nativewrappers/fivem";
 
 interface NearbyVehicle {

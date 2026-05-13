@@ -1,7 +1,10 @@
-export * from './resource';
+export * from './cache';
+export * from './getNearbyVehicles';
+export * from './locale';
+export * from './version';
 export * from './zones';
 
-export const context: 'server' | 'client' = IsDuplicityVersion() ? 'server' : 'client';
+export const context = IsDuplicityVersion() ? 'server' : 'client';
 
 // https://www.raygesualdo.com/posts/flattening-object-keys-with-typescript-types/
 export type FlattenObjectKeys<T extends Record<string, any>, Key = keyof T> = Key extends string
