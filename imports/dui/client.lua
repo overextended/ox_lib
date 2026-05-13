@@ -21,6 +21,7 @@
 ---@field txdObject number
 ---@field dictName string
 ---@field txtName string
+---@field private new DuiConstructor
 lib.dui = lib.class('Dui')
 
 ---@type table<string, Dui>
@@ -28,6 +29,9 @@ local duis = {}
 
 local currentId = 0
 
+---@class DuiConstructor
+---@overload fun(self: Dui, data: DuiProperties): Dui
+---@private
 ---@param data DuiProperties
 function lib.dui:constructor(data)
 	local time = GetGameTimer()

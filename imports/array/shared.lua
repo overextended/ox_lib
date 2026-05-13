@@ -7,6 +7,7 @@
 ]]
 
 ---@class Array<T> : OxClass, { [number]: T }
+---@field private new ArrayConstructor
 lib.array = lib.class('Array')
 
 local table_unpack = table.unpack
@@ -17,6 +18,8 @@ local table_type = table.type
 
 ---@alias ArrayLike<T> Array | { [number]: T }
 
+---@class ArrayConstructor
+---@overload fun(self: Array, ...: unknown): Array
 ---@private
 function lib.array:constructor(...)
     local arr = { ... }

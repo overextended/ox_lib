@@ -27,6 +27,7 @@
 ---@field sfHandle? number
 ---@field fullScreen boolean
 ---@field private private { isDrawing: boolean }
+---@field private new ScaleformConstructor
 lib.scaleform = lib.class('Scaleform')
 
 --- Converts the arguments into data types usable by scaleform
@@ -72,8 +73,10 @@ local function retrieveReturnValue(expectedType)
     end
 end
 
+---@class ScaleformConstructor
+---@overload fun(self: Scaleform, details: detailsTable | string): Scaleform
+---@private
 ---@param details detailsTable | string
----@return nil
 function lib.scaleform:constructor(details)
     details = type(details) == 'table' and details or { name = details }
 
