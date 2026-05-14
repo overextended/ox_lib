@@ -1,7 +1,7 @@
 {
   "name": "@overextended/ox_lib",
   "author": "Overextended",
-  "version": "3.33.0",
+  "version": "3.33.1",
   "description": "JS/TS wrapper for ox_lib exports",
   "exports": {
     ".": {
