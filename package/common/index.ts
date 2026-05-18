@@ -3,6 +3,12 @@ export * from './getNearbyVehicles';
 export * from './locale';
 export * from './version';
 export * from './zones';
+export * from './game/StateBag';
+export * from './game/Entity';
+export * from './game/Object';
+export * from './game/Ped';
+export * from './game/Player';
+export * from './game/Vehicle';
 
 export const context = IsDuplicityVersion() ? 'server' : 'client';
 
