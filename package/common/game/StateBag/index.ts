@@ -3,13 +3,9 @@ import { cache } from '../../cache';
 const allowStateBagReplication = cache.game === 'fxserver' || !GetConvarBool('sv_stateBagStrictMode', false);
 
 export class StateBag {
-  protected statebag;
+  constructor(protected statebag: string = '') {}
 
-  constructor(statebag: string = '') {
-    this.statebag = statebag;
-  }
-
-  /** Writes a value to the statebag. */
+  /** Writes a value to the statebag. Replicated values set from the client are send to the server for validation. */
   public async set(key: string, value: unknown, replicated = false) {
     if (replicated && !allowStateBagReplication) {
       return import('../../../client/callback').then(
@@ -25,7 +21,7 @@ export class StateBag {
   }
 
   /** Returns a value from the statebag. */
-  public get(key: string) {
+  public get<T = unknown>(key: string): T | undefined {
     return GetStateBagValue(this.statebag, key);
   }
 
@@ -39,5 +35,3 @@ export class StateBag {
     return GetStateBagKeys(this.statebag);
   }
 }
-
-export const GlobalState = new StateBag('global');
