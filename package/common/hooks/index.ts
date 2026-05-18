@@ -99,6 +99,7 @@ export class HookPipeline<T = any> {
 
     const result = {
       ok: true,
+      size: 0,
       [Symbol.dispose]: () => {
         // @ts-expect-error
         const packed = msgpack_pack([result.ok, payload]);
@@ -108,16 +109,18 @@ export class HookPipeline<T = any> {
     };
 
     for (let hook of this.hooks) {
-      const blocked = this.filter?.(hook, payload) === false;
-      const rejected = blocked || hook.cb?.(payload) === false;
+      const runHook = this.filter?.(hook, payload) !== false;
+      const rejected = runHook && hook.cb?.(payload) === false;
 
       if (rejected) {
         result.ok = false;
         break;
       }
 
-      events.push(hook.hookId);
+      if (runHook) events.push(hook.hookId);
     }
+
+    result.size = events.length;
 
     return result;
   }
@@ -178,7 +181,7 @@ export function registerHook(eventName: string, handler?: Hook['cb'] | null, opt
     handler = null;
   }
 
-  const hookId = exports[resource]![`registerHook:${event}`]!(handler, options);
+  const hookId = exports[resource][`registerHook:${event}`](handler, options);
 
   return new EventHook(hookId, resource, event);
 }

@@ -89,7 +89,7 @@ function lib.hook:remove(resource, hookId)
 end
 
 ---@param payload unknown
----@return { ok: boolean }
+---@return { ok: boolean, size: number }
 ---Executes the hook pipeline for the payload.
 ---
 ---Each registered hook is evaluated in order of registration, checking the payload against a provided filter\
@@ -102,7 +102,7 @@ end
 ---The returned object acts as a finalisation handle and emits results to registered handlers once closed.
 function lib.hook:dispatch(payload)
     local events = {};
-    local result = setmetatable({ ok = true }, {
+    local result = setmetatable({ ok = true, size = 0 }, {
         __close = function(result, err)
             if err then
                 result.ok = false
@@ -119,16 +119,20 @@ function lib.hook:dispatch(payload)
 
     for i = 1, #self.hooks do
         local hook = self.hooks[i]
-        local blocked = self.filter and self.filter(hook, payload) == false
-        local rejected = blocked or hook.cb and hook.cb(payload) == false
+        local runHook = self.filter and self.filter(hook, payload) ~= false
+        local rejected = runHook and hook.cb and hook.cb(payload) == false
 
         if rejected then
             result.ok = false
             break
         end
 
-        events[i] = hook.hookId
+        if runHook then
+            events[i] = hook.hookId
+        end
     end
+
+    result.size = #events
 
     return result
 end
