@@ -39,10 +39,6 @@ function lib.hook:constructor(event, filter)
     hooks[#hooks + 1] = self
 
     exports(('registerHook:%s'):format(event), function(funcref, options)
-        if funcref then
-            funcref = getmetatable(funcref).__call
-        end
-
         return self:registerHook(funcref, options)
     end)
 
