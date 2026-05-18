@@ -2,7 +2,7 @@ interface OxCache {
   ped: number;
   vehicle: number | false;
   seat: number | false;
-  game: string;
+  game: 'fxserver' | 'fivem' | 'redm';
   resource: string;
   playerId: number;
   serverId: number;

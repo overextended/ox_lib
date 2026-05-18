@@ -181,7 +181,7 @@ function cache(key, func, timeout) end
 
 local cacheEvents = {}
 
-local cache = setmetatable({ game = GetGameName(), resource = resourceName }, {
+local cache = setmetatable({ game = GetGameName() --[[@as 'fxserver' | 'fivem' | 'redm']], resource = resourceName }, {
     __index = function(self, key)
         cacheEvents[key] = {}
 
