@@ -7,10 +7,6 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
-if not _VERSION:find('5.4') then
-    error('Lua 5.4 must be enabled in the resource manifest!', 2)
-end
-
 local resourceName = GetCurrentResourceName()
 local ox_lib = 'ox_lib'
 
