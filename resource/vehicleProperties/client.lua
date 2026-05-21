@@ -199,6 +199,14 @@ function lib.getVehicleProperties(vehicle)
             neons[i + 1] = IsVehicleNeonLightEnabled(vehicle, i)
         end
 
+        local xenonColor
+        local hasCustom, r, g, b = GetVehicleXenonLightsCustomColor(vehicle)
+        if hasCustom then
+            xenonColor = table.pack(r, g, b)
+        else
+            xenonColor = GetVehicleXenonLightsColor(vehicle)
+        end
+
         return {
             model = GetEntityModel(vehicle),
             plate = GetVehicleNumberPlateText(vehicle),
@@ -222,7 +230,7 @@ function lib.getVehicleProperties(vehicle)
             wheelSize = GetVehicleWheelSize(vehicle),
             wheels = GetVehicleWheelType(vehicle),
             windowTint = GetVehicleWindowTint(vehicle),
-            xenonColor = GetVehicleXenonLightsColor(vehicle),
+            xenonColor = xenonColor,
             neonEnabled = neons,
             neonColor = { GetVehicleNeonLightsColour(vehicle) },
             extras = extras,
@@ -527,7 +535,11 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
     end
 
     if props.xenonColor then
-        SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        if type(props.xenonColor) == 'table' then
+            SetVehicleXenonLightsCustomColor(vehicle, props.xenonColor[1], props.xenonColor[2], props.xenonColor[3])
+        else
+            SetVehicleXenonLightsColor(vehicle, props.xenonColor)
+        end
     end
 
     if props.modFrontWheels then
