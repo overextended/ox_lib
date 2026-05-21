@@ -1,10 +1,24 @@
----@param hook { type: string, key: string }
-local setState = lib.hook:new('setState', function(hook, payload)
-    if hook.type and not payload.type:match(hook.type) then return false end
-    if hook.key and not payload.key:match(hook.key) then return false end
+---@class StateHookOptions
+---@field key string
+
+---@class StateHookPayload
+---@field playerId number
+---@field targetId number
+---@field type 'entity' | 'player'
+---@field bag string
+---@field key string
+---@field value unknown
+
+---@param hook StateHookOptions
+---@param payload StateHookPayload
+local function filter(hook, payload)
+    if hook.key and payload.key ~= hook.key then return false end
 
     return true
-end)
+end
+
+local setPlayerState = lib.hook:new('setPlayerState', filter)
+local setEntityState = lib.hook:new('setEntityState', filter)
 
 ---@param playerId number
 ---@param bag string
@@ -15,15 +29,16 @@ lib.callback.register('ox_lib:requestSetStateBag', function(playerId, bag, key, 
     local targetType, target = string.strsplit(':', bag, 2)
     local targetId = tonumber(target)
 
-    if targetType ~= 'player' and targetType ~= 'entity' then return false end
-    if targetType == 'player' and targetId ~= playerId then return false end
+    local pipeline = (targetType == 'entity' and setEntityState) or (targetType == 'player' and setPlayerState)
 
-    if #setState.hooks == 0 then return false end
+    if not pipeline or (targetType == 'player' and targetId ~= playerId) or #pipeline.hooks == 0 then
+        return false
+    end
 
-    local hook <close> = setState:dispatch({
+    local hook <close> = pipeline:dispatch({
         playerId = playerId,
-        type = targetType,
         targetId = target,
+        type = targetType,
         bag = bag,
         key = key,
         value = value,
