@@ -1,7 +1,7 @@
-import { cache } from '../../cache';
+import { context } from '../..';
 import { Ped } from '../Ped';
 
-const isServer = cache.game === 'fxserver';
+const isServer = context === 'server';
 
 export class Player extends Ped {
   readonly type: string = 'Player';
@@ -17,11 +17,22 @@ export class Player extends Ped {
     this.playerId = playerId;
   }
 
+  public get handle() {
+    return isServer ? super.handle : GetPlayerPed(this.playerId);
+  }
+
   public setModel(model: string | number) {
     SetPlayerModel(this.playerId, model);
   }
 
-  public get handle() {
-    return isServer ? super.handle : GetPlayerPed(this.playerId);
+  public getRoutingBucket() {
+    return isServer ? GetPlayerRoutingBucket(this.playerId as unknown as string) : (this.get('bucket') ?? 0);
+  }
+
+  public setRoutingBucket(bucket: number) {
+    if (!isServer) return;
+
+    SetPlayerRoutingBucket(this.playerId as unknown as string, bucket);
+    this.set('bucket', bucket, true);
   }
 }

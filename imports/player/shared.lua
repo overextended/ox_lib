@@ -6,7 +6,7 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
-local isServer = cache.game == 'fxserver';
+local isServer = lib.context == 'server'
 
 ---@class Player : Ped
 ---@field private new PlayerConstructor
@@ -36,4 +36,19 @@ function lib.player:setModel(model)
     SetPlayerModel(self.playerId, model)
 end
 
+function lib.player:getRoutingBucket()
+    ---@diagnostic disable-next-line: param-type-mismatch
+    return isServer and GetPlayerRoutingBucket(self.playerId) or self:get('bucket') or 0
+end
+
+---@param bucket number
+function lib.player:setRoutingBucket(bucket)
+    if not isServer then return end
+
+    ---@diagnostic disable-next-line: param-type-mismatch
+    SetPlayerRoutingBucket(self.playerId, bucket)
+    self:set('bucket', bucket, true)
+end
+
 return lib.player
+

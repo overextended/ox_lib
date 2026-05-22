@@ -1,6 +1,9 @@
 import { Vector3 } from '@overextended/core/vector';
 import { cache } from '../../cache';
 import { StateBag } from '../StateBag';
+import { context } from '../..';
+
+const isServer = context === 'server';
 
 export abstract class GameEntity extends StateBag {
   #handle: number = 0;
@@ -19,7 +22,7 @@ export abstract class GameEntity extends StateBag {
       ? `${this.type === 'Player' ? 'player' : 'entity'}:${this.netId}`
       : `localEntity:${handle}`;
 
-    if ((!this.netId || cache.game === 'fxserver') && this.type !== 'Player') {
+    if ((!this.netId || isServer) && this.type !== 'Player') {
       EnsureEntityStateBag(handle);
     }
   }
@@ -42,5 +45,16 @@ export abstract class GameEntity extends StateBag {
 
   public setHeading(heading: number) {
     SetEntityHeading(this.handle, heading);
+  }
+
+  public getRoutingBucket() {
+    return isServer ? GetEntityRoutingBucket(this.handle) : (this.get('bucket') ?? 0);
+  }
+
+  public setRoutingBucket(bucket: number) {
+    if (!isServer) return;
+
+    SetEntityRoutingBucket(this.handle, bucket);
+    this.set('bucket', bucket, true);
   }
 }

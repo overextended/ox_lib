@@ -6,6 +6,8 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+local isServer = lib.context == 'server'
+
 ---@class GameEntity : OxStateBag
 ---@field handle number
 ---@field netId number
@@ -64,6 +66,19 @@ end
 ---@param heading number
 function lib.gameEntity:setHeading(heading)
     SetEntityHeading(self.handle, heading)
+end
+
+function lib.gameEntity:getRoutingBucket()
+    ---@diagnostic disable-next-line: param-type-mismatch
+    return isServer and GetEntityRoutingBucket(self.handle) or self:get('bucket') or 0
+end
+
+---@param bucket number
+function lib.gameEntity:setRoutingBucket(bucket)
+    if not isServer then return end
+    ---@diagnostic disable-next-line: param-type-mismatch
+    SetEntityRoutingBucket(self.handle, bucket)
+    self:set('bucket', bucket, true)
 end
 
 return lib.gameEntity
