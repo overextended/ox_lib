@@ -295,6 +295,8 @@ function lib.getVehicleProperties(vehicle)
     end
 end
 
+local setLockState = GetConvarBool('ox:setLockState', false)
+
 ---@param vehicle number
 ---@param props VehicleProperties
 ---@param fixVehicle? boolean Fix the vehicle after props have been set. Usually required when adding extras.
@@ -324,7 +326,7 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
     end
 
-    if props.lockState ~= nil then
+    if props.lockState ~= nil and setLockState then
         SetVehicleDoorsLocked(vehicle, props.lockState)
     end
 
