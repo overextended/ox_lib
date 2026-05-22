@@ -7,6 +7,9 @@ export * from './interface';
 export * from './points';
 export * from './streaming';
 export * from './vehicleProperties';
+export * from './game/Prop';
+export * from './game/Ped';
+export * from './game/Vehicle';
 export * as lib from '.';
 
 export const context = IsDuplicityVersion() ? 'server' : 'client';

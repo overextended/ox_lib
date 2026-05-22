@@ -7,6 +7,9 @@ export * from './cache';
 export * from './callback';
 export * from './locale';
 export * from './version';
+export * from './game/Prop';
+export * from './game/Ped';
+export * from './game/Vehicle';
 export * as lib from '.';
 
 export function setVehicleProperties(vehicle: number, props: VehicleProperties) {
