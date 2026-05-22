@@ -41,4 +41,11 @@ function lib.vehicle:setPlate(plate)
     SetVehicleNumberPlateText(self.handle, plate)
 end
 
-return lib.vehicle
+function lib.vehicle:setOnGround()
+    if lib.context == 'client' then
+        return SetVehicleOnGroundProperly(self.handle)
+    end
+
+    self:set('ox_entity_setonground', true, true)
+end
+

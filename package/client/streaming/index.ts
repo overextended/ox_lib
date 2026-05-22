@@ -18,7 +18,7 @@ function streamingRequest<T extends string | number>(
     },
     `failed to load ${assetType} '${asset}' - this may be caused by\n- too many loaded assets\n- oversized, invalid, or corrupted assets`,
     timeout
-  );
+  ) as Promise<T>;
 }
 
 export const requestAnimDict = (animDict: string, timeout?: number) => {

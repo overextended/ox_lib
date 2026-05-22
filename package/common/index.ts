@@ -5,7 +5,7 @@ export * from './version';
 export * from './zones';
 export * from './game/StateBag';
 export * from './game/Entity';
-export * from './game/Object';
+export * from './game/Prop';
 export * from './game/Ped';
 export * from './game/Player';
 export * from './game/Vehicle';

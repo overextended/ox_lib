@@ -12,6 +12,8 @@
 ---@return number? playerId
 ---@return number? playerPed
 ---@return vector3? playerCoords
+---@return number? playerVehicle
+---@diagnostic disable-next-line: duplicate-set-field
 function lib.getClosestPlayer(coords, maxDistance, includePlayer)
 	local players = GetActivePlayers()
 	local closestId, closestPed, closestCoords, closestVehicle

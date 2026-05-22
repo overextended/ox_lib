@@ -28,7 +28,19 @@ export abstract class GameEntity extends StateBag {
     return Vector3.fromArray(GetEntityCoords(this.handle));
   }
 
+  public setCoords(x: number, y: number, z: number, deadFlag = false, ragdollFlag = false, clearArea = false) {
+    SetEntityCoords(this.handle, x, y, z, true, deadFlag, ragdollFlag, clearArea);
+  }
+
   public getModel() {
     return GetEntityModel(this.handle);
+  }
+
+  public getHeading() {
+    return GetEntityHeading(this.handle);
+  }
+
+  public setHeading(heading: number) {
+    SetEntityHeading(this.handle, heading);
   }
 }

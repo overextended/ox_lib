@@ -40,12 +40,30 @@ function lib.gameEntity:setHandle(handle)
 end
 
 function lib.gameEntity:getCoords()
-    print('priv?', self.private.handle)
     return GetEntityCoords(self.handle)
+end
+
+---@param x number
+---@param y number
+---@param z number
+---@param deadFlag? boolean
+---@param ragdollFlag? boolean
+---@param clearArea? boolean
+function lib.gameEntity:setCoords(x, y, z, deadFlag, ragdollFlag, clearArea)
+    SetEntityCoords(self.handle, x, y, z, true, deadFlag or false, ragdollFlag or false, clearArea or false)
 end
 
 function lib.gameEntity:getModel()
     return GetEntityModel(self.handle)
+end
+
+function lib.gameEntity:getHeading()
+    return GetEntityHeading(self.handle)
+end
+
+---@param heading number
+function lib.gameEntity:setHeading(heading)
+    SetEntityHeading(self.handle, heading)
 end
 
 return lib.gameEntity
