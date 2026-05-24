@@ -20,6 +20,7 @@ ui_page 'web/build/index.html'
 
 files {
     'init.lua',
+    'config.lua',
     'resource/settings.lua',
     'imports/**/client.lua',
     'imports/**/shared.lua',
@@ -28,6 +29,7 @@ files {
     'locales/*.json',
 }
 
+shared_script 'config.lua'
 shared_script 'resource/init.lua'
 
 shared_scripts {

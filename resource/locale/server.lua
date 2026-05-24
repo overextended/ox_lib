@@ -6,4 +6,8 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
-function lib.getLocaleKey() return GetConvar('ox:locale', 'en') end
+function lib.getLocaleKey()
+    return GetConvar('ox:locale', Config.Locale or 'en')
+end
+
+lib.locale(lib.getLocaleKey())

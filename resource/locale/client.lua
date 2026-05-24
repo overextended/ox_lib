@@ -8,12 +8,7 @@
 
 local settings = require 'resource.settings'
 
-local function loadLocaleFile(key)
-    local file = LoadResourceFile(cache.resource, ('locales/%s.json'):format(key))
-        or LoadResourceFile(cache.resource, 'locales/en.json')
-
-    return file and json.decode(file) or {}
-end
+lib.locale(settings.locale)
 
 function lib.getLocaleKey() return settings.locale end
 
@@ -22,7 +17,7 @@ function lib.setLocale(key)
     TriggerEvent('ox_lib:setLocale', key)
     SendNUIMessage({
         action = 'setLocale',
-        data = loadLocaleFile(key)
+        data = lib.loadLocaleData(key)
     })
 end
 
@@ -31,8 +26,6 @@ RegisterNUICallback('init', function(_, cb)
 
     SendNUIMessage({
         action = 'setLocale',
-        data = loadLocaleFile(settings.locale)
+        data = lib.loadLocaleData(settings.locale)
     })
 end)
-
-lib.locale(settings.locale)

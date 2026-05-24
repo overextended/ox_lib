@@ -21,7 +21,7 @@ local function safeGetKvp(fn, key, default)
 end
 
 local settings = {
-    default_locale = GetConvar('ox:locale', 'en'),
+    default_locale = GetConvar('ox:locale', Config.Locale or 'en'),
     notification_position = safeGetKvp(GetResourceKvpString, 'notification_position', 'top-right'),
     notification_audio = safeGetKvp(GetResourceKvpInt, 'notification_audio') == 1
 }

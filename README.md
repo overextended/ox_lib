@@ -16,6 +16,8 @@ For additional legal notices, refer to [NOTICE.md](./NOTICE.md).
 
 https://overextended.dev/ox_lib
 
+See [LOCALES.md](./LOCALES.md) for configuring the active language, adding translations, and UTF-8 locale file requirements.
+
 ## 💾 Download
 
 https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip

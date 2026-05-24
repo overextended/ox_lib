@@ -47,6 +47,10 @@ function lib.getLocales()
     return dict
 end
 
+local function localeFileExists(key)
+    return LoadResourceFile(cache.resource, ('locales/%s.json'):format(key)) ~= nil
+end
+
 local function loadLocale(key)
     local data = LoadResourceFile(cache.resource, ('locales/%s.json'):format(key))
 
@@ -57,17 +61,33 @@ local function loadLocale(key)
     return json.decode(data) or {}
 end
 
-local table = lib.table
+---Returns merged locale data with English as the base and the requested locale applied on top.
+---Falls back to English when the requested locale file does not exist.
+---@param key string
+---@return table
+function lib.loadLocaleData(key)
+    local lang = key
 
----Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
----@param key? string
-function lib.locale(key)
-    local lang = key or lib.getLocaleKey()
+    if lang ~= 'en' and not localeFileExists(lang) then
+        warn(("locale '%s' not found, falling back to 'en'"):format(lang))
+        lang = 'en'
+    end
+
     local locales = loadLocale('en')
 
     if lang ~= 'en' then
         table.merge(locales, loadLocale(lang))
     end
+
+    return locales
+end
+
+local table = lib.table
+
+---Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
+---@param key? string
+function lib.locale(key)
+    local locales = lib.loadLocaleData(key or lib.getLocaleKey())
 
     table.wipe(dict)
 
