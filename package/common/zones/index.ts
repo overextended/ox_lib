@@ -17,6 +17,7 @@ export interface Zone {
   inside?: () => void;
   onEnter?: () => void;
   onExit?: () => void;
+  [key: string]: any;
 }
 
 export class Zone {
