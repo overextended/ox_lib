@@ -13,7 +13,8 @@
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "declarationMap": true
   },
   "include": ["client", "server", "common"],
   "exclude": ["**/node_modules"]

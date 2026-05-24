@@ -17,6 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/overextended/ox_lib.git"
   },
+  "type": "module",
   "sideEffects": [
     "./common/locale/index.js"
   ],
@@ -47,7 +48,7 @@
     }
   },
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsdown --",
     "lint": "oxlint",
     "format": "oxfmt",
     "prepublishOnly": "bun run format & bun run compile"
@@ -71,10 +72,6 @@
     "unplugin-preprocessor-directives": "^1.2.0"
   },
   "inlinedDependencies": {
-    "@emotion/react": "11.14.0",
-    "@emotion/serialize": "1.3.3",
-    "@fortawesome/fontawesome-common-types": "6.1.1",
-    "@mantine/core": "6.0.22",
-    "@mantine/styles": "6.0.22"
+    "@fortawesome/fontawesome-common-types": "7.2.0"
   }
 }

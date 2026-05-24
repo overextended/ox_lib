@@ -1,5 +1,6 @@
 export * from './cache';
 export * from './getNearbyVehicles';
+export * from './hooks';
 export * from './locale';
 export * from './version';
 export * from './zones';

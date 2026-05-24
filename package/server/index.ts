@@ -12,6 +12,6 @@ export * from './game/Ped';
 export * from './game/Vehicle';
 export * as lib from '.';
 
-export function setVehicleProperties(vehicle: number, props: VehicleProperties) {
+export function setVehicleProperties(vehicle: number, props: VehicleProperties): void {
   Entity(vehicle).state.set('ox_lib:setVehicleProperties', props, true);
 }
