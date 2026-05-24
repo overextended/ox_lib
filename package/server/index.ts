@@ -1,17 +1,14 @@
-import { VehicleProperties } from '../common';
-
 export * from '../common';
 export * from './acl';
 export * from './addCommand';
 export * from './cache';
 export * from './callback';
-export * from './locale';
-export * from './version';
 export * from './game/Prop';
 export * from './game/Ped';
 export * from './game/Vehicle';
+export * from './locale';
+export * from './version';
+export * from './misc'
+
 export * as lib from '.';
 
-export function setVehicleProperties(vehicle: number, props: VehicleProperties): void {
-  Entity(vehicle).state.set('ox_lib:setVehicleProperties', props, true);
-}
