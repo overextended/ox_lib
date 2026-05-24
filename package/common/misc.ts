@@ -1,11 +1,11 @@
 export const context = IsDuplicityVersion() ? 'server' : 'client';
 
-// https://www.raygesualdo.com/posts/flattening-object-keys-with-typescript-types/
-export type FlattenObjectKeys<T extends Record<string, any>, Key = keyof T> = Key extends string
-  ? T[Key] extends Record<string, unknown>
-    ? `${Key}.${FlattenObjectKeys<T[Key]>}`
-    : `${Key}`
-  : never;
+export type FlattenObjectKeys<T> = {
+  [K in keyof T & string]:
+    T[K] extends Record<string, any>
+      ? K | `${K}.${FlattenObjectKeys<T[K]>}`
+      : K
+}[keyof T & string]
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms, null));

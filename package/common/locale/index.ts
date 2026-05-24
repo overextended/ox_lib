@@ -1,5 +1,6 @@
 import { cache } from '../cache/index';
 import { printf } from 'fast-printf';
+import { FlattenObjectKeys } from '../misc';
 
 const dict: Record<string, string> = {};
 
@@ -15,7 +16,7 @@ function flattenDict(source: Record<string, any>, target: Record<string, string>
   return target;
 }
 
-export const locale = (str: string, ...args: any[]) => {
+export function locale<T extends string>(str: T, ...args: any[]): string {
   const lstr = dict[str];
 
   if (!lstr) return str;
@@ -56,6 +57,7 @@ function loadLocale(key: string): typeof dict {
   return JSON.parse(data) || {};
 }
 
+/** @deprecated */
 export const initLocale = (key?: string) => {
   const lang = key || exports.ox_lib.getLocaleKey();
   let locales = loadLocale('en');
@@ -88,3 +90,8 @@ export const initLocale = (key?: string) => {
 };
 
 initLocale();
+
+export function createLocales<T extends Record<string, any>>() {
+  type Keys = FlattenObjectKeys<T>
+  return <K extends Keys>(key: K, ...args: any[]) => locale(key, ...args)
+}
