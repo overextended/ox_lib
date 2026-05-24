@@ -134,7 +134,7 @@ class EventHook {
   constructor(
     readonly hookId: string,
     readonly resource: string,
-    readonly event: string
+    readonly event: string,
   ) {}
 
   /**

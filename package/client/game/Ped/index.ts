@@ -11,7 +11,7 @@ export async function createPed(
   z: number,
   heading = 0,
   isNetworked = false,
-  bScriptHostPed = false
+  bScriptHostPed = false,
 ) {
   const hash = await requestModel(model);
   const handle = CreatePed(0, hash, x, y, z, heading, isNetworked, bScriptHostPed);

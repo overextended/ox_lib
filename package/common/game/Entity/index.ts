@@ -1,5 +1,4 @@
 import { Vector3 } from '@overextended/core/vector';
-import { cache } from '../../cache';
 import { StateBag } from '../StateBag';
 import { context } from '../..';
 

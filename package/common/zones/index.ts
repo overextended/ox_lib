@@ -108,7 +108,7 @@ export class Zone {
         false,
         null as any,
         null as any,
-        false
+        false,
       );
     }
 

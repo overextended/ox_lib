@@ -6,5 +6,5 @@ export const getVehicleProperties = (vehicle: number): VehicleProperties =>
 export const setVehicleProperties = (
   vehicle: number,
   props: Partial<VehicleProperties>,
-  fixVehicle?: boolean
+  fixVehicle?: boolean,
 ): boolean => exports.ox_lib.setVehicleProperties(vehicle, props, fixVehicle);

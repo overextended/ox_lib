@@ -17,7 +17,7 @@ function streamingRequest<T extends string | number>(
       if (hasLoaded(asset)) return asset;
     },
     `failed to load ${assetType} '${asset}' - this may be caused by\n- too many loaded assets\n- oversized, invalid, or corrupted assets`,
-    timeout
+    timeout,
   ) as Promise<T>;
 }
 
@@ -50,7 +50,7 @@ export const requestWeaponAsset = (
   weaponHash: string | number,
   timeout?: number,
   weaponResourceFlags: number = 31,
-  extraWeaponComponentFlags: number = 0
+  extraWeaponComponentFlags: number = 0,
 ) =>
   streamingRequest(
     RequestWeaponAsset,
@@ -59,5 +59,5 @@ export const requestWeaponAsset = (
     weaponHash,
     timeout,
     weaponResourceFlags,
-    extraWeaponComponentFlags
+    extraWeaponComponentFlags,
   );

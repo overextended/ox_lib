@@ -11,7 +11,7 @@ export async function createObject(
   heading = 0,
   isNetworked = false,
   netMissionEntity = false,
-  dynamic = false
+  dynamic = false,
 ) {
   const handle = CreateObjectNoOffset(model, x, y, z, isNetworked, netMissionEntity, dynamic);
   const prop = new Prop(handle);

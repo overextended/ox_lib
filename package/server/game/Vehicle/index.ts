@@ -16,7 +16,7 @@ export async function createVehicle(
   x: number,
   y: number,
   z: number,
-  heading = 0
+  heading = 0,
 ) {
   const handle = CreateVehicleServerSetter(model, type, x, y, z, heading);
 

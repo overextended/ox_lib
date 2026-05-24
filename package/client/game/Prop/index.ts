@@ -12,7 +12,7 @@ export async function createObject(
   heading = 0,
   isNetworked = false,
   netMissionEntity = false,
-  dynamic = false
+  dynamic = false,
 ) {
   const hash = await requestModel(model);
   const handle = CreateObject(hash, x, y, z, isNetworked, netMissionEntity, dynamic);

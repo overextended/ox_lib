@@ -81,7 +81,7 @@ export function addKeybind(data: KeybindProps): CKeybind {
       kb.isPressed = true;
       kb.onPressed?.call(kb);
     },
-    false
+    false,
   );
 
   RegisterCommand(
@@ -91,7 +91,7 @@ export function addKeybind(data: KeybindProps): CKeybind {
       kb.isPressed = false;
       kb.onReleased?.call(kb);
     },
-    false
+    false,
   );
 
   RegisterKeyMapping('+' + kb.name, kb.description, kb.defaultMapper ?? 'keyboard', kb.defaultKey ?? '');
@@ -101,7 +101,7 @@ export function addKeybind(data: KeybindProps): CKeybind {
       '~!+' + kb.name,
       kb.description,
       kb.secondaryMapper ?? kb.defaultMapper ?? 'keyboard',
-      kb.secondaryKey
+      kb.secondaryKey,
     );
   }
 

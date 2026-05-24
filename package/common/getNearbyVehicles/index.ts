@@ -10,7 +10,7 @@ interface NearbyVehicle {
 export function getNearbyVehicles(
   coords: Vector3,
   maxDistance: number = 2.0,
-  includePlayerVehicle: boolean = false
+  includePlayerVehicle: boolean = false,
 ): NearbyVehicle[] {
   const vehicles = GetGamePool('CVehicle');
   const nearbyVehicles: NearbyVehicle[] = [];

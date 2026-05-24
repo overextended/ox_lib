@@ -32,7 +32,7 @@ function parseArguments(
   source: number,
   args: OxCommandArguments,
   raw: string,
-  params?: OxCommandParams[]
+  params?: OxCommandParams[],
 ): OxCommandArguments | undefined {
   if (!params) return args;
 
@@ -68,7 +68,7 @@ function parseArguments(
       return Citizen.trace(
         `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.paramType} for argument ${index + 1} (${
           param.name
-        }), received '${arg}'^0`
+        }), received '${arg}'^0`,
       );
     }
 
@@ -84,7 +84,7 @@ function parseArguments(
 export function addCommand<T extends OxCommandArguments>(
   commandName: string | string[],
   cb: (source: number, args: T, raw: string) => Promise<any>,
-  properties?: OxCommandProperties
+  properties?: OxCommandProperties,
 ) {
   const restricted = properties?.restricted;
   const params = properties?.params;
@@ -105,7 +105,7 @@ export function addCommand<T extends OxCommandArguments>(
     if (!parsed) return;
 
     cb(source, parsed, raw).catch((e) =>
-      Citizen.trace(`^1command '${raw.split(' ')[0] || raw}' failed to execute!^0\n${e.message}`)
+      Citizen.trace(`^1command '${raw.split(' ')[0] || raw}' failed to execute!^0\n${e.message}`),
     );
   };
 

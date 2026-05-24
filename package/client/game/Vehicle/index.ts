@@ -19,8 +19,7 @@ export async function createVehicle(
 
   SetModelAsNoLongerNeeded(hash);
 
-  return vehicle
+  return vehicle;
 }
 
 export { Vehicle };
-

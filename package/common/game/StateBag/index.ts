@@ -9,7 +9,8 @@ export class StateBag {
   public async set(key: string, value: unknown, replicated = false) {
     if (replicated && !allowStateBagReplication) {
       return import('../../../client/callback').then(
-        (m) => m.triggerServerCallback('ox_lib:requestSetStateBag', null, this.statebag, key, value) as Promise<boolean>
+        (m) =>
+          m.triggerServerCallback('ox_lib:requestSetStateBag', null, this.statebag, key, value) as Promise<boolean>,
       );
     }
 

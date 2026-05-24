@@ -35,7 +35,7 @@ export const cache: OxCache = new Proxy(
       target[key] = exports.ox_lib.cache(key) || false;
       return target[key];
     },
-  }
+  },
 );
 
 export const onCache = <T extends keyof OxCache>(key: T, cb: (value: OxCache[T], oldValue: OxCache[T]) => void) => {

@@ -157,7 +157,7 @@ type inputDialog = (
   rows: string[] | RowInput[],
   options: {
     allowCancel?: boolean;
-  }
+  },
 ) => Promise<Array<string | number | boolean> | undefined>;
 export const inputDialog: inputDialog = async (heading, rows, options) =>
   await exports.ox_lib.inputDialog(heading, rows, options);
