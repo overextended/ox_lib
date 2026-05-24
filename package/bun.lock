@@ -5,7 +5,6 @@
     "": {
       "name": "@overextended/ox_lib",
       "dependencies": {
-        "@nativewrappers/fivem": "^0.0.171",
         "@overextended/core": "^0.2.5",
         "csstype": "^3.2.3",
         "fast-printf": "^1.6.10",
@@ -111,8 +110,6 @@
     "@mantine/utils": ["@mantine/utils@6.0.22", "", { "peerDependencies": { "react": ">=16.8.0" } }, "sha512-RSKlNZvxhMCkOFZ6slbYvZYbWjHUM+PxDQnupIOxIdsTZQQjx/BFfrfJ7kQFOP+g7MtpOds8weAetEs5obwMOQ=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.4", "", { "dependencies": { "@tybys/wasm-util": "^0.10.1" }, "peerDependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1" } }, "sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow=="],
-
-    "@nativewrappers/fivem": ["@nativewrappers/fivem@0.0.171", "", {}, "sha512-7KjaExgkGUcfOjhND9mbmxZMXlDgzDZ2DW4Fm46uIPnoyPrda933tCGqDaBrU6U8lJpzhAXiv6vtgn1mTnFTsA=="],
 
     "@overextended/core": ["@overextended/core@0.2.5", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-0YRi2zB1UQf4FRUfsrP2QG8btQ/P/1BuN0zmBo3F/qX0+RFZuJO3Soze7pd2uwuPteuVB6Drg+nGbTcjN9EiZQ=="],
 
