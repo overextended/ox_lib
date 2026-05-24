@@ -32,7 +32,7 @@ export function locale<T extends string>(str: T, ...args: any[]): string {
   }
 
   return str;
-};
+}
 
 export const getLocales = () => dict;
 
@@ -92,6 +92,6 @@ export const initLocale = (key?: string) => {
 initLocale();
 
 export function createLocales<T extends Record<string, any>>() {
-  type Keys = FlattenObjectKeys<T>
-  return <K extends Keys>(key: K, ...args: any[]) => locale(key, ...args)
+  type Keys = FlattenObjectKeys<T>;
+  return <K extends Keys>(key: K, ...args: any[]) => locale(key, ...args);
 }

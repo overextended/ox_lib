@@ -1,11 +1,8 @@
 export const context = IsDuplicityVersion() ? 'server' : 'client';
 
 export type FlattenObjectKeys<T> = {
-  [K in keyof T & string]:
-    T[K] extends Record<string, any>
-      ? K | `${K}.${FlattenObjectKeys<T[K]>}`
-      : K
-}[keyof T & string]
+  [K in keyof T & string]: T[K] extends Record<string, any> ? K | `${K}.${FlattenObjectKeys<T[K]>}` : K;
+}[keyof T & string];
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms, null));

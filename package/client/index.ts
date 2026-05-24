@@ -12,4 +12,3 @@ export * from './streaming';
 export * from './vehicleProperties';
 
 export * as lib from '.';
-

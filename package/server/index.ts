@@ -8,7 +8,6 @@ export * from './game/Ped';
 export * from './game/Vehicle';
 export * from './locale';
 export * from './version';
-export * from './misc'
+export * from './misc';
 
 export * as lib from '.';
-
