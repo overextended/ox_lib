@@ -69,6 +69,7 @@ class Keybind implements CKeybind {
 
   disable(toggle: boolean): void {
     this.disabled = toggle;
+    this.isPressed = false;
   }
 }
 
