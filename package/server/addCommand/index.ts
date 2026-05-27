@@ -81,6 +81,27 @@ function parseArguments(
   return result ? args : undefined;
 }
 
+function buildSuggestion(commandName: string, { params, help }: OxCommandProperties) {
+  const hints = params
+    ? params.map((param) => {
+        return {
+          name: param.name,
+          help: param.paramType
+            ? param.help
+              ? `${param.help} (type: ${param.paramType})`
+              : `(type: ${param.paramType})`
+            : param.help,
+        };
+      })
+    : null;
+
+  return {
+    name: `/${commandName}`,
+    help: help,
+    params: hints,
+  };
+}
+
 export function addCommand<T extends OxCommandArguments>(
   commandName: string | string[],
   cb: (source: number, args: T, raw: string) => Promise<any>,
@@ -97,7 +118,6 @@ export function addCommand<T extends OxCommandArguments>(
   }
 
   const commands = typeof commandName !== 'object' ? [commandName] : commandName;
-  const numCommands = commands.length;
 
   const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {
     const parsed = parseArguments(source, args, raw, params) as T | undefined;
@@ -109,7 +129,7 @@ export function addCommand<T extends OxCommandArguments>(
     );
   };
 
-  commands.forEach((commandName, index) => {
+  commands.forEach((commandName) => {
     RegisterCommand(commandName, commandHandler, restricted ? true : false);
 
     if (restricted) {
@@ -127,13 +147,10 @@ export function addCommand<T extends OxCommandArguments>(
     }
 
     if (properties) {
-      properties.name = `/${commandName}`;
-      delete properties.restricted;
-      registeredCommmands.push(properties);
+      const suggestion = buildSuggestion(commandName, properties);
+      registeredCommmands.push(suggestion);
 
-      if (index !== numCommands && numCommands !== 1) properties = { ...properties };
-
-      if (shouldSendCommands) emitNet('chat:addSuggestions', -1, properties);
+      if (shouldSendCommands) emitNet('chat:addSuggestions', -1, suggestion);
     }
   });
 }
