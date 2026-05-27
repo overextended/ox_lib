@@ -43,7 +43,7 @@ local function base64encode(data)
             c = c + (x:sub(i, i) == "1" and 2 ^ (6 - i) or 0)
         end
         return b:sub(c + 1, c + 1)
-    end) .. ({"", "==", "="})[#data % 3 + 1])
+    end) .. ({ "", "==", "=" })[#data % 3 + 1])
 end
 
 local function getAuthorizationHeader(user, password)
@@ -115,7 +115,7 @@ if service == 'fivemanage' then
 
                 SetTimeout(500, function()
                     PerformHttpRequest(endpoint, function(status, _, _, response)
-                        if status ~= 200 then 
+                        if status ~= 200 then
                             if type(response) == 'string' then
                                 response = json.decode(response) or response
                                 badResponse(endpoint, status, response)
@@ -237,24 +237,6 @@ if service == 'loki' then
 
     local endpoint = ('%s/loki/api/v1/push'):format(lokiEndpoint)
 
-    -- Converts a string of comma seperated kvp string to a table of kvps
-    -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
-    local function convertDDTagsToKVP(tags)
-        if not tags or type(tags) ~= 'string' then
-            return {}
-        end
-        local tempTable = { string.strsplit(',', tags) } -- outputs a number index table wth k:v strings as values
-        local bTable = table.create(0, #tempTable) -- buffer table
-
-        -- Loop through table and grab only values
-        for _, v in pairs(tempTable) do
-            local key, value = string.strsplit(':', v) -- splits string on ':' character
-            bTable[key] = value
-        end
-
-        return bTable -- Return the new table of kvps
-    end
-
     function lib.logger(source, event, message, ...)
         if not buffer then
             buffer = {}
@@ -262,11 +244,11 @@ if service == 'loki' then
             SetTimeout(500, function()
                 -- Strip string keys from buffer
                 local tempBuffer = {}
-                for _,v in pairs(buffer) do
-                    tempBuffer[#tempBuffer+1] = v
+                for _, v in pairs(buffer) do
+                    tempBuffer[#tempBuffer + 1] = v
                 end
 
-                local postBody = json.encode({streams = tempBuffer})
+                local postBody = json.encode({ streams = tempBuffer })
                 PerformHttpRequest(endpoint, function(status, _, _, _)
                     if status ~= 204 then
                         badResponse(endpoint, status, ("%s"):format(status, postBody))
@@ -282,15 +264,38 @@ if service == 'loki' then
         local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
 
         -- Initializes values table with the message
-        local values = {message = message}
+        local values = { message = message }
 
-        -- Format the args into strings
-        local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
-        local tagsTable = convertDDTagsToKVP(tags)
+        -- Stores the player identifiers to values table
+        local playerIdentifierTags = formatTags(source, nil)
+        if playerIdentifierTags and type(playerIdentifierTags) == 'string' then
+            local tempTable = { string.strsplit(',', playerIdentifierTags) }
+            for _, v in pairs(tempTable) do
+                local key, value = string.strsplit(':', v)
+                values[key] = value
+            end
+        end
 
-        -- Concatenates tags kvp table to the values table
-        for k,v in pairs(tagsTable) do
-            values[k] = v -- Store the tags in the values table ready for logging
+        -- Adds custom tags to the values table defined either by k:v string or table
+        local args = { ... }
+        for _, arg in pairs(args) do
+            if type(arg) == 'table' then
+                for tagKey, tagValue in pairs(arg) do
+                    values[tagKey] = tagValue
+                end
+            elseif type(arg) == 'string' then
+                local tempTable = { string.strsplit(',', arg) } -- Support multiple, comma separated k:v pairs in a string argument
+
+                for _, v in pairs(tempTable) do
+                    local tagKey, tagValue = string.strsplit(':', v)
+
+                    if tagKey and tagValue then -- If either is empty then we mitigate errors
+                        values[tagKey] = tagValue
+                    else
+                        lib.print.warn(('Invalid tag format for argument "%s" in event "%s"'):format(v, event))
+                    end
+                end
+            end
         end
 
         -- initialise stream payload
@@ -326,7 +331,7 @@ if service == 'loki' then
                 json.encode(values)
             }
         end
-	end
+    end
 end
 
 return lib.logger
