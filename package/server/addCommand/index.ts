@@ -5,7 +5,7 @@ type OxCommandArguments = Record<string | number, string | number | boolean>;
 interface OxCommandParams {
   name: string;
   help?: string;
-  paramType?: 'number' | 'playerId' | 'string' | 'longString';
+  type?: 'number' | 'playerId' | 'string' | 'longString';
   optional?: boolean;
 }
 
@@ -40,7 +40,7 @@ function parseArguments(
     const arg = args[index];
     let value;
 
-    switch (param.paramType) {
+    switch (param.type) {
       case 'number':
         value = +arg;
         break;
@@ -66,8 +66,7 @@ function parseArguments(
 
     if (value === undefined && (!param.optional || (param.optional && arg))) {
       return Citizen.trace(
-        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.paramType} for argument ${index + 1} (${
-          param.name
+        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.type} for argument ${index + 1} (${param.name
         }), received '${arg}'^0`,
       );
     }
@@ -84,16 +83,16 @@ function parseArguments(
 function buildSuggestion(commandName: string, { params, help }: OxCommandProperties) {
   const hints = params
     ? params.map((param) => {
-        return {
-          name: param.name,
-          help: param.paramType
-            ? param.help
-              ? `${param.help} (type: ${param.paramType})`
-              : `(type: ${param.paramType})`
-            : param.help,
-        };
-      })
-    : null;
+      return {
+        name: param.name,
+        help: param.type
+          ? param.help
+            ? `${param.help} (type: ${param.type})`
+            : `(type: ${param.type})`
+          : param.help,
+      };
+    })
+    : undefined;
 
   return {
     name: `/${commandName}`,
@@ -109,15 +108,16 @@ export function addCommand<T extends OxCommandArguments>(
 ) {
   const restricted = properties?.restricted;
   const params = properties?.params;
+  const commands = typeof commandName !== 'object' ? [commandName] : commandName;
 
   if (params) {
     params.forEach((param) => {
-      if (param.paramType)
-        param.help = param.help ? `${param.help} (type: ${param.paramType})` : `(type: ${param.paramType})`;
-    });
+      if ('argType' in param) {
+        param.type = param.argType as OxCommandParams['type'];
+        delete param.argType
+      }
+    })
   }
-
-  const commands = typeof commandName !== 'object' ? [commandName] : commandName;
 
   const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {
     const parsed = parseArguments(source, args, raw, params) as T | undefined;
