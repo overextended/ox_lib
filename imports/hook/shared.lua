@@ -122,13 +122,13 @@ function lib.hook:dispatch(payload)
         local runHook = self.filter and self.filter(hook, payload) ~= false
         local rejected = runHook and hook.cb and hook.cb(payload) == false
 
+        if runHook then
+            events[i] = hook.hookId
+        end
+
         if rejected then
             result.ok = false
             break
-        end
-
-        if runHook then
-            events[i] = hook.hookId
         end
     end
 
