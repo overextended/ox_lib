@@ -19,3 +19,5 @@ function lib.vehicle.create(model, x, y, z, heading, isNetworked, netMissionEnti
 
     return lib.vehicle:new(handle)
 end
+
+return lib.vehicle

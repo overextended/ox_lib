@@ -33,6 +33,6 @@ export class Player extends Ped {
     if (!isServer) return;
 
     SetPlayerRoutingBucket(this.playerId as unknown as string, bucket);
-    this.set('bucket', bucket, true);
+    this.set('bucket', bucket, 1);
   }
 }

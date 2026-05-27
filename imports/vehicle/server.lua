@@ -19,3 +19,5 @@ function lib.vehicle.create(model, type, x, y, z, heading)
 
     return lib.vehicle:new(handle)
 end
+
+return lib.vehicle

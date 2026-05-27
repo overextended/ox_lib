@@ -27,3 +27,5 @@ function lib.ped.create(model, x, y, z, heading, isNetworked, bScriptHostPed)
 
     return lib.ped:new(handle)
 end
+
+return lib.ped

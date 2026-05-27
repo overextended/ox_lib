@@ -1,5 +1,4 @@
 export * from './cache';
-export * from './game/StateBag';
 export * from './game/Entity';
 export * from './game/Prop';
 export * from './game/Ped';

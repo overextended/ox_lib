@@ -34,4 +34,3 @@ function lib.ped:setArmour(amount)
     SetPedArmour(self.handle, amount)
 end
 
-return lib.ped

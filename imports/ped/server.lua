@@ -22,3 +22,5 @@ function lib.ped.create(model, x, y, z, heading)
 
     return lib.ped:new(handle)
 end
+
+return lib.ped

@@ -38,6 +38,14 @@ local function hasEntityGotCollision(entity)
     return not IsEntityWaitingForWorldCollision(entity) and true or nil
 end
 
+local playerState = LocalPlayer.state
+
+RegisterNetEvent('ox_lib:setStateBagValue', function(key, value)
+    if source == '' then return end
+
+    playerState[key] = value
+end)
+
 AddStateBagChangeHandler('ox_entity_setonground', '', function(bag, value)
     if not value then return end
 
@@ -52,5 +60,5 @@ AddStateBagChangeHandler('ox_entity_setonground', '', function(bag, value)
     local entity = IsEntityAVehicle(handle) and lib.vehicle:new(handle) or lib.object:new(handle)
 
     entity:setOnGround()
-    entity:set(bag, true, true)
+    entity:set(bag, true, 1)
 end)

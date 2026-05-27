@@ -46,6 +46,6 @@ function lib.vehicle:setOnGround()
         return SetVehicleOnGroundProperly(self.handle)
     end
 
-    self:set('ox_entity_setonground', true, true)
+    self:set('ox_entity_setonground', true, 1)
 end
 

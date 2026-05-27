@@ -15,7 +15,7 @@ lib.player = lib.class('Player', lib.ped)
 ---@class PlayerConstructor
 ---@overload fun(self: Player, netId: number): Player
 function lib.player:constructor(netId)
-    if netId == -1 then netId = isServer and tonumber(GetPlayerFromIndex(0)) or cache.playerId end
+    if netId == -1 then netId = isServer and tonumber(GetPlayerFromIndex(0)) or cache.serverId end
 
     local playerId = isServer and netId or GetPlayerFromServerId(netId)
 
@@ -47,7 +47,7 @@ function lib.player:setRoutingBucket(bucket)
 
     ---@diagnostic disable-next-line: param-type-mismatch
     SetPlayerRoutingBucket(self.playerId, bucket)
-    self:set('bucket', bucket, true)
+    self:set('bucket', bucket, 1)
 end
 
 return lib.player
