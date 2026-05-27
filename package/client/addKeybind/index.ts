@@ -12,6 +12,7 @@ interface KeybindProps {
   description: string;
   defaultMapper?: string;
   defaultKey?: string;
+  allowInPauseMenu?: boolean;
   disabled?: boolean;
   disable?(this: CKeybind, toggle: boolean): void;
   onPressed?(this: CKeybind): void;
@@ -30,6 +31,7 @@ class Keybind implements CKeybind {
   onReleased?: (this: CKeybind) => void;
   secondaryKey?: string;
   secondaryMapper?: string;
+  allowInPauseMenu?: boolean;
   [key: string]: any;
 
   disabled: boolean = false;
@@ -43,6 +45,7 @@ class Keybind implements CKeybind {
     this.defaultKey = data.defaultKey ?? '';
     this.secondaryKey = data.secondaryKey;
     this.secondaryMapper = data.secondaryMapper;
+    this.allowInPauseMenu = data.allowInPauseMenu;
 
     if (typeof data.disabled === 'boolean') this.disabled = data.disabled;
     this.onPressed = data.onPressed;
@@ -77,7 +80,7 @@ export function addKeybind(data: KeybindProps): CKeybind {
   RegisterCommand(
     '+' + kb.name,
     () => {
-      if (kb.disabled || IsPauseMenuActive()) return;
+      if (kb.disabled || (!kb.allowInPauseMenu && IsPauseMenuActive())) return;
       kb.isPressed = true;
       kb.onPressed?.call(kb);
     },
@@ -87,7 +90,7 @@ export function addKeybind(data: KeybindProps): CKeybind {
   RegisterCommand(
     '-' + kb.name,
     () => {
-      if (kb.disabled || IsPauseMenuActive()) return;
+      if (kb.disabled || (!kb.allowInPauseMenu && IsPauseMenuActive())) return;
       kb.isPressed = false;
       kb.onReleased?.call(kb);
     },
