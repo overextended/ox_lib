@@ -134,13 +134,11 @@ export function addCommand<T extends OxCommandArguments>(
 
     if (restricted) {
       const ace = `command.${commandName}`;
-      const restrictedType = typeof restricted;
 
-      if (restrictedType === 'string' && !IsPrincipalAceAllowed(restricted as string, ace)) {
+      if (typeof restricted === 'string' && !IsPrincipalAceAllowed(restricted as string, ace)) {
         addAce(restricted as string, ace, true);
-      } else if (restrictedType === 'object') {
-        const _restricted = restricted as string[];
-        _restricted.forEach((principal) => {
+      } else if (Array.isArray(restricted)) {
+        restricted.forEach((principal) => {
           if (!IsPrincipalAceAllowed(principal, ace)) addAce(principal as string, ace, true);
         });
       }
