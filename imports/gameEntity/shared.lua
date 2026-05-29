@@ -101,7 +101,7 @@ function lib.gameEntity:setHandle(handle)
     local isPlayer = self:instanceOf(lib.player)
     self.private.handle = handle
     self.netId = NetworkGetNetworkIdFromEntity(handle)
-    self.statebag = self.netId == 0 and ('localEntity:%s'):format(handle) or isPlayer and ('player:%s' or 'entity:%s'):format(self.netId)
+    self.statebag = self.netId == 0 and ('localEntity:%s'):format(handle) or (isPlayer and 'player:%s' or 'entity:%s'):format(self.netId)
 
     if self.netId == 0 or (isServer and not isPlayer) then
         EnsureEntityStateBag(handle)
