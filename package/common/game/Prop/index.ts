@@ -13,6 +13,6 @@ export class Prop extends GameEntity {
   public setOnGround() {
     if (context === 'client') return PlaceObjectOnGroundProperly(this.handle);
 
-    return this.set('ox_entity_setonground', true, true);
+    return this.setr('ox_entity_setonground', true);
   }
 }

@@ -30,5 +30,5 @@ function lib.prop:setOnGround()
         return PlaceObjectOnGroundProperly(self.handle)
     end
 
-    return self:set('ox_entity_setonground', true, true)
+    return self:setr('ox_entity_setonground', true)
 end

@@ -25,6 +25,6 @@ export class Vehicle extends GameEntity {
   public setOnGround() {
     if (context === 'client') return SetVehicleOnGroundProperly(this.handle);
 
-    return this.set('ox_entity_setonground', true, true);
+    return this.setr('ox_entity_setonground', true);
   }
 }
