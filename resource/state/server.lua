@@ -55,3 +55,25 @@ lib.callback.register('ox_lib:requestSetStateBag', function(playerId, bag, key, 
 
     return true
 end)
+
+---@param payload StateHookPayload
+---@return boolean
+setEntityState:registerHook(function(payload)
+    if payload.value then return false end
+
+    local vehicle = lib.vehicle:new(payload.entityId)
+    local props = vehicle:get(payload.key) ---@type VehicleProperties?
+
+    if not props then return false end
+
+    if props.plate and props.plate:strtrim() ~= vehicle:getPlate():strtrim() then return false end
+
+    -- we pray
+    return true
+end, { key = 'ox_lib:setVehicleProperties' })
+
+
+---@param payload StateHookPayload
+setEntityState:registerHook(function(payload)
+    return payload.value == true or not payload.value
+end, { key = 'ox_entity_setonground'})
