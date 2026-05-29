@@ -123,7 +123,7 @@ function lib.hook:dispatch(payload)
         local rejected = runHook and hook.cb and hook.cb(payload) == false
 
         if runHook then
-            events[i] = hook.hookId
+            events[#events + 1] = hook.hookId
         end
 
         if rejected then
