@@ -4,6 +4,7 @@
 ---@class StateHookPayload
 ---@field playerId number
 ---@field targetId number
+---@field entityId number
 ---@field type 'entity' | 'player'
 ---@field bag string
 ---@field key string
@@ -28,8 +29,7 @@ local setEntityState = lib.hook:new('setEntityState', filter)
 ---@return boolean
 lib.callback.register('ox_lib:requestSetStateBag', function(playerId, bag, key, value, mode)
     local targetType, target = string.strsplit(':', bag, 2)
-    local targetId = tonumber(target)
-
+    local targetId = tonumber(target, 10)
     local pipeline = (targetType == 'entity' and setEntityState) or (targetType == 'player' and setPlayerState)
 
     if not pipeline or (targetType == 'player' and targetId ~= playerId) or #pipeline.hooks == 0 then
@@ -38,7 +38,8 @@ lib.callback.register('ox_lib:requestSetStateBag', function(playerId, bag, key, 
 
     local hook <close> = pipeline:dispatch({
         playerId = playerId,
-        targetId = target,
+        targetId = targetId,
+        entityId = NetworkGetEntityFromNetworkId(targetId),
         type = targetType,
         bag = bag,
         key = key,
