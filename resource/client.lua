@@ -36,7 +36,7 @@ RegisterNetEvent('ox_lib:setStateBagValue', function(key, value)
     playerState[key] = value
 end)
 
-AddStateBagChangeHandler('ox_entity_setonground', '', function(bag, value)
+AddStateBagChangeHandler('ox_entity_setonground', '', function(bag, key, value)
     if not value then return end
 
     lib.waitFor(isSpawned, nil, false)
