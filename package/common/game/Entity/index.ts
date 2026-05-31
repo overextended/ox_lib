@@ -18,17 +18,19 @@ export abstract class GameEntity {
   protected statebag: string = ''
 
   /** Writes a value to the entity's state. Replicated values are validated by the server. */
-  public async set(key: string, value: unknown, mode?: StateBagReplication) {
+  public async set(key: string, value: unknown, mode?: StateBagReplication): Promise<boolean> {
     if ((mode === 1 && !allowStateBagReplication) || mode === 2) {
       if (mode === 2 && this! instanceof Player) {
         throw new Error('Setting synced-states is not supported for non-player entities.')
       }
 
       if (!isServer) {
-        return import('../../../client/callback').then(
+        const ok = await import('../../../client/callback').then(
           (m) =>
             m.triggerServerCallback('ox_lib:requestSetStateBag', null, this.statebag, key, value) as Promise<boolean>,
         );
+
+        return ok ? this.set(key, value) : false;
       }
 
       emitNet('ox_lib:setStateBagValue', this.netId, key, value)

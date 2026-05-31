@@ -48,7 +48,9 @@ function lib.gameEntity:set(key, value, mode)
         end
 
         if not isServer then
-            return lib.callback.await('ox_lib:requestSetStateBag', nil, self.statebag, key, value, mode)
+            local ok = lib.callback.await('ox_lib:requestSetStateBag', nil, self.statebag, key, value, mode)
+
+            return ok and self:set(key, value) or false
         end
 
         TriggerClientEvent('ox_lib:setStateBagValue', self.netId, key, value)
