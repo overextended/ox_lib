@@ -6,7 +6,7 @@ export class Ped extends GameEntity {
   constructor(handle: number) {
     super();
 
-    if (IsPedAPlayer(handle)) this.type = 'Player';
+    if (!handle) return;
 
     this.setHandle(handle);
   }

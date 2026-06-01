@@ -6,17 +6,20 @@ const isServer = context === 'server';
 export class Player extends Ped {
   readonly type: string = 'Player';
   readonly playerId;
+    /** The player's server id. */
+  readonly netId: number = 0;
 
   constructor(netId: number) {
     if (netId === -1) netId = isServer ? Number(GetPlayerFromIndex(0)) : GetPlayerServerId(PlayerId());
 
     const playerId = isServer ? netId : GetPlayerFromServerId(netId);
 
-    super(GetPlayerPed(playerId));
-
+    super(0);
     this.playerId = playerId;
+    this.setHandle(GetPlayerPed(playerId))
   }
 
+  /** The player ped's script handle. */
   public get handle() {
     return isServer ? super.handle : GetPlayerPed(this.playerId);
   }

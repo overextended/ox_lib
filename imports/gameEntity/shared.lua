@@ -10,8 +10,8 @@ local isServer = lib.context == 'server'
 local allowStateBagReplication = isServer or not GetConvarBool('sv_stateBagStrictMode', false)
 
 ---@class GameEntity : OxClass
----@field handle number
----@field netId number
+---@field handle number The entity's script handle.
+---@field netId number The entity's network id.
 ---@field protected private { handle: number }
 ---@field package new GameEntityConstructor
 lib.gameEntity = lib.class('GameEntity')
@@ -102,7 +102,7 @@ end
 function lib.gameEntity:setHandle(handle)
     local isPlayer = self:instanceOf(lib.player)
     self.private.handle = handle
-    self.netId = NetworkGetNetworkIdFromEntity(handle)
+    self.netId = isPlayer and GetPlayerServerId(NetworkGetEntityOwner(handle)) or NetworkGetNetworkIdFromEntity(handle)
     self.statebag = self.netId == 0 and ('localEntity:%s'):format(handle) or (isPlayer and 'player:%s' or 'entity:%s'):format(self.netId)
 
     if self.netId == 0 or (isServer and not isPlayer) then

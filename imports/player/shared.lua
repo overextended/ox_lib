@@ -9,6 +9,8 @@
 local isServer = lib.context == 'server'
 
 ---@class Player : Ped
+---@field handle number The player ped's script handle.
+---@field netId number The player's server id.
 ---@field private new PlayerConstructor
 lib.player = lib.class('Player', lib.ped)
 
@@ -19,8 +21,9 @@ function lib.player:constructor(netId)
 
     local playerId = isServer and netId or GetPlayerFromServerId(netId)
 
-    self:super(GetPlayerPed(playerId))
+    self:super(0)
     self.playerId = playerId
+    self:setHandle(GetPlayerPed(playerId))
 end
 
 function lib.player:__index(index)

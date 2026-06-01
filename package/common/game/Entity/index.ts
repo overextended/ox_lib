@@ -1,5 +1,5 @@
 import { Vector3 } from '@overextended/core/vector';
-import { context, Player } from '../..';
+import { context } from '../..';
 
 const isServer = context === 'server';
 const allowStateBagReplication = isServer || !GetConvarBool('sv_stateBagStrictMode', false);
@@ -14,13 +14,14 @@ enum StateBagReplication {
 export abstract class GameEntity {
   #handle: number = 0;
   readonly type: string = '';
+  /** The entity's network id. */
   readonly netId: number = 0;
   protected statebag: string = ''
 
   /** Writes a value to the entity's state. Replicated values are validated by the server. */
   public async set(key: string, value: unknown, mode?: StateBagReplication): Promise<boolean> {
     if ((mode === 1 && !allowStateBagReplication) || mode === 2) {
-      if (mode === 2 && this! instanceof Player) {
+      if (mode === 2 && this.type !== 'Player') {
         throw new Error('Setting synced-states is not supported for non-player entities.')
       }
 
@@ -68,16 +69,17 @@ export abstract class GameEntity {
     return GetStateBagKeys(this.statebag);
   }
 
+  /** The entity's script handle */
   public get handle() {
     return this.#handle;
   }
 
   protected setHandle(handle: number) {
-    const isPlayer = this instanceof Player;
-  
+    const isPlayer = this.type === 'Player';
+
     this.#handle = handle;
     // @ts-ignore
-    this.netId = NetworkGetNetworkIdFromEntity(handle);
+    this.netId = isPlayer ? GetPlayerServerId(NetworkGetEntityOwner(handle)) : NetworkGetNetworkIdFromEntity(handle);
     this.statebag = this.netId
       ? `${isPlayer ? 'player' : 'entity'}:${this.netId}`
       : `localEntity:${handle}`;

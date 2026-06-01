@@ -14,7 +14,10 @@ lib.ped = lib.class('Ped', lib.gameEntity)
 ---@overload fun(self: Ped, handle: number): Ped
 function lib.ped:constructor(handle)
     self:super()
-    self:setHandle(handle)
+
+    if handle > 0 then
+        self:setHandle(handle)
+    end
 end
 
 function lib.ped:__index(index)
