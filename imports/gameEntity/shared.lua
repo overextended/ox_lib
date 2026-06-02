@@ -101,9 +101,11 @@ function lib.gameEntity:keys()
 end
 
 function lib.gameEntity:setHandle(handle)
-    local isPlayer = self:instanceOf(lib.player)
+    local isPlayer = self.type == 'Player'
+    local playerId = isPlayer and self--[[@as Player]].playerId
+
     self.private.handle = handle
-    self.netId = isPlayer and GetPlayerServerId(NetworkGetEntityOwner(handle)) or NetworkGetNetworkIdFromEntity(handle)
+    self.netId = playerId and (isServer and playerId or GetPlayerServerId(playerId)) or NetworkGetNetworkIdFromEntity(handle)
     self.statebag = self.netId == 0 and ('localEntity:%s'):format(handle) or (isPlayer and 'player:%s' or 'entity:%s'):format(self.netId)
 
     if self.netId == 0 or (isServer and not isPlayer) then
