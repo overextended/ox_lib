@@ -16,13 +16,13 @@ export abstract class GameEntity {
   readonly type: string = '';
   /** The entity's network id. */
   readonly netId: number = 0;
-  protected statebag: string = ''
+  protected statebag: string = '';
 
   /** Writes a value to the entity's state. Replicated values are validated by the server. */
   public async set(key: string, value: unknown, mode?: StateBagReplication): Promise<boolean> {
     if ((mode === 1 && !allowStateBagReplication) || mode === 2) {
       if (mode === 2 && this.type !== 'Player') {
-        throw new Error('Setting synced-states is not supported for non-player entities.')
+        throw new Error('Setting synced-states is not supported for non-player entities.');
       }
 
       if (!isServer) {
@@ -34,7 +34,7 @@ export abstract class GameEntity {
         return ok ? this.set(key, value) : false;
       }
 
-      emitNet('ox_lib:setStateBagValue', this.netId, key, value)
+      emitNet('ox_lib:setStateBagValue', this.netId, key, value);
     }
 
     // @ts-ignore
@@ -46,12 +46,12 @@ export abstract class GameEntity {
 
   /** Writes a replicated value to the entity's state. Client-set values are validated by the server. */
   public async setr(key: string, value: unknown) {
-    return this.set(key, value, 1)
+    return this.set(key, value, 1);
   }
 
   /** Writes a synced value to the entity's state. Client-set values are validated by the server. */
   public async sets(key: string, value: unknown) {
-    return this.set(key, value, 2)
+    return this.set(key, value, 2);
   }
 
   /** Returns a value from the entity's state. */

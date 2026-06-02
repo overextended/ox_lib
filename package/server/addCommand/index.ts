@@ -66,7 +66,8 @@ function parseArguments(
 
     if (value === undefined && (!param.optional || (param.optional && arg))) {
       return Citizen.trace(
-        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.type} for argument ${index + 1} (${param.name
+        `^1command '${raw.split(' ')[0] || raw}' received an invalid ${param.type} for argument ${index + 1} (${
+          param.name
         }), received '${arg}'^0`,
       );
     }
@@ -83,15 +84,15 @@ function parseArguments(
 function buildSuggestion(commandName: string, { params, help }: OxCommandProperties) {
   const hints = params
     ? params.map((param) => {
-      return {
-        name: param.name,
-        help: param.type
-          ? param.help
-            ? `${param.help} (type: ${param.type})`
-            : `(type: ${param.type})`
-          : param.help,
-      };
-    })
+        return {
+          name: param.name,
+          help: param.type
+            ? param.help
+              ? `${param.help} (type: ${param.type})`
+              : `(type: ${param.type})`
+            : param.help,
+        };
+      })
     : undefined;
 
   return {
@@ -114,9 +115,9 @@ export function addCommand<T extends OxCommandArguments>(
     params.forEach((param) => {
       if ('argType' in param) {
         param.type = param.argType as OxCommandParams['type'];
-        delete param.argType
+        delete param.argType;
       }
-    })
+    });
   }
 
   const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {

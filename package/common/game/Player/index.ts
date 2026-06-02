@@ -6,7 +6,7 @@ const isServer = context === 'server';
 export class Player extends Ped {
   readonly type: string = 'Player';
   readonly playerId;
-    /** The player's server id. */
+  /** The player's server id. */
   readonly netId: number = 0;
 
   constructor(netId: number) {
@@ -16,7 +16,7 @@ export class Player extends Ped {
 
     super(0);
     this.playerId = playerId;
-    this.setHandle(GetPlayerPed(playerId))
+    this.setHandle(GetPlayerPed(playerId));
   }
 
   /** The player ped's script handle. */
