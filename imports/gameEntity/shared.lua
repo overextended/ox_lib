@@ -12,6 +12,7 @@ local allowStateBagReplication = isServer or not GetConvarBool('sv_stateBagStric
 ---@class GameEntity : OxClass
 ---@field handle number The entity's script handle.
 ---@field netId number The entity's network id.
+---@field type string
 ---@field protected private { handle: number }
 ---@field package new GameEntityConstructor
 lib.gameEntity = lib.class('GameEntity')
@@ -43,7 +44,7 @@ end
 ---Writes a value to the entity's state. Replicated values are validated by the server.
 function lib.gameEntity:set(key, value, mode)
     if (mode == 1 and not allowStateBagReplication) or mode == 2 then
-        if mode == 2 and not self:instanceOf(lib.player) then
+        if mode == 2 and self.type ~= 'Player' then
             error('Setting synced-states is not supported for non-player entities.')
         end
 

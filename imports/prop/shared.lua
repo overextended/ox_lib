@@ -9,6 +9,7 @@
 ---@class Prop : GameEntity
 ---@field private new ObjectConstructor
 lib.prop = lib.class('Prop', lib.gameEntity)
+lib.prop.type = lib.prop.__name
 
 ---@class ObjectConstructor
 ---@overload fun(self: Prop, handle: number): Prop

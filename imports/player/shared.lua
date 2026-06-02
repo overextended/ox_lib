@@ -13,6 +13,7 @@ local isServer = lib.context == 'server'
 ---@field netId number The player's server id.
 ---@field private new PlayerConstructor
 lib.player = lib.class('Player', lib.ped)
+lib.player.type = lib.player.__name
 
 ---@class PlayerConstructor
 ---@overload fun(self: Player, netId: number): Player

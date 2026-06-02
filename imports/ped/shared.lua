@@ -9,6 +9,7 @@
 ---@class Ped : GameEntity
 ---@field private new PedConstructor
 lib.ped = lib.class('Ped', lib.gameEntity)
+lib.ped.type = lib.ped.__name
 
 ---@class PedConstructor
 ---@overload fun(self: Ped, handle: number): Ped

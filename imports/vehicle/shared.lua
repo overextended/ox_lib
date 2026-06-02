@@ -11,6 +11,7 @@
 ---@class Vehicle : GameEntity
 ---@field private new VehicleConstructor
 lib.vehicle = lib.class('Vehicle', lib.gameEntity)
+lib.vehicle.type = lib.vehicle.__name
 
 ---@class VehicleConstructor
 ---@overload fun(self: Vehicle, handle: number): Vehicle
