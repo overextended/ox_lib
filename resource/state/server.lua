@@ -66,7 +66,9 @@ setEntityState:registerHook(function(payload)
 
     if not props then return false end
 
-    if props.plate and props.plate:strtrim() ~= vehicle:getPlate():strtrim() then return false end
+    local plate = vehicle:getPlate()
+
+    if plate == '' or (props.plate and props.plate:strtrim() ~= plate:strtrim()) then return false end
 
     -- we pray
     return true
