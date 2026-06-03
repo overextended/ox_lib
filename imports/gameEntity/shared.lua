@@ -43,6 +43,8 @@ end
 ---@return boolean
 ---Writes a value to the entity's state. Replicated values are validated by the server.
 function lib.gameEntity:set(key, value, mode)
+    if mode and self.netId == 0 then mode = nil end
+
     if (mode == 1 and not allowStateBagReplication) or mode == 2 then
         if mode == 2 and self.type ~= 'Player' then
             error('Setting synced-states is not supported for non-player entities.')

@@ -20,6 +20,8 @@ export abstract class GameEntity {
 
   /** Writes a value to the entity's state. Replicated values are validated by the server. */
   public async set(key: string, value: unknown, mode?: StateBagReplication): Promise<boolean> {
+    if (mode && !this.netId) mode = undefined;
+  
     if ((mode === 1 && !allowStateBagReplication) || mode === 2) {
       if (mode === 2 && this.type !== 'Player') {
         throw new Error('Setting synced-states is not supported for non-player entities.');
