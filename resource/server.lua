@@ -13,25 +13,38 @@ end)
 
 GlobalState['ox_lib:locales'] = locales
 
-SetTimeout(2000, function()
-    local stateBagStrictMode = GetConvarBool('sv_stateBagStrictMode', false)
+local ignoreSecurityAdvisory = lib.array.reduce(json.decode(GetConvar('ox:ignoreSecurityAdvisory', "")) or {}, function(acc, value)
+    acc[value] = true
+    return acc
+end, {})
 
-    if stateBagStrictMode then return end
+if GetResourceState('qb-core') ~= 'missing' then
+    ignoreSecurityAdvisory.stateBagStrictMode = true
+end
 
-        print([[
+if not ignoreSecurityAdvisory.stateBagStrictMode then
+    SetTimeout(2000, function()
+        local stateBagStrictMode = GetConvarBool('sv_stateBagStrictMode', false)
+
+        if stateBagStrictMode then return end
+
+            print([[
 ^3━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️  SECURITY WARNING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━^0
 sv_stateBagStrictMode is currently ^1DISABLED.^0
 
 State bags are used to replicate entity/player data between server and clients.
-When strict mode is OFF, clients are able to replicate or influence state bag values.
+When strict mode is OFF, clients are able to freely modify state bag values.
 
 Enabling strict mode improves security by rejecting replicated state bag modifications from clients.
 
 ^2Enable with:^0 setr sv_stateBagStrictMode true
 
-^1Important:^0 Some scripts may break or stop syncing when strict mode is enabled.
+^1CAUTION:^0 Some scripts may break or stop syncing when strict mode is enabled.
 If you experience issues, update resource logic to comply with strict replication rules.
+
+Disable this warning using ^4set ox:ignoreSecurityAdvisory ["stateBagStrictMode"]^0
 ^3━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━^0]])
-end)
+    end)
+end
