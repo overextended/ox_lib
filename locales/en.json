@@ -9,6 +9,26 @@
     "settings": {
       "locale": "Change locale",
       "locale_description": "Current language: ${language} (%s)",
+      "colorblind": "Colorblind mode",
+      "colorblind_current": "Current selection",
+      "colorblind_saved": "Saved colorblind preset: %s",
+      "ui_test_action": "UI test action",
+      "ui_test_action_none": "Do not run a test",
+      "ui_test_action_circle": "Run circle progress test",
+      "ui_tests_open": "Open UI tests after saving",
+      "ui_tests": "UI Tests",
+      "ui_tests_progressbar": "Test progress bar",
+      "ui_tests_circleprogress": "Test circle progress",
+      "ui_tests_skillcheck": "Test skill check",
+      "ui_tests_notification": "Test notification",
+      "ui_tests_notification_description": "If you can read this clearly, the UI test menu worked.",
+      "colorblind_modes": {
+        "off": "Off",
+        "protanopia": "Protanopia",
+        "deuteranopia": "Deuteranopia",
+        "tritanopia": "Tritanopia",
+        "achromatopsia": "Achromatopsia"
+      },
       "notification_audio": "Notification audio",
       "notification_position": "Notification position"
     },
