@@ -12,3 +12,26 @@ table.sort(locales, function(a, b)
 end)
 
 GlobalState['ox_lib:locales'] = locales
+
+SetTimeout(2000, function()
+    local stateBagStrictMode = GetConvarBool('sv_stateBagStrictMode', false)
+
+    if stateBagStrictMode then return end
+
+        print([[
+^3━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  SECURITY WARNING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━^0
+sv_stateBagStrictMode is currently ^1DISABLED.^0
+
+State bags are used to replicate entity/player data between server and clients.
+When strict mode is OFF, clients are able to replicate or influence state bag values.
+
+Enabling strict mode improves security by rejecting replicated state bag modifications from clients.
+
+^2Enable with:^0 setr sv_stateBagStrictMode true
+
+^1Important:^0 Some scripts may break or stop syncing when strict mode is enabled.
+If you experience issues, update resource logic to comply with strict replication rules.
+^3━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━^0]])
+end)
