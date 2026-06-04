@@ -9,25 +9,25 @@
     "settings": {
       "locale": "Endre språk",
       "locale_description": "Nåværende språk: ${language} (%s)",
-      "notification_audio": "Varslings lyd",
-      "notification_position": "Varslings posisjon"
+      "notification_audio": "Varslingslyd",
+      "notification_position": "Varslingsposisjon"
     },
     "position": {
-      "bottom": "Bunn",
-      "bottom-left": "Bunn-venstre",
-      "bottom-right": "Bunn-høyre",
-      "center-left": "Senter-venstre",
-      "center-right": "Senter-høyre",
-      "top": "Top",
-      "top-left": "Top-venstre",
-      "top-right": "Top-høyre"
+      "bottom": "Nederst",
+      "bottom-left": "Nederst til venstre",
+      "bottom-right": "Nederst til høyre",
+      "center-left": "Midten venstre",
+      "center-right": "Midten høyre",
+      "top": "Øverst",
+      "top-left": "Øverst til venstre",
+      "top-right": "Øverst til høyre"
     }
   },
-  "open_radial_menu": "Åpne radial menyen",
+  "open_radial_menu": "Åpne radialmenyen",
   "cancel_progress": "Avbryt den nåværende progresjonsbaren",
-  "txadmin_announcement": "Server annonsering fra %s",
+  "txadmin_announcement": "Serverannonsering fra %s",
   "txadmin_dm": "Direktemelding fra %s",
   "txadmin_warn": "Du har fått en advarsel fra %s",
   "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Planlagt Omstart"
+  "txadmin_scheduledrestart": "Planlagt omstart"
 }

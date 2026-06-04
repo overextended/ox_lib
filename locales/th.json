@@ -1,32 +1,33 @@
 {
-  "language": "Thailand",
+  "language": "ไทย",
+  "settings": "ตั้งค่า",
   "ui": {
     "cancel": "ยกเลิก",
     "close": "ปิด",
     "confirm": "ยืนยัน",
     "more": "เพิ่มเติม...",
     "settings": {
-      "locale": "Change locale",
-      "locale_description": "Current language: ${language} (%s)",
-      "notification_audio": "Notification audio",
-      "notification_position": "Notification position"
+      "locale": "เปลี่ยนภาษา",
+      "locale_description": "ภาษาปัจจุบัน: ${language} (%s)",
+      "notification_audio": "เสียงแจ้งเตือน",
+      "notification_position": "ตำแหน่งแจ้งเตือน"
     },
     "position": {
-      "bottom": "Bottom",
-      "bottom-left": "Bottom-left",
-      "bottom-right": "Bottom-right",
-      "center-left": "Center-left",
-      "center-right": "Center-right",
-      "top": "Top",
-      "top-left": "Top-left",
-      "top-right": "Top-right"
+      "bottom": "ข้างล่าง",
+      "bottom-left": "ล่างซ้าย",
+      "bottom-right": "ล่างขวา",
+      "center-left": "กลางซ้าย",
+      "center-right": "กลางขวา",
+      "top": "ข้างบน",
+      "top-left": "บนซ้าย",
+      "top-right": "บนขวา"
     }
   },
-  "open_radial_menu": "Open radial menu",
-  "cancel_progress": "Cancel current progress bar",
-  "txadmin_announcement": "Server announcement by %s",
-  "txadmin_dm": "Direct Message from %s",
-  "txadmin_warn": "You have been warned by %s",
-  "txadmin_warn_content": "%s  \nAction ID: %s",
-  "txadmin_scheduledrestart": "Scheduled Restart"
+  "open_radial_menu": "เปิดเมนู",
+  "cancel_progress": "ยกเลิก Progress",
+  "txadmin_announcement": "ประกาศจากเซิฟเวอร์โดย %s",
+  "txadmin_dm": "มีข้อความใหม่จาก %s",
+  "txadmin_warn": "คุณถูกเตือนโดย %s",
+  "txadmin_warn_content": "%s  \nเลขไอดี: %s",
+  "txadmin_scheduledrestart": "การรีสตาร์ทตามกำหนดการ"
 }

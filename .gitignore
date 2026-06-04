@@ -1,4 +1,5 @@
 .idea
+.luarc.jsonc
 created_zones.lua
 
 node_modules
@@ -10,3 +11,4 @@ pnpm-debug.log*
 
 /web/node_modules
 /web/build
+/package/dist

@@ -51,7 +51,7 @@ Pull requests that do not contribute meaningful improvements to the project's st
 - Fork the repository and, optionally, create a new branch for your changes.
 - If applicable, include example code to demonstrate your changes.
 - Ensure your code's style is consistent with the project, e.g. uses the same indentation and string quotations.
-- If you have modified or introduced new APIs, open a pull request to our [documentation](https://github.com/overextended/overextended.github.io). We will not accept undocumented code.
+- If you have modified or introduced new APIs, open a pull request to our [documentation](https://github.com/overextended/docs). We will not accept undocumented code.
 
 ## Contributor License Agreement
 

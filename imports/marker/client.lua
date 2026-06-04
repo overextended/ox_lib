@@ -9,14 +9,8 @@
 ---@diagnostic disable: param-type-mismatch
 lib.marker = {}
 
-local defaultRotation = vector3(0, 0, 0)
-local defaultDirection = vector3(0, 0, 0)
-local defaultColor = { r = 255, g = 255, b = 255, a = 100 }
-local defaultSize = { width = 2, height = 1 }
-local defaultTextureDict = nil
-local defaultTextureName = nil
-
-local markerTypesMap = {
+---@enum (key) MarkerType
+local markerTypes = {
   UpsideDownCone = 0,
   VerticalCylinder = 1,
   ThickChevronUp = 2,
@@ -63,58 +57,12 @@ local markerTypesMap = {
   Unknown43 = 43,
 }
 
----@alias MarkerType
----| "UpsideDownCone"
----| "VerticalCylinder"
----| "ThickChevronUp"
----| "ThinChevronUp"
----| "CheckeredFlagRect"
----| "CheckeredFlagCircle"
----| "VerticleCircle"
----| "PlaneModel"
----| "LostMCTransparent"
----| "LostMC"
----| "Number0"
----| "Number1"
----| "Number2"
----| "Number3"
----| "Number4"
----| "Number5"
----| "Number6"
----| "Number7"
----| "Number8"
----| "Number9"
----| "ChevronUpx1"
----| "ChevronUpx2"
----| "ChevronUpx3"
----| "HorizontalCircleFat"
----| "ReplayIcon"
----| "HorizontalCircleSkinny"
----| "HorizontalCircleSkinny_Arrow"
----| "HorizontalSplitArrowCircle"
----| "DebugSphere"
----| "DollarSign"
----| "HorizontalBars"
----| "WolfHead"
----| "QuestionMark"
----| "PlaneSymbol"
----| "HelicopterSymbol"
----| "BoatSymbol"
----| "CarSymbol"
----| "MotorcycleSymbol"
----| "BikeSymbol"
----| "TruckSymbol"
----| "ParachuteSymbol"
----| "Unknown41"
----| "SawbladeSymbol"
----| "Unknown43"
-
 ---@class MarkerProps
----@field type MarkerType | number
+---@field type? MarkerType | integer
 ---@field coords { x: number, y: number, z: number }
 ---@field width? number
 ---@field height? number
----@field color? { r: number, g: number, b: number, a: number }
+---@field color? { r: integer, g: integer, b: integer, a: integer }
 ---@field rotation? { x: number, y: number, z: number }
 ---@field direction? { x: number, y: number, z: number }
 ---@field bobUpAndDown? boolean
@@ -122,9 +70,25 @@ local markerTypesMap = {
 ---@field rotate? boolean
 ---@field textureDict? string
 ---@field textureName? string
+---@field invert? boolean
 
----@param self MarkerProps
-local function drawMarker(self)
+local vector3_zero = vector3(0, 0, 0)
+
+local marker_mt = {
+  type = 0,
+  width = 2.,
+  height = 1.,
+  color = {r = 255, g = 100, b = 0, a = 100},
+  rotation = vector3_zero,
+  direction = vector3_zero,
+  bobUpAndDown = false,
+  faceCamera = false,
+  rotate = false,
+  invert = false,
+}
+marker_mt.__index = marker_mt
+
+function marker_mt:draw()
   DrawMarker(
     self.type,
     self.coords.x, self.coords.y, self.coords.z,
@@ -132,40 +96,19 @@ local function drawMarker(self)
     self.rotation.x, self.rotation.y, self.rotation.z,
     self.width, self.width, self.height,
     self.color.r, self.color.g, self.color.b, self.color.a,
-    self.bobUpAndDown, self.faceCamera, 2, self.rotate, self.textureDict, self.textureName, false)
+    self.bobUpAndDown, self.faceCamera, 2, self.rotate, self.textureDict, self.textureName, self.invert)
 end
 
 ---@param options MarkerProps
 function lib.marker.new(options)
-  local markerType
-  if type(options.type) == "string" then
-    markerType = markerTypesMap[options.type]
-    if markerType == nil then
-      error(("unknown marker type '%s'"):format(options.type))
-    end
-  elseif type(options.type) == "number" then
-    markerType = options.type
-  else
-    error(("expected marker type to have type 'string' or 'number' (received %s)"):format(type(options.type)))
-  end
+  options.type =
+    type(options.type) == 'string' and markerTypes[options.type]
+    or type(options.type) == 'number' and options.type or nil
 
-  local self = {}
-  self.type = markerType
-  self.coords = options.coords
-  self.color = options.color or defaultColor
-  self.width = options.width or defaultSize.width
-  self.height = options.height or defaultSize.height
-  self.rotation = options.rotation or defaultRotation
-  self.direction = options.direction or defaultDirection
-  self.bobUpAndDown = type(options.bobUpAndDown) == 'boolean' and options.bobUpAndDown
-  self.faceCamera = type(options.faceCamera) ~= 'boolean' or options.faceCamera
-  self.rotate = type(options.rotate) == 'boolean' and options.rotate
-  self.textureDict = options.textureDict or defaultTextureDict
-  self.textureName = options.textureName or defaultTextureName
-  self.draw = drawMarker
+  local self = setmetatable(options, marker_mt)
 
-  self.width += 0.0
-  self.height += 0.0
+  self.width += .0
+  self.height += .0
 
   return self
 end

@@ -21,7 +21,10 @@ function lib.getNearbyPlayers(coords, maxDistance, includePlayer)
 
         if playerId ~= cache.playerId or includePlayer then
             local playerPed = GetPlayerPed(playerId)
-            local playerCoords = GetEntityCoords(playerPed)
+            
+            local vehicle = GetVehiclePedIsIn(playerPed, false)
+            local playerCoords = vehicle == 0 and GetEntityCoords(playerPed) or GetWorldPositionOfEntityBone(playerPed, 0)
+            
             local distance = #(coords - playerCoords)
 
             if distance < maxDistance then
@@ -30,6 +33,7 @@ function lib.getNearbyPlayers(coords, maxDistance, includePlayer)
                     id = playerId,
                     ped = playerPed,
                     coords = playerCoords,
+                    vehicle = vehicle
                 }
             end
         end

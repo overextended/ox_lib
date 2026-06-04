@@ -7,6 +7,7 @@
 ]]
 
 ---@class Array<T> : OxClass, { [number]: T }
+---@field private new ArrayConstructor
 lib.array = lib.class('Array')
 
 local table_unpack = table.unpack
@@ -17,6 +18,8 @@ local table_type = table.type
 
 ---@alias ArrayLike<T> Array | { [number]: T }
 
+---@class ArrayConstructor
+---@overload fun(self: Array, ...: unknown): Array
 ---@private
 function lib.array:constructor(...)
     local arr = { ... }
@@ -113,6 +116,8 @@ function lib.array:fill(value, start, endIndex)
     start = start or 1
     endIndex = endIndex or length
 
+    if start < 0 then start = length + start + 1 end
+    if endIndex < 0 then endIndex = length + endIndex + 1 end
     if start < 1 then start = 1 end
     if endIndex > length then endIndex = length end
 
@@ -257,16 +262,20 @@ end
 ---@return T
 function lib.array:reduce(reducer, initialValue, reverse)
     local length = #self
-    local initialIndex = initialValue and 1 or 2
-    local accumulator = initialValue or self[1]
+    local accumulator, startIdx
 
     if reverse then
-        for i = initialIndex, length do
-            local index = length - i + initialIndex
-            accumulator = reducer(accumulator, self[index], index)
+        accumulator = initialValue or self[length]
+        startIdx = initialValue and length or length - 1
+
+        for i = startIdx, 1, -1 do
+            accumulator = reducer(accumulator, self[i], i)
         end
     else
-        for i = initialIndex, length do
+        accumulator = initialValue or self[1]
+        startIdx = initialValue and 1 or 2
+
+        for i = startIdx, length do
             accumulator = reducer(accumulator, self[i], i)
         end
     end

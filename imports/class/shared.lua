@@ -29,6 +29,11 @@ local function assertType(id, var, expected)
     return true
 end
 
+local weakkeys = { __mode = 'k' }
+
+---@type { [OxClass]: { [function]: true } }
+local classes = setmetatable({}, weakkeys)
+
 ---@alias OxClassConstructor<T> fun(self: T, ...: unknown): nil
 
 ---@class OxClass
@@ -38,7 +43,7 @@ end
 ---@field protected super? OxClassConstructor
 ---@field protected constructor? OxClassConstructor
 local mixins = {}
-local constructors = {}
+local constructors = setmetatable({}, weakkeys)
 
 ---Somewhat hacky way to remove the constructor from the class.__index.
 ---Maybe add static fields in the future?
@@ -55,6 +60,34 @@ local function getConstructor(class)
 end
 
 local function void() return '' end
+
+---@param class OxClass
+---@return boolean
+local function validatePrivateAccess(class)
+    local level = 3
+
+    while true do
+        local di = getinfo(level, 'f')
+
+        if not di or not di.func then return false end
+
+        local method = classes[class][di.func]
+
+        if not method then
+            for k, v in pairs(class) do
+                if v == di.func then
+                    method = v
+                    classes[class][method] = k
+                    break
+                end
+            end
+        end
+
+        if method then return true end
+
+        level += 1
+    end
+end
 
 ---Creates a new instance of the given class.
 ---@protected
@@ -89,16 +122,12 @@ function mixins.new(class, ...)
             __metatable = 'private',
             __tostring = void,
             __index = function(self, index)
-                local di = getinfo(2, 'n')
-
-                if di.namewhat ~= 'method' and di.namewhat ~= '' then return end
+                if not validatePrivateAccess(class) then return end
 
                 return private[index]
             end,
             __newindex = function(self, index, value)
-                local di = getinfo(2, 'n')
-
-                if di.namewhat ~= 'method' and di.namewhat ~= '' then
+                if not validatePrivateAccess(class) then
                     error(("cannot set value of private field '%s'"):format(index), 2)
                 end
 
@@ -151,7 +180,8 @@ function lib.class(name, super)
         setmetatable(class, super)
     end
 
-    ---@todo See if there's a way we can auto-create a class using the name and super
+    classes[class] = setmetatable({}, weakkeys)
+
     return class
 end
 

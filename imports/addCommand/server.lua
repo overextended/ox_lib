@@ -77,6 +77,33 @@ local function parseArguments(source, args, raw, params)
     return args
 end
 
+---@param commandName string
+---@param properties OxCommandProperties
+---@return OxCommandProperties
+local function buildSuggestion(commandName, properties)
+    local hints
+
+    if properties.params then
+        hints = {}
+
+        for i = 1, #properties.params do
+            local param = properties.params[i]
+            hints[i] = {
+                name = param.name,
+                help = param.type
+                    and (param.help and ('%s (type: %s)'):format(param.help, param.type) or ('(type: %s)'):format(param.type))
+                    or param.help,
+            }
+        end
+    end
+
+    return {
+        name = ('/%s'):format(commandName),
+        help = properties.help,
+        params = hints,
+    }
+end
+
 ---@param commandName string | string[]
 ---@param properties OxCommandProperties | false
 ---@param cb fun(source: number, args: table, raw: string)
@@ -97,16 +124,6 @@ function lib.addCommand(commandName, properties, cb, ...)
 
         restricted = properties.restricted
         params = properties.params
-    end
-
-    if params then
-        for i = 1, #params do
-            local param = params[i]
-
-            if param.type then
-                param.help = param.help and ('%s (type: %s)'):format(param.help, param.type) or ('(type: %s)'):format(param.type)
-            end
-        end
     end
 
     local commands = type(commandName) ~= 'table' and { commandName } or commandName
@@ -147,16 +164,10 @@ function lib.addCommand(commandName, properties, cb, ...)
         end
 
         if properties then
-            ---@diagnostic disable-next-line: inject-field
-            properties.name = ('/%s'):format(commandName)
-            properties.restricted = nil
-            registeredCommands[totalCommands] = properties
+            local suggestion = buildSuggestion(commandName, properties)
+            registeredCommands[totalCommands] = suggestion
 
-            if i ~= numCommands and numCommands ~= 1 then
-                properties = table.clone(properties)
-            end
-
-            if shouldSendCommands then TriggerClientEvent('chat:addSuggestions', -1, properties) end
+            if shouldSendCommands then TriggerClientEvent('chat:addSuggestions', -1, suggestion) end
         end
     end
 end

@@ -30,9 +30,12 @@ local input
 ---@field searchable? boolean
 ---@field description? string
 ---@field maxSelectedValues? number
+---@field minLength? number
+---@field maxLength? number
 
 ---@class InputDialogOptionsProps
 ---@field allowCancel? boolean
+---@field size? 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 ---@param heading string
 ---@param rows string[] | InputDialogRowProps[]

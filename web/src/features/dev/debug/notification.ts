@@ -26,6 +26,7 @@ export const debugCustomNotification = () => {
         title: 'Error',
         description: 'Notification description',
         type: 'error',
+        position: "bottom"
       },
     },
   ]);

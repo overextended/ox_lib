@@ -12,7 +12,6 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(error, info)
-    this.setState({ hasError: false });
   }
 
   render() {

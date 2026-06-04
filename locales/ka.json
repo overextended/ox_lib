@@ -1,0 +1,33 @@
+{
+  "language": "ქართული",
+  "settings": "პარამეტრები",
+  "ui": {
+    "cancel": "გაუქმება",
+    "close": "დახურვა",
+    "confirm": "დადასტურება",
+    "more": "მეტი...",
+    "settings": {
+      "locale": "ენის შეცვლა",
+      "locale_description": "მიმდინარე ენა: ${language} (%s)",
+      "notification_audio": "შეტყობინების ხმა",
+      "notification_position": "შეტყობინების მდებარეობა"
+    },
+    "position": {
+      "bottom": "ქვემოთ",
+      "bottom-left": "ქვედა მარცხნივ",
+      "bottom-right": "ქვედა მარჯვნივ",
+      "center-left": "შუა მარცხნივ",
+      "center-right": "შუა მარჯვნივ",
+      "top": "ზემოთ",
+      "top-left": "ზედა მარცხნივ",
+      "top-right": "ზედა მარჯვნივ"
+    }
+  },
+  "open_radial_menu": "რადიალური მენიუს გახსნა",
+  "cancel_progress": "მიმდინარე პროგრესის გაუქმება",
+  "txadmin_announcement": "სერვერის განცხადება: %s",
+  "txadmin_dm": "პირადი შეტყობინება: %s",
+  "txadmin_warn": "თქვენ მიიღეთ გაფრთხილება: %s",
+  "txadmin_warn_content": "%s  \nქმედების ID: %s",
+  "txadmin_scheduledrestart": "დაგეგმილი რესტარტი"
+}

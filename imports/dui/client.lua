@@ -21,6 +21,7 @@
 ---@field txdObject number
 ---@field dictName string
 ---@field txtName string
+---@field private new DuiConstructor
 lib.dui = lib.class('Dui')
 
 ---@type table<string, Dui>
@@ -28,6 +29,9 @@ local duis = {}
 
 local currentId = 0
 
+---@class DuiConstructor
+---@overload fun(self: Dui, data: DuiProperties): Dui
+---@private
 ---@param data DuiProperties
 function lib.dui:constructor(data)
 	local time = GetGameTimer()
@@ -83,6 +87,29 @@ function lib.dui:sendMessage(message)
 		print(('Dui %s message sent with data :'):format(self.private.id), json.encode(message, { indent = true }))
 	end
 end
+
+---@param x number
+---@param y number
+function lib.dui:sendMouseMove(x, y)
+	SendDuiMouseMove(self.duiObject, x, y)	
+end
+
+---@param button 'left' | 'middle' | 'right'
+function lib.dui:sendMouseDown(button)
+	SendDuiMouseDown(self.duiObject, button)
+end
+
+---@param button 'left' | 'middle' | 'right'
+function lib.dui:sendMouseUp(button)
+	SendDuiMouseUp(self.duiObject, button)
+end
+
+---@param deltaX number
+---@param deltaY number
+function lib.dui:sendMouseWheel(deltaX, deltaY)
+	SendDuiMouseWheel(self.duiObject, deltaY, deltaX)
+end
+
 
 AddEventHandler('onResourceStop', function(resourceName)
 	if cache.resource ~= resourceName then return end

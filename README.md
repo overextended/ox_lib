@@ -26,7 +26,5 @@ https://www.npmjs.com/package/@overextended/ox_lib
 
 ## 🖥️ Lua Language Server
 
-- Install [Lua Language Server](https://marketplace.visualstudio.com/items?itemName=sumneko.lua) to ease development with annotations, type checking, diagnostics, and more.
-- Install [cfxlua-vscode](https://marketplace.visualstudio.com/items?itemName=overextended.cfxlua-vscode) to add natives and cfxlua runtime declarations to LLS.
-- You can load ox_lib into your global development environment by modifying workspace/user settings "Lua.workspace.library" with the resource path.
-  - e.g. "c:/fxserver/resources/ox_lib"
+- Install [Lua Language Server](https://luals.github.io/#install) to ease development with annotations, type checking, diagnostics, and more.
+- Download [fivem-lls-addon](https://github.com/overextended/fivem-lls-addon) to add support for native declarations and other platform-specific functionality.

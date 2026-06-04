@@ -21,7 +21,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.41.3",
-    "react-hot-toast": "^2.4.0",
+    "react-hot-toast": "^2.5.2",
     "react-markdown": "^8.0.1",
     "remark-gfm": "^3.0.1",
     "tinycolor2": "^1.6.0",
@@ -50,9 +50,7 @@
     "prop-types": "^15.8.1",
     "rimraf": "^3.0.2"
   },
-  "pnpm": {
-    "patchedDependencies": {
-      "react-hot-toast@2.4.0": "patches/react-hot-toast@2.4.0.patch"
-    }
+  "patchedDependencies": {
+    "react-hot-toast@2.5.2": "patches/react-hot-toast@2.5.2.patch"
   }
 }

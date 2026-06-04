@@ -1,0 +1,33 @@
+{
+  "language": "日本語",
+  "settings": "設定",
+  "ui": {
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認",
+    "more": "もっと見る...",
+    "settings": {
+      "locale": "言語を変更",
+      "locale_description": "現在の言語: ${language} (%s)",
+      "notification_audio": "通知音",
+      "notification_position": "通知位置"
+    },
+    "position": {
+      "bottom": "下",
+      "bottom-left": "左下",
+      "bottom-right": "右下",
+      "center-left": "左中央",
+      "center-right": "右中央",
+      "top": "上",
+      "top-left": "左上",
+      "top-right": "右上"
+    }
+  },
+  "open_radial_menu": "ラジアルメニューを開く",
+  "cancel_progress": "現在のプログレスバーをキャンセル",
+  "txadmin_announcement": "%s によるサーバーアナウンス",
+  "txadmin_dm": "%s からのダイレクトメッセージ",
+  "txadmin_warn": "%s から警告を受けました",
+  "txadmin_warn_content": "%s  \nアクションID: %s",
+  "txadmin_scheduledrestart": "スケジュール済み再起動"
+}
