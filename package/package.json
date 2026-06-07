@@ -1,6 +1,6 @@
 {
   "name": "@overextended/ox_lib",
-  "version": "3.37.1",
+  "version": "3.37.2",
   "description": "JS/TS wrapper for ox_lib exports",
   "keywords": [
     "fivem",
