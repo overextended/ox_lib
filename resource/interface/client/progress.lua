@@ -34,10 +34,31 @@ local maxProps = GetConvarInt('ox:progressPropLimit', 2)
 ---@field prop? ProgressPropProps | ProgressPropProps[]
 ---@field disable? { move?: boolean, sprint?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
 
-local function createProp(ped, prop)
-    local ok, result = pcall(lib.requestModel, prop.model)
+---@param model string | number
+---@return boolean
+---@return number | string
+local function loadPropModel(model)
+    local ok, result = pcall(lib.requestModel, model)
 
-    if not ok then return lib.print.error(result) end
+    if not ok then return false, result end
+
+    SetModelAsNoLongerNeeded(result)
+
+    if IsModelAPed(result) or IsModelAVehicle(result) then return false, ("model '%s' is not a valid object"):format(model) end
+
+    local min, max = GetModelDimensions(result)
+    local size = max - min
+    local largestDimension = math.max(size.x, size.y, size.z)
+
+    if largestDimension > 2.5 then return false, ("model '%s' is too large"):format(model) end
+
+    return true, result
+end
+
+local function createProp(ped, prop)
+    local ok, result = loadPropModel(prop.model)
+
+    if not ok or not result then return lib.print.error(result or '') end
 
     local coords = GetEntityCoords(ped)
     local object = CreateObject(result, coords.x, coords.y, coords.z, false, false, false)
@@ -75,10 +96,46 @@ local controls = {
     INPUT_VEH_MOUSE_CONTROL_OVERRIDE = isFivem and 106 or 0x39CCABD5
 }
 
+local setBusyState = setmetatable({}, {
+    __call = function(self)
+        self[1] = playerState.invBusy
+        playerState.invBusy = true
+
+        return self
+    end,
+
+    __close = function(self)
+        playerState.invBusy = self[1]
+        self[1] = nil
+        progress = nil
+    end
+})
+
 ---@param data ProgressProps
-local function startProgress(data)
-    playerState.invBusy = true
+local function startProgress(data, nuiMessage)
+    local invBusy <close> = setBusyState()
     progress = data
+
+    if data.prop then
+        if table.type(data.prop) ~= 'array' then
+            local model = data.prop.model
+
+            local ok, err = loadPropModel(model)
+
+            if not ok then return lib.print.error(err) end
+        else
+            for i = 1, #data.prop do
+                local model = data.prop[i].model
+
+                local ok, err = loadPropModel(model)
+
+                if not ok then return lib.print.error(err) end
+            end
+        end
+
+        TriggerServerEvent('ox_lib:progressProps', data.prop)
+    end
+
     local anim = data.anim
 
     if anim then
@@ -93,12 +150,10 @@ local function startProgress(data)
         end
     end
 
-    if data.prop then
-        TriggerServerEvent('ox_lib:progressProps', data.prop)
-    end
-
     local disable = data.disable
     local startTime = GetGameTimer()
+
+    SendNUIMessage(nuiMessage)
 
     while progress do
         if disable then
@@ -153,7 +208,6 @@ local function startProgress(data)
         end
     end
 
-    playerState.invBusy = false
     local duration = progress ~= false and GetGameTimer() - startTime + 100 -- give slight leeway
 
     if progress == false or duration <= data.duration then
@@ -170,15 +224,13 @@ function lib.progressBar(data)
     while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
-        SendNUIMessage({
+        return startProgress(data, {
             action = 'progress',
             data = {
                 label = data.label,
                 duration = data.duration
             }
         })
-
-        return startProgress(data)
     end
 end
 
@@ -188,7 +240,7 @@ function lib.progressCircle(data)
     while progress ~= nil do Wait(0) end
 
     if not interruptProgress(data) then
-        SendNUIMessage({
+        return startProgress(data, {
             action = 'circleProgress',
             data = {
                 duration = data.duration,
@@ -196,8 +248,6 @@ function lib.progressCircle(data)
                 label = data.label
             }
         })
-
-        return startProgress(data)
     end
 end
 
