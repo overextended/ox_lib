@@ -7,8 +7,6 @@
 ]]
 
 local service = GetConvar('ox:logger', 'datadog')
-local buffer
-local bufferSize = 0
 
 local function removeColorCodes(str)
     -- replace ^[0-9] with nothing
@@ -24,32 +22,6 @@ local function removeColorCodes(str)
 end
 
 local hostname = removeColorCodes(GetConvar('ox:logger:hostname', GetConvar('sv_projectName', 'fxserver')))
-
-local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-
-local function base64encode(data)
-    return ((data:gsub(".", function(x)
-        local r, b = "", x:byte()
-        for i = 8, 1, -1 do
-            r = r .. (b % 2 ^ i - b % 2 ^ (i - 1) > 0 and "1" or "0")
-        end
-        return r;
-    end) .. "0000"):gsub("%d%d%d?%d?%d?%d?", function(x)
-        if (#x < 6) then
-            return ""
-        end
-        local c = 0
-        for i = 1, 6 do
-            c = c + (x:sub(i, i) == "1" and 2 ^ (6 - i) or 0)
-        end
-        return b:sub(c + 1, c + 1)
-    end) .. ({ "", "==", "=" })[#data % 3 + 1])
-end
-
-local function getAuthorizationHeader(user, password)
-    return "Basic " .. base64encode(user .. ":" .. password)
-end
-
 
 local function badResponse(endpoint, status, response)
     warn(('unable to submit logs to %s (status: %s)\n%s'):format(endpoint, status, json.encode(response, { indent = true })))
@@ -92,246 +64,54 @@ local function formatTags(source, tags)
     return tags
 end
 
-if service == 'fivemanage' then
-    local key = GetConvar('fivemanage:key', '')
-    local dataset = GetConvar('fivemanage:dataset', '')
+---@class LogContext
+---@field hostname string
+---@field formatTags fun(source: any, tags: string?): string?
 
-    if key ~= '' then
-        local endpoint = 'https://api.fivemanage.com/api/logs/batch'
+---@class LogProvider
+---@field endpoint string
+---@field headers table<string, string>
+---@field okStatus number
+---@field append fun(buffer: table, source: any, event: string, message: string, ...): nil
+---@field encode fun(buffer: table): string
+---@field parseError fun(status: number, response: any, body: string): any|nil
 
-        local headers = {
-            ['Content-Type'] = 'application/json',
-            ['Authorization'] = key,
-            ['User-Agent'] = 'ox_lib',
-        }
+local KNOWN = { datadog = true, fivemanage = true, loki = true }
 
-        if dataset ~= "" then
-            headers['X-Fivemanage-Dataset'] = dataset
-        end
+if not KNOWN[service] then return lib.logger end
 
-        function lib.logger(source, event, message, ...)
-            if not buffer then
-                buffer = {}
+---@type fun(ctx: LogContext): LogProvider?
+local providerFactory = lib.require(('imports.logger.providers.%s'):format(service))
+if not providerFactory then return lib.logger end
 
-                SetTimeout(500, function()
-                    PerformHttpRequest(endpoint, function(status, _, _, response)
-                        if status ~= 200 then
-                            if type(response) == 'string' then
-                                response = json.decode(response) or response
-                                badResponse(endpoint, status, response)
-                            end
-                        end
-                    end, 'POST', json.encode(buffer), headers)
+local provider = providerFactory({
+    hostname = hostname,
+    formatTags = formatTags,
+})
+if not provider then return lib.logger end
 
-                    buffer = nil
-                    bufferSize = 0
-                end)
-            end
+local buffer
 
-            local metadata = {
-                hostname = hostname,
-                service = event,
-                source = source,
-            }
+function lib.logger(source, event, message, ...)
+    if not buffer then
+        buffer = {}
 
-            local playerTags = formatTags(source, nil)
-            if playerTags and type(playerTags) == 'string' then
-                local tempTable = { string.strsplit(',', playerTags) }
-                for _, v in pairs(tempTable) do
-                    local key, value = string.strsplit(':', v)
-                    if key and value then
-                        metadata[key] = value
-                    end
-                end
-            end
+        SetTimeout(500, function()
+            local body = provider.encode(buffer)
+            buffer = nil
 
-            local args = { ... }
-            for _, arg in pairs(args) do
-                if type(arg) == 'table' then
-                    for k, v in pairs(arg) do
-                        metadata[k] = v
-                    end
-                elseif type(arg) == 'string' then
-                    local key, value = string.strsplit(':', arg)
-                    if key and value then
-                        metadata[key] = value
-                    end
-                end
-            end
+            PerformHttpRequest(provider.endpoint, function(status, _, _, response)
+                if status == provider.okStatus then return end
 
-            bufferSize += 1
-            buffer[bufferSize] = {
-                level = "info",
-                message = message,
-                resource = cache.resource,
-                metadata = metadata,
-            }
-        end
-    end
-end
+                local err = provider.parseError(status, response, body)
+                if err == nil then return end
 
-if service == 'datadog' then
-    local key = GetConvar('datadog:key', ''):gsub("[\'\"]", '')
-
-    if key ~= '' then
-        local endpoint = ('https://http-intake.logs.%s/api/v2/logs'):format(GetConvar('datadog:site', 'datadoghq.com'))
-
-        local headers = {
-            ['Content-Type'] = 'application/json',
-            ['DD-API-KEY'] = key,
-        }
-
-        function lib.logger(source, event, message, ...)
-            if not buffer then
-                buffer = {}
-
-                SetTimeout(500, function()
-                    PerformHttpRequest(endpoint, function(status, _, _, response)
-                        if status ~= 202 then
-                            if type(response) == 'string' then
-                                response = json.decode(response:sub(10)) or response
-                                badResponse(endpoint, status, type(response) == 'table' and response.errors[1] or response)
-                            end
-                        end
-                    end, 'POST', json.encode(buffer), headers)
-
-                    buffer = nil
-                    bufferSize = 0
-                end)
-            end
-
-            bufferSize += 1
-            buffer[bufferSize] = {
-                hostname = hostname,
-                service = event,
-                message = message,
-                resource = cache.resource,
-                ddsource = tostring(source),
-                ddtags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil),
-            }
-        end
-    end
-end
-
-if service == 'loki' then
-    local lokiUser = GetConvar('loki:user', '')
-    local lokiPassword = GetConvar('loki:password', GetConvar('loki:key', ''))
-    local lokiEndpoint = GetConvar('loki:endpoint', '')
-    local lokiTenant = GetConvar('loki:tenant', '')
-    local startingPattern = '^http[s]?://'
-    local headers = {
-        ['Content-Type'] = 'application/json'
-    }
-
-    if lokiUser ~= '' then
-        headers['Authorization'] = getAuthorizationHeader(lokiUser, lokiPassword)
+                badResponse(provider.endpoint, status, err)
+            end, 'POST', body, provider.headers)
+        end)
     end
 
-    if lokiTenant ~= '' then
-        headers['X-Scope-OrgID'] = lokiTenant
-    end
-
-    if not lokiEndpoint:find(startingPattern) then
-        lokiEndpoint = 'https://' .. lokiEndpoint
-    end
-
-    local endpoint = ('%s/loki/api/v1/push'):format(lokiEndpoint)
-
-    function lib.logger(source, event, message, ...)
-        if not buffer then
-            buffer = {}
-
-            SetTimeout(500, function()
-                -- Strip string keys from buffer
-                local tempBuffer = {}
-                for _, v in pairs(buffer) do
-                    tempBuffer[#tempBuffer + 1] = v
-                end
-
-                local postBody = json.encode({ streams = tempBuffer })
-                PerformHttpRequest(endpoint, function(status, _, _, _)
-                    if status ~= 204 then
-                        badResponse(endpoint, status, ("%s"):format(status, postBody))
-                    end
-                end, 'POST', postBody, headers)
-
-                buffer = nil
-            end)
-        end
-
-        -- Generates a nanosecond unix timestamp
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
-
-        -- Initializes values table with the message
-        local values = { message = message }
-
-        -- Stores the player identifiers to values table
-        local playerIdentifierTags = formatTags(source, nil)
-        if playerIdentifierTags and type(playerIdentifierTags) == 'string' then
-            local tempTable = { string.strsplit(',', playerIdentifierTags) }
-            for _, v in pairs(tempTable) do
-                local key, value = string.strsplit(':', v)
-                values[key] = value
-            end
-        end
-
-        -- Adds custom tags to the values table defined either by k:v string or table
-        local args = { ... }
-        for _, arg in pairs(args) do
-            if type(arg) == 'table' then
-                for tagKey, tagValue in pairs(arg) do
-                    values[tagKey] = tagValue
-                end
-            elseif type(arg) == 'string' then
-                local tempTable = { string.strsplit(',', arg) } -- Support multiple, comma separated k:v pairs in a string argument
-
-                for _, v in pairs(tempTable) do
-                    local tagKey, tagValue = string.strsplit(':', v)
-
-                    if tagKey and tagValue then -- If either is empty then we mitigate errors
-                        values[tagKey] = tagValue
-                    else
-                        lib.print.warn(('Invalid tag format for argument "%s" in event "%s"'):format(v, event))
-                    end
-                end
-            end
-        end
-
-        -- initialise stream payload
-        local payload = {
-            stream = {
-                server = hostname,
-                resource = cache.resource,
-                event = event
-            },
-            values = {
-                {
-                    timestamp,
-                    json.encode(values)
-                }
-            }
-        }
-
-        -- Safety check incase it throws index issue
-        if not buffer then
-            buffer = {}
-        end
-
-        -- Checks if the event exists in the buffer and adds to the values if found
-        -- else initialises the stream
-        if not buffer[event] then
-            buffer[event] = payload
-        else
-            local lastIndex = #buffer[event].values
-            lastIndex += 1
-
-            buffer[event].values[lastIndex] = {
-                timestamp,
-                json.encode(values)
-            }
-        end
-    end
+    provider.append(buffer, source, event, message, ...)
 end
 
 return lib.logger
