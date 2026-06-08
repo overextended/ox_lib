@@ -426,19 +426,20 @@ lib.zones = {}
 ---@param data PolyZone
 ---@return CZone
 function lib.zones.poly(data)
-    data.id = #Zones + 1
-    data.thickness = data.thickness or 4
+    local zone = table.clone(data)
+    zone.id = #Zones + 1
+    zone.thickness = zone.thickness or 4
 
-    local pointN = #data.points
+    local pointN = #zone.points
     local points = table.create(pointN, 0)
 
     for i = 1, pointN do
-        points[i] = convertToVector(data.points[i])
+        points[i] = convertToVector(zone.points[i])
     end
 
-    data.polygon = glm.polygon.new(points)
+    zone.polygon = glm.polygon.new(points)
 
-    if not data.polygon:isPlanar() then
+    if not zone.polygon:isPlanar() then
         local zCoords = {}
 
         for i = 1, pointN do
@@ -484,20 +485,20 @@ function lib.zones.poly(data)
 
         for i = 1, pointN do
             ---@diagnostic disable-next-line: param-type-mismatch
-            points[i] = vec3(data.points[i].xy, zCoord)
+            points[i] = vec3(zone.points[i].xy, zCoord)
         end
 
-        data.polygon = glm.polygon.new(points)
+        zone.polygon = glm.polygon.new(points)
     end
 
-    data.coords = data.polygon:centroid()
-    data.__type = 'poly'
-    data.radius = lib.array.reduce(data.polygon, function(acc, point)
-        local distance = #(point - data.coords)
+    zone.coords = zone.polygon:centroid()
+    zone.__type = 'poly'
+    zone.radius = lib.array.reduce(zone.polygon, function(acc, point)
+        local distance = #(point - zone.coords)
         return distance > acc and distance or acc
     end, 0)
 
-    return setZone(data)
+    return setZone(zone)
 end
 
 ---@class BoxZone : ZoneProperties
@@ -508,22 +509,23 @@ end
 ---@param data BoxZone
 ---@return CZone
 function lib.zones.box(data)
-    data.id = #Zones + 1
-    data.coords = convertToVector(data.coords)
-    data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
-    data.thickness = data.size.z * 2
-    data.rotation = quat(data.rotation or 0, vec3(0, 0, 1))
-    data.__type = 'box'
-    data.width = data.size.x * 2
-    data.length = data.size.y * 2
-    data.polygon = (data.rotation * glm.polygon.new({
-        vec3(data.size.x, data.size.y, 0),
-        vec3(-data.size.x, data.size.y, 0),
-        vec3(-data.size.x, -data.size.y, 0),
-        vec3(data.size.x, -data.size.y, 0),
-    }) + data.coords)
+    local zone = table.clone(data)
+    zone.id = #Zones + 1
+    zone.coords = convertToVector(zone.coords)
+    zone.size = zone.size and convertToVector(zone.size) / 2 or vec3(2)
+    zone.thickness = zone.size.z * 2
+    zone.rotation = quat(zone.rotation or 0, vec3(0, 0, 1))
+    zone.__type = 'box'
+    zone.width = zone.size.x * 2
+    zone.length = zone.size.y * 2
+    zone.polygon = (zone.rotation * glm.polygon.new({
+        vec3(zone.size.x, zone.size.y, 0),
+        vec3(-zone.size.x, zone.size.y, 0),
+        vec3(-zone.size.x, -zone.size.y, 0),
+        vec3(zone.size.x, -zone.size.y, 0),
+    }) + zone.coords)
 
-    return setZone(data)
+    return setZone(zone)
 end
 
 ---@class SphereZone : ZoneProperties
@@ -533,13 +535,14 @@ end
 ---@param data SphereZone
 ---@return CZone
 function lib.zones.sphere(data)
-    data.id = #Zones + 1
-    data.coords = convertToVector(data.coords)
-    data.radius = (data.radius or 2) + 0.0
-    data.__type = 'sphere'
-    data.contains = insideSphere
+    local zone = table.clone(data)
+    zone.id = #Zones + 1
+    zone.coords = convertToVector(zone.coords)
+    zone.radius = (zone.radius or 2) + 0.0
+    zone.__type = 'sphere'
+    zone.contains = insideSphere
 
-    return setZone(data)
+    return setZone(zone)
 end
 
 function lib.zones.getAllZones() return Zones end
