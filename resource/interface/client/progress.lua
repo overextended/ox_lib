@@ -38,6 +38,10 @@ local maxProps = GetConvarInt('ox:progressPropLimit', 2)
 ---@return boolean
 ---@return number | string
 local function loadPropModel(model)
+    if not model then
+        return false, 'prop model is nil'
+    end
+
     local ok, result = pcall(lib.requestModel, model)
 
     if not ok then return false, result end
@@ -120,16 +124,19 @@ local function startProgress(data, nuiMessage)
         if table.type(data.prop) ~= 'array' then
             local model = data.prop.model
 
-            local ok, err = loadPropModel(model)
-
-            if not ok then return lib.print.error(err) end
-        else
-            for i = 1, #data.prop do
-                local model = data.prop[i].model
-
+            if model then
                 local ok, err = loadPropModel(model)
 
                 if not ok then return lib.print.error(err) end
+            end
+        else
+            for i = 1, #data.prop do
+				local prop = data.prop[i]
+				if prop and prop.model then
+					local ok, err = loadPropModel(prop.model)
+
+					if not ok then return lib.print.error(err) end
+				end
             end
         end
 

@@ -11,6 +11,10 @@
 ---@param timeout number? Approximate milliseconds to wait for the model to load. Default is 10000.
 ---@return number model
 function lib.requestModel(model, timeout)
+    if not model then
+        error('attempted to load invalid model (nil)')
+    end
+
     if type(model) ~= 'number' then model = joaat(model) end
     if HasModelLoaded(model) then return model end
 
