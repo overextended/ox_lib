@@ -153,7 +153,7 @@ function lib.points.new(...)
 
     -- Support sending a single argument containing point data
     if type(args[1]) == 'table' then
-        self = table.clone(args[1])
+        self = args[1]
         self.id = id
         self.remove = removePoint
     else
