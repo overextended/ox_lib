@@ -47,7 +47,7 @@ function lib.setValidCallback(callbackName, isValid)
 end
 
 function lib.isCallbackValid(callbackName)
-    return registeredCallbacks[callbackName] == GetInvokingResource() or cache.resource
+    return (registeredCallbacks[callbackName] or cache.resource) == GetInvokingResource()
 end
 
 local cbEvent = '__ox_cb_%s'
