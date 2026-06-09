@@ -1,16 +1,20 @@
+<div align="center">
+
 # ox_lib
 
-A FiveM library and resource implementing reusable modules, methods, and UI elements.
+A comprehensive FiveM development library that streamlines resource creation through shared utilities, UI components, and common framework abstractions.
 
-![](https://img.shields.io/github/downloads/overextended/ox_lib/total?logo=github)
-![](https://img.shields.io/github/downloads/overextended/ox_lib/latest/total?logo=github)
-![](https://img.shields.io/github/contributors/overextended/ox_lib?logo=github)
-![](https://img.shields.io/github/v/release/overextended/ox_lib?logo=github)
+[![](https://img.shields.io/github/downloads/overextended/ox_lib/total?style=for-the-badge&logo=github)](https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip)
+[![](https://img.shields.io/github/downloads/overextended/ox_lib/latest/total?style=for-the-badge&logo=github)](https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip)
+[![](https://img.shields.io/github/v/release/overextended/ox_lib?style=for-the-badge&logo=github)](https://github.com/overextended/ox_lib/releases/latest/)\
+[![](https://badges.5metrics.dev/ox_lib/serverRank.svg?style=for-the-badge)](https://5metrics.dev/resource/ox_lib)
+[![](https://badges.5metrics.dev/ox_lib/servers.svg?style=for-the-badge)](https://5metrics.dev/resource/ox_lib)
+[![](https://badges.5metrics.dev/ox_lib/players.svg?style=for-the-badge)](https://5metrics.dev/resource/ox_lib)
 
-For guidelines to contributing to the project, and to see our Contributor License Agreement, see [CONTRIBUTING.md](./CONTRIBUTING.md)
-
+For guidelines to contributing to the project, and to see our Contributor License Agreement, see [CONTRIBUTING.md](./CONTRIBUTING.md)\
 For additional legal notices, refer to [NOTICE.md](./NOTICE.md).
 
+</div>
 
 ## 📚 Documentation
 
