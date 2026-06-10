@@ -32,12 +32,13 @@ local settings = require 'resource.settings'
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.notify(data)
     local sound = settings.notification_audio and data.sound
-    data.sound = nil
-    data.position = data.position or settings.notification_position
+    local payload = table.clone(data)
+    payload.sound = nil
+    payload.position = payload.position or settings.notification_position
 
     SendNUIMessage({
         action = 'notify',
-        data = data
+        data = payload
     })
 
     if not sound then return end

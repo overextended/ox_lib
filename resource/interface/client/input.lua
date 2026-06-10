@@ -45,11 +45,14 @@ function lib.inputDialog(heading, rows, options)
     if input then return end
     input = promise.new()
 
-    -- Backwards compat with string tables
+    -- Backwards compat with string tables (build a normalized copy, don't mutate caller's rows)
+    local normalized = table.create(#rows, 0)
+
     for i = 1, #rows do
-        if type(rows[i]) == 'string' then
-            rows[i] = { type = 'input', label = rows[i] --[[@as string]] }
-        end
+        local row = rows[i]
+        normalized[i] = type(row) == 'string'
+            and { type = 'input', label = row --[[@as string]] }
+            or row
     end
 
     lib.setNuiFocus(false)
@@ -57,7 +60,7 @@ function lib.inputDialog(heading, rows, options)
         action = 'openDialog',
         data = {
             heading = heading,
-            rows = rows,
+            rows = normalized,
             options = options
         }
     })
