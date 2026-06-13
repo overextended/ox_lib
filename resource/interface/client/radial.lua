@@ -195,10 +195,9 @@ function lib.removeRadialItem(id)
 end
 
 ---Registers an item or array of items in a specific radial sub menu.
----@param string parentMenuId
+---@param parentMenuId string
 ---@param items RadialMenuItem | RadialMenuItem[]
 function lib.addRadialSubItem(parentMenuId, items)
-
     local parentMenu = menus[parentMenuId]
     if not parentMenu then
         return error('No radial menu with such id found.')
@@ -215,13 +214,13 @@ function lib.addRadialSubItem(parentMenuId, items)
         for j = 1, #parentMenu.items do
             if parentMenu.items[j].id == item.id then
                 parentMenu.items[j] = item
+                break
             end
 
             if j == #parentMenu.items then
                 parentMenu.items[#parentMenu.items + 1] = item
             end
         end
-        
     end
 
     if isOpen then
