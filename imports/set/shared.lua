@@ -89,9 +89,10 @@ function lib.set:each()
 end
 
 function lib.set:__pairs()
-    return self:each(), nil, nil
+    return next, self.private.items
 end
 
+lib.set.__ipairs = lib.set.__pairs
 lib.set.__len = lib.set.size
 
 ---@return Array
