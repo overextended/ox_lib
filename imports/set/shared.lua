@@ -17,9 +17,9 @@ function lib.set:constructor(...)
     self.private.items = {}
     self.private.index = {}
 
-    local n = select('#', ...)
-    for i = 1, n do
-        self:add((select(i, ...)))
+    local args = { ... }
+    for i = 1, select('#', ...) do
+        self:add(args[i])
     end
 end
 

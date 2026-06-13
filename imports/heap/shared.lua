@@ -55,13 +55,17 @@ end
 ---@param ... any
 ---@return Heap self
 function lib.heap:push(...)
+    local n = select('#', ...)
+    if n == 0 then return self end
+
     local items = self.private.items
     local lt = self.private.lt
-    local n = select('#', ...)
+    local startIndex = #items
+
+    table.move({ ... }, 1, n, startIndex + 1, items)
 
     for i = 1, n do
-        items[#items + 1] = (select(i, ...))
-        siftUp(items, #items, lt)
+        siftUp(items, startIndex + i, lt)
     end
 
     return self
