@@ -123,7 +123,7 @@ end
 
 ---@return Lru self
 function lib.lru:clear()
-    self.private.map = {}
+    table.wipe(self.private.map)
     self.private.head = nil
     self.private.tail = nil
     self.private.count = 0

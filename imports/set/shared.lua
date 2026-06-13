@@ -72,8 +72,8 @@ end
 
 ---@return Set self
 function lib.set:clear()
-    self.private.items = {}
-    self.private.index = {}
+    table.wipe(self.private.items)
+    table.wipe(self.private.index)
     return self
 end
 

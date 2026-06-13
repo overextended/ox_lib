@@ -88,7 +88,7 @@ end
 
 ---@return RingBuffer self
 function lib.ringbuffer:clear()
-    self.private.items = table.create(self.private.capacity, 0)
+    table.wipe(self.private.items)
     self.private.count = 0
     self.private.nextIndex = 1
     return self

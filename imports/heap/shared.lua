@@ -107,7 +107,7 @@ end
 
 ---@return Heap self
 function lib.heap:clear()
-    self.private.items = {}
+    table.wipe(self.private.items)
     return self
 end
 
