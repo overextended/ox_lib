@@ -52,12 +52,18 @@ function Heap:constructor(comparator)
     self.private.lt = comparator or defaultLess
 end
 
----@param value any
+---@param ... any
 ---@return Heap self
-function Heap:push(value)
+function Heap:push(...)
     local items = self.private.items
-    items[#items + 1] = value
-    siftUp(items, #items, self.private.lt)
+    local lt = self.private.lt
+    local n = select('#', ...)
+
+    for i = 1, n do
+        items[#items + 1] = (select(i, ...))
+        siftUp(items, #items, lt)
+    end
+
     return self
 end
 
@@ -101,20 +107,6 @@ function Heap:clear()
     return self
 end
 
----@param values any[]
----@return Heap self
-function Heap:pushAll(values)
-    local items = self.private.items
-    local lt = self.private.lt
-
-    for i = 1, #values do
-        items[#items + 1] = values[i]
-        siftUp(items, #items, lt)
-    end
-
-    return self
-end
-
 ---@return Array sorted Newly-allocated array drained in pop order.
 function Heap:drain()
     local out = lib.array:new()
@@ -125,6 +117,8 @@ function Heap:drain()
     end
     return out
 end
+
+Heap.__len = Heap.size
 
 lib.heap = Heap
 return lib.heap

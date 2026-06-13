@@ -141,5 +141,11 @@ function Lru:each()
     end
 end
 
+function Lru:__pairs()
+    return self:each(), nil, nil
+end
+
+Lru.__len = Lru.size
+
 lib.lru = Lru
 return lib.lru

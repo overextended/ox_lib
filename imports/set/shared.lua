@@ -11,85 +11,99 @@
 local Set = lib.class('Set')
 
 ---@class SetConstructor
----@overload fun(self: Set, values?: any[]): Set
+---@overload fun(self: Set, ...: any): Set
 ---@private
----@param values? any[]
-function Set:constructor(values)
+function Set:constructor(...)
     self.private.items = {}
-    self.private.count = 0
+    self.private.index = {}
 
-    if values then
-        for i = 1, #values do
-            local v = values[i]
-            if not self.private.items[v] then
-                self.private.items[v] = true
-                self.private.count += 1
-            end
-        end
+    local n = select('#', ...)
+    for i = 1, n do
+        self:add((select(i, ...)))
     end
 end
 
 ---@param value any
 ---@return Set self
 function Set:add(value)
-    if not self.private.items[value] then
-        self.private.items[value] = true
-        self.private.count += 1
-    end
+    if value == nil or self.private.index[value] then return self end
+    local items = self.private.items
+    local i = #items + 1
+    items[i] = value
+    self.private.index[value] = i
     return self
 end
 
 ---@param value any
 ---@return boolean removed
 function Set:remove(value)
-    if not self.private.items[value] then return false end
-    self.private.items[value] = nil
-    self.private.count -= 1
+    local i = self.private.index[value]
+    if not i then return false end
+
+    local items = self.private.items
+    local lastI = #items
+
+    if i ~= lastI then
+        local last = items[lastI]
+        items[i] = last
+        self.private.index[last] = i
+    end
+
+    items[lastI] = nil
+    self.private.index[value] = nil
     return true
 end
 
 ---@param value any
 ---@return boolean
 function Set:has(value)
-    return self.private.items[value] ~= nil
+    return self.private.index[value] ~= nil
 end
 
 ---@return integer
 function Set:size()
-    return self.private.count
+    return #self.private.items
 end
 
 ---@return boolean
 function Set:isEmpty()
-    return self.private.count == 0
+    return #self.private.items == 0
 end
 
 ---@return Set self
 function Set:clear()
     self.private.items = {}
-    self.private.count = 0
+    self.private.index = {}
     return self
 end
 
 ---@return fun(): any?
 function Set:each()
     local items = self.private.items
-    local k
+    local i = 0
     return function()
-        k = next(items, k)
-        return k
+        i += 1
+        return items[i]
     end
 end
 
+function Set:__pairs()
+    return self:each(), nil, nil
+end
+
+Set.__len = Set.size
+
 ---@return Array
 function Set:toArray()
-    return lib.array:from(self:each())
+    return lib.array:from(self.private.items)
 end
 
 ---@param other Set
 ---@return Set
 function Set:union(other)
-    local result = lib.set(self:toArray())
+    local result = Set:new()
+    local items = self.private.items
+    for i = 1, #items do result:add(items[i]) end
     for v in other:each() do result:add(v) end
     return result
 end
@@ -97,9 +111,10 @@ end
 ---@param other Set
 ---@return Set
 function Set:intersection(other)
-    local result = lib.set()
-    for v in self:each() do
-        if other:has(v) then result:add(v) end
+    local result = Set:new()
+    local items = self.private.items
+    for i = 1, #items do
+        if other:has(items[i]) then result:add(items[i]) end
     end
     return result
 end
@@ -107,9 +122,10 @@ end
 ---@param other Set
 ---@return Set
 function Set:difference(other)
-    local result = lib.set()
-    for v in self:each() do
-        if not other:has(v) then result:add(v) end
+    local result = Set:new()
+    local items = self.private.items
+    for i = 1, #items do
+        if not other:has(items[i]) then result:add(items[i]) end
     end
     return result
 end
@@ -117,9 +133,10 @@ end
 ---@param other Set
 ---@return boolean
 function Set:equals(other)
-    if self.private.count ~= other:size() then return false end
-    for v in self:each() do
-        if not other:has(v) then return false end
+    if #self.private.items ~= other:size() then return false end
+    local items = self.private.items
+    for i = 1, #items do
+        if not other:has(items[i]) then return false end
     end
     return true
 end
@@ -127,9 +144,10 @@ end
 ---@param other Set
 ---@return boolean
 function Set:isSubsetOf(other)
-    if self.private.count > other:size() then return false end
-    for v in self:each() do
-        if not other:has(v) then return false end
+    if #self.private.items > other:size() then return false end
+    local items = self.private.items
+    for i = 1, #items do
+        if not other:has(items[i]) then return false end
     end
     return true
 end

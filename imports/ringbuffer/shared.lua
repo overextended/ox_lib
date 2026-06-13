@@ -109,6 +109,12 @@ function RingBuffer:each()
     end
 end
 
+function RingBuffer:__pairs()
+    return self:each(), nil, nil
+end
+
+RingBuffer.__len = RingBuffer.size
+
 ---@return Array oldestFirst
 function RingBuffer:toArray()
     return lib.array:from(self:each())
