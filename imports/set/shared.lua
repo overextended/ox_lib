@@ -44,9 +44,10 @@ function lib.set:remove(value)
     local lastI = #items
 
     if i ~= lastI then
-        local last = items[lastI]
-        items[i] = last
-        self.private.index[last] = i
+        table.move(items, i + 1, lastI, i)
+        for j = i, lastI - 1 do
+            self.private.index[items[j]] = j
+        end
     end
 
     items[lastI] = nil
