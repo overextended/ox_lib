@@ -111,7 +111,7 @@ function lib.heap:clear()
     return self
 end
 
----@return Array sorted newly-allocated array drained in pop order.
+---@return Array sorted Newly-allocated array drained in pop order.
 function lib.heap:drain()
     local out = lib.array:new()
     local n = 0
