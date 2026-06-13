@@ -14,7 +14,7 @@
 
 ---@class Lru : OxClass
 ---@field private new LruConstructor
-local Lru = lib.class('Lru')
+lib.lru = lib.class('Lru')
 
 local function detach(self, node)
     local prev, nxt = node.prev, node.next
@@ -36,7 +36,7 @@ end
 ---@overload fun(self: Lru, capacity: integer): Lru
 ---@private
 ---@param capacity integer
-function Lru:constructor(capacity)
+function lib.lru:constructor(capacity)
     if type(capacity) ~= 'number' or capacity < 1 or capacity % 1 ~= 0 then
         error("capacity must be a positive integer", 2)
     end
@@ -50,7 +50,7 @@ end
 
 ---@param key any
 ---@return any?
-function Lru:get(key)
+function lib.lru:get(key)
     local node = self.private.map[key]
     if not node then return nil end
     detach(self, node)
@@ -62,7 +62,7 @@ end
 ---@param value any
 ---@return any? evictedKey
 ---@return any? evictedValue
-function Lru:set(key, value)
+function lib.lru:set(key, value)
     local node = self.private.map[key]
 
     if node then
@@ -88,13 +88,13 @@ end
 
 ---@param key any
 ---@return boolean
-function Lru:has(key)
+function lib.lru:has(key)
     return self.private.map[key] ~= nil
 end
 
 ---@param key any
 ---@return any?
-function Lru:peek(key)
+function lib.lru:peek(key)
     local node = self.private.map[key]
     if not node then return nil end
     return node.value
@@ -102,7 +102,7 @@ end
 
 ---@param key any
 ---@return boolean removed
-function Lru:delete(key)
+function lib.lru:delete(key)
     local node = self.private.map[key]
     if not node then return false end
     detach(self, node)
@@ -112,17 +112,17 @@ function Lru:delete(key)
 end
 
 ---@return integer
-function Lru:size()
+function lib.lru:size()
     return self.private.count
 end
 
 ---@return integer
-function Lru:capacity()
+function lib.lru:capacity()
     return self.private.capacity
 end
 
 ---@return Lru self
-function Lru:clear()
+function lib.lru:clear()
     self.private.map = {}
     self.private.head = nil
     self.private.tail = nil
@@ -131,7 +131,7 @@ function Lru:clear()
 end
 
 ---@return fun(): any?, any?
-function Lru:each()
+function lib.lru:each()
     local node = self.private.head
     return function()
         if not node then return nil end
@@ -141,11 +141,10 @@ function Lru:each()
     end
 end
 
-function Lru:__pairs()
+function lib.lru:__pairs()
     return self:each(), nil, nil
 end
 
-Lru.__len = Lru.size
+lib.lru.__len = lib.lru.size
 
-lib.lru = Lru
 return lib.lru

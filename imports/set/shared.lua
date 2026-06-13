@@ -8,12 +8,12 @@
 
 ---@class Set : OxClass
 ---@field private new SetConstructor
-local Set = lib.class('Set')
+lib.set = lib.class('Set')
 
 ---@class SetConstructor
 ---@overload fun(self: Set, ...: any): Set
 ---@private
-function Set:constructor(...)
+function lib.set:constructor(...)
     self.private.items = {}
     self.private.index = {}
 
@@ -25,7 +25,7 @@ end
 
 ---@param value any
 ---@return Set self
-function Set:add(value)
+function lib.set:add(value)
     if value == nil or self.private.index[value] then return self end
     local items = self.private.items
     local i = #items + 1
@@ -36,7 +36,7 @@ end
 
 ---@param value any
 ---@return boolean removed
-function Set:remove(value)
+function lib.set:remove(value)
     local i = self.private.index[value]
     if not i then return false end
 
@@ -56,29 +56,29 @@ end
 
 ---@param value any
 ---@return boolean
-function Set:has(value)
+function lib.set:has(value)
     return self.private.index[value] ~= nil
 end
 
 ---@return integer
-function Set:size()
+function lib.set:size()
     return #self.private.items
 end
 
 ---@return boolean
-function Set:isEmpty()
+function lib.set:isEmpty()
     return #self.private.items == 0
 end
 
 ---@return Set self
-function Set:clear()
+function lib.set:clear()
     self.private.items = {}
     self.private.index = {}
     return self
 end
 
 ---@return fun(): any?
-function Set:each()
+function lib.set:each()
     local items = self.private.items
     local i = 0
     return function()
@@ -87,21 +87,21 @@ function Set:each()
     end
 end
 
-function Set:__pairs()
+function lib.set:__pairs()
     return self:each(), nil, nil
 end
 
-Set.__len = Set.size
+lib.set.__len = lib.set.size
 
 ---@return Array
-function Set:toArray()
+function lib.set:toArray()
     return lib.array:from(self.private.items)
 end
 
 ---@param other Set
 ---@return Set
-function Set:union(other)
-    local result = Set:new()
+function lib.set:union(other)
+    local result = lib.set:new()
     local items = self.private.items
     for i = 1, #items do result:add(items[i]) end
     for v in other:each() do result:add(v) end
@@ -110,8 +110,8 @@ end
 
 ---@param other Set
 ---@return Set
-function Set:intersection(other)
-    local result = Set:new()
+function lib.set:intersection(other)
+    local result = lib.set:new()
     local items = self.private.items
     for i = 1, #items do
         if other:has(items[i]) then result:add(items[i]) end
@@ -121,8 +121,8 @@ end
 
 ---@param other Set
 ---@return Set
-function Set:difference(other)
-    local result = Set:new()
+function lib.set:difference(other)
+    local result = lib.set:new()
     local items = self.private.items
     for i = 1, #items do
         if not other:has(items[i]) then result:add(items[i]) end
@@ -132,7 +132,7 @@ end
 
 ---@param other Set
 ---@return boolean
-function Set:equals(other)
+function lib.set:equals(other)
     if #self.private.items ~= other:size() then return false end
     local items = self.private.items
     for i = 1, #items do
@@ -143,7 +143,7 @@ end
 
 ---@param other Set
 ---@return boolean
-function Set:isSubsetOf(other)
+function lib.set:isSubsetOf(other)
     if #self.private.items > other:size() then return false end
     local items = self.private.items
     for i = 1, #items do
@@ -152,5 +152,4 @@ function Set:isSubsetOf(other)
     return true
 end
 
-lib.set = Set
 return lib.set

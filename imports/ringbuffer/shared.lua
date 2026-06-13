@@ -8,13 +8,13 @@
 
 ---@class RingBuffer : OxClass
 ---@field private new RingBufferConstructor
-local RingBuffer = lib.class('RingBuffer')
+lib.ringbuffer = lib.class('RingBuffer')
 
 ---@class RingBufferConstructor
 ---@overload fun(self: RingBuffer, capacity: integer): RingBuffer
 ---@private
 ---@param capacity integer
-function RingBuffer:constructor(capacity)
+function lib.ringbuffer:constructor(capacity)
     if type(capacity) ~= 'number' or capacity < 1 or capacity % 1 ~= 0 then
         error("capacity must be a positive integer", 2)
     end
@@ -27,7 +27,7 @@ end
 
 ---@param value any
 ---@return any? evicted Value that was overwritten, if the buffer was full.
-function RingBuffer:push(value)
+function lib.ringbuffer:push(value)
     local items = self.private.items
     local capacity = self.private.capacity
     local nextIndex = self.private.nextIndex
@@ -52,7 +52,7 @@ end
 
 ---@param i integer Positive index from the oldest (1 = oldest); negative from the newest (-1 = newest).
 ---@return any?
-function RingBuffer:get(i)
+function lib.ringbuffer:get(i)
     if type(i) ~= 'number' or i % 1 ~= 0 then
         error("index must be an integer", 2)
     end
@@ -67,27 +67,27 @@ function RingBuffer:get(i)
 end
 
 ---@return integer
-function RingBuffer:size()
+function lib.ringbuffer:size()
     return self.private.count
 end
 
 ---@return integer
-function RingBuffer:capacity()
+function lib.ringbuffer:capacity()
     return self.private.capacity
 end
 
 ---@return boolean
-function RingBuffer:isFull()
+function lib.ringbuffer:isFull()
     return self.private.count == self.private.capacity
 end
 
 ---@return boolean
-function RingBuffer:isEmpty()
+function lib.ringbuffer:isEmpty()
     return self.private.count == 0
 end
 
 ---@return RingBuffer self
-function RingBuffer:clear()
+function lib.ringbuffer:clear()
     self.private.items = table.create(self.private.capacity, 0)
     self.private.count = 0
     self.private.nextIndex = 1
@@ -95,7 +95,7 @@ function RingBuffer:clear()
 end
 
 ---@return fun(): any?
-function RingBuffer:each()
+function lib.ringbuffer:each()
     local count = self.private.count
     local capacity = self.private.capacity
     local items = self.private.items
@@ -109,16 +109,15 @@ function RingBuffer:each()
     end
 end
 
-function RingBuffer:__pairs()
+function lib.ringbuffer:__pairs()
     return self:each(), nil, nil
 end
 
-RingBuffer.__len = RingBuffer.size
+lib.ringbuffer.__len = lib.ringbuffer.size
 
 ---@return Array oldestFirst
-function RingBuffer:toArray()
+function lib.ringbuffer:toArray()
     return lib.array:from(self:each())
 end
 
-lib.ringbuffer = RingBuffer
 return lib.ringbuffer

@@ -8,7 +8,7 @@
 
 ---@class Heap : OxClass
 ---@field private new HeapConstructor
-local Heap = lib.class('Heap')
+lib.heap = lib.class('Heap')
 
 local function defaultLess(a, b) return a < b end
 
@@ -43,7 +43,7 @@ end
 ---@overload fun(self: Heap, comparator?: fun(a: any, b: any): boolean): Heap
 ---@private
 ---@param comparator? fun(a: any, b: any): boolean Returns true when `a` should come before `b`. Defaults to `a < b` (min-heap).
-function Heap:constructor(comparator)
+function lib.heap:constructor(comparator)
     if comparator ~= nil and type(comparator) ~= 'function' then
         error("comparator must be a function or nil", 2)
     end
@@ -54,7 +54,7 @@ end
 
 ---@param ... any
 ---@return Heap self
-function Heap:push(...)
+function lib.heap:push(...)
     local items = self.private.items
     local lt = self.private.lt
     local n = select('#', ...)
@@ -68,7 +68,7 @@ function Heap:push(...)
 end
 
 ---@return any?
-function Heap:pop()
+function lib.heap:pop()
     local items = self.private.items
     local n = #items
     if n == 0 then return nil end
@@ -87,28 +87,28 @@ function Heap:pop()
 end
 
 ---@return any?
-function Heap:peek()
+function lib.heap:peek()
     return self.private.items[1]
 end
 
 ---@return integer
-function Heap:size()
+function lib.heap:size()
     return #self.private.items
 end
 
 ---@return boolean
-function Heap:isEmpty()
+function lib.heap:isEmpty()
     return #self.private.items == 0
 end
 
 ---@return Heap self
-function Heap:clear()
+function lib.heap:clear()
     self.private.items = {}
     return self
 end
 
 ---@return Array sorted Newly-allocated array drained in pop order.
-function Heap:drain()
+function lib.heap:drain()
     local out = lib.array:new()
     local n = 0
     while #self.private.items > 0 do
@@ -118,7 +118,6 @@ function Heap:drain()
     return out
 end
 
-Heap.__len = Heap.size
+lib.heap.__len = lib.heap.size
 
-lib.heap = Heap
 return lib.heap
