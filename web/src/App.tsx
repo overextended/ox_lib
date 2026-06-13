@@ -15,6 +15,7 @@ import SkillCheck from './features/skillcheck';
 import RadialMenu from './features/menu/radial';
 import { theme } from './theme';
 import { MantineProvider } from '@mantine/core';
+import { useEffect } from 'react';
 import { useConfig } from './providers/ConfigProvider';
 
 const App: React.FC = () => {
@@ -24,7 +25,9 @@ const App: React.FC = () => {
     setClipboard(data);
   });
 
-  fetchNui('init');
+  useEffect(() => {
+    fetchNui('init').catch(() => undefined);
+  }, []);
 
   return (
     <MantineProvider withNormalizeCSS withGlobalStyles theme={{ ...theme, ...config }}>
