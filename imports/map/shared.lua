@@ -111,7 +111,7 @@ function lib.map:delete(key)
     if not pos then return false end
 
     self.private.keys[pos] = TOMBSTONE
-    self.private.values[pos] = nil
+    self.private.values[pos] = TOMBSTONE
     self.private.index[key] = nil
     self.private.count -= 1
     self.private.deleted += 1
