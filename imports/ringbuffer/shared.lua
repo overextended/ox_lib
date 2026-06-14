@@ -6,8 +6,17 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@diagnostic disable: invisible
+
+---@class RingBufferPrivate
+---@field items any[]
+---@field capacity integer
+---@field count integer
+---@field nextIndex integer
+
 ---@class RingBuffer : OxClass
 ---@field private new RingBufferConstructor
+---@field private private RingBufferPrivate
 lib.ringbuffer = lib.class('RingBuffer')
 
 ---@class RingBufferConstructor
@@ -45,6 +54,8 @@ function lib.ringbuffer:push(value)
     return evicted
 end
 
+---@param self RingBuffer
+---@return integer
 local function oldestIndex(self)
     if self.private.count < self.private.capacity then return 1 end
     return self.private.nextIndex

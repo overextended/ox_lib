@@ -6,12 +6,23 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@alias HeapComparator fun(a: any, b: any): boolean
+
+---@class HeapPrivate
+---@field items any[]
+---@field lt HeapComparator
+
 ---@class Heap : OxClass
 ---@field private new HeapConstructor
+---@field private private HeapPrivate
 lib.heap = lib.class('Heap')
 
+---@type HeapComparator
 local function defaultLess(a, b) return a < b end
 
+---@param items any[]
+---@param i integer
+---@param lt HeapComparator
 local function siftUp(items, i, lt)
     while i > 1 do
         local parent = i >> 1
@@ -21,6 +32,10 @@ local function siftUp(items, i, lt)
     end
 end
 
+---@param items any[]
+---@param i integer
+---@param n integer
+---@param lt HeapComparator
 local function siftDown(items, i, n, lt)
     while true do
         local left = i * 2
@@ -40,9 +55,9 @@ local function siftDown(items, i, n, lt)
 end
 
 ---@class HeapConstructor
----@overload fun(self: Heap, comparator?: fun(a: any, b: any): boolean): Heap
+---@overload fun(self: Heap, comparator?: HeapComparator): Heap
 ---@private
----@param comparator? fun(a: any, b: any): boolean Returns true when `a` should come before `b`. Defaults to `a < b` (min-heap).
+---@param comparator? HeapComparator Returns true when `a` should come before `b`. Defaults to `a < b` (min-heap).
 function lib.heap:constructor(comparator)
     if comparator ~= nil and type(comparator) ~= 'function' then
         error("comparator must be a function or nil", 2)

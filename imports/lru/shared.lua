@@ -6,16 +6,28 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@diagnostic disable: invisible
+
 ---@class LruNode
 ---@field key any
 ---@field value any
 ---@field prev? LruNode
 ---@field next? LruNode
 
+---@class LruPrivate
+---@field capacity integer
+---@field map table<any, LruNode>
+---@field count integer
+---@field head? LruNode
+---@field tail? LruNode
+
 ---@class Lru : OxClass
 ---@field private new LruConstructor
+---@field private private LruPrivate
 lib.lru = lib.class('Lru')
 
+---@param self Lru
+---@param node LruNode
 local function detach(self, node)
     local prev, nxt = node.prev, node.next
     if prev then prev.next = nxt else self.private.head = nxt end
@@ -24,6 +36,8 @@ local function detach(self, node)
     node.next = nil
 end
 
+---@param self Lru
+---@param node LruNode
 local function attachHead(self, node)
     node.prev = nil
     node.next = self.private.head
@@ -78,7 +92,7 @@ function lib.lru:set(key, value)
     self.private.count += 1
 
     if self.private.count > self.private.capacity then
-        local evicted = self.private.tail
+        local evicted = self.private.tail --[[@as LruNode]]
         detach(self, evicted)
         self.private.map[evicted.key] = nil
         self.private.count -= 1
