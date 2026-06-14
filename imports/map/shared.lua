@@ -6,20 +6,23 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@diagnostic disable: invisible
+
 ---@class Map : OxClass
 ---@field private new MapConstructor
 lib.map = lib.class('Map')
 
-local TOMBSTONE = {}
-local MIN_REBUILD = 8
+local TOMBSTONE = {} ---@type table
+local MIN_REBUILD = 8 ---@type integer
 
+---@param self Map
 local function rebuild(self)
-    local newKeys = {}
-    local newValues = {}
-    local newIndex = {}
-    local keys = self.private.keys
-    local values = self.private.values
-    local n = 0
+    local newKeys = {} ---@type any[]
+    local newValues = {} ---@type any[]
+    local newIndex = {} ---@type table<any, integer>
+    local n = 0 ---@type integer
+    local keys = self.private.keys ---@type any[]
+    local values = self.private.values ---@type any[]
 
     for i = 1, #keys do
         local k = keys[i]
@@ -71,13 +74,13 @@ function lib.map:set(key, value)
         return self
     end
 
-    local pos = self.private.index[key]
+    local pos = self.private.index[key] ---@type integer?
 
     if pos then
         self.private.values[pos] = value
     else
-        local keys = self.private.keys
-        local newPos = #keys + 1
+        local keys = self.private.keys ---@type any[]
+        local newPos = #keys + 1 ---@type integer
         keys[newPos] = key
         self.private.values[newPos] = value
         self.private.index[key] = newPos
@@ -90,7 +93,7 @@ end
 ---@param key any
 ---@return any?
 function lib.map:get(key)
-    local pos = self.private.index[key]
+    local pos = self.private.index[key] ---@type integer?
     if not pos then return nil end
     return self.private.values[pos]
 end
@@ -104,7 +107,7 @@ end
 ---@param key any
 ---@return boolean removed
 function lib.map:delete(key)
-    local pos = self.private.index[key]
+    local pos = self.private.index[key] ---@type integer?
     if not pos then return false end
 
     self.private.keys[pos] = TOMBSTONE
@@ -142,10 +145,10 @@ end
 
 ---@return fun(): any?, any?
 function lib.map:entries()
-    local keys = self.private.keys
-    local values = self.private.values
-    local n = #keys
-    local i = 0
+    local keys = self.private.keys ---@type any[]
+    local values = self.private.values ---@type any[]
+    local n = #keys ---@type integer
+    local i = 0 ---@type integer
 
     return function()
         i += 1
@@ -159,9 +162,9 @@ end
 
 ---@return fun(): any?
 function lib.map:keys()
-    local keys = self.private.keys
-    local n = #keys
-    local i = 0
+    local keys = self.private.keys ---@type any[]
+    local n = #keys ---@type integer
+    local i = 0 ---@type integer
 
     return function()
         i += 1
@@ -175,10 +178,10 @@ end
 
 ---@return fun(): any?
 function lib.map:values()
-    local keys = self.private.keys
-    local values = self.private.values
-    local n = #keys
-    local i = 0
+    local keys = self.private.keys ---@type any[]
+    local values = self.private.values ---@type any[]
+    local n = #keys ---@type integer
+    local i = 0 ---@type integer
 
     return function()
         i += 1
@@ -199,9 +202,9 @@ lib.map.__len = lib.map.size
 
 ---@return table
 function lib.map:toTable()
-    local out = {}
-    local keys = self.private.keys
-    local values = self.private.values
+    local out = {} ---@type table
+    local keys = self.private.keys ---@type any[]
+    local values = self.private.values ---@type any[]
     for i = 1, #keys do
         local k = keys[i]
         if k ~= TOMBSTONE then out[k] = values[i] end

@@ -6,6 +6,8 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@diagnostic disable: invisible
+
 ---@class RingBuffer : OxClass
 ---@field private new RingBufferConstructor
 lib.ringbuffer = lib.class('RingBuffer')
@@ -28,11 +30,11 @@ end
 ---@param value any
 ---@return any? evicted Value that was overwritten, if the buffer was full.
 function lib.ringbuffer:push(value)
-    local items = self.private.items
-    local capacity = self.private.capacity
-    local nextIndex = self.private.nextIndex
+    local items = self.private.items ---@type any[]
+    local capacity = self.private.capacity ---@type integer
+    local nextIndex = self.private.nextIndex ---@type integer
 
-    local evicted
+    local evicted ---@type any?
     if self.private.count == capacity then
         evicted = items[nextIndex]
     else
@@ -45,6 +47,8 @@ function lib.ringbuffer:push(value)
     return evicted
 end
 
+---@param self RingBuffer
+---@return integer
 local function oldestIndex(self)
     if self.private.count < self.private.capacity then return 1 end
     return self.private.nextIndex
@@ -57,12 +61,12 @@ function lib.ringbuffer:get(i)
         error("index must be an integer", 2)
     end
 
-    local count = self.private.count
+    local count = self.private.count ---@type integer
     if i < 0 then i = count + i + 1 end
     if i < 1 or i > count then return nil end
 
-    local start = oldestIndex(self)
-    local capacity = self.private.capacity
+    local start = oldestIndex(self) ---@type integer
+    local capacity = self.private.capacity ---@type integer
     return self.private.items[((start - 1 + i - 1) % capacity) + 1]
 end
 
@@ -96,11 +100,11 @@ end
 
 ---@return fun(): any?
 function lib.ringbuffer:each()
-    local count = self.private.count
-    local capacity = self.private.capacity
-    local items = self.private.items
-    local start = oldestIndex(self)
-    local i = 0
+    local count = self.private.count ---@type integer
+    local capacity = self.private.capacity ---@type integer
+    local items = self.private.items ---@type any[]
+    local start = oldestIndex(self) ---@type integer
+    local i = 0 ---@type integer
 
     return function()
         i += 1

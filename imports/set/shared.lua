@@ -16,7 +16,7 @@ lib.set = lib.class('Set')
 function lib.set:constructor(...)
     self.private.map = lib.map:new()
 
-    local args = { ... }
+    local args = { ... } ---@type any[]
     for i = 1, select('#', ...) do
         self:add(args[i])
     end
@@ -65,10 +65,10 @@ function lib.set:each()
 end
 
 function lib.set:__pairs()
-    local it = self.private.map:keys()
-    local i = 0
+    local it = self.private.map:keys() ---@type fun(): any?
+    local i = 0 ---@type integer
     return function()
-        local v = it()
+        local v = it() ---@type any?
         if v == nil then return nil end
         i += 1
         return i, v
@@ -86,7 +86,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:union(other)
-    local result = lib.set:new()
+    local result = lib.set:new() ---@type Set
     for v in self:each() do result:add(v) end
     for v in other:each() do result:add(v) end
     return result
@@ -95,7 +95,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:intersection(other)
-    local result = lib.set:new()
+    local result = lib.set:new() ---@type Set
     for v in self:each() do
         if other:has(v) then result:add(v) end
     end
@@ -105,7 +105,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:difference(other)
-    local result = lib.set:new()
+    local result = lib.set:new() ---@type Set
     for v in self:each() do
         if not other:has(v) then result:add(v) end
     end

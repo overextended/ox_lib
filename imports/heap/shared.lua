@@ -6,30 +6,40 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@alias HeapComparator fun(a: any, b: any): boolean
+
 ---@class Heap : OxClass
 ---@field private new HeapConstructor
 lib.heap = lib.class('Heap')
 
+---@type HeapComparator
 local function defaultLess(a, b) return a < b end
 
+---@param items any[]
+---@param i integer
+---@param lt HeapComparator
 local function siftUp(items, i, lt)
     while i > 1 do
-        local parent = i >> 1
+        local parent = i >> 1 ---@type integer
         if not lt(items[i], items[parent]) then return end
         items[i], items[parent] = items[parent], items[i]
         i = parent
     end
 end
 
+---@param items any[]
+---@param i integer
+---@param n integer
+---@param lt HeapComparator
 local function siftDown(items, i, n, lt)
     while true do
-        local left = i * 2
+        local left = i * 2 ---@type integer
         if left > n then return end
 
-        local smallest = i
+        local smallest = i ---@type integer
         if lt(items[left], items[smallest]) then smallest = left end
 
-        local right = left + 1
+        local right = left + 1 ---@type integer
         if right <= n and lt(items[right], items[smallest]) then smallest = right end
 
         if smallest == i then return end
@@ -40,9 +50,9 @@ local function siftDown(items, i, n, lt)
 end
 
 ---@class HeapConstructor
----@overload fun(self: Heap, comparator?: fun(a: any, b: any): boolean): Heap
+---@overload fun(self: Heap, comparator?: HeapComparator): Heap
 ---@private
----@param comparator? fun(a: any, b: any): boolean Returns true when `a` should come before `b`. Defaults to `a < b` (min-heap).
+---@param comparator? HeapComparator Returns true when `a` should come before `b`. Defaults to `a < b` (min-heap).
 function lib.heap:constructor(comparator)
     if comparator ~= nil and type(comparator) ~= 'function' then
         error("comparator must be a function or nil", 2)
@@ -55,12 +65,12 @@ end
 ---@param ... any
 ---@return Heap self
 function lib.heap:push(...)
-    local n = select('#', ...)
+    local n = select('#', ...) ---@type integer
     if n == 0 then return self end
 
-    local items = self.private.items
-    local lt = self.private.lt
-    local startIndex = #items
+    local items = self.private.items ---@type any[]
+    local lt = self.private.lt ---@type HeapComparator
+    local startIndex = #items ---@type integer
 
     table.move({ ... }, 1, n, startIndex + 1, items)
 
@@ -73,11 +83,11 @@ end
 
 ---@return any?
 function lib.heap:pop()
-    local items = self.private.items
-    local n = #items
+    local items = self.private.items ---@type any[]
+    local n = #items ---@type integer
     if n == 0 then return nil end
 
-    local top = items[1]
+    local top = items[1] ---@type any
 
     if n == 1 then
         items[1] = nil
@@ -111,10 +121,10 @@ function lib.heap:clear()
     return self
 end
 
----@return Array sorted Newly-allocated array drained in pop order.
+---@return Array sorted newly-allocated array drained in pop order.
 function lib.heap:drain()
-    local out = lib.array:new()
-    local n = 0
+    local out = lib.array:new() ---@type Array
+    local n = 0 ---@type integer
     while #self.private.items > 0 do
         n += 1
         out[n] = self:pop()
