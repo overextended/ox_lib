@@ -8,8 +8,15 @@
 
 ---@diagnostic disable: invisible
 
+---@class RingBufferPrivate
+---@field items any[]
+---@field capacity integer
+---@field count integer
+---@field nextIndex integer
+
 ---@class RingBuffer : OxClass
 ---@field private new RingBufferConstructor
+---@field private private RingBufferPrivate
 lib.ringbuffer = lib.class('RingBuffer')
 
 ---@class RingBufferConstructor
@@ -30,11 +37,11 @@ end
 ---@param value any
 ---@return any? evicted Value that was overwritten, if the buffer was full.
 function lib.ringbuffer:push(value)
-    local items = self.private.items ---@type any[]
-    local capacity = self.private.capacity ---@type integer
-    local nextIndex = self.private.nextIndex ---@type integer
+    local items = self.private.items
+    local capacity = self.private.capacity
+    local nextIndex = self.private.nextIndex
 
-    local evicted ---@type any?
+    local evicted
     if self.private.count == capacity then
         evicted = items[nextIndex]
     else
@@ -61,12 +68,12 @@ function lib.ringbuffer:get(i)
         error("index must be an integer", 2)
     end
 
-    local count = self.private.count ---@type integer
+    local count = self.private.count
     if i < 0 then i = count + i + 1 end
     if i < 1 or i > count then return nil end
 
-    local start = oldestIndex(self) ---@type integer
-    local capacity = self.private.capacity ---@type integer
+    local start = oldestIndex(self)
+    local capacity = self.private.capacity
     return self.private.items[((start - 1 + i - 1) % capacity) + 1]
 end
 
@@ -100,11 +107,11 @@ end
 
 ---@return fun(): any?
 function lib.ringbuffer:each()
-    local count = self.private.count ---@type integer
-    local capacity = self.private.capacity ---@type integer
-    local items = self.private.items ---@type any[]
-    local start = oldestIndex(self) ---@type integer
-    local i = 0 ---@type integer
+    local count = self.private.count
+    local capacity = self.private.capacity
+    local items = self.private.items
+    local start = oldestIndex(self)
+    local i = 0
 
     return function()
         i += 1

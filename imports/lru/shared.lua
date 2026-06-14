@@ -14,15 +14,22 @@
 ---@field prev? LruNode
 ---@field next? LruNode
 
+---@class LruPrivate
+---@field capacity integer
+---@field map table<any, LruNode>
+---@field count integer
+---@field head? LruNode
+---@field tail? LruNode
+
 ---@class Lru : OxClass
 ---@field private new LruConstructor
+---@field private private LruPrivate
 lib.lru = lib.class('Lru')
 
 ---@param self Lru
 ---@param node LruNode
 local function detach(self, node)
-    local prev = node.prev ---@type LruNode?
-    local nxt = node.next ---@type LruNode?
+    local prev, nxt = node.prev, node.next
     if prev then prev.next = nxt else self.private.head = nxt end
     if nxt then nxt.prev = prev else self.private.tail = prev end
     node.prev = nil
@@ -58,7 +65,7 @@ end
 ---@param key any
 ---@return any?
 function lib.lru:get(key)
-    local node = self.private.map[key] ---@type LruNode?
+    local node = self.private.map[key]
     if not node then return nil end
     detach(self, node)
     attachHead(self, node)
@@ -70,7 +77,7 @@ end
 ---@return any? evictedKey
 ---@return any? evictedValue
 function lib.lru:set(key, value)
-    local node = self.private.map[key] ---@type LruNode?
+    local node = self.private.map[key]
 
     if node then
         node.value = value
@@ -85,7 +92,7 @@ function lib.lru:set(key, value)
     self.private.count += 1
 
     if self.private.count > self.private.capacity then
-        local evicted = self.private.tail ---@type LruNode
+        local evicted = self.private.tail --[[@as LruNode]]
         detach(self, evicted)
         self.private.map[evicted.key] = nil
         self.private.count -= 1
@@ -102,7 +109,7 @@ end
 ---@param key any
 ---@return any?
 function lib.lru:peek(key)
-    local node = self.private.map[key] ---@type LruNode?
+    local node = self.private.map[key]
     if not node then return nil end
     return node.value
 end
@@ -110,7 +117,7 @@ end
 ---@param key any
 ---@return boolean removed
 function lib.lru:delete(key)
-    local node = self.private.map[key] ---@type LruNode?
+    local node = self.private.map[key]
     if not node then return false end
     detach(self, node)
     self.private.map[key] = nil
@@ -139,7 +146,7 @@ end
 
 ---@return fun(): any?, any?
 function lib.lru:each()
-    local node = self.private.head ---@type LruNode?
+    local node = self.private.head
     return function()
         if not node then return nil end
         local k, v = node.key, node.value

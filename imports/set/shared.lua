@@ -6,8 +6,12 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+---@class SetPrivate
+---@field map Map
+
 ---@class Set : OxClass
 ---@field private new SetConstructor
+---@field private private SetPrivate
 lib.set = lib.class('Set')
 
 ---@class SetConstructor
@@ -16,7 +20,7 @@ lib.set = lib.class('Set')
 function lib.set:constructor(...)
     self.private.map = lib.map:new()
 
-    local args = { ... } ---@type any[]
+    local args = { ... }
     for i = 1, select('#', ...) do
         self:add(args[i])
     end
@@ -65,10 +69,10 @@ function lib.set:each()
 end
 
 function lib.set:__pairs()
-    local it = self.private.map:keys() ---@type fun(): any?
-    local i = 0 ---@type integer
+    local it = self.private.map:keys()
+    local i = 0
     return function()
-        local v = it() ---@type any?
+        local v = it()
         if v == nil then return nil end
         i += 1
         return i, v
@@ -86,7 +90,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:union(other)
-    local result = lib.set:new() ---@type Set
+    local result = lib.set:new()
     for v in self:each() do result:add(v) end
     for v in other:each() do result:add(v) end
     return result
@@ -95,7 +99,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:intersection(other)
-    local result = lib.set:new() ---@type Set
+    local result = lib.set:new()
     for v in self:each() do
         if other:has(v) then result:add(v) end
     end
@@ -105,7 +109,7 @@ end
 ---@param other Set
 ---@return Set
 function lib.set:difference(other)
-    local result = lib.set:new() ---@type Set
+    local result = lib.set:new()
     for v in self:each() do
         if not other:has(v) then result:add(v) end
     end

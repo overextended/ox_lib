@@ -8,8 +8,13 @@
 
 ---@alias HeapComparator fun(a: any, b: any): boolean
 
+---@class HeapPrivate
+---@field items any[]
+---@field lt HeapComparator
+
 ---@class Heap : OxClass
 ---@field private new HeapConstructor
+---@field private private HeapPrivate
 lib.heap = lib.class('Heap')
 
 ---@type HeapComparator
@@ -20,7 +25,7 @@ local function defaultLess(a, b) return a < b end
 ---@param lt HeapComparator
 local function siftUp(items, i, lt)
     while i > 1 do
-        local parent = i >> 1 ---@type integer
+        local parent = i >> 1
         if not lt(items[i], items[parent]) then return end
         items[i], items[parent] = items[parent], items[i]
         i = parent
@@ -33,13 +38,13 @@ end
 ---@param lt HeapComparator
 local function siftDown(items, i, n, lt)
     while true do
-        local left = i * 2 ---@type integer
+        local left = i * 2
         if left > n then return end
 
-        local smallest = i ---@type integer
+        local smallest = i
         if lt(items[left], items[smallest]) then smallest = left end
 
-        local right = left + 1 ---@type integer
+        local right = left + 1
         if right <= n and lt(items[right], items[smallest]) then smallest = right end
 
         if smallest == i then return end
@@ -65,12 +70,12 @@ end
 ---@param ... any
 ---@return Heap self
 function lib.heap:push(...)
-    local n = select('#', ...) ---@type integer
+    local n = select('#', ...)
     if n == 0 then return self end
 
-    local items = self.private.items ---@type any[]
-    local lt = self.private.lt ---@type HeapComparator
-    local startIndex = #items ---@type integer
+    local items = self.private.items
+    local lt = self.private.lt
+    local startIndex = #items
 
     table.move({ ... }, 1, n, startIndex + 1, items)
 
@@ -83,11 +88,11 @@ end
 
 ---@return any?
 function lib.heap:pop()
-    local items = self.private.items ---@type any[]
-    local n = #items ---@type integer
+    local items = self.private.items
+    local n = #items
     if n == 0 then return nil end
 
-    local top = items[1] ---@type any
+    local top = items[1]
 
     if n == 1 then
         items[1] = nil
@@ -121,10 +126,10 @@ function lib.heap:clear()
     return self
 end
 
----@return Array sorted newly-allocated array drained in pop order.
+---@return Array sorted Newly-allocated array drained in pop order.
 function lib.heap:drain()
-    local out = lib.array:new() ---@type Array
-    local n = 0 ---@type integer
+    local out = lib.array:new()
+    local n = 0
     while #self.private.items > 0 do
         n += 1
         out[n] = self:pop()
