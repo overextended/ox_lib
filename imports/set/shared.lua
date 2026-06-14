@@ -14,8 +14,7 @@ lib.set = lib.class('Set')
 ---@overload fun(self: Set, ...: any): Set
 ---@private
 function lib.set:constructor(...)
-    self.private.items = {}
-    self.private.index = {}
+    self.private.map = lib.map:new()
 
     local args = { ... }
     for i = 1, select('#', ...) do
@@ -26,70 +25,54 @@ end
 ---@param value any
 ---@return Set self
 function lib.set:add(value)
-    if value == nil or self.private.index[value] then return self end
-    local items = self.private.items
-    local i = #items + 1
-    items[i] = value
-    self.private.index[value] = i
+    if value ~= nil and not self.private.map:has(value) then
+        self.private.map:set(value, true)
+    end
     return self
 end
 
 ---@param value any
 ---@return boolean removed
 function lib.set:remove(value)
-    local i = self.private.index[value]
-    if not i then return false end
-
-    local items = self.private.items
-    local lastI = #items
-
-    if i ~= lastI then
-        table.move(items, i + 1, lastI, i)
-        for j = i, lastI - 1 do
-            self.private.index[items[j]] = j
-        end
-    end
-
-    items[lastI] = nil
-    self.private.index[value] = nil
-    return true
+    return self.private.map:delete(value)
 end
 
 ---@param value any
 ---@return boolean
 function lib.set:has(value)
-    return self.private.index[value] ~= nil
+    return self.private.map:has(value)
 end
 
 ---@return integer
 function lib.set:size()
-    return #self.private.items
+    return self.private.map:size()
 end
 
 ---@return boolean
 function lib.set:isEmpty()
-    return #self.private.items == 0
+    return self.private.map:isEmpty()
 end
 
 ---@return Set self
 function lib.set:clear()
-    table.wipe(self.private.items)
-    table.wipe(self.private.index)
+    self.private.map:clear()
     return self
 end
 
 ---@return fun(): any?
 function lib.set:each()
-    local items = self.private.items
-    local i = 0
-    return function()
-        i += 1
-        return items[i]
-    end
+    return self.private.map:keys()
 end
 
 function lib.set:__pairs()
-    return next, self.private.items
+    local it = self.private.map:keys()
+    local i = 0
+    return function()
+        local v = it()
+        if v == nil then return nil end
+        i += 1
+        return i, v
+    end
 end
 
 lib.set.__ipairs = lib.set.__pairs
@@ -97,15 +80,14 @@ lib.set.__len = lib.set.size
 
 ---@return Array
 function lib.set:toArray()
-    return lib.array:from(self.private.items)
+    return lib.array:from(self:each())
 end
 
 ---@param other Set
 ---@return Set
 function lib.set:union(other)
     local result = lib.set:new()
-    local items = self.private.items
-    for i = 1, #items do result:add(items[i]) end
+    for v in self:each() do result:add(v) end
     for v in other:each() do result:add(v) end
     return result
 end
@@ -114,9 +96,8 @@ end
 ---@return Set
 function lib.set:intersection(other)
     local result = lib.set:new()
-    local items = self.private.items
-    for i = 1, #items do
-        if other:has(items[i]) then result:add(items[i]) end
+    for v in self:each() do
+        if other:has(v) then result:add(v) end
     end
     return result
 end
@@ -125,9 +106,8 @@ end
 ---@return Set
 function lib.set:difference(other)
     local result = lib.set:new()
-    local items = self.private.items
-    for i = 1, #items do
-        if not other:has(items[i]) then result:add(items[i]) end
+    for v in self:each() do
+        if not other:has(v) then result:add(v) end
     end
     return result
 end
@@ -135,10 +115,9 @@ end
 ---@param other Set
 ---@return boolean
 function lib.set:equals(other)
-    if #self.private.items ~= other:size() then return false end
-    local items = self.private.items
-    for i = 1, #items do
-        if not other:has(items[i]) then return false end
+    if self:size() ~= other:size() then return false end
+    for v in self:each() do
+        if not other:has(v) then return false end
     end
     return true
 end
@@ -146,10 +125,9 @@ end
 ---@param other Set
 ---@return boolean
 function lib.set:isSubsetOf(other)
-    if #self.private.items > other:size() then return false end
-    local items = self.private.items
-    for i = 1, #items do
-        if not other:has(items[i]) then return false end
+    if self:size() > other:size() then return false end
+    for v in self:each() do
+        if not other:has(v) then return false end
     end
     return true
 end
