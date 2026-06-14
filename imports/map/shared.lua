@@ -212,4 +212,20 @@ function lib.map:toTable()
     return out
 end
 
+---@return Array entries Array of `{ key, value }` tables in insertion order.
+function lib.map:toArray()
+    local out = lib.array:new() ---@type Array
+    local keys = self.private.keys ---@type any[]
+    local values = self.private.values ---@type any[]
+    local n = 0 ---@type integer
+    for i = 1, #keys do
+        local k = keys[i]
+        if k ~= TOMBSTONE then
+            n += 1
+            out[n] = { key = k, value = values[i] }
+        end
+    end
+    return out
+end
+
 return lib.map
