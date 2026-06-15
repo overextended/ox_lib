@@ -1,8 +1,9 @@
-import { cache } from '../cache/index';
+import { cache } from '../cache';
 import { printf } from 'fast-printf';
 import { FlattenObjectKeys } from '../misc';
 
 const dict: Record<string, string> = {};
+const path = GetResourceMetadata(cache.resource, 'locales_path', 0) || 'locales'
 
 function flattenDict(source: Record<string, any>, target: Record<string, string>, prefix?: string) {
   for (const key in source) {
@@ -50,9 +51,9 @@ export function getLocale(resource: string, key: string) {
 }
 
 function loadLocale(key: string): typeof dict {
-  const data = LoadResourceFile(cache.resource, `locales/${key}.json`);
+  const data = LoadResourceFile(cache.resource, `${path}/${key}.json`);
 
-  if (!data) console.warn(`could not load 'locales/${key}.json'`);
+  if (!data) console.warn(`could not load '${path}/${key}.json'`);
 
   return JSON.parse(data) || {};
 }
