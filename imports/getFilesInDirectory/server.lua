@@ -13,21 +13,13 @@
 function lib.getFilesInDirectory(path, pattern)
     local resource = cache.resource
 
-    if path:find('^@') then
-        resource = path:gsub('^@(.-)/.+', '%1')
-        path = path:sub(#resource + 3)
+    if path:sub(1, 1) ~= '@' then
+        path = ('%s/%s'):format(GetResourcePath(resource), path)
     end
 
     local files = {}
     local fileCount = 0
-    local windows = string.match(os.getenv('OS') or '', 'Windows')
-    local command = ('%s%s%s'):format(
-        windows and 'dir "' or 'ls "',
-        (GetResourcePath(resource):gsub('//', '/') .. '/' .. path):gsub('\\', '/'),
-        windows and '/" /b' or '/"'
-    )
-
-    local dir = io.popen(command)
+    local dir = io.readdir(path)
 
     if dir then
         for line in dir:lines() do
