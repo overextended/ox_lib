@@ -68,6 +68,14 @@ function lib.set:each()
     return self.private.map:keys()
 end
 
+function lib.set:__pack()
+    return msgpack.pack(self:toArray()), true
+end
+
+function lib.set:__tojson()
+    return json.encode(self:toArray())
+end
+
 function lib.set:__pairs()
     local it = self.private.map:keys()
     local i = 0

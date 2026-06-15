@@ -201,6 +201,16 @@ end
 
 lib.map.each = lib.map.entries
 
+function lib.map:__pack()
+    return msgpack.pack(self:toTable()), true
+end
+
+function lib.map:__tojson()
+    return json.encode(setmetatable(self:toTable(), {
+        __jsonorder = self.private.keys
+    }))
+end
+
 function lib.map:__pairs()
     return self:entries()
 end
