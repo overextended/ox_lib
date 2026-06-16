@@ -142,8 +142,20 @@ end
 
 ---Registers an item or array of items in the global radial menu.
 ---@param items RadialMenuItem | RadialMenuItem[]
-function lib.addRadialItem(items)
-    local menuSize = #menuItems
+---@param parentMenuId string? If provided, the item(s) will be added to the specified radial submenu instead of the global menu.
+function lib.addRadialItem(items, parentMenuId)
+    local targetMenu
+    if parentMenuId then
+        if not menus[parentMenuId] then
+            return error('No radial submenu with such parent id found.')
+        end
+
+        targetMenu = menus[parentMenuId].items
+    else
+        targetMenu = menuItems
+    end
+
+    local menuSize = #targetMenu
     local invokingResource = GetInvokingResource()
 
     items = table.type(items) == 'array' and items or { items }
@@ -154,17 +166,17 @@ function lib.addRadialItem(items)
 
         if menuSize == 0 then
             menuSize += 1
-            menuItems[menuSize] = item
+            targetMenu[menuSize] = item
         else
             for j = 1, menuSize do
-                if menuItems[j].id == item.id then
-                    menuItems[j] = item
+                if targetMenu[j].id == item.id then
+                    targetMenu[j] = item
                     break
                 end
 
                 if j == menuSize then
                     menuSize += 1
-                    menuItems[menuSize] = item
+                    targetMenu[menuSize] = item
                 end
             end
         end
@@ -175,23 +187,34 @@ function lib.addRadialItem(items)
     end
 end
 
----Removes an item from the global radial menu with the given id.
+---Removes an item from the global radial menu or a specific radial submenu with the given id.
 ---@param id string
-function lib.removeRadialItem(id)
+---@param parentMenuId string? If provided, the item will be removed from the specified radial submenu instead of the global menu.
+function lib.removeRadialItem(id, parentMenuId)
     local menuItem
+    local targetMenu
+    if parentMenuId then
+        if not menus[parentMenuId] then
+            return error('No radial sub menu with such parent id found.')
+        end
 
-    for i = 1, #menuItems do
-        menuItem = menuItems[i]
+        targetMenu = menus[parentMenuId].items
+    else
+        targetMenu = menuItems
+    end
+
+    for i = 1, #targetMenu do
+        menuItem = targetMenu[i]
 
         if menuItem.id == id then
-            table.remove(menuItems, i)
+            table.remove(targetMenu, i)
             break
         end
     end
 
     if not isOpen then return end
 
-    refreshRadial(id)
+    refreshRadial()
 end
 
 ---Removes all items from the global radial menu.
