@@ -158,6 +158,7 @@ local enteringZones = lib.context == 'client' and lib.array:new() --[[@as Array<
 local nearbyZones = lib.array:new() --[[@as Array<CZone>]]
 local glm_polygon_contains = glm.polygon.contains
 local tick
+local lastCellX, lastCellY
 
 ---@param zone CZone
 local function removeZone(zone)
@@ -189,7 +190,7 @@ CreateThread(function()
         local cellX, cellY = lib.grid.getCellPosition(coords)
         cache.coords = coords
 
-        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
+        if cellX ~= lastCellX or cellY ~= lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
 
@@ -207,8 +208,8 @@ CreateThread(function()
                 end
             end
 
-            cache.lastCellX = cellX
-            cache.lastCellY = cellY
+            lastCellX = cellX
+            lastCellY = cellY
         end
 
         nearbyZones = zones

@@ -28,6 +28,7 @@ local nearbyCount = 0
 ---@type CPoint?
 local closestPoint
 local tick
+local lastCellX, lastCellY
 
 local function removePoint(self)
     if closestPoint?.id == self.id then
@@ -51,7 +52,7 @@ CreateThread(function()
         cache.coords = coords
         closestPoint = nil
 
-        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
+        if cellX ~= lastCellX or cellY ~= lastCellY then
             for i = 1, nearbyCount do
                 local point = nearbyPoints[i]
 
@@ -67,8 +68,8 @@ CreateThread(function()
                 end
             end
 
-            cache.lastCellX = cellX
-            cache.lastCellY = cellY
+            lastCellX = cellX
+            lastCellY = cellY
         end
 
         if nearbyCount ~= 0 then
