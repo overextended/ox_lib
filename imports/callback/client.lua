@@ -51,7 +51,8 @@ local function triggerServerCallback(_, event, delay, cb, ...)
     local key
 
     repeat
-        key = ('%s:%s'):format(event, math.random(0, 100000))
+        -- High-entropy key (~62 bits) so the server cannot trivially predict/forge a pending callback response.
+        key = ('%s:%x%x'):format(event, math.random(0, 0x7FFFFFFF), math.random(0, 0x7FFFFFFF))
     until not pendingCallbacks[key]
 
     TriggerServerEvent('ox_lib:validateCallback', event, cache.resource, key)

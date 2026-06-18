@@ -18,15 +18,17 @@ function lib.getNearbyObjects(coords, maxDistance)
 	for i = 1, #objects do
 		local object = objects[i]
 
-        local objectCoords = GetEntityCoords(object)
-        local distance = #(coords - objectCoords)
+        if DoesEntityExist(object) then
+            local objectCoords = GetEntityCoords(object)
+            local distance = #(coords - objectCoords)
 
-        if distance < maxDistance then
-            count += 1
-            nearby[count] = {
-                object = object,
-                coords = objectCoords
-            }
+            if distance < maxDistance then
+                count += 1
+                nearby[count] = {
+                    object = object,
+                    coords = objectCoords
+                }
+            end
         end
 	end
 

@@ -9,14 +9,21 @@
 ---@alias IconProp 'fas' | 'far' | 'fal' | 'fat' | 'fad' | 'fab' | 'fak' | 'fass'
 
 local keepInput = IsNuiFocusKeepingInput()
+local hasFocus = false
 
 function lib.setNuiFocus(allowInput, disableCursor)
-    keepInput = IsNuiFocusKeepingInput()
+    -- Only snapshot keep-input on the first acquisition, so a nested UI can't overwrite it.
+    if not hasFocus then
+        keepInput = IsNuiFocusKeepingInput()
+        hasFocus = true
+    end
+
     SetNuiFocus(true, not disableCursor)
     SetNuiFocusKeepInput(allowInput)
 end
 
 function lib.resetNuiFocus()
+    hasFocus = false
     SetNuiFocus(false, false)
     SetNuiFocusKeepInput(keepInput)
 end

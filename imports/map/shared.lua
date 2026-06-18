@@ -206,8 +206,21 @@ function lib.map:__pack()
 end
 
 function lib.map:__tojson()
+    -- Build the order from live keys only, since self.private.keys may still hold TOMBSTONEs.
+    local keys = self.private.keys
+    local order = {}
+    local n = 0
+
+    for i = 1, #keys do
+        local k = keys[i]
+        if k ~= TOMBSTONE then
+            n += 1
+            order[n] = k
+        end
+    end
+
     return json.encode(setmetatable(self:toTable(), {
-        __jsonorder = self.private.keys
+        __jsonorder = order
     }))
 end
 

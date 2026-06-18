@@ -12,7 +12,6 @@ lib.array = lib.class('Array')
 
 local table_unpack = table.unpack
 local table_remove = table.remove
-local table_clone = table.clone
 local table_concat = table.concat
 local table_type = table.type
 
@@ -79,8 +78,13 @@ end
 ---Create a new array containing the elements of two or more arrays.
 ---@param ... ArrayLike
 function lib.array:merge(...)
-    local newArr = table_clone(self)
+    local result = lib.array:new()
     local length = #self
+
+    for i = 1, length do
+        result[i] = self[i]
+    end
+
     local arrays = { ... }
 
     for i = 1, #arrays do
@@ -88,11 +92,11 @@ function lib.array:merge(...)
 
         for j = 1, #arr do
             length += 1
-            newArr[length] = arr[j]
+            result[length] = arr[j]
         end
     end
 
-    return lib.array:new(table_unpack(newArr))
+    return result
 end
 
 ---Tests if all elements in an array succeed in passing the provided test function.
@@ -131,7 +135,7 @@ end
 ---Creates a new array containing the elements from an array that pass the test of the provided function.
 ---@param testFn fun(element: unknown): boolean
 function lib.array:filter(testFn)
-    local newArr = {}
+    local arr = lib.array:new()
     local length = 0
 
     for i = 1, #self do
@@ -139,11 +143,11 @@ function lib.array:filter(testFn)
 
         if testFn(element) then
             length += 1
-            newArr[length] = element
+            arr[length] = element
         end
     end
 
-    return lib.array:new(table_unpack(newArr))
+    return arr
 end
 
 ---Returns the first or last element of an array that passes the provided test function.
@@ -262,18 +266,30 @@ end
 ---@return T
 function lib.array:reduce(reducer, initialValue, reverse)
     local length = #self
+    -- Compare against nil (not truthiness) so a falsy initial value such as `false` or `0` is honoured.
+    local hasInitial = initialValue ~= nil
     local accumulator, startIdx
 
     if reverse then
-        accumulator = initialValue or self[length]
-        startIdx = initialValue and length or length - 1
+        if hasInitial then
+            accumulator = initialValue
+            startIdx = length
+        else
+            accumulator = self[length]
+            startIdx = length - 1
+        end
 
         for i = startIdx, 1, -1 do
             accumulator = reducer(accumulator, self[i], i)
         end
     else
-        accumulator = initialValue or self[1]
-        startIdx = initialValue and 1 or 2
+        if hasInitial then
+            accumulator = initialValue
+            startIdx = 1
+        else
+            accumulator = self[1]
+            startIdx = 2
+        end
 
         for i = startIdx, length do
             accumulator = reducer(accumulator, self[i], i)

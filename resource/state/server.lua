@@ -36,10 +36,17 @@ lib.callback.register('ox_lib:requestSetStateBag', function(playerId, bag, key, 
         return false
     end
 
+    local entityId = targetId and NetworkGetEntityFromNetworkId(targetId) or 0
+
+    -- A client may only mutate state bags for entities it currently owns.
+    if targetType == 'entity' and (entityId == 0 or NetworkGetEntityOwner(entityId) ~= playerId) then
+        return false
+    end
+
     local hook <close> = pipeline:dispatch({
         playerId = playerId,
         targetId = targetId,
-        entityId = NetworkGetEntityFromNetworkId(targetId),
+        entityId = entityId,
         type = targetType,
         bag = bag,
         key = key,

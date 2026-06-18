@@ -13,6 +13,11 @@
 function lib.getFilesInDirectory(path, pattern)
     local resource = cache.resource
 
+    -- io.readdir is NOT sandboxed to the resource directory, so reject directory traversal.
+    if type(path) ~= 'string' or path:find('..', 1, true) then
+        error("path must be a string and cannot contain '..' (directory traversal is not allowed)", 2)
+    end
+
     if path:sub(1, 1) ~= '@' then
         path = ('%s/%s'):format(GetResourcePath(resource), path)
     end

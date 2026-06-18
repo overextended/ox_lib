@@ -80,6 +80,12 @@ function lib.grid.getCell(point)
     return lastCell.cell
 end
 
+local function cloneEntries(src)
+    local out = lib.array:new()
+    for i = 1, #src do out[i] = src[i] end
+    return out
+end
+
 ---@param point vector
 ---@param filter? fun(entry: GridEntry): boolean
 ---@return Array<GridEntry>
@@ -91,7 +97,8 @@ function lib.grid.getNearbyEntries(point, filter)
         gridCache.maxX == maxX and
         gridCache.minY == minY and
         gridCache.maxY == maxY then
-        return gridCache.entries
+        -- Copy so callers mutating the result can't corrupt the cache.
+        return cloneEntries(gridCache.entries)
     end
 
     local entries = lib.array:new()
@@ -131,6 +138,10 @@ end
 
 ---@param entry { coords: vector, length?: number, width?: number, radius?: number, [string]: any }
 function lib.grid.addEntry(entry)
+    if not entry.radius and (not entry.length or not entry.width) then
+        error("grid entry requires 'radius', or both 'length' and 'width'", 2)
+    end
+
     entry.length = entry.length or entry.radius * 2
     entry.width = entry.width or entry.radius * 2
     local minX, maxX, minY, maxY = getGridDimensions(entry.coords, entry.length, entry.width)
@@ -146,9 +157,9 @@ function lib.grid.addEntry(entry)
         end
 
         grid[y] = row
-
-        table.wipe(gridCache)
     end
+
+    table.wipe(gridCache)
 end
 
 ---@param entry table A table that was added to the grid previously.

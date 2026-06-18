@@ -103,8 +103,6 @@ local function getTriangles(polygon, height, type)
     local indices = table.create(numPoints, 0)
     local reverse = signedArea(polygon) < 0
 
-    print(signedArea(polygon), isCCW(polygon[1], polygon[2], polygon[3]))
-
     for i = 1, numPoints do
         indices[i] = reverse and numPoints + 1 - i or i
     end
@@ -340,7 +338,8 @@ end
 local function contains(self, coords, updateDistance)
     if updateDistance then self.distance = #(self.coords - coords) end
 
-    return glm_polygon_contains(self.polygon, coords, self.thickness / 4)
+    -- Half the thickness matches the drawn volume (debugPoly/getTriangles extrude by thickness/2).
+    return glm_polygon_contains(self.polygon, coords, self.thickness / 2)
 end
 
 local function insideSphere(self, coords, updateDistance)
@@ -466,9 +465,10 @@ function lib.zones.poly(data)
         end)
 
         local zCoord = coordsArray[1].coord
-        local averageTo = 1
+        -- Default to averaging every Z; only shrink once a lower count is found (else all-equal counts stay deterministic).
+        local averageTo = #coordsArray
 
-        for i = 1, #coordsArray do
+        for i = 2, #coordsArray do
             if coordsArray[i].count < coordsArray[1].count then
                 averageTo = i - 1
                 break

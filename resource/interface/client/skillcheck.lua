@@ -36,6 +36,11 @@ function lib.cancelSkillCheck()
     end
 
     SendNUIMessage({action = 'skillCheckCancel'})
+
+    -- Resolve locally so the caller never deadlocks if the NUI fails to echo skillCheckOver.
+    lib.resetNuiFocus()
+    skillcheck:resolve(false)
+    skillcheck = nil
 end
 
 ---@return boolean

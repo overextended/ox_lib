@@ -107,14 +107,15 @@ function timer:restart(async)
     self:start(async)
 end
 
+-- Defined once and rounds arithmetically instead of allocating a closure + format string per call.
+local function roundedfloat(value)
+    return math.floor(value * 100 + 0.5) / 100
+end
+
 function timer:getTimeLeft(format)
     local ms = self.private.paused
         and self.private.currentTimeLeft
         or self.private.currentTimeLeft - (GetGameTimer() - self.private.startTime)
-
-    local roundedfloat = function(value)
-        return tonumber(string.format('%.2f', value))
-    end
 
     if format == 'ms' then
         return roundedfloat(ms)

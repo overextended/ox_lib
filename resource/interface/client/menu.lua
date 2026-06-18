@@ -116,11 +116,14 @@ end
 ---@param options MenuOptions | MenuOptions[]
 ---@param index? number
 function lib.setMenuOptions(id, options, index)
+    local menu = registeredMenus[id]
+    if not menu then error(('No menu with id %s was found'):format(id)) end
+
     if index then
-        registeredMenus[id].options[index] = options
+        menu.options[index] = options
     else
         if not options[1] then error('Invalid override format used, expected table of options.') end
-        registeredMenus[id].options = options
+        menu.options = options
     end
 end
 
@@ -175,7 +178,8 @@ RegisterNUICallback('changeSelected', function(data, cb)
         return error("Menu args must be passed as a table")
     end
 
-    if not args then args = {} end
+    -- Clone so repeated selections don't accumulate keys on the option's stored args table.
+    args = args and table.clone(args) or {}
     if data[2] then args[data[3]] = true end
 
     if data[2] and not args.isCheck then

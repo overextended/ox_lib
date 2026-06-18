@@ -170,6 +170,10 @@ function lib.points.new(...)
     self.distance = self.distance or args[2]
     self.radius = self.distance
 
+    if type(self.radius) ~= 'number' then
+        error("point requires a numeric 'distance'", 2)
+    end
+
     if args[3] then
         for k, v in pairs(args[3]) do
             self[k] = v

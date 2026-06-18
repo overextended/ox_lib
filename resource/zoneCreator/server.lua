@@ -130,8 +130,35 @@ local parse = {
 	end,
 }
 
+---Sanitises client zone data (safe name charset, numeric coercion) to prevent Lua injection into the generated file.
+local function sanitizeZoneData(data)
+    if type(data) ~= 'table' or not parse[data.zoneType] then return false end
+
+    data.name = type(data.name) == 'string' and data.name:gsub('[^%w_%-]', '') or ''
+    if data.name == '' then data.name = 'zone' end
+
+    for _, key in ipairs({ 'xCoord', 'yCoord', 'zCoord', 'width', 'length', 'height', 'heading', 'radius' }) do
+        if data[key] ~= nil then data[key] = tonumber(data[key]) or 0 end
+    end
+
+    if type(data.points) == 'table' then
+        for i = 1, #data.points do
+            local point = data.points[i]
+
+            if type(point) == 'table' then
+                point.x = tonumber(point.x) or 0
+                point.y = tonumber(point.y) or 0
+            end
+        end
+    end
+
+    return true
+end
+
 RegisterNetEvent('ox_lib:saveZone', function(data)
     if not source or not IsPlayerAceAllowed(source, 'command') then return end
+    if not sanitizeZoneData(data) then return end
+
     local output = (LoadResourceFile(cache.resource, 'created_zones.lua') or '') .. parse[data.zoneType](data)
     SaveResourceFile(cache.resource, 'created_zones.lua', output, -1)
 end)

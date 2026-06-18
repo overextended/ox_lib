@@ -19,7 +19,7 @@ function lib.getClosestVehicle(coords, maxDistance, includePlayerVehicle)
 	for i = 1, #vehicles do
 		local vehicle = vehicles[i]
 
-		if lib.context == 'server' or not cache.vehicle or vehicle ~= cache.vehicle or includePlayerVehicle then
+		if DoesEntityExist(vehicle) and (lib.context == 'server' or not cache.vehicle or vehicle ~= cache.vehicle or includePlayerVehicle) then
 			local vehicleCoords = GetEntityCoords(vehicle)
 			local distance = #(coords - vehicleCoords)
 

@@ -141,7 +141,11 @@ function SetInterval(callback, interval, ...)
             Wait(interval)
 
             if interval < 0 then break end
-            callback(table.unpack(args))
+
+            local ok, err = pcall(callback, table.unpack(args))
+
+            -- Surface the error without killing the interval loop (which would leak intervals[id]).
+            if not ok then CreateThread(function() error(err, 0) end) end
         until false
         intervals[id] = nil
     end)

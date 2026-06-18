@@ -18,7 +18,7 @@ function lib.getNearbyPeds(coords, maxDistance)
     for i = 1, #peds do
         local ped = peds[i]
 
-        if not IsPedAPlayer(ped) then
+        if DoesEntityExist(ped) and not IsPedAPlayer(ped) then
             local pedCoords = GetEntityCoords(ped)
             local distance = #(coords - pedCoords)
 

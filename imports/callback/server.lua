@@ -32,7 +32,8 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
     local key
 
     repeat
-        key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
+        -- High-entropy key (~62 bits) so a client cannot brute-force/forge a pending callback response.
+        key = ('%s:%x%x:%s'):format(event, math.random(0, 0x7FFFFFFF), math.random(0, 0x7FFFFFFF), playerId)
     until not pendingCallbacks[key]
 
     TriggerClientEvent('ox_lib:validateCallback', playerId, event, cache.resource, key)

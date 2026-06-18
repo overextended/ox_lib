@@ -56,7 +56,8 @@ function lib.closeAlertDialog(reason)
     local p = alert
     alert = nil
 
-    if reason then p:reject(reason) else p:resolve() end
+    -- Always resolve (not reject), since lib.alertDialog awaits this and a rejection would error.
+    p:resolve()
 end
 
 RegisterNUICallback('closeAlert', function(data, cb)

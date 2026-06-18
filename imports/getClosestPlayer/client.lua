@@ -24,10 +24,8 @@ function lib.getClosestPlayer(coords, maxDistance, includePlayer)
 
 		if playerId ~= cache.playerId or includePlayer then
 			local playerPed = GetPlayerPed(playerId)
-			local playerCoords = GetEntityCoords(playerPed)
-
-            local vehicle = GetVehiclePedIsIn(playerPed, false)
-            local playerCoords = vehicle == 0 and GetEntityCoords(playerPed) or GetWorldPositionOfEntityBone(playerPed, 0)
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
+			local playerCoords = vehicle == 0 and GetEntityCoords(playerPed) or GetWorldPositionOfEntityBone(playerPed, 0)
             
 			local distance = #(coords - playerCoords)
 

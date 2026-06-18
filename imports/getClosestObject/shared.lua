@@ -18,13 +18,15 @@ function lib.getClosestObject(coords, maxDistance)
 	for i = 1, #objects do
 		local object = objects[i]
 
-		local objectCoords = GetEntityCoords(object)
-		local distance = #(coords - objectCoords)
+		if DoesEntityExist(object) then
+			local objectCoords = GetEntityCoords(object)
+			local distance = #(coords - objectCoords)
 
-		if distance < maxDistance then
-			maxDistance = distance
-			closestObject = object
-			closestCoords = objectCoords
+			if distance < maxDistance then
+				maxDistance = distance
+				closestObject = object
+				closestCoords = objectCoords
+			end
 		end
 	end
 

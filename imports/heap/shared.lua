@@ -76,8 +76,14 @@ function lib.heap:push(...)
     local items = self.private.items
     local lt = self.private.lt
     local startIndex = #items
+    local args = { ... }
 
-    table.move({ ... }, 1, n, startIndex + 1, items)
+    -- Reject nil before mutating, otherwise a hole corrupts ordering and size().
+    for i = 1, n do
+        if args[i] == nil then error("heap values cannot be nil", 2) end
+    end
+
+    table.move(args, 1, n, startIndex + 1, items)
 
     for i = 1, n do
         siftUp(items, startIndex + i, lt)
