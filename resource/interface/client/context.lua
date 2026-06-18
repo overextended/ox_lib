@@ -91,8 +91,11 @@ function lib.getOpenContextMenu() return openContextMenu end
 function lib.hideContext(onExit) closeContext(nil, nil, onExit) end
 
 RegisterNUICallback('openContext', function(data, cb)
-    if data.back and contextMenus[openContextMenu].onBack then contextMenus[openContextMenu].onBack() end
     cb(1)
+
+    local menu = openContextMenu and contextMenus[openContextMenu]
+    if data.back and menu and menu.onBack then menu.onBack() end
+
     lib.showContext(data.id)
 end)
 
@@ -105,7 +108,9 @@ RegisterNUICallback('clickContext', function(id, cb)
         id += 1
     end
 
-    local data = contextMenus[openContextMenu].options[id]
+    local menu = openContextMenu and contextMenus[openContextMenu]
+    local data = menu and menu.options[id]
+    if not data then return end
 
     if not data.event and not data.serverEvent and not data.onSelect then return end
 
