@@ -135,7 +135,7 @@ local function parseCron(value, unit)
             end
         end
         if #months > 0 then
-            return table.concat(months, ',')
+            return #months == 1 and tonumber(months[1]) or table.concat(months, ',')
         end
     end
 
