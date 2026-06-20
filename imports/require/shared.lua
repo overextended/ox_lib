@@ -21,6 +21,66 @@ package = {
 
 ---@param modName string
 ---@return string
+local function resolveRelative(modName)
+    if not modName:find('^%.%.?/') then return modName end
+
+    local src
+    local i = 3
+
+    while true do
+        local info = debug.getinfo(i, 'S')
+        if not info then break end
+
+        local source = info.source
+
+        if source and source:sub(1, 1) == '@' and not source:find('^@+ox_lib/imports/require/') then
+            src = source
+            break
+        end
+
+        i += 1
+    end
+
+    if not src then
+        error(("cannot resolve relative path '%s' without a file source"):format(modName), 4)
+    end
+
+    local dir = src:match('^@+[^/]+/(.+)/[^/]+%.lua$') or ''
+    local parts = {}
+
+    for part in dir:gmatch('[^/]+') do
+        parts[#parts + 1] = part
+    end
+
+    local rest = modName
+
+    while true do
+        if rest:sub(1, 3) == '../' then
+            if #parts == 0 then
+                error(("relative path '%s' goes above the resource root"):format(modName), 4)
+            end
+            parts[#parts] = nil
+            rest = rest:sub(4)
+        elseif rest:sub(1, 2) == './' then
+            rest = rest:sub(3)
+        else
+            break
+        end
+    end
+
+    rest = rest:gsub('%.lua$', ''):gsub('%.json$', '')
+
+    if rest == '' then
+        error(("relative path '%s' resolves to no module"):format(modName), 4)
+    end
+
+    if #parts == 0 then return rest end
+
+    return table.concat(parts, '.') .. '.' .. rest
+end
+
+---@param modName string
+---@return string
 ---@return string
 local function getModuleInfo(modName)
     local resource = modName:match('^@(.-)/.+') --[[@as string?]]
@@ -125,6 +185,8 @@ function lib.load(filePath, env)
         error(("file path must be a string (received '%s')"):format(filePath), 2)
     end
 
+    filePath = resolveRelative(filePath)
+
     local result, err = loadModule(filePath, env)
 
     if result then return result() end
@@ -139,6 +201,8 @@ function lib.loadJson(filePath)
     if type(filePath) ~= 'string' then
         error(("file path must be a string (received '%s')"):format(filePath), 2)
     end
+
+    filePath = resolveRelative(filePath)
 
     local resourceSrc, modPath = getModuleInfo(filePath:gsub('%.', '/'))
     local resourceFile = LoadResourceFile(resourceSrc, ('%s.json'):format(modPath))
@@ -158,6 +222,8 @@ function lib.require(modName)
     if type(modName) ~= 'string' then
         error(("module name must be a string (received '%s')"):format(modName), 3)
     end
+
+    modName = resolveRelative(modName)
 
     local module = loaded[modName]
 
