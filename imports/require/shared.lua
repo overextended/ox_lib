@@ -97,8 +97,106 @@ end
 ---| fun(modName: string): function loader
 ---| fun(modName: string): nil, string errmsg
 
+local relativeCache = {}
+
+---@param modName string
+local function relativeSearcher(modName)
+    if modName:sub(1, 2) ~= './' and modName:sub(1, 3) ~= '../' then
+        return nil, 'not a relative path'
+    end
+
+    local src
+    local i = 3
+
+    while true do
+        local info = debug.getinfo(i, 'S')
+        if not info then break end
+
+        local source = info.source
+
+        if source and source:sub(1, 1) == '@' and not source:find('^@+ox_lib/imports/require/') then
+            src = source
+            break
+        end
+
+        i += 1
+    end
+
+    if not src then
+        return nil, ("cannot resolve relative path '%s' without a file source"):format(modName)
+    end
+
+    local resource = src:match('^@+([^/]+)/') or cache.resource
+    local dir = src:match('^@+[^/]+/(.+)/[^/]+%.lua$') or ''
+    local parts = {}
+
+    for part in dir:gmatch('[^/]+') do
+        parts[#parts + 1] = part
+    end
+
+    local rest = modName
+
+    while true do
+        if rest:sub(1, 3) == '../' then
+            if #parts == 0 then
+                return nil, ("relative path '%s' goes above the resource root"):format(modName)
+            end
+            parts[#parts] = nil
+            rest = rest:sub(4)
+        elseif rest:sub(1, 2) == './' then
+            rest = rest:sub(3)
+        else
+            break
+        end
+    end
+
+    rest = rest:gsub('%.lua$', '')
+
+    if rest == '' then
+        return nil, ("relative path '%s' resolves to no module"):format(modName)
+    end
+
+    local prefix = #parts > 0 and (table.concat(parts, '/') .. '/') or ''
+    local relativePath = rest:gsub('%.', '/')
+    local cacheKey = ('%s/%s%s'):format(resource, prefix, relativePath)
+    local cached = relativeCache[cacheKey]
+
+    if cached ~= nil then
+        if cached == '__loading' then
+            error(("^1circular-dependency occurred when loading module '%s'^0"):format(modName), 3)
+        end
+
+        return function() return cached end
+    end
+
+    local fileName = prefix .. relativePath .. '.lua'
+    local file = LoadResourceFile(resource, fileName)
+
+    if not file then
+        local initPath = prefix .. relativePath .. '/init.lua'
+        file = LoadResourceFile(resource, initPath)
+
+        if not file then
+            return nil, ("no file '@%s/%s'\n\tno file '@%s/%s'"):format(resource, fileName, resource, initPath)
+        end
+
+        fileName = initPath
+    end
+
+    local chunk = assert(load(file, ('@@%s/%s'):format(resource, fileName), 't'))
+
+    return function()
+        relativeCache[cacheKey] = '__loading'
+        local result = chunk()
+        if result == nil then result = true end
+        relativeCache[cacheKey] = result
+        return result
+    end
+end
+
 ---@type PackageSearcher[]
 package.searchers = {
+    relativeSearcher,
     function(modName)
         local ok, result = pcall(_require, modName)
 
@@ -159,15 +257,19 @@ function lib.require(modName)
         error(("module name must be a string (received '%s')"):format(modName), 3)
     end
 
-    local module = loaded[modName]
+    local isRelative = modName:sub(1, 2) == './' or modName:sub(1, 3) == '../'
 
-    if module == '__loading' then
-        error(("^1circular-dependency occurred when loading module '%s'^0"):format(modName), 2)
+    if not isRelative then
+        local module = loaded[modName]
+
+        if module == '__loading' then
+            error(("^1circular-dependency occurred when loading module '%s'^0"):format(modName), 2)
+        end
+
+        if module ~= nil then return module end
+
+        loaded[modName] = '__loading'
     end
-
-    if module ~= nil then return module end
-
-    loaded[modName] = '__loading'
 
     local err = {}
 
@@ -176,9 +278,12 @@ function lib.require(modName)
 
         if result then
             if type(result) == 'function' then result = result() end
-            loaded[modName] = result or result == nil
 
-            return loaded[modName]
+            if not isRelative then
+                loaded[modName] = result or result == nil
+            end
+
+            return result or result == nil
         end
 
         err[#err + 1] = errMsg
