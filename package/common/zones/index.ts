@@ -40,7 +40,7 @@ export class Zone {
     return new Zone(new Sphere(...args));
   }
 
-  /** Deletes a zone with the given id. */
+  /** Removes a zone with the given id from the registry. */
   public static delete(id: string) {
     const zone = zones.get(id);
 
@@ -163,6 +163,11 @@ export class Zone {
 
       return;
     }
+  }
+
+  /** Removes the zone from the registry. */
+  public remove() {
+    Zone.delete(this.id)
   }
 }
 
