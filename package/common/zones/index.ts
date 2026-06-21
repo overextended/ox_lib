@@ -20,12 +20,14 @@ export interface Zone {
   [key: string]: any;
 }
 
+const zones = new Map<string, Zone>();
+const grid = new Grid<Zone>();
+let nearbyZones = new Set<Zone>() as ReadonlySet<Zone>;
+let insideZones = new Set<Zone>();
+let lastZones = new Set<Zone>();
+let nextId = 1;
+
 export class Zone {
-  private static nextId = 1;
-
-  public static map = new Map<string, Zone>();
-  public static grid = new Grid<Zone>();
-
   public static Prism(...args: ConstructorParameters<typeof Prism>) {
     return new Zone(new Prism(...args));
   }
@@ -38,21 +40,34 @@ export class Zone {
     return new Zone(new Sphere(...args));
   }
 
+  /** Deletes a zone with the given id. */
   public static delete(id: string) {
-    const zone = Zone.map.get(id);
+    const zone = zones.get(id);
 
     if (zone) {
-      Zone.map.delete(id);
-      Zone.grid.remove(zone);
+      zones.delete(id);
+      grid.remove(zone);
     }
   }
 
-  public static getNearby(point: Vector2 | Vector3) {
-    return Zone.grid.getEntries(point.x, point.y);
+  /** Returns a set of all zones. */
+  public static getAll() {
+    return zones;
   }
 
+  /** Returns a set of all zones the player is currently standing inside. Always empty on the server. */
+  public static getCurrent() {
+    return insideZones
+  }
+
+  /** Returns a set of all zones near the given point, or the player if undefined. */
+  public static getNearby(point?: Vector2 | Vector3) {
+    return point ? grid.getEntries(point.x, point.y) : nearbyZones;
+  }
+
+  /** Evaluates if a zone with the given id exists. */
   public static has(id: string) {
-    return Zone.map.has(id);
+    return zones.has(id);
   }
 
   public shouldDraw = false;
@@ -61,7 +76,7 @@ export class Zone {
     this.shape = shape;
     this.x = shape.centroid.x;
     this.y = shape.centroid.y;
-    this.id = `zone:${Zone.nextId++}`;
+    this.id = `zone:${nextId++}`;
 
     if (shape instanceof Prism) {
       const bounds = shape.bounds;
@@ -74,8 +89,12 @@ export class Zone {
       this.height = diametre;
     }
 
-    Zone.grid.add(this);
-    Zone.map.set(this.id, this);
+    grid.add(this);
+    zones.set(this.id, this);
+  }
+
+  public contains(point: Vector3) {
+    return this.shape.contains(point.x, point.y, point.z)
   }
 
   public draw(red = 255, green = 42, blue = 24, alpha = 100) {
@@ -149,10 +168,6 @@ export class Zone {
 
 function startPolling() {
   if (cache.game === 'fxserver') return;
-
-  let nearbyZones = new Set<Zone>() as ReadonlySet<Zone>;
-  let insideZones = new Set<Zone>();
-  let lastZones = new Set<Zone>();
 
   setInterval(() => {
     const coords = Vector3.fromArray(GetEntityCoords(cache.ped, true));
