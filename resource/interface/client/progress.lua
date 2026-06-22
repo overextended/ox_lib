@@ -195,7 +195,7 @@ local function startProgress(data, nuiMessage)
         Wait(0)
     end
 
-    if data.prop then
+    if data.prop and next(data.prop) ~= nil then
         TriggerServerEvent('ox_lib:progressProps', nil)
     end
 
