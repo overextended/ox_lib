@@ -116,7 +116,7 @@ local function startProgress(data, nuiMessage)
     local invBusy <close> = setBusyState()
     progress = data
 
-    if data.prop then
+    if data.prop and next(data.prop) ~= nil then
         if table.type(data.prop) ~= 'array' then
             local model = data.prop.model
 
