@@ -4,6 +4,8 @@ import Indicator from './indicator';
 import { fetchNui } from '../../utils/fetchNui';
 import { Box, createStyles } from '@mantine/core';
 import type { GameDifficulty, SkillCheckProps } from '../../typings';
+import { getColorblindTheme } from '../../config/colorblind';
+import { useConfig } from '../../providers/ConfigProvider';
 
 export const circleCircumference = 2 * 50 * Math.PI;
 
@@ -15,7 +17,8 @@ const difficultyOffsets = {
   hard: 25,
 };
 
-const useStyles = createStyles((theme, params: { difficultyOffset: number }) => ({
+const useStyles = createStyles(
+  (theme, params: { difficultyOffset: number; skillAreaColor: string; indicatorColor: string }) => ({
   svg: {
     position: 'absolute',
     top: '50%',
@@ -41,7 +44,7 @@ const useStyles = createStyles((theme, params: { difficultyOffset: number }) => 
   },
   skillArea: {
     fill: 'transparent',
-    stroke: theme.fn.primaryColor(),
+    stroke: params.skillAreaColor,
     strokeWidth: 8,
     r: 50,
     cx: 250,
@@ -56,7 +59,7 @@ const useStyles = createStyles((theme, params: { difficultyOffset: number }) => 
     },
   },
   indicator: {
-    stroke: 'red',
+    stroke: params.indicatorColor,
     strokeWidth: 16,
     fill: 'transparent',
     r: 50,
@@ -92,9 +95,11 @@ const useStyles = createStyles((theme, params: { difficultyOffset: number }) => 
       fontSize: 22,
     },
   },
-}));
+  })
+);
 
 const SkillCheck: React.FC = () => {
+  const { config } = useConfig();
   const [visible, setVisible] = useState(false);
   const dataRef = useRef<{ difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] } | null>(null);
   const dataIndexRef = useRef<number>(0);
@@ -104,7 +109,12 @@ const SkillCheck: React.FC = () => {
     difficulty: 'easy',
     key: 'e',
   });
-  const { classes } = useStyles({ difficultyOffset: skillCheck.difficultyOffset });
+  const colorblindTheme = getColorblindTheme(config.colorblindMode);
+  const { classes } = useStyles({
+    difficultyOffset: skillCheck.difficultyOffset,
+    skillAreaColor: colorblindTheme.skillAreaColor,
+    indicatorColor: colorblindTheme.indicatorColor,
+  });
 
   useNuiEvent('startSkillCheck', (data: { difficulty: GameDifficulty | GameDifficulty[]; inputs?: string[] }) => {
     dataRef.current = data;
