@@ -30,6 +30,7 @@ const InputDialog: React.FC = () => {
   });
   const [visible, setVisible] = React.useState(false);
   const { locale } = useLocales();
+  const closeTimeout = React.useRef<number | null>(null);
 
   const form = useForm<{ test: { value: any }[] }>({});
   const fieldForm = useFieldArray({
@@ -38,6 +39,13 @@ const InputDialog: React.FC = () => {
   });
 
   useNuiEvent<InputProps>('openDialog', (data) => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+    form.reset();
+    fieldForm.remove();
+
     setFields(data);
     setVisible(true);
     data.rows.forEach((row, index) => {
@@ -66,18 +74,24 @@ const InputDialog: React.FC = () => {
     });
   });
 
-  useNuiEvent('closeInputDialog', async () => await handleClose(true));
+  useNuiEvent('closeInputDialog', () => handleClose(true));
 
-  const handleClose = async (dontPost?: boolean) => {
+  const handleClose = (dontPost?: boolean) => {
     setVisible(false);
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    form.reset();
-    fieldForm.remove();
-    if (dontPost) return;
-    fetchNui('inputData');
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
+    closeTimeout.current = window.setTimeout(() => {
+      form.reset();
+      fieldForm.remove();
+      closeTimeout.current = null;
+      if (!dontPost) {
+        fetchNui('inputData');
+      }
+    }, 200);
   };
 
-  const onSubmit = form.handleSubmit(async (data) => {
+  const onSubmit = form.handleSubmit((data) => {
     setVisible(false);
     const values: any[] = [];
     for (let i = 0; i < fields.rows.length; i++) {
@@ -89,10 +103,15 @@ const InputDialog: React.FC = () => {
       }
     }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    form.reset();
-    fieldForm.remove();
-    fetchNui('inputData', values);
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+    }
+    closeTimeout.current = window.setTimeout(() => {
+      form.reset();
+      fieldForm.remove();
+      closeTimeout.current = null;
+      fetchNui('inputData', values);
+    }, 200);
   });
 
   return (
