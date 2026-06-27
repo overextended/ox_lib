@@ -63,4 +63,65 @@ function string.random(pattern, length)
     return table.concat(arr)
 end
 
+---Converts the first character to uppercase if it is lowercase
+---@param str string
+---@return string
+function string.capitalize(str)
+    return str:gsub('^%l', string.upper)
+end
+
+---Checks if a string starts with a given prefix
+---@param str string
+---@param prefix string
+---@return boolean
+function string.startsWith(str, prefix)
+    return str:sub(1, #prefix) == prefix
+end
+
+---Checks if a string ends with a given suffix
+---@param str string
+---@param suffix string
+---@return boolean
+function string.endsWith(str, suffix)
+    return suffix == '' or str:sub(-#suffix) == suffix
+end
+
+---Checks if a string contains a given value
+---@param str string
+---@param value string
+---@param plain? boolean Whether `value` is treated as a string literal or Lua pattern. Defaults to true.
+---@return boolean
+function string.contains(str, value, plain)
+    return str:find(value, 1, plain ~= false) ~= nil
+end
+
+---Checks if a string is empty or contains only whitespace.
+---@param str string
+---@return boolean
+function string.isBlank(str)
+    return str:match('^%s*$') ~= nil
+end
+
+---Escapes Lua pattern magic characters in a string
+---@param str string
+---@return string
+function string.escapePattern(str)
+    return str:gsub('([%(%)%.%%%+%-%*%?%[%]%^%$])', '%%%1')
+end
+
+---Replaces all text or pattern matches in a string
+---@param str string
+---@param search string
+---@param replacement string
+---@param plain? boolean Whether `value` is treated as a string literal or Lua pattern. Defaults to true.
+---@return string replaced String with replacements applied.
+function string.replace(str, search, replacement, plain)
+    if plain ~= false then
+        search = string.escapePattern(search)
+        replacement = replacement:gsub('%%', '%%%%')
+    end
+
+    return (str:gsub(search, replacement))
+end
+
 return lib.string
