@@ -63,7 +63,7 @@ function string.random(pattern, length)
     return table.concat(arr)
 end
 
----Capitalizes the first lowercase letter of a string
+---Converts the first character to uppercase if it is lowercase
 ---@param str string
 ---@return string
 function string.capitalize(str)
@@ -89,46 +89,39 @@ end
 ---Checks if a string contains a given value
 ---@param str string
 ---@param value string
----@param plain? boolean If true or nil, searches as plain text. If false, searches as Lua pattern.
+---@param plain? boolean Whether `value` is treated as a string literal or Lua pattern. Defaults to true.
 ---@return boolean
 function string.contains(str, value, plain)
     return str:find(value, 1, plain ~= false) ~= nil
 end
 
----Checks if a string is empty
----@param str string
----@return boolean
-function string.isEmpty(str)
-    return str == ''
-end
-
----Checks if a string is blank (empty or only whitespace)
+---Checks if a string is empty or contains only whitespace.
 ---@param str string
 ---@return boolean
 function string.isBlank(str)
     return str:match('^%s*$') ~= nil
 end
 
----Escapes Lua pattern characters in a string
+---Escapes Lua pattern magic characters in a string
 ---@param str string
 ---@return string
 function string.escapePattern(str)
-    return str:gsub('([^%w])', '%%%1')
+    return str:gsub('([%(%)%.%%%+%-%*%?%[%]%^%$])', '%%%1')
 end
 
 ---Replaces all text or pattern matches in a string
 ---@param str string
----@param old string
----@param new string
----@param plain? boolean If true or nil, replaces plain text. If false, replaces Lua pattern matches.
----@return string
-function string.replace(str, old, new, plain)
+---@param search string
+---@param replacement string
+---@param plain? boolean Whether `value` is treated as a string literal or Lua pattern. Defaults to true.
+---@return string replaced String with replacements applied.
+function string.replace(str, search, replacement, plain)
     if plain ~= false then
-        old = string.escapePattern(old)
-        new = new:gsub('%%', '%%%%')
+        search = string.escapePattern(search)
+        replacement = replacement:gsub('%%', '%%%%')
     end
 
-    return str:gsub(old, new)
+    return (str:gsub(search, replacement))
 end
 
 return lib.string
