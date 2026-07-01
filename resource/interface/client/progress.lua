@@ -111,25 +111,47 @@ local setBusyState = setmetatable({}, {
     end
 })
 
+local invalidPropData = "lib.requestModel received invalid prop data from resource '%s' (%s)"
+
 ---@param data ProgressProps
 local function startProgress(data, nuiMessage)
     local invBusy <close> = setBusyState()
     progress = data
 
     if data.prop then
-        if table.type(data.prop) ~= 'array' then
-            local model = data.prop.model
+        local ttype = table.type(data.prop)
 
-            local ok, err = loadPropModel(model)
-
-            if not ok then return lib.print.error(err) end
-        else
-            for i = 1, #data.prop do
+        if ttype == 'empty' then
+            lib.print.warn(invalidPropData:format(GetInvokingResource(), 'table is empty'))
+        elseif ttype == 'array' then
+            for i = #data.prop, 1, -1 do
                 local model = data.prop[i].model
 
-                local ok, err = loadPropModel(model)
+                if model then
+                    local ok, err = loadPropModel(model)
+    
+                    if not ok then
+                        lib.print.warn(invalidPropData:format(GetInvokingResource(), err))
+                        table.remove(data.prop, i)
+                    end
+                else
+                    lib.print.warn(invalidPropData:format(GetInvokingResource(), 'model is undefined'))
+                    table.remove(data.prop, i)
+                end
+            end
+        else
+            local model = data.prop.model
 
-                if not ok then return lib.print.error(err) end
+            if model then
+                local ok, err = loadPropModel(model)
+    
+                if not ok then
+                    lib.print.warn(invalidPropData:format(GetInvokingResource(), err))
+                    data.prop = nil
+                end
+            else
+                lib.print.warn(invalidPropData:format(GetInvokingResource(), 'model is undefined'))
+                data.prop = nil
             end
         end
 
