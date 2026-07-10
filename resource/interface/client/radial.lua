@@ -335,15 +335,21 @@ end
 
 ---Shows a registered menu as root without affecting global menus.
 ---@param id string
----@param option number?
-function lib.showRadialMenu(id, option)
+function lib.showRadialMenu(id)
     local radial = id and menus[id]
     if not radial then return end
 
     if isDisabled then return end
 
     if isOpen then
-        return lib.hideRadial()
+        --Transitions between different root menus
+        if rootRadial == radial then
+            return lib.hideRadial()
+        end
+
+        rootRadial = radial
+        table.wipe(menuHistory)
+        return showRadial(id)
     end
 
     local radialItems = radial.items
@@ -370,7 +376,6 @@ function lib.showRadialMenu(id, option)
         action = 'openRadialMenu',
         data = {
             items = radialItems,
-            option = option
         }
     })
 
@@ -393,12 +398,22 @@ lib.addKeybind({
         if isDisabled then return end
 
         if isOpen then
+            --Transitions between different root menus
+            if rootRadial then
+                rootRadial = nil
+                table.wipe(menuHistory)
+                return showRadial()
+            end
+
             return lib.hideRadial()
         end
 
         if #menuItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
 
         isOpen = true
+        currentRadial = nil
+        rootRadial = nil
+        table.wipe(menuHistory)
 
         SendNUIMessage({
             action = 'openRadialMenu',
