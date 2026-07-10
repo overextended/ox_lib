@@ -19,6 +19,8 @@ export const registerRadial = (radial: { id: string; items: Omit<RadialItem, 'id
 
 export const getCurrentRadialId = () => exports.ox_lib.getCurrentRadialId();
 
+export const showRadialMenu = (menuId: string) => exports.ox_lib.showRadialMenu(menuId);
+
 export const hideRadial = () => exports.ox_lib.hideRadial();
 
 export const disableRadial = (state: boolean) => exports.ox_lib.disableRadial(state);
