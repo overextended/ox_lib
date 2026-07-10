@@ -38,6 +38,10 @@ local menuHistory = {}
 ---@type RadialMenuProps?
 local currentRadial = nil
 
+---The registered menu opened directly with lib.showRadialMenu.
+---@type RadialMenuProps?
+local rootRadial = nil
+
 ---Open a the global radial menu or a registered radial submenu with the given id.
 ---@param id string?
 ---@param option number?
@@ -65,7 +69,7 @@ local function showRadial(id, option)
         action = 'openRadialMenu',
         data = {
             items = radial and radial.items or menuItems,
-            sub = radial and true or nil,
+            sub = radial and radial ~= rootRadial or nil,
             option = option
         }
     })
@@ -138,6 +142,7 @@ function lib.hideRadial()
 
     isOpen = false
     currentRadial = nil
+    rootRadial = nil
 end
 
 ---Registers an item or array of items in the global radial menu.
@@ -304,6 +309,7 @@ RegisterNUICallback('radialClose', function(_, cb)
 
     isOpen = false
     currentRadial = nil
+    rootRadial = nil
 end)
 
 RegisterNUICallback('radialTransition', function(_, cb)
@@ -324,6 +330,58 @@ function lib.disableRadial(state)
 
     if isOpen and state then
         return lib.hideRadial()
+    end
+end
+
+---Shows a registered menu as root without affecting global menus.
+---@param id string
+---@param option number?
+function lib.showRadialMenu(id, option)
+    local radial = id and menus[id]
+    if not radial then return end
+
+    if isDisabled then return end
+
+    if isOpen then
+        return lib.hideRadial()
+    end
+
+    local radialItems = radial.items
+    if #radialItems == 0 or IsNuiFocused() or IsPauseMenuActive() then return end
+
+    isOpen = true
+    currentRadial = radial
+    rootRadial = radial
+    table.wipe(menuHistory)
+
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = false
+    })
+
+    Wait(100)
+
+    if not isOpen then return end
+
+    lib.setNuiFocus(true)
+    SetCursorLocation(0.5, 0.5)
+
+    SendNUIMessage({
+        action = 'openRadialMenu',
+        data = {
+            items = radialItems,
+            option = option
+        }
+    })
+
+    while isOpen do
+        DisablePlayerFiring(cache.playerId, true)
+        DisableControlAction(0, 1, true)
+        DisableControlAction(0, 2, true)
+        DisableControlAction(0, 142, true)
+        DisableControlAction(2, 199, true)
+        DisableControlAction(2, 200, true)
+        Wait(0)
     end
 end
 
