@@ -71,19 +71,26 @@ local function validatePrivateAccess(class)
 
         if not di or not di.func then return false end
 
-        local method = classes[class][di.func]
+        local currentClass = class
 
-        if not method then
-            for k, v in pairs(class) do
-                if v == di.func then
-                    method = v
-                    classes[class][method] = k
-                    break
+        while currentClass do
+            local classMethods = classes[currentClass]
+            local method = classMethods and classMethods[di.func]
+
+            if classMethods and not method then
+                for k, v in pairs(currentClass) do
+                    if v == di.func then
+                        method = v
+                        classMethods[method] = k
+                        break
+                    end
                 end
             end
-        end
 
-        if method then return true end
+            if method then return true end
+
+            currentClass = getmetatable(currentClass)
+        end
 
         level += 1
     end
