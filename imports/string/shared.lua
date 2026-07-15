@@ -67,7 +67,7 @@ end
 ---@param str string
 ---@return string
 function string.capitalize(str)
-    return str:gsub('^%l', string.upper)
+    return (str:gsub('^%l', string.upper))
 end
 
 ---Checks if a string starts with a given prefix
@@ -106,7 +106,7 @@ end
 ---@param str string
 ---@return string
 function string.escapePattern(str)
-    return str:gsub('([%(%)%.%%%+%-%*%?%[%]%^%$])', '%%%1')
+    return (str:gsub('([%(%)%.%%%+%-%*%?%[%]%^%$])', '%%%1'))
 end
 
 ---Replaces all text or pattern matches in a string
