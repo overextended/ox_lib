@@ -2,6 +2,45 @@ local debug_getinfo = debug.getinfo
 
 function noop() end
 
+-- Sandboxed builds log an error for every LoadResourceFile miss, so list each
+-- module directory via io.readdir before probing files. Falls back to probing
+-- when io.readdir is unavailable (listing == false).
+local moduleFiles = {}
+
+local function getModuleFiles(dir)
+    local listing = moduleFiles[dir]
+
+    if listing == nil then
+        listing = false
+
+        if type(io) == 'table' and io.readdir then
+            local ok, handle = pcall(io.readdir, ('@ox_lib/%s'):format(dir))
+
+            if ok and handle then
+                listing = {}
+
+                for entry in handle:lines() do
+                    listing[entry] = true
+                end
+
+                pcall(handle.close, handle)
+            end
+        end
+
+        moduleFiles[dir] = listing
+    end
+
+    return listing
+end
+
+local function loadResourceFileSafe(resource, dir, file)
+    local listing = getModuleFiles(dir)
+
+    if listing and not listing[file] then return nil end
+
+    return LoadResourceFile(resource, ('%s/%s'):format(dir, file))
+end
+
 lib = setmetatable({
     name = 'ox_lib',
     context = IsDuplicityVersion() and 'server' or 'client',
@@ -16,8 +55,8 @@ lib = setmetatable({
 
     __index = function(self, key)
         local dir = ('imports/%s'):format(key)
-        local chunk = LoadResourceFile(self.name, ('%s/%s.lua'):format(dir, self.context))
-        local shared = LoadResourceFile(self.name, ('%s/shared.lua'):format(dir))
+        local chunk = loadResourceFileSafe(self.name, dir, ('%s.lua'):format(self.context))
+        local shared = loadResourceFileSafe(self.name, dir, 'shared.lua')
 
         if shared then
             chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared

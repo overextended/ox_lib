@@ -50,6 +50,45 @@ end
 
 local tempData = {}
 
+-- Sandboxed builds log an error for every LoadResourceFile miss, so list
+-- directories via io.readdir before probing candidate paths. A failed or
+-- unavailable readdir falls back to probing (listing == false).
+local dirListings = {}
+
+local function resourceFileExists(resource, fileName)
+    if type(io) ~= 'table' or not io.readdir then return true end
+
+    local dir, file = fileName:match('^(.*)/([^/]+)$')
+
+    if not file then
+        dir, file = '', fileName
+    end
+
+    local key = ('@%s/%s'):format(resource, dir)
+    local listing = dirListings[key]
+
+    if listing == nil then
+        listing = false
+        local ok, handle = pcall(io.readdir, key)
+
+        if ok and handle then
+            listing = {}
+
+            for entry in handle:lines() do
+                listing[entry] = true
+            end
+
+            pcall(handle.close, handle)
+        end
+
+        dirListings[key] = listing
+    end
+
+    if not listing then return true end
+
+    return listing[file] == true
+end
+
 ---@param name string
 ---@param path string
 ---@return string? filename
@@ -61,7 +100,7 @@ function package.searchpath(name, path)
 
     for template in path:gmatch('[^;]+') do
         local fileName = template:gsub('^%./', ''):gsub('?', modName:gsub('%.', '/') or modName)
-        local file = LoadResourceFile(resource, fileName)
+        local file = resourceFileExists(resource, fileName) and LoadResourceFile(resource, fileName) or nil
 
         if file then
             tempData[1] = file

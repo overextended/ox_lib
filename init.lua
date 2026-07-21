@@ -43,10 +43,49 @@ local context = IsDuplicityVersion() and 'server' or 'client'
 
 function noop() end
 
+-- Sandboxed builds log an error for every LoadResourceFile miss, so list each
+-- module directory via io.readdir before probing files. Falls back to probing
+-- when io.readdir is unavailable (listing == false).
+local moduleFiles = {}
+
+local function getModuleFiles(dir)
+    local listing = moduleFiles[dir]
+
+    if listing == nil then
+        listing = false
+
+        if type(io) == 'table' and io.readdir then
+            local ok, handle = pcall(io.readdir, ('@%s/%s'):format(ox_lib, dir))
+
+            if ok and handle then
+                listing = {}
+
+                for entry in handle:lines() do
+                    listing[entry] = true
+                end
+
+                pcall(handle.close, handle)
+            end
+        end
+
+        moduleFiles[dir] = listing
+    end
+
+    return listing
+end
+
+local function loadResourceFileSafe(dir, file)
+    local listing = getModuleFiles(dir)
+
+    if listing and not listing[file] then return nil end
+
+    return LoadResourceFile(ox_lib, ('%s/%s'):format(dir, file))
+end
+
 local function loadModule(self, module)
     local dir = ('imports/%s'):format(module)
-    local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, context))
-    local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
+    local chunk = loadResourceFileSafe(dir, ('%s.lua'):format(context))
+    local shared = loadResourceFileSafe(dir, 'shared.lua')
 
     if shared then
         chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
