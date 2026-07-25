@@ -216,10 +216,10 @@ function lib.array:includes(element, fromIndex)
     return false
 end
 
----Concatenates all array elements into a string, seperated by commas or the specified seperator.
----@param seperator? string
-function lib.array:join(seperator)
-    return table_concat(self, seperator or ',')
+---Concatenates all array elements into a string, separated by commas or the specified separator.
+---@param separator? string
+function lib.array:join(separator)
+    return table_concat(self, separator or ',')
 end
 
 ---Create a new array containing the results from calling the provided function on every element in an array.
