@@ -42,6 +42,14 @@ cache = {
     game = GetGameName(),
 }
 
+if not GetCurrentResourceName() == "ox_lib" then
+    local err =
+    '^1Resource name mismatch. Please ensure the resource is named "ox_lib".\n	^3https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip^0'
+    function lib.hasLoaded() return err end
+
+    error(err)
+end
+
 if not LoadResourceFile(lib.name, 'web/build/index.html') then
     local err =
     '^1Unable to load UI. Build ox_lib or download the latest release.\n	^3https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip^0'

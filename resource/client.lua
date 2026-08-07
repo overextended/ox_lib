@@ -6,6 +6,8 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+local settings = require 'resource.settings'
+
 local _registerCommand = RegisterCommand
 
 ---@param commandName string
@@ -22,7 +24,8 @@ end
 RegisterNUICallback('getConfig', function(_, cb)
     cb({
         primaryColor = GetConvar('ox:primaryColor', 'blue'),
-        primaryShade = GetConvarInt('ox:primaryShade', 8)
+        primaryShade = GetConvarInt('ox:primaryShade', 8),
+        colorblindMode = settings.colorblind_mode or 'off'
     })
 end)
 
