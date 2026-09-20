@@ -32,7 +32,7 @@ export const cache: OxCache = new Proxy(
         target[key] = value;
       });
 
-      target[key] = exports.ox_lib.cache(key) || false;
+      target[key] = exports.ox_lib.cache(key) ?? false;
       return target[key];
     },
   },
