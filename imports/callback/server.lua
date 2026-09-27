@@ -119,7 +119,7 @@ function lib.callback.register(name, cb)
 
     lib.setValidCallback(name, true)
 
-    registeredhandlers[name] = RegisterNetEvent(event, function(resource, key, ...)
+    registeredHandlers[name] = RegisterNetEvent(event, function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
     end)
 end
