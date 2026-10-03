@@ -15,6 +15,12 @@ RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
 
     if not cb then return end
 
+    local keyPlayerId = key:match(':(%d+)$')
+
+    if not keyPlayerId or tonumber(keyPlayerId) ~= source then
+        return warn(("Player %d triggered callback event with invalid key '%s'."):format(source, key))
+    end
+
     pendingCallbacks[key] = nil
 
     cb(...)

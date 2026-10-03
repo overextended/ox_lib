@@ -8,6 +8,12 @@ onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
 
   if (!resolve) return;
 
+  const keyPlayerId = key.match(/:(\d+)$/)?.[1];
+
+  if (!keyPlayerId || parseInt(keyPlayerId) !== source) {
+    return console.warn(`Player ${source} triggered callback event with invalid key '${key}'.`);
+  }
+
   delete pendingCallbacks[key];
 
   resolve(...args);
