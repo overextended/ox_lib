@@ -6,4 +6,5 @@ export * from './notifications';
 export * from './progress';
 export * from './radial';
 export * from './skillcheck';
+export * from './mashgame';
 export * from './textui';
