@@ -12,6 +12,7 @@ import ListMenu from './features/menu/list';
 import Dev from './features/dev';
 import { isEnvBrowser } from './utils/misc';
 import SkillCheck from './features/skillcheck';
+import MashGame from './features/mashgame';
 import RadialMenu from './features/menu/radial';
 import { theme } from './theme';
 import { MantineProvider } from '@mantine/core';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
       <ListMenu />
       <RadialMenu />
       <SkillCheck />
+      <MashGame />
       {isEnvBrowser() && <Dev />}
     </MantineProvider>
   );
