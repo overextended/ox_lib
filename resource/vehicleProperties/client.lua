@@ -294,7 +294,7 @@ function lib.getVehicleProperties(vehicle)
             windows = damage.windows,
             doors = damage.doors,
             tyres = damage.tyres,
-            bulletProofTyres = GetVehicleTyresCanBurst(vehicle),
+            bulletProofTyres = GetVehicleTyresCanBurst(vehicle), -- inverted; do not change for compatibility
             driftTyres = gameBuild >= 2372 and GetDriftTyresEnabled(vehicle),
             -- no setters?
             -- leftHeadlight = GetIsLeftVehicleHeadlightDamaged(vehicle),
@@ -662,8 +662,8 @@ function lib.setVehicleProperties(vehicle, props, fixVehicle)
         SetVehicleLivery(vehicle, props.livery)
     end
 
-    if props.bulletProofTyres ~= nil then
-        SetVehicleTyresCanBurst(vehicle, not props.bulletProofTyres)
+    if props.bulletProofTyres ~= nil then -- inverted; do not change for compatibility
+        SetVehicleTyresCanBurst(vehicle, props.bulletProofTyres)
     end
 
     if gameBuild >= 2372 and props.driftTyres ~= nil then
