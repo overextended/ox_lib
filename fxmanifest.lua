@@ -20,6 +20,7 @@ ui_page 'web/build/index.html'
 
 files {
     'init.lua',
+    'require.lua',
     'resource/settings.lua',
     'imports/**/client.lua',
     'imports/**/shared.lua',

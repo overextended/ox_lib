@@ -1,4 +1,3 @@
----@meta
 --[[
     https://github.com/overextended/ox_lib
 
@@ -7,53 +6,54 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
-if not _VERSION:find('5.4') then
-    error('Lua 5.4 must be enabled in the resource manifest!', 2)
-end
-
 local resourceName = GetCurrentResourceName()
-local ox_lib = 'ox_lib'
+local lib = {
+    name = debug.getinfo(1, 'S').source:match('^@@([^/]+)/.+'),
+    context = IsDuplicityVersion() and 'server' or 'client',
+}
 
--- Some people have decided to load this file as part of ox_lib's fxmanifest?
-if resourceName == ox_lib then return end
+if resourceName == lib.name then return end
 
-if lib and lib.name == ox_lib then
-    error(("Cannot load ox_lib more than once.\n\tRemove any duplicate entries from '@%s/fxmanifest.lua'"):format(resourceName))
+if _ENV.lib?.name then
+    if _ENV.lib.name == lib.name then return end
 end
 
-local export = exports[ox_lib]
-
-if GetResourceState(ox_lib) ~= 'started' then
+if GetResourceState(lib.name) ~= 'started' then
     error('^1ox_lib must be started before this resource.^0', 0)
 end
 
+local export = exports[lib.name]
 local status = export.hasLoaded()
 
 if status ~= true then error(status, 2) end
 
--- Ignore invalid types during msgpack.pack (e.g. userdata)
+-- Prevent errors when encoding unknown data types (such as userdata, glm_polygon, etc.)
 msgpack.setoption('ignore_invalid', true)
-
------------------------------------------------------------------------------------------------
--- Module
------------------------------------------------------------------------------------------------
-
-local LoadResourceFile = LoadResourceFile
-local context = IsDuplicityVersion() and 'server' or 'client'
 
 function noop() end
 
+load(LoadResourceFile(lib.name, 'require.lua'), 'require')(lib)
+
+table.insert(package.searchers, 1, function(modName)
+    if modName:find('^Ox%.') then
+        modName = modName:gsub('^Ox.', '@ox_lib.modules.')
+        return function() return require(modName) end
+    end
+end)
+
+local LoadResourceFile = LoadResourceFile
+
 local function loadModule(self, module)
     local dir = ('imports/%s'):format(module)
-    local chunk = LoadResourceFile(ox_lib, ('%s/%s.lua'):format(dir, context))
-    local shared = LoadResourceFile(ox_lib, ('%s/shared.lua'):format(dir))
+    local chunk = LoadResourceFile(lib.name, ('%s/%s.lua'):format(dir, lib.context))
+    local shared = LoadResourceFile(lib.name, ('%s/shared.lua'):format(dir))
 
     if shared then
         chunk = (chunk and ('%s\n%s'):format(shared, chunk)) or shared
     end
 
     if chunk then
-        local fn, err = load(chunk, ('@@ox_lib/imports/%s/%s.lua'):format(module, context))
+        local fn, err = load(chunk, ('@@ox_lib/imports/%s/%s.lua'):format(module, lib.context))
 
         if not fn or err then
             if shared then
@@ -72,10 +72,6 @@ local function loadModule(self, module)
         return self[module]
     end
 end
-
------------------------------------------------------------------------------------------------
--- API
------------------------------------------------------------------------------------------------
 
 local function call(self, index, ...)
     local module = rawget(self, index)
@@ -100,16 +96,9 @@ local function call(self, index, ...)
     return module
 end
 
-local lib = setmetatable({
-    name = ox_lib,
-    context = context,
-}, {
-    __index = call,
-    __call = call,
-})
+setmetatable(lib, { __index = call, __call = call })
 
 local intervals = {}
---- Dream of a world where this PR gets accepted.
 ---@param callback function | number
 ---@param interval? number
 ---@param ... any
@@ -162,25 +151,11 @@ function ClearInterval(id)
     intervals[id] = -1
 end
 
---[[
-    lua language server doesn't support generics when using @overload
-    see https://github.com/LuaLS/lua-language-server/issues/723
-    this function stub allows the following to work
-
-    local key = cache('key', function() return 'abc' end) -- fff: 'abc'
-    local game = cache.game -- game: string
-]]
-
----@generic T
----@param key string
----@param func fun(...: any): T
----@param timeout? number
----@return T
----Caches the result of a function, optionally clearing it after timeout ms.
-function cache(key, func, timeout) end
-
 local cacheEvents = {}
 
+---@generic T
+---@overload fun(key: string, fn: fun(...: any): T, timeout: number?): T
+---Caches the result of a function, optionally clearing it after timeout ms.
 local cache = setmetatable({ game = GetGameName() --[[@as 'fxserver' | 'fivem' | 'redm']], resource = resourceName }, {
     __index = function(self, key)
         cacheEvents[key] = {}
@@ -230,7 +205,7 @@ _ENV.require = lib.require
 
 local notifyEvent = ('__ox_notify_%s'):format(cache.resource)
 
-if context == 'client' then
+if lib.context == 'client' then
     RegisterNetEvent(notifyEvent, function(data)
         if locale then
             if data.title then

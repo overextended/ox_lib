@@ -6,6 +6,7 @@
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
 
+local lib = lib or ...
 local loaded = {}
 local _require = require
 
@@ -29,12 +30,7 @@ local function getModuleInfo(modName)
         return resource, modName:sub(#resource + 3)
     end
 
-    if modName:find('^Ox/') then
-        modName = modName:gsub('^Ox/', 'modules/')
-        return lib.name, modName
-    end
-
-    local idx = 4 -- call stack depth (kept slightly lower than expected depth "just in case")
+    local idx = 4
 
     while true do
         local src = debug.getinfo(idx, 'S')?.source
@@ -43,10 +39,12 @@ local function getModuleInfo(modName)
             return cache.resource, modName
         end
 
-        resource = src:match('^@@([^/]+)/.+')
+        if src ~= 'require' then
+            resource = src:match('^@@([^/]+)/.+')
 
-        if resource and not src:find('^@@ox_lib/imports/require') then
-            return resource, modName
+            if resource then
+                return resource, modName
+            end
         end
 
         idx += 1
