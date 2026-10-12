@@ -24,10 +24,11 @@ package = {
 ---@return string
 ---@return string
 local function getModuleInfo(modName)
-    local resource = modName:match('^@(.-)/.+') --[[@as string?]]
+    local resource, path = modName:match('^@(.-)/(.+)$')
+    resource = resource or modName:match('^@(.+)$')
 
     if resource then
-        return resource, modName:sub(#resource + 3)
+        return resource, path or 'init'
     end
 
     local idx = 4
