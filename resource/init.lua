@@ -3,7 +3,7 @@ local debug_getinfo = debug.getinfo
 function noop() end
 
 lib = setmetatable({
-    name = 'ox_lib',
+    name = GetCurrentResourceName(),
     context = IsDuplicityVersion() and 'server' or 'client',
 }, {
     __newindex = function(self, key, fn)
@@ -50,6 +50,8 @@ if not LoadResourceFile(lib.name, 'web/build/index.html') then
     error(err)
 end
 
-function lib.hasLoaded() return true end
+load(LoadResourceFile(lib.name, 'require.lua'), 'require')(lib)
+require 'Ox.Class'
 
-require = lib.require
+
+function lib.hasLoaded() return true end

@@ -34,13 +34,6 @@ function noop() end
 
 load(LoadResourceFile(lib.name, 'require.lua'), 'require')(lib)
 
-table.insert(package.searchers, 1, function(modName)
-    if modName:find('^Ox%.') then
-        modName = modName:gsub('^Ox.', '@ox_lib.modules.')
-        return function() return require(modName) end
-    end
-end)
-
 local LoadResourceFile = LoadResourceFile
 
 local function loadModule(self, module)
@@ -201,7 +194,6 @@ end
 
 _ENV.lib = lib
 _ENV.cache = cache
-_ENV.require = lib.require
 
 local notifyEvent = ('__ox_notify_%s'):format(cache.resource)
 
@@ -249,6 +241,8 @@ else
     end
 end
 
+require 'Ox.Class'
+
 for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
     local name = GetResourceMetadata(cache.resource, 'ox_lib', i - 1)
 
@@ -259,4 +253,3 @@ for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
     end
 end
 
-require 'Ox.Class'

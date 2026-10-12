@@ -191,4 +191,13 @@ function lib.require(modName)
     error(("%s"):format(table.concat(err, "\n\t")))
 end
 
+_ENV.require = lib.require
+
+table.insert(package.searchers, 1, function(modName)
+    if modName:find('^Ox%.') then
+        modName = modName:gsub('^Ox.', '@ox_lib.modules.')
+        return function() return require(modName) end
+    end
+end)
+
 return lib.require
