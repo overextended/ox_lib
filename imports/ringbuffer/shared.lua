@@ -17,7 +17,7 @@
 ---@class RingBuffer : OxClass
 ---@field private new RingBufferConstructor
 ---@field private private RingBufferPrivate
-lib.ringbuffer = lib.class('RingBuffer')
+lib.ringbuffer = Class('RingBuffer')
 
 ---@class RingBufferConstructor
 ---@overload fun(self: RingBuffer, capacity: integer): RingBuffer

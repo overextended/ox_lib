@@ -9,7 +9,7 @@
 ---@class EventHook : OxClass
 ---@field private handler EventHandler
 ---@field private new EventHookConstructor
-local EventHook = lib.class('EventHook')
+local EventHook = Class('EventHook')
 
 ---@class EventHookConstructor
 ---@overload fun(self: EventHook, hookId: string, resource: string, event: string): EventHook

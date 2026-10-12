@@ -24,7 +24,7 @@
 ---@class Lru : OxClass
 ---@field private new LruConstructor
 ---@field private private LruPrivate
-lib.lru = lib.class('Lru')
+lib.lru = Class('Lru')
 
 ---@param self Lru
 ---@param node LruNode

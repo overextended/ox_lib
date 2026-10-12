@@ -28,7 +28,7 @@
 ---@field fullScreen boolean
 ---@field private private { isDrawing: boolean }
 ---@field private new ScaleformConstructor
-lib.scaleform = lib.class('Scaleform')
+lib.scaleform = Class('Scaleform')
 
 --- Converts the arguments into data types usable by scaleform
 ---@param argsTable (number | string | boolean)[]

@@ -18,7 +18,7 @@
 ---@class Map : OxClass
 ---@field private new MapConstructor
 ---@field private private MapPrivate
-lib.map = lib.class('Map')
+lib.map = Class('Map')
 
 local TOMBSTONE = {}
 local MIN_REBUILD = 8

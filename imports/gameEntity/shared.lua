@@ -15,7 +15,7 @@ local allowStateBagReplication = isServer or not GetConvarBool('sv_stateBagStric
 ---@field type string
 ---@field protected private { handle: number }
 ---@field package new GameEntityConstructor
-lib.gameEntity = lib.class('GameEntity')
+lib.gameEntity = Class('GameEntity')
 
 ---@class GameEntityConstructor
 ---@overload fun(self: GameEntity, handle: number): GameEntity

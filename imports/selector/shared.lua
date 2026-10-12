@@ -5,7 +5,7 @@
 ---@field private sets OxSelectorSet | table<string, OxSelectorItem[]>
 ---@field private totalWeights table<string, number>
 ---@field private new OxSelectorConstructor
-local OxSelector = lib.class("OxSelector")
+local OxSelector = Class("OxSelector")
 
 local DEFAULT_SET = 'default'
 local deepClone = lib.table.deepclone

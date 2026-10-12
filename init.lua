@@ -258,3 +258,5 @@ for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
         if type(module) == 'function' then pcall(module) end
     end
 end
+
+require 'Ox.Class'

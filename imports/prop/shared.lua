@@ -8,7 +8,7 @@
 
 ---@class Prop : GameEntity
 ---@field private new ObjectConstructor
-lib.prop = lib.class('Prop', lib.gameEntity)
+lib.prop = Class('Prop', lib.gameEntity)
 lib.prop.type = lib.prop.__name
 
 ---@class ObjectConstructor

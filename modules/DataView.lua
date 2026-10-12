@@ -61,7 +61,7 @@
 ---@field setUluaInt DataViewSet<integer>
 ---@field setLuaNum DataViewSet<number>
 ---@field setString DataViewSet<string>
-local DataView = lib.class('DataView')
+local DataView = Class('DataView')
 
 ---@class DataViewConstructor
 ---@overload fun(self: DataView, length: integer): DataView

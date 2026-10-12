@@ -12,7 +12,7 @@
 ---@class Set : OxClass
 ---@field private new SetConstructor
 ---@field private private SetPrivate
-lib.set = lib.class('Set')
+lib.set = Class('Set')
 
 ---@class SetConstructor
 ---@overload fun(self: Set, ...: any): Set

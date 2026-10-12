@@ -16,7 +16,7 @@ end)
 
 ---@class HookPipeline : OxClass
 ---@field private new HookPipelineConstructor
-lib.hook = lib.class('HookPipeline')
+lib.hook = Class('HookPipeline')
 
 ---@class HookPipelineConstructor
 ---@overload fun(self: HookPipeline, event: string, filter: fun(hook: table, payload: unknown): boolean): HookPipeline

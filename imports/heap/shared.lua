@@ -15,7 +15,7 @@
 ---@class Heap : OxClass
 ---@field private new HeapConstructor
 ---@field private private HeapPrivate
-lib.heap = lib.class('Heap')
+lib.heap = Class('Heap')
 
 ---@type HeapComparator
 local function defaultLess(a, b) return a < b end

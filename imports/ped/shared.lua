@@ -8,7 +8,7 @@
 
 ---@class Ped : GameEntity
 ---@field private new PedConstructor
-lib.ped = lib.class('Ped', lib.gameEntity)
+lib.ped = Class('Ped', lib.gameEntity)
 lib.ped.type = lib.ped.__name
 
 ---@class PedConstructor

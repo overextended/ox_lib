@@ -8,7 +8,7 @@
 
 ---@class Array<T> : OxClass, { [number]: T }
 ---@field private new ArrayConstructor
-lib.array = lib.class('Array')
+lib.array = Class('Array')
 
 local table_unpack = table.unpack
 local table_remove = table.remove

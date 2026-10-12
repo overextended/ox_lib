@@ -22,7 +22,7 @@
 ---@field dictName string
 ---@field txtName string
 ---@field private new DuiConstructor
-lib.dui = lib.class('Dui')
+lib.dui = Class('Dui')
 
 ---@type table<string, Dui>
 local duis = {}

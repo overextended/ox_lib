@@ -24,7 +24,7 @@
 ---@field play fun(self: self) resumes the timer if paused
 ---@field getTimeLeft fun(self: self, format?: 'ms' | 's' | 'm' | 'h'): number | table returns the time left on the timer with the specified format rounded to 2 decimal places (miliseconds, seconds, minutes, hours). returns a table of all if not specified.
 ---@field private new OxTimerConstructor
-local timer = lib.class('OxTimer')
+local timer = Class('OxTimer')
 
 ---@class OxTimerConstructor
 ---@overload fun(self: OxTimer, time: number, onEnd: fun(self: OxTimer), async?: boolean): OxTimer
