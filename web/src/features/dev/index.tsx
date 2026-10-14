@@ -7,6 +7,7 @@ import { debugCustomNotification } from './debug/notification';
 import { debugCircleProgressbar, debugProgressbar } from './debug/progress';
 import { debugTextUI } from './debug/textui';
 import { debugSkillCheck } from './debug/skillcheck';
+import { debugMashGame } from './debug/mashgame';
 import { useState } from 'react';
 import { debugRadial } from './debug/radial';
 import LibIcon from '../../components/LibIcon';
@@ -68,6 +69,9 @@ const Dev: React.FC = () => {
           <Divider />
           <Button fullWidth onClick={() => debugSkillCheck()}>
             Run skill check
+          </Button>
+          <Button fullWidth onClick={() => debugMashGame()}>
+            Run mash game
           </Button>
         </Stack>
       </Drawer>
