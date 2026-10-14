@@ -7,6 +7,7 @@
 ]]
 
 local pendingCallbacks = {}
+local registeredHandlers = {}
 local cbEvent = '__ox_cb_%s'
 local callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000)
 
@@ -124,9 +125,21 @@ function lib.callback.register(name, cb)
 
     lib.setValidCallback(name, true)
 
-    RegisterNetEvent(event, function(resource, key, ...)
+    registeredHandlers[name] = RegisterNetEvent(event, function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))
     end)
+end
+
+---@param name string
+---Removes a registered callback.
+---@diagnostic disable-next-line: duplicate-set-field
+function lib.callback.remove(name)
+    lib.setValidCallback(name, false)
+
+    if registeredHandlers[name] then
+        RemoveEventHandler(registeredHandlers[name])
+        registeredHandlers[name] = nil
+    end
 end
 
 return lib.callback
