@@ -1,23 +1,11 @@
-const legacyCopy = (value: string) => {
+// yoinked from https://github.com/project-error/npwd/blob/d8dc5b7f47faf5fc581ffee30f31ff61d184cfe7/phone/src/os/phone/hooks/useClipboard.ts#L1
+export const setClipboard = (value: string) => {
+  window.focus();
   const clipElem = document.createElement('textarea');
   clipElem.value = value;
-  clipElem.style.position = 'fixed';
-  clipElem.style.opacity = '0';
   document.body.appendChild(clipElem);
   clipElem.focus();
   clipElem.select();
-  try {
-    document.execCommand('copy');
-  } finally {
-    document.body.removeChild(clipElem);
-  }
-};
-
-export const setClipboard = (value: string) => {
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(value).catch(() => legacyCopy(value));
-    return;
-  }
-
-  legacyCopy(value);
+  document.execCommand('copy');
+  document.body.removeChild(clipElem);
 };
