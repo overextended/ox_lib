@@ -11,19 +11,27 @@ local cbEvent = '__ox_cb_%s'
 local callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000)
 
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
-    local cb = pendingCallbacks[key]
+    local entry = pendingCallbacks[key]
 
-    if not cb then return end
+    if not entry then return end
 
-    local keyPlayerId = key:match(':(%d+)$')
-
-    if not keyPlayerId or tonumber(keyPlayerId) ~= source then
+    if entry.playerId ~= source then
         return warn(("Player %d triggered callback event with invalid key '%s'."):format(source, key))
     end
 
     pendingCallbacks[key] = nil
 
-    cb(...)
+    entry.resolve(...)
+end)
+
+AddEventHandler('playerDropped', function()
+    local playerId = source
+
+    for _, entry in pairs(pendingCallbacks) do
+        if entry.playerId == playerId then
+            entry.reject(("player %d dropped before responding to callback '%s'"):format(playerId, entry.event))
+        end
+    end
 end)
 
 ---@param _ any
@@ -41,33 +49,51 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
         key = ('%s:%s:%s'):format(event, math.random(0, 100000), playerId)
     until not pendingCallbacks[key]
 
+    ---@type promise | false
+    local promise = not cb and promise.new()
+    local entry
+
+    entry = {
+        event = event,
+        playerId = tonumber(playerId),
+        resolve = function(response, ...)
+            if response == 'cb_invalid' then
+                response = ("callback '%s' does not exist"):format(event)
+
+                return promise and promise:reject(response) or error(response)
+            end
+
+            response = { response, ... }
+
+            if promise then
+                return promise:resolve(response)
+            end
+
+            if cb then
+                cb(table.unpack(response))
+            end
+        end,
+        reject = function(reason)
+            if pendingCallbacks[key] ~= entry then return end
+
+            pendingCallbacks[key] = nil
+
+            if promise then
+                promise:reject(reason)
+            end
+        end
+    }
+
+    pendingCallbacks[key] = entry
+
     TriggerClientEvent('ox_lib:validateCallback', playerId, event, cache.resource, key)
     TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
-    ---@type promise | false
-    local promise = not cb and promise.new()
-
-    pendingCallbacks[key] = function(response, ...)
-        if response == 'cb_invalid' then
-            response = ("callback '%s' does not exist"):format(event)
-
-            return promise and promise:reject(response) or error(response)
-        end
-
-        response = { response, ... }
-
-        if promise then
-            return promise:resolve(response)
-        end
-
-        if cb then
-            cb(table.unpack(response))
-        end
-    end
+    SetTimeout(callbackTimeout, function()
+        entry.reject(("callback event '%s' timed out"):format(key))
+    end)
 
     if promise then
-        SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
-
         return table.unpack(Citizen.Await(promise))
     end
 end

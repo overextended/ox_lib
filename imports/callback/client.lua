@@ -14,13 +14,13 @@ local callbackTimeout = GetConvarInt('ox:callbackTimeout', 300000)
 RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
     if source == '' then return end
 
-    local cb = pendingCallbacks[key]
+    local entry = pendingCallbacks[key]
 
-    if not cb then return end
+    if not entry then return end
 
     pendingCallbacks[key] = nil
 
-    cb(...)
+    entry.resolve(...)
 end)
 
 ---@param event string
@@ -54,33 +54,49 @@ local function triggerServerCallback(_, event, delay, cb, ...)
         key = ('%s:%s'):format(event, math.random(0, 100000))
     until not pendingCallbacks[key]
 
+    ---@type promise | false
+    local promise = not cb and promise.new()
+    local entry
+
+    entry = {
+        resolve = function(response, ...)
+            if response == 'cb_invalid' then
+                response = ("callback '%s' does not exist"):format(event)
+
+                return promise and promise:reject(response) or error(response)
+            end
+
+            response = { response, ... }
+
+            if promise then
+                return promise:resolve(response)
+            end
+
+            if cb then
+                cb(table.unpack(response))
+            end
+        end,
+        reject = function(reason)
+            if pendingCallbacks[key] ~= entry then return end
+
+            pendingCallbacks[key] = nil
+
+            if promise then
+                promise:reject(reason)
+            end
+        end
+    }
+
+    pendingCallbacks[key] = entry
+
     TriggerServerEvent('ox_lib:validateCallback', event, cache.resource, key)
     TriggerServerEvent(cbEvent:format(event), cache.resource, key, ...)
 
-    ---@type promise | false
-    local promise = not cb and promise.new()
-
-    pendingCallbacks[key] = function(response, ...)
-        if response == 'cb_invalid' then
-            response = ("callback '%s' does not exist"):format(event)
-
-            return promise and promise:reject(response) or error(response)
-        end
-
-        response = { response, ... }
-
-        if promise then
-            return promise:resolve(response)
-        end
-
-        if cb then
-            cb(table.unpack(response))
-        end
-    end
+    SetTimeout(callbackTimeout, function()
+        entry.reject(("callback event '%s' timed out"):format(key))
+    end)
 
     if promise then
-        SetTimeout(callbackTimeout, function() promise:reject(("callback event '%s' timed out"):format(key)) end)
-
         return table.unpack(Citizen.Await(promise))
     end
 end
