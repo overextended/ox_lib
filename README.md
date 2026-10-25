@@ -11,10 +11,13 @@ A comprehensive FiveM development library that streamlines resource creation thr
 [![](https://badges.5metrics.dev/ox_lib/servers.svg?style=for-the-badge)](https://5metrics.dev/resource/ox_lib)
 [![](https://badges.5metrics.dev/ox_lib/players.svg?style=for-the-badge)](https://5metrics.dev/resource/ox_lib)
 
-For guidelines to contributing to the project, and to see our Contributor License Agreement, see [CONTRIBUTING.md](./CONTRIBUTING.md)\
+</div>
+
+For guidelines to contributing to the project, and to see our Contributor License Agreement, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 For additional legal notices, refer to [NOTICE.md](./NOTICE.md).
 
-</div>
+## Dependencies
+- [cfxlua-require](https://github.com/overextended/cfxlua-require) (included in release)
 
 ## 📚 Documentation
 
