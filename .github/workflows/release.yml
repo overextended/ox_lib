@@ -36,6 +36,12 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           token: ${{ steps.app_token.outputs.token }}
 
+      - name: Checkout cfxlua-require
+        uses: actions/checkout@v4
+        with:
+          repository: overextended/cfxlua-require
+          path: cfxlua-require
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -77,7 +83,8 @@ jobs:
           cp ./{LICENSE,README.md,fxmanifest.lua,init.lua,require.lua} ./temp/ox_lib
           cp -r ./{imports,resource,locales,modules} ./temp/ox_lib
           cp -r ./web/build ./temp/ox_lib/web/
-          cd ./temp && zip -r ../ox_lib.zip ./ox_lib
+          cp -r ./cfxlua-require/. ./temp/cfxlua-require/
+          cd ./temp && zip -r ../ox_lib.zip ./ox_lib ./cfxlua-require
 
       - name: Publish package to npm registry
         run: npm publish --access public

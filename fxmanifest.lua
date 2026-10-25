@@ -14,6 +14,7 @@ description 'A library of shared functions to utilise in other resources.'
 dependencies {
     '/server:7290',
     '/onesync',
+    'require',
 }
 
 ui_page 'web/build/index.html'

@@ -30,9 +30,10 @@ if status ~= true then error(status, 2) end
 -- Prevent errors when encoding unknown data types (such as userdata, glm_polygon, etc.)
 msgpack.setoption('ignore_invalid', true)
 
+_ENV.lib = lib
 function noop() end
 
-load(LoadResourceFile(lib.name, 'require.lua'), 'require')(lib)
+load(LoadResourceFile(lib.name, 'require.lua'), '@@ox_lib/require.lua')()
 
 local LoadResourceFile = LoadResourceFile
 
@@ -192,7 +193,6 @@ function lib.onCache(key, cb)
     table.insert(cacheEvents[key], cb)
 end
 
-_ENV.lib = lib
 _ENV.cache = cache
 
 local notifyEvent = ('__ox_notify_%s'):format(cache.resource)
