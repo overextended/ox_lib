@@ -33,15 +33,19 @@ export function triggerClientCallback<T = unknown>(
   emitNet(`ox_lib:validateCallback`, playerId, eventName, cache.resource, key);
   emitNet(`__ox_cb_${eventName}`, playerId, cache.resource, key, ...args);
 
-  return new Promise<T>((resolve, reject) => {
-    pendingCallbacks[key] = (args) => {
-      if (Array.isArray(args) && args[0] === 'cb_invalid') reject(`callback '${eventName} does not exist`);
+  try {
+    return new Promise<T>((resolve, reject) => {
+      pendingCallbacks[key] = (args) => {
+        if (Array.isArray(args) && args[0] === 'cb_invalid') reject(`callback '${eventName} does not exist`);
 
-      resolve(args);
-    };
+        resolve(args);
+      };
 
-    setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
-  });
+      setTimeout(reject, callbackTimeout, `callback event '${key}' timed out`);
+    });
+  } finally {
+    delete pendingCallbacks[key];
+  }
 }
 
 export function onClientCallback(eventName: string, cb: (playerId: number, ...args: any[]) => any) {
