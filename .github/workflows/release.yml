@@ -83,7 +83,7 @@ jobs:
           cp ./{LICENSE,README.md,fxmanifest.lua,init.lua,require.lua} ./temp/ox_lib
           cp -r ./{imports,resource,locales,modules} ./temp/ox_lib
           cp -r ./web/build ./temp/ox_lib/web/
-          cp -r ./cfxlua-require/. ./temp/cfxlua-require/
+          rsync -a --exclude='.git/' ./cfxlua-require/ ./temp/cfxlua-require/
           cd ./temp && zip -r ../ox_lib.zip ./ox_lib ./cfxlua-require
 
       - name: Publish package to npm registry
