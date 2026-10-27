@@ -24,10 +24,12 @@ function lib.load(filePath, env)
     return loadfile(filePath, 't', env)()
 end
 
--- Module v2 searcher
+---Module v2 searcher
+---@param modName string
 table.insert(package.searchers, 1, function(modName)
-    if modName:find('^Ox%.') then
-        modName = modName:gsub('^Ox.', '@ox_lib.modules.')
-        return function() return require(modName) end
+    local module, matched = modName:gsub('^Ox%.', '@ox_lib.modules.')
+
+    if matched > 0 then
+        return function() return require(module) end
     end
 end)
