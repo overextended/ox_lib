@@ -14,7 +14,10 @@ description 'A library of shared functions to utilise in other resources.'
 dependencies {
     '/server:7290',
     '/onesync',
-    'require',
+}
+
+fx_dependencies {
+    'require: 1.0.2',
 }
 
 ui_page 'web/build/index.html'

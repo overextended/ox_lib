@@ -36,4 +36,29 @@ end)
 
 require 'Ox.Class'
 
+local SemVer = require 'Ox.SemVer'
+local errors = {}
+
+for i = 0, GetNumResourceMetadata(cache.resource, 'fx_dependencie') - 1 do
+    local resource, required = string.strsplit(':', GetResourceMetadata(cache.resource, 'fx_dependencie', i), 2)
+    local version = SemVer:new(GetResourceMetadata(resource, 'version', 0))
+    required = SemVer:new(required)
+
+    if required:compare(version) == 1 then
+        errors[#errors + 1] = ("- %s: required %s, installed %s"):format(
+            resource,
+            tostring(required),
+            tostring(version)
+        )
+    end
+end
+
+if #errors > 0 then
+    error(([[The following resource dependencies do not meet the required version:
+    %s
+
+Please update the listed resources to their required versions and restart.]]):format(table.concat(errors, '\n\t')), 0)
+end
+
+
 return require
