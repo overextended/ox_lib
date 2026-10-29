@@ -1,9 +1,5 @@
 -- See https://github.com/overextended/cfxlua-require
 
-if GetResourceState('require') == 'missing' then
-    error("Unable to find 'require' resource provider.\nDownload ^3https://github.com/overextended/cfxlua-require^1 to resolve this error.", 0)
-end
-
 ---@diagnostic disable-next-line: undefined-global
 if not package or not runtime then
     load(LoadResourceFile('require', 'init.lua'), '@@require')()
