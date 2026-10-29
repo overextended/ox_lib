@@ -45,10 +45,12 @@ for i = 0, GetNumResourceMetadata(cache.resource, 'fx_dependencie') - 1 do
     required = SemVer:new(required)
 
     if required:compare(version) == 1 then
-        errors[#errors + 1] = ("- %s: required %s, installed %s"):format(
+        local url = GetResourceMetadata(resource, 'repository', 0) or GetResourceMetadata(resource, 'url', 0)
+        errors[#errors + 1] = ("- %s: required %s, installed %s%s"):format(
             resource,
-            tostring(required),
-            tostring(version)
+            required,
+            version,
+            url and (' (%s)'):format(url) or ''
         )
     end
 end
