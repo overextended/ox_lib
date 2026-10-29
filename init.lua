@@ -33,8 +33,6 @@ msgpack.setoption('ignore_invalid', true)
 _ENV.lib = lib
 function noop() end
 
-load(LoadResourceFile(lib.name, 'require.lua'), '@@ox_lib/require.lua')()
-
 local LoadResourceFile = LoadResourceFile
 
 local function loadModule(self, module)
@@ -240,6 +238,8 @@ else
         return players
     end
 end
+
+load(LoadResourceFile(lib.name, 'require.lua'), '@@ox_lib/require.lua')()
 
 for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
     local name = GetResourceMetadata(cache.resource, 'ox_lib', i - 1)
