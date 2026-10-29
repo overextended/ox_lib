@@ -1,5 +1,5 @@
 local debug_getinfo = debug.getinfo
-local loadStatus = false
+local loadStatus = 'ox_lib has not yet loaded.'
 
 function noop() end
 
@@ -55,6 +55,4 @@ end
 
 load(LoadResourceFile(lib.name, 'require.lua'), '@@ox_lib/require.lua')()
 
-require 'Ox.Class'
-
-hasLoaded = true
+loadStatus = true

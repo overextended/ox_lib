@@ -33,3 +33,7 @@ table.insert(package.searchers, 1, function(modName)
         return function() return require(module) end
     end
 end)
+
+require 'Ox.Class'
+
+return require

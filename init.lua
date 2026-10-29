@@ -25,7 +25,7 @@ end
 local export = exports[lib.name]
 local status = export.hasLoaded()
 
-if status ~= true then error(status, 2) end
+if status ~= true then error(status, 1) end
 
 -- Prevent errors when encoding unknown data types (such as userdata, glm_polygon, etc.)
 msgpack.setoption('ignore_invalid', true)
@@ -240,8 +240,6 @@ else
         return players
     end
 end
-
-require 'Ox.Class'
 
 for i = 1, GetNumResourceMetadata(cache.resource, 'ox_lib') do
     local name = GetResourceMetadata(cache.resource, 'ox_lib', i - 1)
