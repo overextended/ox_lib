@@ -33,7 +33,7 @@ files {
     'web/build/**/*',
     'locales/*.json',
     'modules/*.lua',
-    -- 'modules/**/init.lua',
+    'modules/**/*.lua',
 }
 
 shared_script 'resource/init.lua'

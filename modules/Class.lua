@@ -176,7 +176,7 @@ end
 ---@param name `T`
 ---@param super? S
 ---@return `T`
-function Class(name, super)
+local function Class(name, super)
     assertType(1, name, 'string')
 
     local class = table.clone(mixins)
@@ -193,5 +193,7 @@ function Class(name, super)
 
     return class
 end
+
+_ENV.Class = Class
 
 return Class

@@ -1,52 +1,48 @@
---[[
-    https://github.com/overextended/ox_lib
+---@diagnostic disable: missing-fields
+local Vehicle = require 'Ox.Game.Vehicle'
 
-    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+---@see Vehicle
+---@deprecated
+lib.vehicle = setmetatable(table.deepclone(Vehicle), Vehicle)
 
-    Copyright © 2025 Linden <https://github.com/thelindat>
-]]
+if lib.context == 'server' then
+    ---@param model string | number
+    ---@param type VehicleType
+    ---@param x number
+    ---@param y number
+    ---@param z number
+    ---@param heading? number
+    ---@return Vehicle
+    ---@see CreateVehicleServerSetter (FiveM)
+    ---@see CreateVehicle (RedM)
+    ---`server`
+    function lib.vehicle.create(model, type, x, y, z, heading)
+        heading = heading or 0
+        local handle = CreateVehicleServerSetter
+            and CreateVehicleServerSetter(model, type, x, y, z, heading)
+            or CreateVehicle(model, x, y, z, heading, true, true)
 
----@alias VehicleType 'automobile' | 'bike' | 'boat' | 'heli' | 'plane' | 'submarine' | 'trailer' | 'train'
-
----@class Vehicle : GameEntity
----@field private new VehicleConstructor
-lib.vehicle = Class('Vehicle', lib.gameEntity)
-lib.vehicle.type = lib.vehicle.__name
-
----@class VehicleConstructor
----@overload fun(self: Vehicle, handle: number): Vehicle
-function lib.vehicle:constructor(handle)
-    self:super()
-    self:setHandle(handle)
-end
-
-function lib.vehicle:__index(index)
-    if index == 'handle' then
-        return self.private.handle
+        return Vehicle:new(handle)
     end
+else
+    ---@param model string | number
+    ---@param x number
+    ---@param y number
+    ---@param z number
+    ---@param heading? number
+    ---@param isNetworked? boolean
+    ---@param netMissionEntity? boolean
+    ---@return Vehicle
+    ---@see CreateVehicle
+    ---`client`
+    function lib.vehicle.create(model, x, y, z, heading, isNetworked, netMissionEntity)
+        local hash = lib.requestModel(model)
+        local handle = CreateVehicle(hash, x, y, z, heading or 0, isNetworked or false, netMissionEntity or false)
 
-    return lib.vehicle[index]
-end
+        SetModelAsNoLongerNeeded(hash)
 
----@return VehicleType
-function lib.vehicle:getType()
-    return GetVehicleType(self.handle)
-end
-
-function lib.vehicle:getPlate()
-    return GetVehicleNumberPlateText(self.handle)
-end
-
----@param plate string
-function lib.vehicle:setPlate(plate)
-    SetVehicleNumberPlateText(self.handle, plate)
-end
-
-function lib.vehicle:setOnGround()
-    if lib.context == 'client' then
-        return SetVehicleOnGroundProperly(self.handle)
+        return Vehicle:new(handle)
     end
-
-    self:setr('ox_entity_setonground', true)
 end
 
+return lib.vehicle
