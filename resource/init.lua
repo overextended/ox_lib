@@ -2,7 +2,6 @@ local debug_getinfo = debug.getinfo
 local loadStatus = false
 
 function noop() end
-function lib.hasLoaded() return loadStatus end
 
 lib = setmetatable({
     name = GetCurrentResourceName(),
@@ -38,6 +37,8 @@ lib = setmetatable({
         end
     end
 })
+
+function lib.hasLoaded() return loadStatus end
 
 cache = {
     resource = lib.name,
