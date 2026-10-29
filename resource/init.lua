@@ -1,6 +1,8 @@
 local debug_getinfo = debug.getinfo
+local loadStatus = false
 
 function noop() end
+function lib.hasLoaded() return loadStatus end
 
 lib = setmetatable({
     name = GetCurrentResourceName(),
@@ -45,13 +47,13 @@ cache = {
 if not LoadResourceFile(lib.name, 'web/build/index.html') then
     local err =
     '^1Unable to load UI. Build ox_lib or download the latest release.\n	^3https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip^0'
-    function lib.hasLoaded() return err end
+    loadStatus = err
 
     error(err)
 end
 
-load(LoadResourceFile(lib.name, 'require.lua'), 'require')(lib)
+load(LoadResourceFile(lib.name, 'require.lua'), '@@ox_lib/require.lua')()
+
 require 'Ox.Class'
 
-
-function lib.hasLoaded() return true end
+hasLoaded = true
