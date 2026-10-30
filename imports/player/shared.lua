@@ -1,3 +1,4 @@
+---@diagnostic disable
 ---@see Player
 ---@deprecated
 lib.player = require 'Ox.Game.Player'
