@@ -76,7 +76,7 @@ end
 ---@field encode fun(buffer: table): string
 ---@field parseError fun(status: number, response: any, body: string): any|nil
 
-local KNOWN = { datadog = true, fivemanage = true, loki = true }
+local KNOWN = { datadog = true, fivemanage = true, loki = true, victorialogs = true }
 
 if not KNOWN[service] then return lib.logger end
 
