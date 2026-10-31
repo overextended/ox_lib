@@ -37,27 +37,21 @@ local config = {
 ---@field status { ok: integer }
 ---@field append fun(log: OxLoggerEntry): table | false, string?
 ---@field encode fun(logs: Array): string
----@field onError fun(status: number, response: any, body: string): any?
+---@field onResponse fun(status: number, response: any, body: string): boolean, string?
 local provider = require(('resource.logger.%s'):format(providerName))(config)
 
 ---@type Array<OxLoggerEntry>
 local logs = lib.array:new()
-
-local function badResponse(status, err)
-    warn(("Failed to submit logs to %s (status: %s)\n%s"):format(provider.name, status, err))
-end
 
 local function sendLogs()
     local body = provider.encode(logs)
     table.wipe(logs)
 
     PerformHttpRequest(provider.endpoint, function(status, _, _, response)
-        if status == provider.status.ok then return end
+        local ok, err = provider.onResponse(status, response, body)
 
-        local err = provider.onError(status, response, body)
-
-        if err then
-            return badResponse(status, err)
+        if not ok then
+            return warn(("Failed to submit logs to %s\n%s"):format(provider.name, err))
         end
     end, 'POST', body, provider.headers)
 end
@@ -68,8 +62,12 @@ local function append(resource, log)
 
     local result, err = provider.append(log)
 
-    if err then
-        return lib.print.error(tostring(result))
+    if err or not result then
+        return lib.print.error(err or '')
+    end
+
+    if result.metadata and not next(result.metadata) then
+        result.metadata = nil
     end
 
     logs:push(result)
@@ -77,7 +75,7 @@ end
 
 exports('internal_logMessage', function(resource, batch)
     if #logs == 0 then
-        SetTimeout(500, sendLogs)
+        SetTimeout(200, sendLogs)
     end
 
     for i = 1, #batch do

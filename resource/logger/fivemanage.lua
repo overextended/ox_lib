@@ -11,7 +11,7 @@
 return function(config)
     local apiKey = GetConvar('FIVEMANAGE_LOGS_API_KEY', '')
 
-    if not apiKey then
+    if apiKey == '' then
         error("convar 'FIVEMANAGE_LOGS_API_KEY' has not been set")
     end
 
@@ -29,14 +29,23 @@ return function(config)
         },
     }
 
-    function provider.append(log) return log end
+    function provider.append(log)
+        log.resource = log.metadata.resource
+        log.metadata.resource = nil
+
+        return log
+    end
 
     function provider.encode(logs) return json.encode(logs, config.jsonOptions) end
 
-    function provider.onError(_, response)
-        if type(response) ~= 'string' then return nil end
+    function provider.onResponse(status, response)
+        if status == provider.status.ok then return true end
 
-        return json.decode(response) or response
+        if type(response) ~= 'string' then
+            return false, ('\t%s'):format(status)
+        end
+
+        return false, response
     end
 
     return provider
