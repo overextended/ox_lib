@@ -11,7 +11,7 @@ local registeredMenus = {}
 ---@type MenuProps | nil
 local openMenu
 
----@alias MenuPosition 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+---@alias MenuPosition 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 ---@alias MenuChangeFunction fun(selected: number, scrollIndex?: number, args?: any, checked?: boolean)
 ---@alias MenuScrollSelectChangeFunction fun(selected: number, scrollIndex?: number, args?: any)
 
