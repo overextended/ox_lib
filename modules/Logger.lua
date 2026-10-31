@@ -10,10 +10,10 @@
 
 local logs = lib.array:new()
 
----@param level string
+---@param level OxLogLevel
 ---@param message string
 ---@param metadata? table<string, any>
-local function logger(level, message, metadata)
+local function default(level, message, metadata)
     if #logs == 0 then
         SetTimeout(50, function()
             exports.ox_lib:internal_logMessage(cache.resource, logs)
@@ -27,5 +27,18 @@ local function logger(level, message, metadata)
         metadata = metadata
     })
 end
+
+---@overload fun(level: OxLogLevel, message: string, metadata?: table<string, any>)
+local logger = setmetatable({}, { __call = default })
+
+function logger.error(message, metadata) return logger('error', message, metadata) end
+
+function logger.warn(message, metadata) return logger('warn', message, metadata) end
+
+function logger.info(message, metadata) return logger('info', message, metadata) end
+
+function logger.verbose(message, metadata) return logger('verbose', message, metadata) end
+
+function logger.debug(message, metadata) return logger('debug', message, metadata) end
 
 return logger

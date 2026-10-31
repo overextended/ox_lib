@@ -23,6 +23,15 @@ local config = {
     jsonOptions = { indent = true, sort_keys = true }
 }
 
+---@enum (key) OxLogLevel
+local logLevel = {
+    error = 1,
+    warn = 2,
+    info = 3,
+    verbose = 4,
+    debug = 5,
+}
+
 ---@class OxLoggerEntry
 ---@field level string
 ---@field message string
