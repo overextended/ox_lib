@@ -8,6 +8,7 @@
 
 ---@meta Ox.Logger
 
+---@type Array<OxLoggerEntry>
 local logs = lib.array:new()
 
 ---@param level OxLogLevel
@@ -31,14 +32,24 @@ end
 ---@overload fun(level: OxLogLevel, message: string, metadata?: table<string, any>)
 local logger = setmetatable({}, { __call = default })
 
+---@param message string
+---@param metadata? OxLoggerMetadata
 function logger.error(message, metadata) return logger('error', message, metadata) end
 
+---@param message string
+---@param metadata? OxLoggerMetadata
 function logger.warn(message, metadata) return logger('warn', message, metadata) end
 
+---@param message string
+---@param metadata? OxLoggerMetadata
 function logger.info(message, metadata) return logger('info', message, metadata) end
 
+---@param message string
+---@param metadata? OxLoggerMetadata
 function logger.verbose(message, metadata) return logger('verbose', message, metadata) end
 
+---@param message string
+---@param metadata? OxLoggerMetadata
 function logger.debug(message, metadata) return logger('debug', message, metadata) end
 
 return logger

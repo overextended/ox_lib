@@ -32,6 +32,10 @@ local logLevel = {
     debug = 5,
 }
 
+---@class OxLoggerMetadata
+---@field players? number[]
+---@field [string] any
+
 ---@class OxLoggerEntry
 ---@field level string
 ---@field message string
