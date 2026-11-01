@@ -65,9 +65,44 @@ local function sendLogs()
     end, 'POST', body, provider.headers)
 end
 
+local players = {}
+
+AddEventHandler('playerDropped', function()
+    players[source] = nil
+end)
+
+AddEventHandler('onPlayerNameChanged', function(playerId, _, newName)
+    if not players[playerId] then return end
+
+    players[playerId].name = newName
+end)
+
+local function getPlayerInfo(playerId)
+    local info = players[playerId]
+
+    if info then return info end
+
+    players[playerId] = {
+        name = GetPlayerName(playerId)
+    }
+
+    return lib.array.reduce(GetPlayerIdentifiers(playerId), function(acc, identifier)
+        local tag, value = string.strsplit(':', identifier, 2)
+        acc[tag] = value
+
+        return acc
+    end, players[playerId])
+end
+
 local function append(resource, log)
     log.metadata = log.metadata or {}
     log.metadata.resource = resource
+
+    if log.metadata.players then
+        for k, v in pairs(log.metadata.players) do
+            log.metadata.players[k] = getPlayerInfo(v)
+        end
+    end
 
     local result, err = provider.append(log)
 
