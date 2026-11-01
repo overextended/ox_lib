@@ -3,7 +3,7 @@ import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types
 type RadialItem = {
   id: string;
   label: string;
-  icon: IconName | [IconPrefix, IconName] | string;
+  icon: IconName | [IconPrefix, IconName];
   onSelect?: (currentMenu: string | null, itemIndex: number) => void | string;
   menu?: string;
   iconWidth?: number;
