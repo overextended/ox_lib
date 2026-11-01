@@ -155,7 +155,7 @@ type RowInput =
 type inputDialog = (
   heading: string,
   rows: string[] | RowInput[],
-  options: {
+  options?: {
     allowCancel?: boolean;
   },
 ) => Promise<Array<string | number | boolean> | undefined>;
