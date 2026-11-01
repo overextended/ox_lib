@@ -106,7 +106,7 @@ end
 
 function GameEntity:setHandle(handle)
     local isPlayer = self.type == 'Player'
-    local playerId = isPlayer and self--[[@as Player]].playerId
+    local playerId = isPlayer and self --[[@as Player]].playerId
 
     self.private.handle = handle
     self.netId = playerId and (isServer and playerId or GetPlayerServerId(playerId)) or NetworkGetNetworkIdFromEntity(handle)
