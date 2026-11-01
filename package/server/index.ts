@@ -9,5 +9,6 @@ export * from './game/Vehicle';
 export * from './locale';
 export * from './version';
 export * from './misc';
+export * from './logger';
 
 export * as lib from '.';
