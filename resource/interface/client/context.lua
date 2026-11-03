@@ -32,6 +32,7 @@ local openContextMenu = nil
 ---@class ContextMenuProps
 ---@field id string
 ---@field title string
+---@field position? 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 ---@field menu? string
 ---@field onExit? fun()
 ---@field onBack? fun()
@@ -65,6 +66,7 @@ function lib.showContext(id)
         action = 'showContext',
         data = {
             title = data.title,
+            position = data.position,
             canClose = data.canClose,
             menu = data.menu,
             options = data.options

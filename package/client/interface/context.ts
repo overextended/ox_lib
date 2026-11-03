@@ -32,6 +32,7 @@ interface ContextMenuArrayItem extends ContextMenuItem {
 interface ContextMenuProps {
   id: string;
   title: string;
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   menu?: string;
   onExit?: () => void;
   onBack?: () => void;

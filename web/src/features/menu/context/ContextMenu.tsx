@@ -1,7 +1,7 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { Box, createStyles, Flex, Stack, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { ContextMenuProps } from '../../../typings';
+import { ContextMenuPosition, ContextMenuProps } from '../../../typings';
 import ContextButton from './components/ContextButton';
 import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';
@@ -13,13 +13,14 @@ const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
 };
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, params: { position?: ContextMenuPosition }) => ({
   container: {
     position: 'absolute',
-    top: '15%',
-    right: '25%',
+    top: params.position === 'bottom-left' || params.position === 'bottom-right' ? undefined : '15%',
+    bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? '15%' : undefined,
+    left: params.position === 'top-left' || params.position === 'bottom-left' ? '25%' : undefined,
+    right: params.position === 'top-left' || params.position === 'bottom-left' ? undefined : '25%',
     width: 320,
-    height: 580,
   },
   header: {
     justifyContent: 'center',
@@ -38,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     textAlign: 'center',
   },
   buttonsContainer: {
-    height: 560,
+    maxHeight: 560,
     overflowY: 'scroll',
   },
   buttonsFlexWrapper: {
@@ -47,12 +48,12 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const ContextMenu: React.FC = () => {
-  const { classes } = useStyles();
   const [visible, setVisible] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
     title: '',
     options: { '': { description: '', metadata: [] } },
   });
+  const { classes } = useStyles({ position: contextMenu.position });
 
   const closeContext = () => {
     if (contextMenu.canClose === false) return;
