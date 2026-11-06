@@ -53,7 +53,7 @@ function timer:run()
         Wait(0)
     end
 
-    if self.private.triggerOnEnd then
+    if self.private.triggerOnEnd and self.onEnd then
         self:onEnd()
     end
 
