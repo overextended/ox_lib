@@ -99,7 +99,10 @@ const InputDialog: React.FC = () => {
 
       if ((row.type === 'date' || row.type === 'date-range') && row.returnString) {
         if (!data.test[i]) continue;
-        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
+        const format = row.format || 'DD/MM/YYYY';
+        const toString = (date: number | null) => (date ? dayjs(date).format(format) : null);
+        const value = data.test[i].value;
+        data.test[i].value = Array.isArray(value) ? value.map(toString) : toString(value);
       }
     }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
