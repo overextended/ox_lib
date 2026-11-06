@@ -286,7 +286,7 @@ RegisterNUICallback('radialClick', function(index, cb)
         item = menuItems[itemIndex]
     end
 
-    local menuResource = currentRadial and currentRadial.resource or item.resource
+    local menuResource = item.resource or currentRadial and currentRadial.resource
 
     if item.menu then
         menuHistory[#menuHistory + 1] = { id = currentRadial and currentRadial.id, option = item.menu }
