@@ -27,8 +27,11 @@ export interface Options {
   [key: string]: Option;
 }
 
+export type ContextMenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
 export interface ContextMenuProps {
   title: string;
+  position?: ContextMenuPosition;
   menu?: string;
   canClose?: boolean;
   options: Options | Option[];
