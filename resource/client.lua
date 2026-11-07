@@ -7,6 +7,8 @@
 ]]
 
 local _registerCommand = RegisterCommand
+local Vehicle = require 'Ox.Game.Vehicle'
+local Prop = require 'Ox.Game.Prop'
 
 ---@param commandName string
 ---@param callback fun(source, args, raw)
@@ -52,7 +54,7 @@ AddStateBagChangeHandler('ox_entity_setonground', '', function(bag, key, value)
         return not IsEntityWaitingForWorldCollision(handle) and true or nil
     end)
 
-    local entity = IsEntityAVehicle(handle) and lib.vehicle:new(handle) or lib.object:new(handle)
+    local entity = IsEntityAVehicle(handle) and Vehicle:new(handle) or Prop:new(handle)
 
     if IsEntityInAir(handle) then
         local coords = GetEntityCoords(handle)

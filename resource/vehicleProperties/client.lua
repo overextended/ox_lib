@@ -8,6 +8,7 @@
 
 if cache.game == 'redm' then return end
 
+local Vehicle = require 'Ox.Game.Vehicle'
 ---@class VehicleProperties
 ---@field model? number
 ---@field plate? string
@@ -122,7 +123,7 @@ AddStateBagChangeHandler('ox_lib:setVehicleProperties', '', function(bagName, ke
 
     if not entityExists then return end
 
-    local vehicle = lib.vehicle:new(entity)
+    local vehicle = Vehicle:new(entity)
 
     for i = 1, 10 do
         local isEntityOwner = NetworkGetEntityOwner(entity) == cache.playerId

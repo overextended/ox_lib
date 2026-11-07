@@ -18,6 +18,7 @@ local function filter(hook, payload)
     return true
 end
 
+local Vehicle = require 'Ox.Game.Vehicle'
 local setPlayerState = lib.hook:new('setPlayerState', filter)
 local setEntityState = lib.hook:new('setEntityState', filter)
 
@@ -61,7 +62,7 @@ end)
 setEntityState:registerHook(function(payload)
     if payload.value then return false end
 
-    local vehicle = lib.vehicle:new(payload.entityId)
+    local vehicle = Vehicle:new(payload.entityId)
     local props = vehicle:get(payload.key) ---@type VehicleProperties?
 
     if not props then return false end
