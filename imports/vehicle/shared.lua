@@ -3,7 +3,7 @@ local Vehicle = require 'Ox.Game.Vehicle'
 
 ---@see Vehicle
 ---@deprecated
-lib.vehicle = setmetatable(table.deepclone(Vehicle), Vehicle)
+lib.vehicle = Class('Vehicle', Vehicle)
 
 if lib.context == 'server' then
     ---@param model string | number
