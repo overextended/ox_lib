@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS "user"(
+  "id" INTEGER NOT NULL,
+  "license" TEXT NOT NULL UNIQUE,
+  "last_seen" TIMESTAMP NOT NULL,
+  PRIMARY KEY("id")
+);
+
+CREATE TABLE IF NOT EXISTS "user_tokens"(
+  "user_id" INTEGER NOT NULL,
+  "token" TEXT NOT NULL,
+  "last_seen" TIMESTAMP NOT NULL,
+  PRIMARY KEY("user_id"),
+  FOREIGN KEY("user_id") REFERENCES "user"("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "character"(
+  "id" INTEGER NOT NULL,
+  "user_id" INTEGER NOT NULL,
+  "last_seen" TIMESTAMP NOT NULL,
+  PRIMARY KEY("id"),
+  FOREIGN KEY("user_id") REFERENCES "user"("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);

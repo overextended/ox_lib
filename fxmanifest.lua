@@ -55,4 +55,5 @@ server_scripts {
     'imports/getFilesInDirectory/server.lua',
     'resource/**/server.lua',
     'resource/**/server/*.lua',
+    'resource/server.js'
 }
