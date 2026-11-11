@@ -20,7 +20,7 @@ export function getNearbyVehicles(
       const vehicleCoords = Vector3.fromArray(GetEntityCoords(vehicle, true));
       const distance = vehicleCoords.distance(coords);
 
-      if (distance < maxDistance && NetworkGetEntityIsNetworked(vehicle)) {
+      if (distance < maxDistance) {
         nearbyVehicles.push({
           vehicle,
           coords: vehicleCoords,
