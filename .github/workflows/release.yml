@@ -17,11 +17,6 @@ jobs:
       - name: Install zip
         run: sudo apt install zip
 
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - name: Generate GitHub App token
         id: app_token
         uses: tibdex/github-app-token@v2
@@ -42,18 +37,18 @@ jobs:
           repository: overextended/cfxlua-require
           path: cfxlua-require
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Nub.js
+        uses: nubjs/setup-nub@v0
         with:
           node-version: "24"
 
       - name: Bump package version
-        run: bun run .github/actions/bump-package-version.js
+        run: nub run .github/actions/bump-package-version.js
         env:
           TGT_RELEASE_VERSION: ${{ github.ref_name }}
 
       - name: Bump manifest version
-        run: bun run .github/actions/bump-manifest-version.js
+        run: nub run .github/actions/bump-manifest-version.js
         env:
           TGT_RELEASE_VERSION: ${{ github.ref_name }}
 
@@ -66,22 +61,22 @@ jobs:
           message: "chore: bump version to ${{ github.ref_name }}"
 
       - name: Install package dependencies
-        run: bun install --frozen-lockfile
+        run: nub install --frozen-lockfile
         working-directory: package
 
       - name: Install web dependencies
-        run: bun install --frozen-lockfile
+        run: nub install --frozen-lockfile
         working-directory: web
 
       - name: Run web build script
-        run: bun run build
+        run: nub run build
         working-directory: web
 
       - name: Bundle files
         run: |
           mkdir -p ./temp/ox_lib/web
           cp ./{LICENSE,README.md,fxmanifest.lua,init.lua,require.lua} ./temp/ox_lib
-          cp -r ./{imports,resource,locales,modules} ./temp/ox_lib
+          cp -r ./{imports,resource,locales,modules,dist} ./temp/ox_lib
           cp -r ./web/build ./temp/ox_lib/web/
           rsync -a --exclude='.git/' ./cfxlua-require/ ./temp/cfxlua-require/
           cd ./temp && zip -r ../ox_lib.zip ./ox_lib ./cfxlua-require

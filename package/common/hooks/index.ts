@@ -38,9 +38,11 @@ export class HookPipeline<T = any> {
 
     hooks.add(this);
 
-    exports(`registerHook:${event}`, (ref: Hook['cb'], options?: HookOptions) => this.registerHook(ref, options));
+    global.exports(`registerHook:${event}`, (ref: Hook["cb"], options?: HookOptions) =>
+      this.registerHook(ref, options),
+    );
 
-    exports(`removeHook:${event}`, (hookId: string) => {
+    global.exports(`removeHook:${event}`, (hookId: string) => {
       const resource = GetInvokingResource() || cache.resource;
 
       this.remove(resource, hookId);

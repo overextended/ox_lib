@@ -1,0 +1,41 @@
+{
+  "name": "ox_lib",
+  "version": "3.42.2",
+  "description": "",
+  "keywords": [
+    "fivem",
+    "overextended"
+  ],
+  "license": "LGPL-3.0-or-later",
+  "author": {
+    "name": "Overextended",
+    "url": "https://overextended.dev"
+  },
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "build": "tsdown --",
+    "dev": "tsdown --watch",
+    "webdev": "cd web && nub run dev --outDir ../dist/web --emptyOutDir",
+    "webbuild": "cd web && nub run build --outDir ../dist/web --emptyOutDir"
+  },
+  "dependencies": {
+    "@overextended/core": "^0.3.1"
+  },
+  "devDependencies": {
+    "@citizenfx/client": "latest",
+    "@citizenfx/server": "latest",
+    "@nubjs/types": ">=0.4.13 <=0.9.7",
+    "@types/node": "^22",
+    "fast-glob": "^3.3.3",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "tsdown": "^0.23.4",
+    "typescript": "^7",
+    "zx": "^8.8.5"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  }
+}

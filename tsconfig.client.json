@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@citizenfx/client"],
+    "paths": {
+      "*/common": ["./src/*/common/"],
+      "common/*": ["./src/common/*"],
+      "*": ["./src/*/client/", "./src/*/client.ts"],
+      "@overextended/ox_lib/*": ["./package/*"]
+    }
+  },
+  "include": [
+    "./src/client.ts",
+    "./src/**/common.ts",
+    "./src/**/client.ts",
+    "./src/**/client/**/*",
+    "./src/**/common/**/*",
+    "./src/common/**/*",
+    "./types/*.d.ts",
+    "./package/common/*",
+    "./package/common/**/*",
+    "./package/client/*",
+    "./package/client/**/*"
+  ]
+}
