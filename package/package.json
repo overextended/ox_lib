@@ -51,7 +51,7 @@
     "compile": "tsdown --",
     "lint": "oxlint",
     "format": "oxfmt",
-    "prepublishOnly": "bun run compile"
+    "prepublishOnly": "nub run compile"
   },
   "dependencies": {
     "@overextended/core": "^0.2.5",

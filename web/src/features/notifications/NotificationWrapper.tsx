@@ -8,6 +8,45 @@ import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
 
+import type { ToastPosition } from 'react-hot-toast';
+
+const customPositions = {
+  'center-left': {
+    position: 'top-left',
+    containerStyle: {
+      top: '50%',
+      bottom: 'auto',
+      transform: 'translateY(-50%)',
+    },
+  },
+  center: {
+    position: 'top-center',
+    containerStyle: {
+      top: '50%',
+      bottom: 'auto',
+      transform: 'translateY(-50%)',
+    },
+  },
+  'center-right': {
+    position: 'top-right',
+    containerStyle: {
+      top: '50%',
+      bottom: 'auto',
+      transform: 'translateY(-50%)',
+    },
+  },
+} as const satisfies Record<
+  string,
+  {
+    position: ToastPosition;
+    containerStyle: React.CSSProperties;
+  }
+>;
+
+type CustomPosition = keyof typeof customPositions;
+
+const isCustomPosition = (position: string): position is CustomPosition => position in customPositions;
+
 const useStyles = createStyles((theme) => ({
   container: {
     width: 300,
@@ -37,26 +76,27 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const createAnimation = (from: string, to: string, visible: boolean) => keyframes({
-  from: {
-    opacity: visible ? 0 : 1,
-    transform: `translate${from}`,
-  },
-  to: {
-    opacity: visible ? 1 : 0,
-    transform: `translate${to}`,
-  },
-});
+const createAnimation = (from: string, to: string, visible: boolean) =>
+  keyframes({
+    from: {
+      opacity: visible ? 0 : 1,
+      transform: `translate${from}`,
+    },
+    to: {
+      opacity: visible ? 1 : 0,
+      transform: `translate${to}`,
+    },
+  });
 
 const getAnimation = (visible: boolean, position: string) => {
-  const animationOptions = visible ? '0.2s ease-out forwards' : '0.4s ease-in forwards'
+  const animationOptions = visible ? '0.2s ease-out forwards' : '0.4s ease-in forwards';
   let animation: { from: string; to: string };
 
   if (visible) {
-    animation = position.includes('bottom') ? { from: 'Y(30px)', to: 'Y(0px)' } : { from: 'Y(-30px)', to:'Y(0px)' };
+    animation = position.includes('bottom') ? { from: 'Y(30px)', to: 'Y(0px)' } : { from: 'Y(-30px)', to: 'Y(0px)' };
   } else {
     if (position.includes('right')) {
-      animation = { from: 'X(0px)', to: 'X(100%)' }
+      animation = { from: 'X(0px)', to: 'X(100%)' };
     } else if (position.includes('left')) {
       animation = { from: 'X(0px)', to: 'X(-100%)' };
     } else if (position === 'top-center') {
@@ -68,7 +108,7 @@ const getAnimation = (visible: boolean, position: string) => {
     }
   }
 
-  return `${createAnimation(animation.from, animation.to, visible)} ${animationOptions}`
+  return `${createAnimation(animation.from, animation.to, visible)} ${animationOptions}`;
 };
 
 const durationCircle = keyframes({
@@ -91,7 +131,7 @@ const Notifications: React.FC = () => {
 
     data.showDuration = data.showDuration !== undefined ? data.showDuration : true;
 
-    if (toastId) setToastKey(prevKey => prevKey + 1);
+    if (toastId) setToastKey((prevKey) => prevKey + 1);
 
     // Backwards compat with old notifications
     switch (position) {
@@ -209,13 +249,21 @@ const Notifications: React.FC = () => {
       ),
       {
         id: toastId,
-        duration: duration,
-        position: position,
+        duration,
+        ...(isCustomPosition(position) ? { toasterId: position } : { position: position as ToastPosition }),
       }
     );
   });
 
-  return <Toaster />;
+  return (
+    <>
+      <Toaster />
+
+      {Object.entries(customPositions).map(([id, options]) => (
+        <Toaster key={id} toasterId={id} position={options.position} containerStyle={options.containerStyle} />
+      ))}
+    </>
+  );
 };
 
 export default Notifications;

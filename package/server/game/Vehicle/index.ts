@@ -1,4 +1,4 @@
-import { Vehicle, VehicleType } from '../../../common/game/Vehicle';
+import { Vehicle, type VehicleType } from "../../../common/game/Vehicle";
 
 const CreateVehicleServerSetter =
   globalThis.CreateVehicleServerSetter ||
