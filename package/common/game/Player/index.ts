@@ -8,9 +8,9 @@ const registry = new FinalizationRegistry((id: number) => players.delete(id));
 type StateChangeHandler<T = any> = (player: Player, key: string, value?: T, old?: T) => void;
 
 const stateChangeHandlers = new Map<string, {
-  cb: StateChangeHandler;
   cookie: number;
-}[]>();
+  subscriptions: Set<{ cb: StateChangeHandler }>;
+}>();
 
 /** Returns the cached player wrapper or creates one for the supplied id. */
 function getPlayer(id: number) {
@@ -32,14 +32,23 @@ function triggerStateChangeHandlers(bag: string, key: string, value: unknown) {
   if (!bag.startsWith('player:')) return;
 
   const playerId = GetPlayerFromStateBagName(bag);
-  const handlers = playerId && stateChangeHandlers.get(key);
+
+  if (isServer ? playerId <= 0 : playerId < 0) return;
+
+  const serverId = isServer ? playerId : GetPlayerServerId(playerId);
+
+  if (serverId <= 0 || bag !== `player:${serverId}`) return;
+
+  const handlers = stateChangeHandlers.get(key);
 
   if (!handlers) return;
 
-  const player = getPlayer(playerId);
+  const player = getPlayer(serverId);
+  const old = GetStateBagValue(bag, key);
+  const subscriptions = [...handlers.subscriptions];
 
-  for (const handler of handlers) {
-    handler.cb(player, key, value, GetStateBagValue(bag, key));
+  for (const subscription of subscriptions) {
+    if (handlers.subscriptions.has(subscription)) subscription.cb(player, key, value, old);
   }
 }
 
@@ -49,18 +58,27 @@ export class Player extends Ped {
   /** The player's server id. */
   readonly netId: number = 0;
 
-  static on<T = unknown>(key: string, handler: StateChangeHandler<T>) {
+  /** Registers a player state callback and returns a function that unsubscribes it. */
+  static on<T = unknown>(key: string, handler: StateChangeHandler<T>): () => void {
     let handlers = stateChangeHandlers.get(key);
 
     if (!handlers) {
-      handlers = [];
+      handlers = {
+        cookie: AddStateBagChangeHandler(key, '', triggerStateChangeHandlers),
+        subscriptions: new Set(),
+      };
       stateChangeHandlers.set(key, handlers);
     }
 
-    handlers.push({
-      cb: handler,
-      cookie: AddStateBagChangeHandler(key, '', triggerStateChangeHandlers),
-    });
+    const subscription = { cb: handler };
+    handlers.subscriptions.add(subscription);
+
+    return () => {
+      if (!handlers.subscriptions.delete(subscription) || handlers.subscriptions.size) return;
+
+      RemoveStateBagChangeHandler(handlers.cookie);
+      stateChangeHandlers.delete(key);
+    };
   }
 
   /** Wraps a player server id, using the local client or first server player for -1. */

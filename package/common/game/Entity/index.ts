@@ -79,10 +79,10 @@ export abstract class GameEntity {
   /** Updates the script handle, network id, and state bag used by this wrapper. */
   protected setHandle(handle: number) {
     const isPlayer = this.type === 'Player';
-    const playerId = isPlayer && ((this as any).playerId as number);
+    const playerId = isPlayer ? ((this as any).playerId as number) : 0;
     this.#handle = handle;
     // @ts-expect-error
-    this.netId = playerId ? (isServer ? playerId : GetPlayerServerId(playerId)) : NetworkGetNetworkIdFromEntity(handle);
+    this.netId = isPlayer ? (isServer ? playerId : GetPlayerServerId(playerId)) : NetworkGetNetworkIdFromEntity(handle);
     this.statebag = this.netId ? `${isPlayer ? 'player' : 'entity'}:${this.netId}` : `localEntity:${handle}`;
 
     if (!this.netId || (isServer && !isPlayer)) {

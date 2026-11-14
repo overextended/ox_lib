@@ -33,32 +33,67 @@ local function triggerStateChangeHandlers(bag, key, value)
     if not bag:find('^player:') then return end
 
     local playerId = GetPlayerFromStateBagName(bag)
-    local handlers = playerId ~= 0 and stateChangeHandlers[key]
+
+    if (isServer and playerId <= 0) or (not isServer and playerId < 0) then return end
+
+    local serverId = isServer and playerId or GetPlayerServerId(playerId)
+
+    if serverId <= 0 or bag ~= ('player:%s'):format(serverId) then return end
+
+    local handlers = stateChangeHandlers[key]
 
     if not handlers then return end
 
-    local player = players[playerId]
+    local player = players[serverId]
+    local old = GetStateBagValue(bag, key)
+    local subscriptions = table.clone(handlers.subscriptions)
 
-    for i = 1, #handlers do
-        local handler = handlers[i]
-        handler.cb(player, key, value, GetStateBagValue(bag, key))
+    for i = 1, #subscriptions do
+        local subscription = subscriptions[i]
+
+        if subscription.active then
+            subscription.cb(player, key, value, old)
+        end
     end
 end
 
 ---@param key string
 ---@param handler fun(player: Player, key: string, value?: unknown, old?: unknown)
+---@return fun() unsubscribe
+---Registers a player state callback and returns a function that unsubscribes it.
 function Player.on(key, handler)
     local handlers = stateChangeHandlers[key]
 
     if not handlers then
-        handlers = lib.array:new()
+        handlers = {
+            cookie = AddStateBagChangeHandler(key, '', triggerStateChangeHandlers),
+            subscriptions = {},
+        }
         stateChangeHandlers[key] = handlers
     end
 
-    handlers:push({
-        cb = handler,
-        cookie = AddStateBagChangeHandler(key, '', triggerStateChangeHandlers),
-    })
+    local subscription = { cb = handler, active = true }
+    local subscriptions = handlers.subscriptions
+
+    subscriptions[#subscriptions + 1] = subscription
+
+    return function()
+        if not subscription.active then return end
+
+        subscription.active = false
+
+        for i = 1, #subscriptions do
+            if subscriptions[i] == subscription then
+                table.remove(subscriptions, i)
+                break
+            end
+        end
+
+        if #subscriptions > 0 then return end
+
+        RemoveStateBagChangeHandler(handlers.cookie)
+        stateChangeHandlers[key] = nil
+    end
 end
 
 ---@class PlayerConstructor
