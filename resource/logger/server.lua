@@ -8,7 +8,9 @@
 
 local providerName = GetConvar('ox:logger', '')
 
-if providerName == '' then return end
+if providerName == '' then
+    return exports('internal_logMessage', function() end)
+end
 
 local function getHostName()
     return GetConvar('ox:logger:hostname', GetConvar('sv_projectName', 'fxserver'))
