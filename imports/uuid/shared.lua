@@ -39,7 +39,7 @@ function lib.uuid.validate(str)
     local version = tonumber(str:sub(15, 15), 16)
     local variant = tonumber(str:sub(20, 20), 16)
 
-    return version == 7 and (variant & 0x8) == 0x8
+    return version == 7 and (variant & 0xc) == 0x8
 end
 
 return lib.uuid
