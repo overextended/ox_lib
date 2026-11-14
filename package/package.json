@@ -64,7 +64,7 @@
     "@citizenfx/server": "latest",
     "@fortawesome/fontawesome-common-types": "7.2.0",
     "@mantine/core": "^6.0.22",
-    "@types/node": "16.9.1",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.2.15",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",

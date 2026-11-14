@@ -1,6 +1,6 @@
 import { cache } from '../cache';
 import { printf } from 'fast-printf';
-import type { FlattenObjectKeys } from "../misc";
+import type { FlattenObjectKeys } from "../utils";
 
 const dict: Record<string, string> = {};
 const path = GetResourceMetadata(cache.resource, 'locales_path', 0) || 'locales'

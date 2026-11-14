@@ -1,19 +1,13 @@
 console.warn(`The ox_lib zones module is experimental and may change in future versions.`);
 
-import { Grid } from '@overextended/core/grid';
-import { Cylinder, Prism, Sphere } from '@overextended/core/geometry';
-import { Vector2, Vector3 } from '@overextended/core/vector';
+import { Grid, GridEntry } from '../grid';
+import { Cylinder, Prism, Sphere } from '../geometry';
+import { Vector2, Vector3 } from '../vector';
 import { cache } from '../cache';
 
 type Shapes = Prism | Sphere | Cylinder;
 
-export interface Zone {
-  id: string;
-  shape: Shapes;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+export interface Zone extends GridEntry {
   inside?: () => void;
   onEnter?: () => void;
   onExit?: () => void;
@@ -22,12 +16,15 @@ export interface Zone {
 
 const zones = new Map<string, Zone>();
 const grid = new Grid<Zone>();
-let nearbyZones = new Set<Zone>() as ReadonlySet<Zone>;
-let insideZones = new Set<Zone>();
 let lastZones = new Set<Zone>();
+let nearbyZones = new Set<Zone>();
+let insideZones = new Set<Zone>();
 let nextId = 1;
 
-export class Zone {
+export class Zone extends GridEntry {
+  readonly id: string;
+  readonly shape: Shapes;
+
   public static Prism(...args: ConstructorParameters<typeof Prism>) {
     return new Zone(new Prism(...args));
   }
@@ -47,6 +44,9 @@ export class Zone {
     if (zone) {
       zones.delete(id);
       grid.remove(zone);
+      lastZones.delete(zone);
+      nearbyZones.delete(zone);
+      insideZones.delete(zone);
     }
   }
 
@@ -61,7 +61,7 @@ export class Zone {
   }
 
   /** Returns a set of all zones near the given point, or the player if undefined. */
-  public static getNearby(point?: Vector2 | Vector3) {
+  public static getNearby(point?: Vector2 | Vector3): ReadonlySet<Zone> {
     return point ? grid.getEntries(point.x, point.y) : nearbyZones;
   }
 
@@ -73,21 +73,19 @@ export class Zone {
   public shouldDraw = false;
 
   private constructor(shape: Shapes) {
-    this.shape = shape;
-    this.x = shape.centroid.x;
-    this.y = shape.centroid.y;
+    const bounds = shape.bounds;
+
+    super({
+      coords: new Vector2(
+        (bounds.minX + bounds.maxX) / 2,
+        (bounds.minY + bounds.maxY) / 2,
+      ),
+      width: bounds.maxX - bounds.minX,
+      height: bounds.maxY - bounds.minY,
+    });
+
     this.id = `zone:${nextId++}`;
-
-    if (shape instanceof Prism) {
-      const bounds = shape.bounds;
-      this.width = Math.abs(bounds.maxX - bounds.minX);
-      this.height = Math.abs(bounds.maxY - bounds.minY);
-    } else {
-      const diametre = ('circle' in shape ? shape.circle.radius : shape.radius) * 2;
-
-      this.width = diametre;
-      this.height = diametre;
-    }
+    this.shape = shape;
 
     grid.add(this);
     zones.set(this.id, this);
@@ -177,7 +175,7 @@ function startPolling() {
   setInterval(() => {
     const coords = Vector3.fromArray(GetEntityCoords(cache.ped, true));
     cache.coords = coords;
-    nearbyZones = Zone.getNearby(coords);
+    nearbyZones = Zone.getNearby(coords) as Set<Zone>;
     [lastZones, insideZones] = [insideZones, lastZones];
     insideZones.clear();
 
