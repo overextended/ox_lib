@@ -3,15 +3,19 @@ local loadStatus = 'ox_lib has not yet loaded.'
 
 function noop() end
 
-lib = setmetatable({
+lib = {
     name = GetCurrentResourceName(),
     context = IsDuplicityVersion() and 'server' or 'client',
-}, {
+}
+
+lib = setmetatable(lib, {
     __newindex = function(self, key, fn)
         rawset(self, key, fn)
 
         if debug_getinfo(2, 'S').short_src:find('@ox_lib/resource') then
-            exports(key, fn)
+            AddEventHandler(('__cfx_export_ox_lib_%s'):format(key), function(setCB)
+                setCB(fn)
+            end)
         end
     end,
 

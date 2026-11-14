@@ -4,11 +4,12 @@
  * Note: Resource internals (including this) need to be rewritten into TS eventually (v4?)
  */
 
+import { cfxExport } from "@overextended/ox_lib/common/exports";
 import { dbr } from "./sqlite";
 import { User } from "./user";
 
-global.exports("dbFindOne", (query = "", parameters = []) => dbr.prepare(query).get(parameters));
-global.exports("dbFindAll", (query = "", parameters = []) => dbr.prepare(query).all(parameters));
+cfxExport("dbFindOne", (query = "", parameters = []) => dbr.prepare(query).get(parameters));
+cfxExport("dbFindAll", (query = "", parameters = []) => dbr.prepare(query).all(parameters));
 
 on("playerJoining", () => new User(source));
 on("playerDropped", () => User.Registry.delete(source));

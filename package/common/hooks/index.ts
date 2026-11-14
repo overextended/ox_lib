@@ -1,4 +1,5 @@
 import { cache } from '../cache';
+import { cfxExport } from '../exports';
 
 const hooks: Set<HookPipeline> = new Set();
 
@@ -39,11 +40,11 @@ export class HookPipeline<T = any> {
 
     hooks.add(this);
 
-    global.exports(`registerHook:${event}`, (ref: Hook["cb"], options?: HookOptions) =>
+    cfxExport(`registerHook:${event}`, (ref: Hook["cb"], options?: HookOptions) =>
       this.registerHook(ref, options),
     );
 
-    global.exports(`removeHook:${event}`, (hookId: string) => {
+    cfxExport(`removeHook:${event}`, (hookId: string) => {
       const resource = GetInvokingResource() || cache.resource;
 
       this.remove(resource, hookId);
