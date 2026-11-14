@@ -12,8 +12,11 @@ interface OptionsProps {
   alignIcon?: 'top' | 'center';
 }
 
+/** Shows text with optional positioning, icon, and styling. */
 export const showTextUI = (text: string, options?: OptionsProps): void => exports.ox_lib.showTextUI(text, options);
 
+/** Hides the current text UI. */
 export const hideTextUI = (): void => exports.ox_lib.hideTextUI();
 
+/** Queries whether the text UI is open. */
 export const isTextUIOpen = (): boolean => exports.ox_lib.isTextUIOpen();

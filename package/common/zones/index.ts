@@ -25,14 +25,17 @@ export class Zone extends GridEntry {
   readonly id: string;
   readonly shape: Shapes;
 
+  /** Creates and registers a zone from an extruded polygon. */
   public static Prism(...args: ConstructorParameters<typeof Prism>) {
     return new Zone(new Prism(...args));
   }
 
+  /** Creates and registers a rectangular zone with an optional heading. */
   public static Cuboid(...args: Parameters<(typeof Prism)['createCuboid']>) {
     return new Zone(Prism.createCuboid(...args));
   }
 
+  /** Creates and registers a spherical zone. */
   public static Sphere(...args: ConstructorParameters<typeof Sphere>) {
     return new Zone(new Sphere(...args));
   }
@@ -50,7 +53,7 @@ export class Zone extends GridEntry {
     }
   }
 
-  /** Returns a set of all zones. */
+  /** Returns the shared map of zone ids to registered zones. */
   public static getAll() {
     return zones;
   }
@@ -72,6 +75,7 @@ export class Zone extends GridEntry {
 
   public shouldDraw = false;
 
+  /** Registers a shape and indexes its horizontal bounds for nearby queries. */
   private constructor(shape: Shapes) {
     const bounds = shape.bounds;
 
@@ -91,10 +95,12 @@ export class Zone extends GridEntry {
     zones.set(this.id, this);
   }
 
+  /** Checks whether a point lies inside the zone shape, including its boundary. */
   public contains(point: Vector3) {
     return this.shape.contains(point.x, point.y, point.z)
   }
 
+  /** Draws supported zone shapes for debugging on the client. */
   public draw(red = 255, green = 42, blue = 24, alpha = 100) {
     if (cache.game === 'fxserver') return;
 
@@ -169,6 +175,7 @@ export class Zone extends GridEntry {
   }
 }
 
+/** Starts client zone membership polling and per-frame drawing and inside callbacks. */
 function startPolling() {
   if (cache.game === 'fxserver') return;
 

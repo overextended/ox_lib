@@ -1,5 +1,6 @@
 import { Vehicle, type VehicleType } from "../../../common/game/Vehicle";
 
+/** Creates a server vehicle using the setter native or the RedM creation fallback. */
 const CreateVehicleServerSetter =
   globalThis.CreateVehicleServerSetter ||
   ((model: string | number, type: VehicleType, x: number, y: number, z: number, heading = 0) => {
@@ -7,6 +8,7 @@ const CreateVehicleServerSetter =
   });
 
 /**
+ * Creates a networked vehicle on the server and returns its wrapper.
  * @see {@link CreateVehicleServerSetter} (FiveM)
  * @see {@link CreateVehicle} (RedM)
  */

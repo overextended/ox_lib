@@ -91,10 +91,10 @@ export abstract class Vector {
     declare w?: number;
 
     /**
-     * Constructs a new vector with optional components.
+     * Validates the component types supplied by a concrete vector constructor.
      *
      * @param x - The x-component of the vector.
-     * @param y - The y-component of the vector. Defaults to `x` if not provided.
+     * @param y - The y-component of the vector.
      * @param z - The z-component of the vector (optional).
      * @param w - The w-component of the vector (optional).
      */
@@ -109,6 +109,7 @@ export abstract class Vector {
         }
     }
 
+    /** Returns the number of components in this vector class. */
     public get size() {
         return (this.constructor as CVector).size;
     }
@@ -133,7 +134,7 @@ export abstract class Vector {
      * Creates a vector from an array of numbers.
      *
      * @param primitive - An array representing the components of a vector.
-     * @returns A new vector instance corresponding to the provided array length.
+     * @returns A new instance of the receiving vector class.
      */
     public static fromArray<T extends CVector, U extends VectorArray<T>>(
         this: T,
@@ -191,7 +192,7 @@ export abstract class Vector {
         this: T,
         primitives: U,
     ): InstanceType<T>[] {
-        return primitives.map(this.fromArray) as InstanceType<T>[];
+        return primitives.map(this.fromArray, this) as InstanceType<T>[];
     }
 
     /**
@@ -318,6 +319,7 @@ export abstract class Vector {
         return Math.hypot(this.x, this.y, this.z ?? 0, this.w ?? 0);
     }
 
+    /** Visits each component in x, y, z, w order with its key and index. */
     public forEach(
         callback: (value: number, key: keyof Vec, index: number) => void,
     ): void {
@@ -329,6 +331,7 @@ export abstract class Vector {
         }
     }
 
+    /** Iterates over component values in x, y, z, w order. */
     public abstract [Symbol.iterator](): IterableIterator<number>;
 
     /**
@@ -516,6 +519,7 @@ export class Vector2 extends Vector {
         this.y = y;
     }
 
+    /** Iterates over this vector's components in declaration order. */
     *[Symbol.iterator]() {
         yield this.x;
         yield this.y;
@@ -525,7 +529,7 @@ export class Vector2 extends Vector {
      * Computes the cross product between this and another vector.
      *
      * @param v The other vector.
-     * @returns A new vector orthogonal to both inputs.
+     * @returns The signed scalar cross product.
      */
     public cross(v: VectorObject<this>): number {
         const vec = v instanceof Vector ? v : Vector2.fromInput(v);
@@ -556,6 +560,7 @@ export class Vector3 extends Vector {
         this.z = z;
     }
 
+    /** Iterates over this vector's components in declaration order. */
     *[Symbol.iterator]() {
         yield this.x;
         yield this.y;
@@ -604,6 +609,7 @@ export class Vector4 extends Vector {
         this.w = w;
     }
 
+    /** Iterates over this vector's components in declaration order. */
     *[Symbol.iterator]() {
         yield this.x;
         yield this.y;

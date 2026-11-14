@@ -447,6 +447,7 @@ export class Polygon implements Shape2D {
     return new Vector2(x * f, y * f);
   }
 
+  /** Triangulates the polygon, throwing when no valid ear can be found. */
   public calculateTriangles() {
     const triangles: [Readonly<Vector2>, Readonly<Vector2>, Readonly<Vector2>][] = [];
 
@@ -549,6 +550,7 @@ export class Polygon implements Shape2D {
     return (this.#centroid ??= Object.freeze(this.calculateCentroid()));
   }
 
+  /** Returns the cached triangles that cover the polygon. */
   public get triangles() {
     return (this.#triangles ??= Object.freeze(this.calculateTriangles()));
   }

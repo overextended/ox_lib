@@ -3,7 +3,9 @@ interface CKeybind extends KeybindProps {
   disabled: boolean;
   isPressed: boolean;
   hash: number;
+  /** Returns the instructional label for the current mapped key. */
   getCurrentKey(): string;
+  /** Returns whether the keybind is currently held. */
   isControlPressed(): boolean;
 }
 
@@ -14,8 +16,11 @@ interface KeybindProps {
   defaultKey?: string;
   allowInPauseMenu?: boolean;
   disabled?: boolean;
+  /** Enables or disables the keybind and resets its pressed state. */
   disable?(this: CKeybind, toggle: boolean): void;
+  /** Runs when the enabled keybind is pressed. */
   onPressed?(this: CKeybind): void;
+  /** Runs when the enabled keybind is released. */
   onReleased?(this: CKeybind): void;
   [key: string]: any;
 }
@@ -38,6 +43,7 @@ class Keybind implements CKeybind {
   isPressed: boolean = false;
   hash: number;
 
+  /** Creates a keybind instance from its mapping and handler settings. */
   constructor(data: KeybindProps) {
     this.name = data.name;
     this.description = data.description;
@@ -54,25 +60,30 @@ class Keybind implements CKeybind {
     this.hash = GetHashKey('+' + this.name) | 0x80000000;
   }
 
+  /** Returns the instructional label for the current mapped key. */
   get currentKey(): string {
     return this.getCurrentKey();
   }
 
+  /** Returns the mapped key label without its instructional prefix. */
   getCurrentKey(): string {
     const label = GetControlInstructionalButton(0, this.hash, true);
     return label.substring(2);
   }
 
+  /** Returns the pressed state tracked by the keybind commands. */
   isControlPressed(): boolean {
     return this.isPressed;
   }
 
+  /** Sets whether the keybind is disabled and clears its pressed state. */
   disable(toggle: boolean): void {
     this.disabled = toggle;
     this.isPressed = false;
   }
 }
 
+/** Registers press and release commands with primary and optional secondary key mappings. */
 export function addKeybind(data: KeybindProps): CKeybind {
   const kb = new Keybind(data);
 
@@ -117,10 +128,12 @@ export function addKeybind(data: KeybindProps): CKeybind {
   return kb;
 }
 
+/** Returns the keybind registered under the given name, if present. */
 export function getKeybind(name: string): CKeybind | undefined {
   return keybinds[name];
 }
 
+/** Returns the registry of keybinds created by this resource. */
 export function getAllKeybinds(): Readonly<Record<string, CKeybind>> {
   return keybinds;
 }

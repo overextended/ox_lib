@@ -2,6 +2,7 @@ import { Prop } from '../../../common/game/Prop';
 import { requestModel } from '../../streaming';
 
 /**
+ * Loads the model, creates an object, and releases the model streaming reference.
  * @see {@link CreateObject}
  */
 export async function createObject(

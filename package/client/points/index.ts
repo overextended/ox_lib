@@ -29,6 +29,7 @@ export class Point<T = unknown> {
   currentDistance?: number;
   isClosest: boolean = false;
 
+  /** Registers a distance point and starts proximity checks if this is the first point. */
   constructor(point: LibPoint<T>) {
     this.id = points.length + 1;
     this.coords = Vector3.fromArray(point.coords);
@@ -43,6 +44,7 @@ export class Point<T = unknown> {
     }
   }
 
+  /** Removes this point from proximity tracking and stops polling when no points remain. */
   remove = () => {
     const coords = Vector3.fromArray(GetEntityCoords(cache.ped, false));
     const distance = coords.distance(this.coords);
@@ -61,6 +63,7 @@ export class Point<T = unknown> {
   };
 }
 
+/** Polls point distances every 300 ms and runs nearby handlers each frame while in range. */
 const startPointsInterval = () => {
   pointsInterval = setInterval(() => {
     if (points.length < 1) return;

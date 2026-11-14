@@ -29,6 +29,7 @@ interface NotifyProps {
   sound?: { bank?: string; set: string; name: string };
 }
 
+/** Displays a notification with the supplied text, appearance, and optional sound. */
 export const notify = (data: NotifyProps): void => exports.ox_lib.notify(data);
 
 // Keep for backwards compat with v2
@@ -41,4 +42,5 @@ interface DefaultNotifyProps {
   id?: number;
 }
 
+/** Displays a notification using the legacy v2 status options. */
 export const defaultNotify = (data: DefaultNotifyProps): void => exports.ox_lib.defaultNotify(data);

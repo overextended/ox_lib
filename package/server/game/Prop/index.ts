@@ -1,6 +1,7 @@
 import { Prop } from '../../../common/game/Prop';
 
 /**
+ * Creates an object without a vertical model offset.
  * @see {@link CreateObjectNoOffset}
  */
 export async function createObject(

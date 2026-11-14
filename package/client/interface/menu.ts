@@ -32,13 +32,18 @@ interface MenuProps {
 }
 
 type registerMenu = (data: MenuProps, cb: ChangeFunction) => void;
+/** Registers a keyboard menu and its selection handler. */
 export const registerMenu: registerMenu = (data, cb) => exports.ox_lib.registerMenu(data, cb);
 
+/** Opens the registered keyboard menu with the given id. */
 export const showMenu = (id: string): string => exports.ox_lib.showMenu(id);
 
+/** Closes the current keyboard menu, optionally invoking its close handler. */
 export const hideMenu = (onExit: boolean): void => exports.ox_lib.hideMenu(onExit);
 
+/** Returns the id of the open keyboard menu, if any. */
 export const getOpenMenu = (): string | null => exports.ox_lib.getOpenMenu();
 
 type setMenuOptions = (id: string, options: MenuOptions | MenuOptions[], index?: number) => void;
+/** Replaces all menu options, or a single option at the given one-based index. */
 export const setMenuOptions: setMenuOptions = (id, options, index) => exports.ox_lib.setMenuOptions(id, options, index);

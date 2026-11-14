@@ -28,6 +28,7 @@ on('playerJoining', () => {
   emitNet('chat:addSuggestions', source, registeredCommmands);
 });
 
+/** Converts positional command arguments into named values using the parameter definitions. */
 function parseArguments(
   source: number,
   args: OxCommandArguments,
@@ -81,6 +82,7 @@ function parseArguments(
   return result ? args : undefined;
 }
 
+/** Builds a chat suggestion with parameter names and type hints. */
 function buildSuggestion(commandName: string, { params, help }: OxCommandProperties) {
   const hints = params
     ? params.map((param) => {
@@ -102,6 +104,7 @@ function buildSuggestion(commandName: string, { params, help }: OxCommandPropert
   };
 }
 
+/** Registers command aliases with argument parsing, ACE restrictions, and chat suggestions. */
 export function addCommand<T extends OxCommandArguments>(
   commandName: string | string[],
   cb: (source: number, args: T, raw: string) => Promise<any>,
@@ -120,6 +123,7 @@ export function addCommand<T extends OxCommandArguments>(
     });
   }
 
+  /** Parses named arguments and invokes the command callback, tracing rejected promises. */
   const commandHandler = (source: number, args: OxCommandArguments, raw: string) => {
     const parsed = parseArguments(source, args, raw, params) as T | undefined;
 

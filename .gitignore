@@ -1,4 +1,5 @@
 .idea
+.ox/
 .luarc.jsonc
 created_zones.lua
 

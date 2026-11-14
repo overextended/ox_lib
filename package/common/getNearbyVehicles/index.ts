@@ -7,6 +7,7 @@ interface NearbyVehicle {
   coords: Vector3;
 }
 
+/** Returns vehicles and coordinates strictly within the distance, optionally including the player vehicle. */
 export function getNearbyVehicles(
   coords: Vector3,
   maxDistance: number = 2.0,

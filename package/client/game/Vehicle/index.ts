@@ -2,6 +2,7 @@ import { Vehicle } from '../../../common/game/Vehicle';
 import { requestModel } from '../../streaming';
 
 /**
+ * Loads the model, creates a vehicle, and releases the model streaming reference.
  * @see {@link CreateVehicle}
  */
 export async function createVehicle(

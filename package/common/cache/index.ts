@@ -17,6 +17,7 @@ export const cache: OxCache = new Proxy(
     game: GetGameName(),
   },
   {
+    /** Lazily subscribes to cache updates and reads the initial value from ox_lib. */
     get(target: any, key: string) {
       const result = key ? target[key] : target;
       if (result !== undefined) return result;
@@ -38,6 +39,7 @@ export const cache: OxCache = new Proxy(
   },
 );
 
+/** Subscribes to changes for a cache key, receiving the new and previous values. */
 export const onCache = <T extends keyof OxCache>(key: T, cb: (value: OxCache[T], oldValue: OxCache[T]) => void) => {
   if (!cacheEvents[key]) cache[key];
 

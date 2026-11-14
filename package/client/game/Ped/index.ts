@@ -2,6 +2,7 @@ import { Ped } from '../../../common/game/Ped';
 import { requestModel } from '../../streaming';
 
 /**
+ * Loads the model, creates a ped, and releases the model streaming reference.
  * @see {@link CreatePed}
  */
 export async function createPed(

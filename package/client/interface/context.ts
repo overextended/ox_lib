@@ -41,10 +41,14 @@ interface ContextMenuProps {
 }
 
 type registerContext = (context: ContextMenuProps | ContextMenuProps[]) => void;
+/** Registers one or more context menus by id. */
 export const registerContext: registerContext = (context) => exports.ox_lib.registerContext(context);
 
+/** Opens the registered context menu with the given id. */
 export const showContext = (id: string): void => exports.ox_lib.showContext(id);
 
+/** Closes the current context menu, optionally invoking its exit handler. */
 export const hideContext = (onExit: boolean): void => exports.ox_lib.hideContext(onExit);
 
+/** Returns the id of the open context menu, if any. */
 export const getOpenContextMenu = (): string | null => exports.ox_lib.getOpenContextMenu();

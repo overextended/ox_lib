@@ -21,6 +21,7 @@ export class Dui {
   dictName: string = '';
   txtName: string = '';
 
+  /** Creates a DUI browser and runtime texture, tracked for cleanup when the resource stops. */
   constructor(data: DuiProperties) {
     const time = GetGameTimer();
     const id = `${cache.resource}_${time}_${currentId}`;
@@ -39,6 +40,7 @@ export class Dui {
     if (this.debug) console.log(`Dui ${this.id} created`);
   }
 
+  /** Destroys the DUI browser and removes it from the cleanup registry. */
   remove() {
     SetDuiUrl(this.duiObject, 'about:blank');
     DestroyDui(this.duiObject);
@@ -47,6 +49,7 @@ export class Dui {
     if (this.debug) console.log(`Dui ${this.id} removed`);
   }
 
+  /** Navigates the DUI browser to the given URL. */
   setUrl(url: string) {
     this.url = url;
     SetDuiUrl(this.duiObject, url);
@@ -54,6 +57,7 @@ export class Dui {
     if (this.debug) console.log(`Dui ${this.id} url set to ${url}`);
   }
 
+  /** Sends a JSON message to the DUI browser. */
   sendMessage(data: object) {
     SendDuiMessage(this.duiObject, JSON.stringify(data));
 

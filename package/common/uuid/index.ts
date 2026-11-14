@@ -13,11 +13,11 @@ const hex = (n: number) => n.toString(16).padStart(2, '0');
 export const uuid = {
   /** Generates a UUID v7 string. */
   generate() {
-    let timestamp = Date.now();
+    const timestamp = Date.now();
     const bytes = Array(16);
 
     for (let i = 0; i < 6; i++) {
-      bytes[i] = (timestamp >> (40 - i * 8)) & 0xff;
+      bytes[i] = Math.floor(timestamp / 2 ** (40 - i * 8)) & 0xff;
     }
 
     for (let i = 6; i < 16; i++) {
@@ -44,6 +44,6 @@ export const uuid = {
     const version = parseInt(str[14], 16);
     const variant = parseInt(str[19], 16);
 
-    return version === 7 && (variant & 0x8) === 0x8;
+    return version === 7 && (variant & 0xc) === 0x8;
   },
 };

@@ -13,6 +13,7 @@ onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
   pendingCallbacks[key]?.(...args);
 });
 
+/** Sends a callback request to a client and waits for its first response value or a timeout. */
 export function triggerClientCallback<T = unknown>(
   eventName: string,
   playerId: number,
@@ -38,6 +39,7 @@ export function triggerClientCallback<T = unknown>(
   }).finally(() => delete pendingCallbacks[key]);
 }
 
+/** Registers a server callback that receives the requesting player ID before its arguments. */
 export function onClientCallback(eventName: string, cb: (playerId: number, ...args: any[]) => any) {
   exports.ox_lib.setValidCallback(eventName, true);
 

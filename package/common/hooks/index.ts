@@ -18,6 +18,7 @@ interface HookOptions {
 
 export class HookPipeline<T = any> {
   private hooks: Hook[];
+  private nextHookId = 0;
 
   readonly event;
   readonly filter;
@@ -54,7 +55,7 @@ export class HookPipeline<T = any> {
    * @param options Optional metadata attached to the hook.
    */
   public registerHook(cb: Hook['cb'] | null, options?: HookOptions) {
-    const idx = this.hooks.length;
+    const idx = this.nextHookId++;
     const resource = GetInvokingResource() || cache.resource;
     const hook = {} as Hook;
 
@@ -72,7 +73,7 @@ export class HookPipeline<T = any> {
   /**
    * Removes hooks from the pipeline.
    * - If `hookId` is provided, only the matching hook is removed.
-   * - If omitted, all hooks belonging to the invoking resource are removed.
+   * - If omitted, all hooks belonging to the supplied resource are removed.
    */
   public remove(resource: string, hookId?: string) {
     for (let i = this.hooks.length - 1; i >= 0; i--) {
@@ -90,7 +91,7 @@ export class HookPipeline<T = any> {
    * Each registered hook is evaluated in order of registration, checking the payload against a provided filter\
    * using the hook options and executing the hook callback.
    *
-   * A hook may block execution by returning `false` from the pipeline filter or its own callback.
+   * The filter skips hooks by returning `false`. A hook callback cancels dispatch by returning `false`.
    *
    * If any hook rejects the execution, dispatch is cancelled and `result.ok` is set to `false`.
    *
@@ -102,6 +103,7 @@ export class HookPipeline<T = any> {
     const result = {
       ok: true,
       size: 0,
+      /** Emits the final acceptance state and payload to each hook that ran. */
       [Symbol.dispose]: () => {
         // @ts-expect-error
         const packed = msgpack_pack([result.ok, payload]);
@@ -173,6 +175,7 @@ class EventHook {
   }
 }
 
+/** Registers a hook on a resourceName:eventName export and returns its event subscription handle. */
 export function registerHook(eventName: string, handler?: Hook['cb'] | null, options?: HookOptions) {
   const [resource, event] = eventName.split(':', 2);
 

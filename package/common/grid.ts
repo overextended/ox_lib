@@ -11,7 +11,9 @@ const validateEntry = Symbol('validateEntry');
 const refreshEntry = Symbol('refreshEntry');
 
 interface EntryGrid {
+    /** Checks whether an entry can be indexed by this grid. */
     [validateEntry](entry: GridEntryOptions): void;
+    /** Reindexes an entry after its bounds change. */
     [refreshEntry](entry: GridEntry): void;
 }
 
@@ -24,50 +26,62 @@ const entryGrids = new WeakMap<GridEntry, Set<EntryGrid>>();
 export class GridEntry {
     #state: GridEntryOptions = { coords: new Vector2(0, 0) };
 
+    /** Creates an entry from a centre position and optional dimensions or radius. */
     constructor(options: GridEntryOptions) {
         this.set(options);
     }
 
+    /** Returns the horizontal centre coordinate. */
     public get x() {
         return this.#state.coords.x;
     }
 
+    /** Returns the vertical centre coordinate. */
     public get y() {
         return this.#state.coords.y;
     }
 
+    /** Returns a copy of the centre position. */
     public get coords() {
         return this.#state.coords.clone();
     }
 
+    /** Moves the entry and updates every grid containing it. */
     public set coords(coords: Vector2) {
         this.set({ coords });
     }
 
+    /** Returns the horizontal extent, or undefined to use each grid's cell width. */
     public get width() {
         return this.#state.width;
     }
 
+    /** Changes the horizontal extent and switches from radius to rectangular dimensions. */
     public set width(value: number | undefined) {
         this.set({ width: value });
     }
 
+    /** Returns the vertical extent, or undefined to use each grid's cell height. */
     public get height() {
         return this.#state.height;
     }
 
+    /** Changes the vertical extent and switches from radius to rectangular dimensions. */
     public set height(value: number | undefined) {
         this.set({ height: value });
     }
 
+    /** Returns the configured radius, if the entry uses radius-based dimensions. */
     public get radius() {
         return this.#state.radius;
     }
 
+    /** Sets both extents to twice the radius, or zero when undefined, and updates subscribed grids. */
     public set radius(value: number | undefined) {
         this.set({ radius: value });
     }
 
+    /** Validates an update against subscribed grids, then applies and reindexes it. */
     public set(options: Partial<GridEntryOptions>): this {
         const hasRadius = 'radius' in options;
 
@@ -108,6 +122,7 @@ interface GridCache<T extends GridEntry> {
     lastCell: Set<T>;
 }
 
+/** Copies the values accepted by the predicate into a new set. */
 function filterSet<T>(set: Set<T>, predicate: (value: T) => boolean) {
     const result = new Set<T>();
 
@@ -132,6 +147,7 @@ export class Grid<T extends GridEntry = GridEntry> {
         return this.#entries;
     }
 
+    /** Creates a grid with positive finite cell dimensions, defaulting to square cells. */
     constructor(readonly cellWidth: number = 128, readonly cellHeight = cellWidth) {
         if (!Number.isFinite(cellWidth) || cellWidth <= 0 || !Number.isFinite(cellHeight) || cellHeight <= 0)
             throw new RangeError('Grid cell dimensions must be positive finite numbers.');
@@ -319,6 +335,7 @@ export class Grid<T extends GridEntry = GridEntry> {
         return success;
     }
 
+    /** Registers an entry in every cell within the inclusive index bounds. */
     private addToCells(entry: T, [left, right, top, bottom]: [number, number, number, number]) {
         for (let y = top; y <= bottom; y++) {
             let row = this.#rows.get(y);
@@ -335,6 +352,7 @@ export class Grid<T extends GridEntry = GridEntry> {
         }
     }
 
+    /** Removes an entry from the indexed cells and prunes empty rows and cells. */
     private removeFromCells(entry: T, [left, right, top, bottom]: [number, number, number, number]) {
         let success = false;
 

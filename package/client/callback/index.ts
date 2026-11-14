@@ -11,6 +11,7 @@ onNet(`__ox_cb_${cache.resource}`, (key: string, ...args: any) => {
 
 const eventTimers: Record<string, number> = {};
 
+/** Checks the event cooldown and starts a new delay in milliseconds when allowed. */
 export function eventTimer(eventName: string, delay: number | null) {
   if (delay && delay > 0) {
     const currentTime = GetGameTimer();
@@ -23,6 +24,7 @@ export function eventTimer(eventName: string, delay: number | null) {
   return true;
 }
 
+/** Requests a server callback response, or returns nothing while its millisecond cooldown is active. */
 export function triggerServerCallback<T = unknown>(
   eventName: string,
   delay: number | null,
@@ -50,6 +52,7 @@ export function triggerServerCallback<T = unknown>(
   }).finally(() => delete pendingCallbacks[key]);
 }
 
+/** Registers a client callback handler that replies to requests from the server. */
 export function onServerCallback(eventName: string, cb: (...args: any[]) => any) {
   exports.ox_lib.setValidCallback(eventName, true);
 

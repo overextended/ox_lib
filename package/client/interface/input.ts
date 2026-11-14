@@ -159,7 +159,9 @@ type inputDialog = (
     allowCancel?: boolean;
   },
 ) => Promise<Array<string | number | boolean> | undefined>;
+/** Shows an input dialog and waits for submitted values, or no result when cancelled. */
 export const inputDialog: inputDialog = async (heading, rows, options) =>
   await exports.ox_lib.inputDialog(heading, rows, options);
 
+/** Closes the active input dialog without returning submitted values. */
 export const closeInputDialog = () => exports.ox_lib.closeInputDialog();
