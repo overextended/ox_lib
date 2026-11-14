@@ -1,8 +1,10 @@
 <div align="center">
 
-# ox_lib
+# Ox Framework
 
-A comprehensive FiveM development library that streamlines resource creation through shared utilities, UI components, and common framework abstractions.
+A development framework for FiveM, providing Lua and TypeScript developers with a modular runtime, reusable APIs, and UI components.
+
+Unlike traditional FiveM frameworks, Ox is designed to work alongside your existing resources and frameworks, including ESX and QBCore, rather than replace or conflict with them. Build secure, maintainable resources with less boilerplate, without locking your code into a particular framework.
 
 [![](https://img.shields.io/github/downloads/overextended/ox_lib/total?style=for-the-badge&logo=github)](https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip)
 [![](https://img.shields.io/github/downloads/overextended/ox_lib/latest/total?style=for-the-badge&logo=github)](https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip)
