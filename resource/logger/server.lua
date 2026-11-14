@@ -127,6 +127,6 @@ exports('internal_logMessage', function(resource, batch)
     end
 
     for i = 1, #batch do
-        append(resource, batch[i])
+        pcall(append, resource, batch[i])
     end
 end)

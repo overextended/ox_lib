@@ -30,26 +30,28 @@ local function default(level, message, metadata)
 end
 
 ---@overload fun(level: OxLogLevel, message: string, metadata?: table<string, any>)
-local logger = setmetatable({}, { __call = default })
+local logger = setmetatable({}, {
+    __call = function(...) return default(...) end
+})
 
 ---@param message string
 ---@param metadata? OxLoggerMetadata
-function logger.error(message, metadata) return logger('error', message, metadata) end
+function logger.error(message, metadata) return default('error', message, metadata) end
 
 ---@param message string
 ---@param metadata? OxLoggerMetadata
-function logger.warn(message, metadata) return logger('warn', message, metadata) end
+function logger.warn(message, metadata) return default('warn', message, metadata) end
 
 ---@param message string
 ---@param metadata? OxLoggerMetadata
-function logger.info(message, metadata) return logger('info', message, metadata) end
+function logger.info(message, metadata) return default('info', message, metadata) end
 
 ---@param message string
 ---@param metadata? OxLoggerMetadata
-function logger.verbose(message, metadata) return logger('verbose', message, metadata) end
+function logger.verbose(message, metadata) return default('verbose', message, metadata) end
 
 ---@param message string
 ---@param metadata? OxLoggerMetadata
-function logger.debug(message, metadata) return logger('debug', message, metadata) end
+function logger.debug(message, metadata) return default('debug', message, metadata) end
 
-return logger
+return default
