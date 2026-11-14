@@ -33,6 +33,7 @@ lib.hook = Class('HookPipeline')
 ---@see EventHook
 function lib.hook:constructor(event, filter)
     self.hooks = {}
+    self.nextHookId = 0
     self.event = event
     self.filter = filter
 
@@ -64,9 +65,11 @@ function lib.hook:registerHook(cb, options)
         end
     end
 
+    self.nextHookId = self.nextHookId + 1
+
     hook.cb = cb
     hook.resource = resource or cache.resource
-    hook.hookId = ('%s:%s:%s'):format(hook.resource, self.event, idx)
+    hook.hookId = ('%s:%s:%s'):format(hook.resource, self.event, self.nextHookId)
 
     self.hooks[idx] = hook
 
