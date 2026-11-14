@@ -1,6 +1,6 @@
 import { cache } from '../cache/index';
 import { context } from '../';
-import { Vector3 } from '@overextended/core/vector';
+import { Vector3 } from '../vector';
 
 interface NearbyVehicle {
   vehicle: number;

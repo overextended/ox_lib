@@ -7,17 +7,13 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@overextended/core':
-        specifier: ^0.3.1
-        version: 0.3.1(typescript@7.0.2)
     devDependencies:
       '@citizenfx/client':
         specifier: latest
-        version: 2.0.38435-1
+        version: 2.0.38621-1
       '@citizenfx/server':
         specifier: latest
-        version: 2.0.38435-1
+        version: 2.0.38621-1
       '@nubjs/types':
         specifier: '>=0.4.13 <=0.9.7'
         version: 0.9.7(@types/node@22.20.5)
@@ -45,11 +41,11 @@ importers:
 
 packages:
 
-  '@citizenfx/client@2.0.38435-1':
-    resolution: {integrity: sha512-x580D/1usvrXaDwyItRMdNRUdd0RFD7FHGUgRE/FftaDWKsL9vEoLO9/twGplkrXCNzC/W5Q5pTV4Fo3Hggohg==}
+  '@citizenfx/client@2.0.38621-1':
+    resolution: {integrity: sha512-aneJlHWdNA+Y3XD6d+kLyGl4zp21LBHq6p9WaK5JUqZJzDk7USW4DTgADGswsm1pwp3aeD5frDesx1I3ROvdjw==}
 
-  '@citizenfx/server@2.0.38435-1':
-    resolution: {integrity: sha512-a1yNoKcvysR+tbh3NqP0TspA4d/SIM0vmsIcPrq0u+JCn4Q8g0LkHrOnLbzS24PSWYuie7NB/Lk2lXmLeAFSxQ==}
+  '@citizenfx/server@2.0.38621-1':
+    resolution: {integrity: sha512-XtPcr6k85Lz1DS2pljboYGiobAcRkuL6WYEhfkwMwi7nf5YxHxzjtWtxPWLGuTrXAu4fNxYFFJ6jxmZlFHOipg==}
 
   '@emnapi/core@2.0.0-beta.2':
     resolution: {integrity: sha512-MzCVoWtcg4Pm2B3je5mMvYMvj3MmBKw+fU7vbsJc9/iT8ip6/eYIHo/Dsm/mr+wsHB6SEyJDuxB09Yy6r/8+4A==}
@@ -88,11 +84,6 @@ packages:
     resolution: {integrity: sha512-cHecrNdV4PPc8EqqOzn2wAQYUYwDKcuEfxIEnTlJo8snXAcX2DJhoPK1IFjEA4tDZ7CsybG3R++4dg+sccAQ+w==}
     peerDependencies:
       '@types/node': '>=25'
-
-  '@overextended/core@0.3.1':
-    resolution: {integrity: sha512-ehDIPZHZR+A73/USIigQysIqQ63txKcQj2t7flaJbLh33r+IYi/RcP7Z+vifdUugqkqWp8fq1tjbdypmt1H3GQ==}
-    peerDependencies:
-      typescript: ^5.8.3
 
   '@oxc-project/types@0.157.0':
     resolution: {integrity: sha512-95iTox1qdt6WGWce3xwNOVayByOfLaYAq+qGPpub6NWbBh9sv0GG3+zyfh9ZBCO/jVu5A0EWI+qQI7g6fevjxg==}
@@ -864,14 +855,16 @@ packages:
 
 snapshots:
 
-  '@citizenfx/client@2.0.38435-1': {}
+  '@citizenfx/client@2.0.38621-1': {}
 
-  '@citizenfx/server@2.0.38435-1': {}
+  '@citizenfx/server@2.0.38621-1': {}
 
-  '@emnapi/core@2.0.0-beta.2':
+  '@emnapi/core@2.0.0-beta.2(@emnapi/runtime@2.0.0-beta.2)':
     dependencies:
       '@emnapi/wasi-threads': 2.2.0
       tslib: 2.9.1
+    optionalDependencies:
+      '@emnapi/runtime': 2.0.0-beta.2
     optional: true
 
   '@emnapi/runtime@2.0.0-beta.2':
@@ -884,9 +877,9 @@ snapshots:
       tslib: 2.9.1
     optional: true
 
-  '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@2.0.0-beta.2)(@emnapi/runtime@2.0.0-beta.2)':
+  '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@2.0.0-beta.2(@emnapi/runtime@2.0.0-beta.2))(@emnapi/runtime@2.0.0-beta.2)':
     dependencies:
-      '@emnapi/core': 2.0.0-beta.2
+      '@emnapi/core': 2.0.0-beta.2(@emnapi/runtime@2.0.0-beta.2)
       '@emnapi/runtime': 2.0.0-beta.2
       '@tybys/wasm-util': 0.10.4
     optional: true
@@ -906,10 +899,6 @@ snapshots:
   '@nubjs/types@0.9.7(@types/node@22.20.5)':
     dependencies:
       '@types/node': 22.20.5
-
-  '@overextended/core@0.3.1(typescript@7.0.2)':
-    dependencies:
-      typescript: 7.0.2
 
   '@oxc-project/types@0.157.0': {}
 
@@ -1072,12 +1061,10 @@ snapshots:
 
   '@rolldown/binding-wasm32-wasi@1.3.1(@oxc-project/types@0.157.0)':
     dependencies:
-      '@emnapi/core': 2.0.0-beta.2
+      '@emnapi/core': 2.0.0-beta.2(@emnapi/runtime@2.0.0-beta.2)
       '@emnapi/runtime': 2.0.0-beta.2
-      '@napi-rs/wasm-runtime': 1.2.6(@emnapi/core@2.0.0-beta.2)(@emnapi/runtime@2.0.0-beta.2)
+      '@napi-rs/wasm-runtime': 1.2.6(@emnapi/core@2.0.0-beta.2(@emnapi/runtime@2.0.0-beta.2))(@emnapi/runtime@2.0.0-beta.2)
       '@oxc-project/types': 0.157.0
-    transitivePeerDependencies:
-      - '@emnapi/runtime'
     optional: true
 
   '@rolldown/binding-win32-arm64-msvc@1.3.1':
@@ -1327,8 +1314,6 @@ snapshots:
       '@rolldown/binding-wasm32-wasi': 1.3.1(@oxc-project/types@0.157.0)
       '@rolldown/binding-win32-arm64-msvc': 1.3.1
       '@rolldown/binding-win32-x64-msvc': 1.3.1
-    transitivePeerDependencies:
-      - '@emnapi/runtime'
 
   run-parallel@1.2.0:
     dependencies:
@@ -1367,7 +1352,6 @@ snapshots:
       unconfig-core: 7.5.0
       verkit: 0.5.0
     transitivePeerDependencies:
-      - '@emnapi/runtime'
       - '@volar/typescript'
       - '@vue/language-core'
       - '@yuku-toolchain/wasm'

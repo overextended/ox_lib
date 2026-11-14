@@ -1,4 +1,4 @@
-import { Vector3 } from '@overextended/core/vector';
+import { Vector3 } from '../../common/vector';
 import { cache } from '../cache';
 
 let points: Point[] = [];

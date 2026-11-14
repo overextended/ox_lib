@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@overextended/core':
-        specifier: ^0.2.5
-        version: 0.2.5(typescript@6.0.3)
       csstype:
         specifier: ^3.2.3
         version: 3.2.3
@@ -223,11 +220,6 @@ packages:
     resolution: {integrity: sha512-RSKlNZvxhMCkOFZ6slbYvZYbWjHUM+PxDQnupIOxIdsTZQQjx/BFfrfJ7kQFOP+g7MtpOds8weAetEs5obwMOQ==}
     peerDependencies:
       react: '>=16.8.0'
-
-  '@overextended/core@0.2.5':
-    resolution: {integrity: sha512-0YRi2zB1UQf4FRUfsrP2QG8btQ/P/1BuN0zmBo3F/qX0+RFZuJO3Soze7pd2uwuPteuVB6Drg+nGbTcjN9EiZQ==}
-    peerDependencies:
-      typescript: ^5.8.3
 
   '@oxc-project/types@0.156.0':
     resolution: {integrity: sha512-1Duyg48TdJNdyhEB8Xn1L36bT9Pv6GUtlKjHxOys8xkaF/rQq3XJE+bAurSK/AgIz5mGFsb77cn9Pb20+WCScw==}
@@ -1505,10 +1497,6 @@ snapshots:
   '@mantine/utils@6.0.22(react@19.3.1)':
     dependencies:
       react: 19.3.1
-
-  '@overextended/core@0.2.5(typescript@6.0.3)':
-    dependencies:
-      typescript: 6.0.3
 
   '@oxc-project/types@0.156.0': {}
 

@@ -54,7 +54,6 @@
     "prepublishOnly": "nub run compile"
   },
   "dependencies": {
-    "@overextended/core": "^0.2.5",
     "csstype": "^3.2.3",
     "fast-printf": "^1.6.10",
     "typescript": "^6.0.3"

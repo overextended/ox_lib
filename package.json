@@ -20,9 +20,6 @@
     "webdev": "cd web && nub run dev --outDir ../dist/web --emptyOutDir",
     "webbuild": "cd web && nub run build --outDir ../dist/web --emptyOutDir"
   },
-  "dependencies": {
-    "@overextended/core": "^0.3.1"
-  },
   "devDependencies": {
     "@citizenfx/client": "latest",
     "@citizenfx/server": "latest",

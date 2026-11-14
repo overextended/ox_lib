@@ -1,4 +1,4 @@
-import { Vector3 } from '@overextended/core/vector';
+import { Vector3 } from '../../vector';
 import { context } from '../..';
 
 const isServer = context === 'server';
